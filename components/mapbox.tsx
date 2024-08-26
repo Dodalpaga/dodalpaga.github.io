@@ -6,7 +6,6 @@ import React, {
 } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import './mapbox.css';
 
 type MapProps = {
   lng: number;
@@ -17,6 +16,7 @@ type MapProps = {
 type MapRef = {
   getCenter: () => { lng: number; lat: number };
   setCenter: (lng: number, lat: number) => void;
+  exportImage: () => string; // New method to export the map as an image
 };
 
 const ExampleMap = forwardRef<MapRef, MapProps>(({ lng, lat, zoom }, ref) => {
@@ -32,6 +32,7 @@ const ExampleMap = forwardRef<MapRef, MapProps>(({ lng, lat, zoom }, ref) => {
       style: `https://api.maptiler.com/maps/satellite/style.json?key=${API_KEY}`,
       center: [lng, lat],
       zoom: zoom,
+      preserveDrawingBuffer: true,
     });
     map.current.addControl(new maplibregl.NavigationControl(), 'top-right');
     new maplibregl.Marker({ color: '#FF0000' })
@@ -52,11 +53,27 @@ const ExampleMap = forwardRef<MapRef, MapProps>(({ lng, lat, zoom }, ref) => {
         map.current.setCenter([newLng, newLat]);
       }
     },
+    exportImage: () => {
+      if (map.current) {
+        const canvas = map.current.getCanvas();
+        return canvas.toDataURL('image/png');
+      }
+      return '';
+    },
   }));
 
   return (
-    <div className="map-wrap">
-      <div ref={mapContainer} className="map" />
+    <div
+      style={{
+        position: 'relative',
+        width: '100%',
+        height: 'calc(100vh - 250px)',
+      }}
+    >
+      <div
+        ref={mapContainer}
+        style={{ position: 'absolute', width: '100%', height: '100%' }}
+      />
     </div>
   );
 });
