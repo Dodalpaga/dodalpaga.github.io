@@ -2,7 +2,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import NavBar from '../components/navbar';
-import imagePath from '../assets/mountain.png';
+import imagePath from '../public/assets/mountain.png';
 
 export default function Home() {
   return (
