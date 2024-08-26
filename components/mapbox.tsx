@@ -15,7 +15,8 @@ type MapProps = {
 };
 
 type MapRef = {
-  getBounds: () => { north: number; south: number; east: number; west: number };
+  getCenter: () => { lng: number; lat: number };
+  setCenter: (lng: number, lat: number) => void;
 };
 
 const ExampleMap = forwardRef<MapRef, MapProps>(({ lng, lat, zoom }, ref) => {
@@ -39,17 +40,17 @@ const ExampleMap = forwardRef<MapRef, MapProps>(({ lng, lat, zoom }, ref) => {
   }, [API_KEY, lng, lat, zoom]);
 
   useImperativeHandle(ref, () => ({
-    getBounds: () => {
+    getCenter: () => {
       if (map.current) {
-        const bounds = map.current.getBounds();
-        return {
-          north: bounds.getNorth(),
-          south: bounds.getSouth(),
-          east: bounds.getEast(),
-          west: bounds.getWest(),
-        };
+        const center = map.current.getCenter();
+        return { lng: center.lng, lat: center.lat };
       }
-      return { north: lat, south: lat, east: lng, west: lng };
+      return { lng, lat };
+    },
+    setCenter: (newLng: number, newLat: number) => {
+      if (map.current) {
+        map.current.setCenter([newLng, newLat]);
+      }
     },
   }));
 
