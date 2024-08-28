@@ -9,8 +9,18 @@
 
 Forked from `https://github.com/digitros/nextjs-fastapi`
 
+## First App : Satellite image segmentation
+
 Install torch for cuda :
 
 ```bash
 pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 ```
+
+Download model checkpoints from [this link](https://github.com/facebookresearch/segment-anything#model-checkpoints) and put them in [`/api/models`](/api//models/README.md)
+
+By default, the code supports sam_vit_h_4b8939.pth weights.
+
+Here are the type of images you can get :
+
+![Test Image](./public/assets/example_segmentation.png)

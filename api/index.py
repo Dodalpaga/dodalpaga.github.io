@@ -1,6 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+import sys, os
+
+# Add the segmentation directory to the Python path
+sys.path.append(os.path.join(os.path.dirname(__file__), 'segmentation'))
+from app import process_image
 
 app = FastAPI()
 
@@ -19,5 +24,6 @@ class ImageRequest(BaseModel):
 
 @app.post("/api/image_segmentation")
 def image_segmentation(request: ImageRequest):
-    # Return the base64 image as received
-    return {"base64_image": request.base64_image}
+    # Process the image and get the base64 of the segmented image
+    base64_segmented_image = process_image(request.base64_image)
+    return {"base64_image": base64_segmented_image}
