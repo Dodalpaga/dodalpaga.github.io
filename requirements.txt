@@ -1,2 +1,13 @@
 fastapi==0.100.1
+fastapi-cors
+opencv-python
+torch==2.3.0
+torchvision==0.18.0
+torchaudio==2.3.0
 uvicorn[standard]==0.23.2
+setuptools==59.5.0
+numpy
+pandas
+geojson
+matplotlib
+scikit-learn

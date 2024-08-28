@@ -8,3 +8,9 @@
 <p align="center">Simple Next.js boilerplate that uses <a href="https://fastapi.tiangolo.com/">FastAPI</a> as the API backend.</p>
 
 Forked from `https://github.com/digitros/nextjs-fastapi`
+
+Install torch for cuda :
+
+```bash
+pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+```

@@ -21,7 +21,24 @@ export default function Content() {
       setTimeout(() => {
         const imageData = mapRef.current.exportImage();
         console.log(imageData); // Log the image data URL to verify it's being generated
-        setMapImage(imageData);
+
+        // Send a POST request to the FastAPI endpoint with the base64 image
+        fetch('http://localhost:8000/api/image_segmentation', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ base64_image: imageData }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log('Response from FastAPI:', data);
+            // Set the returned base64 image as the map image
+            setMapImage(data.base64_image);
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+          });
       }, 1000); // Adjust the delay if needed
     }
   };
