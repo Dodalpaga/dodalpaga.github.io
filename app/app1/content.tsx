@@ -3,6 +3,7 @@ import ExampleMap from '../../components/mapbox';
 import Stack from '@mui/material/Stack';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress'; // Import CircularProgress for loading symbol
 import Image from 'next/image';
 
 // Define the MapRef type
@@ -14,10 +15,14 @@ type MapRef = {
 
 export default function Content() {
   const mapRef = React.useRef<MapRef>(null);
-  const [mapImage, setMapImage] = React.useState<string | null>(null);
+  const [mapImage, setMapImage] = React.useState<string>(
+    'https://www.un-autre-regard-sur-la-terre.org/document/blogUARST/Histoire/30%20ans%20du%20satellite%20SPOT%201/Toulouse%20vu%20par%20SPOT/Spot%205%20-%20Toulouse%20-%20Apr%e8s%20AZF%20-%2017-06-2002%20-%20Vignette.jpg'
+  );
+  const [loading, setLoading] = React.useState<boolean>(false); // State for loading
 
   const handleExportImage = () => {
     if (mapRef.current) {
+      setLoading(true); // Set loading to true when starting the request
       setTimeout(() => {
         const imageData = mapRef.current.exportImage();
         console.log(imageData); // Log the image data URL to verify it's being generated
@@ -38,6 +43,9 @@ export default function Content() {
           })
           .catch((error) => {
             console.error('Error:', error);
+          })
+          .finally(() => {
+            setLoading(false); // Set loading to false after the request is complete
           });
       }, 1000); // Adjust the delay if needed
     }
@@ -57,28 +65,35 @@ export default function Content() {
         direction="row"
         className="container flex flex-col items-center justify-between p-4"
       >
-        <ExampleMap ref={mapRef} lng={139.753} lat={35.6844} zoom={14} />
+        <ExampleMap ref={mapRef} lng={1.444209} lat={43.604652} zoom={11.8} />
 
         <div
           style={{
             position: 'relative',
             width: '100%',
             height: 'calc(100vh - 250px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
         >
-          {mapImage && (
-            <Image
-              src={mapImage}
-              alt="Map Preview"
-              width={0}
-              height={0}
-              sizes="100%"
-              style={{ width: '100%', height: 'auto' }} // optional
-            />
+          {loading ? (
+            <CircularProgress /> // Show loading symbol while waiting for the image
+          ) : (
+            mapImage && (
+              <Image
+                src={mapImage}
+                alt="Map Preview"
+                width={0}
+                height={0}
+                sizes="100%"
+                style={{ width: 'auto', height: '100%' }} // optional
+              />
+            )
           )}
         </div>
       </Stack>
-      <Button variant="outlined" onClick={handleExportImage}>
+      <Button variant="contained" onClick={handleExportImage}>
         Export Map Image
       </Button>
     </Container>

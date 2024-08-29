@@ -4,6 +4,7 @@ import torch
 import torchvision
 import numpy as np
 import matplotlib.pyplot as plt
+plt.switch_backend('agg')
 import cv2
 import io
 import base64
