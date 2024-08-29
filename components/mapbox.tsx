@@ -36,7 +36,7 @@ const ExampleMap = forwardRef<MapRef, MapProps>(({ lng, lat, zoom }, ref) => {
     });
     map.current.addControl(new maplibregl.NavigationControl(), 'top-right');
     new maplibregl.Marker({ color: '#FF0000' })
-      .setLngLat([139.7525, 35.6846])
+      .setLngLat([1.444209, 43.604652])
       .addTo(map.current);
   }, [API_KEY, lng, lat, zoom]);
 
