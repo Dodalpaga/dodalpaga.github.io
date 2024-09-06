@@ -14,41 +14,51 @@ type MapRef = {
 };
 
 export default function Content() {
-  const mapRef = React.useRef<MapRef>(null);
+  const mapRef = React.useRef<MapRef | null>(null); // MapRef can be null
   const [mapImage, setMapImage] = React.useState<string>(
     'https://www.un-autre-regard-sur-la-terre.org/document/blogUARST/Histoire/30%20ans%20du%20satellite%20SPOT%201/Toulouse%20vu%20par%20SPOT/Spot%205%20-%20Toulouse%20-%20Apr%e8s%20AZF%20-%2017-06-2002%20-%20Vignette.jpg'
   );
   const [loading, setLoading] = React.useState<boolean>(false); // State for loading
 
   const handleExportImage = () => {
-    if (mapRef.current) {
-      setLoading(true); // Set loading to true when starting the request
-      setTimeout(() => {
-        const imageData = mapRef.current.exportImage();
-        console.log(imageData); // Log the image data URL to verify it's being generated
-
-        // Send a POST request to the FastAPI endpoint with the base64 image
-        fetch('http://localhost:8000/api/image_segmentation', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ base64_image: imageData }),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            console.log('Response from FastAPI:', data);
-            // Set the returned base64 image as the map image
-            setMapImage(data.base64_image);
-          })
-          .catch((error) => {
-            console.error('Error:', error);
-          })
-          .finally(() => {
-            setLoading(false); // Set loading to false after the request is complete
-          });
-      }, 1000); // Adjust the delay if needed
+    if (!mapRef.current) {
+      console.warn('mapRef is null, cannot export image.');
+      return;
     }
+
+    setLoading(true); // Set loading to true when starting the request
+    setTimeout(() => {
+      // Use optional chaining to safely call exportImage if mapRef.current exists
+      const imageData = mapRef.current?.exportImage();
+      if (!imageData) {
+        console.error('Failed to export image from mapRef.');
+        setLoading(false);
+        return;
+      }
+
+      console.log(imageData); // Log the image data URL to verify it's being generated
+
+      // Send a POST request to the FastAPI endpoint with the base64 image
+      fetch('http://localhost:8000/api/image_segmentation', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ base64_image: imageData }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log('Response from FastAPI:', data);
+          // Set the returned base64 image as the map image
+          setMapImage(data.base64_image);
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        })
+        .finally(() => {
+          setLoading(false); // Set loading to false after the request is complete
+        });
+    }, 1000); // Adjust the delay if needed
   };
 
   return (
