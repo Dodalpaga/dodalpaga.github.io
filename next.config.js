@@ -26,8 +26,20 @@ const nextConfig = {
     ];
   },
   images: {
-    domains: ['www.un-autre-regard-sur-la-terre.org'], // Add the domain here for next/image to allow loading external images from this domain
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'www.un-autre-regard-sur-la-terre.org',
+        port: '', // Empty string indicates no specific port
+        pathname: '**', // Allow all paths under this domain
+      },
+    ],
   },
 };
 
-module.exports = nextConfig;
+const withNextra = require('nextra')({
+  theme: 'nextra-theme-docs',
+  themeConfig: './theme.config.jsx',
+});
+
+module.exports = withNextra(nextConfig);
