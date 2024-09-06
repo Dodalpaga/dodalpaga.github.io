@@ -24,11 +24,14 @@ base_dir = os.path.dirname(os.path.dirname(__file__))
 
 # Define the relative path to the model file
 # https://github.com/facebookresearch/segment-anything#model-checkpoints
-relative_path_to_model = "models/sam_vit_h_4b8939.pth"
+relative_path_to_model = "models/sam_vit_b_01ec64.pth"
 
 # Generate the absolute path
 sam_checkpoint = os.path.abspath(os.path.join(base_dir, relative_path_to_model))
-model_type = "vit_h"
+# check if the model file exists
+if not os.path.exists(sam_checkpoint):
+    raise FileNotFoundError(f"Model file not found: {sam_checkpoint}. Please download it from https://github.com/facebookresearch/segment-anything#model-checkpoints and place it in the 'models' folder.")
+model_type = "vit_b"
 
 if torch.cuda.is_available():
     device = "cuda"

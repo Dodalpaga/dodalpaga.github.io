@@ -17,9 +17,11 @@ Install torch for cuda :
 pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 ```
 
+Create a `.env` file and define a `NEXT_PUBLIC_MAPTILER_API_KEY` key
+
 Download model checkpoints from [this link](https://github.com/facebookresearch/segment-anything#model-checkpoints) and put them in [`/api/models`](/api//models/README.md)
 
-By default, the code supports sam_vit_h_4b8939.pth weights.
+By default, the code supports sam_vit_b_01ec64.pth weights.
 
 Here are the type of images you can get :
 

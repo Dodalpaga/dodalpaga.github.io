@@ -5,3 +5,7 @@ uvicorn[standard]==0.23.2
 setuptools==59.5.0
 numpy
 matplotlib
+torch -f https://download.pytorch.org/whl/cu118
+torchvision -f https://download.pytorch.org/whl/cu118
+torchaudio -f https://download.pytorch.org/whl/cu118
+segment-anything
