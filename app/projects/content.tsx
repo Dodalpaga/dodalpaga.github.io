@@ -19,16 +19,16 @@ const apps = [
       'This is a brief description of App 1, highlighting its main features and purpose.',
   },
   {
-    title: 'Template',
+    title: 'Code Interpreter',
     image: '/assets/template.png', // Update with your actual image path
-    link: '/template', // Update with your actual routes
+    link: '/code_interpreter', // Update with your actual routes
     description:
       'This is a brief description of a template, showcasing its unique functionalities.',
   },
   {
-    title: 'Template',
+    title: 'Processing Apps',
     image: '/assets/template.png', // Update with your actual image path
-    link: '/template', // Update with your actual routes
+    link: '/processing_apps', // Update with your actual routes
     description:
       'This is a brief description of a template, showcasing its unique functionalities.',
   },
