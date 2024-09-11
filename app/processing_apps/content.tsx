@@ -1,6 +1,11 @@
 import * as React from 'react';
 import Container from '@mui/material/Container';
-import ProcessingCanvas from './ProcessingCanvas';
+import dynamic from 'next/dynamic';
+
+// Dynamically import ProcessingCanvas with server-side rendering disabled
+const ProcessingCanvas = dynamic(() => import('./ProcessingCanvas'), {
+  ssr: false,
+});
 
 export default function Content() {
   return (
