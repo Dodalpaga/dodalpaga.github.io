@@ -14,7 +14,7 @@ const apps = [
   {
     title: 'Satellite Imagery Segmenter',
     image: '/assets/sentinel-2.png', // Update with your actual image path
-    link: '/app1', // Update with your actual routes
+    link: '/satellite_segmentation', // Update with your actual routes
     description:
       'This is a brief description of App 1, highlighting its main features and purpose.',
   },

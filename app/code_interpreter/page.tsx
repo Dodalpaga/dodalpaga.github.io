@@ -6,7 +6,7 @@ import Footer from '../../components/footer';
 import Content from './content';
 import Loading from '../../components/loading';
 
-export default function SandboxApp() {
+export default function Template() {
   const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
