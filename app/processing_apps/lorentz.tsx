@@ -130,7 +130,7 @@ const sketch = (p: p5) => {
   };
 };
 
-const ProcessingCanvas: React.FC = () => {
+const LorentzCanvas: React.FC = () => {
   const canvasRef = useRef<HTMLDivElement>(null);
   const p5InstanceRef = useRef<p5 | null>(null);
 
@@ -173,4 +173,4 @@ const ProcessingCanvas: React.FC = () => {
   );
 };
 
-export default ProcessingCanvas;
+export default LorentzCanvas;
