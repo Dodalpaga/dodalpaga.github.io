@@ -21,14 +21,7 @@ export default function SandboxApp() {
       <div className="flex flex-col items-center justify-between p-4">
         <NavBar brandName="My Brand" imageSrcPath={imagePath.src} />
       </div>
-      <div
-        className="flex flex-col items-center justify-between p-4"
-        style={{
-          height: 'calc(100vh - 146px)',
-          position: 'relative',
-          bottom: '0',
-        }}
-      >
+      <div className="flex flex-col items-center justify-between p-4">
         {isLoading ? <Loading /> : <Content />}
       </div>
       <Footer brandName="My Brand" />

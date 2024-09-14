@@ -1,6 +1,5 @@
 'use client';
 import React, { useRef, useState } from 'react';
-import { ModeToggleBtn } from './mode-toggle-btn';
 import SelectLanguages, {
   selectedLanguageOptionProps,
 } from './SelectLanguages';
@@ -86,11 +85,7 @@ export default function EditorComponent() {
           height: '50px',
         }}
       >
-        <h2 className="scroll-m-20  text-2xl font-semibold tracking-tight first:mt-0">
-          Codex
-        </h2>
-        <div className="flex items-center space-x-2 ">
-          <ModeToggleBtn />
+        <div className="flex items-center">
           <div className="w-[230px]">
             <SelectLanguages
               onSelect={onSelect}

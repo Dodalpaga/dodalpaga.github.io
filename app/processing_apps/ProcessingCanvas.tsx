@@ -23,9 +23,31 @@ const sketch = (p: p5) => {
   let lastMouseX = 0;
   let lastMouseY = 0;
   let isRotating = false;
+  let dezoomFactor = 1; // Initialize dezoom factor
+
+  // Store the canvas element
+  let canvasParent: HTMLElement | null = null;
+
+  const resizeCanvasToParent = () => {
+    if (canvasParent) {
+      const parentWidth = canvasParent.offsetWidth;
+      const parentHeight = canvasParent.offsetHeight;
+
+      // Set canvas width to 1/3 of the parent's width and full height
+      p.resizeCanvas(parentWidth, parentHeight);
+
+      // Adjust dezoom factor based on the canvas width
+      dezoomFactor = parentWidth / 600; // Assuming 600 was the original fixed width
+    }
+  };
 
   p.setup = () => {
-    p.createCanvas(600, 600, p.WEBGL); // Increased canvas size
+    // Create the canvas and set its size to 1/3 of parent's width and full height
+    const canvas = p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
+    canvasParent = canvas.elt.parentElement; // Get the parent element of the canvas
+
+    resizeCanvasToParent();
+
     p.colorMode(p.HSB);
     p.background('#E4E8E8');
     p.noCursor(); // Hide the cursor
@@ -61,8 +83,8 @@ const sketch = (p: p5) => {
       0 // Up vector
     );
 
-    p.translate(0, -50, -150);
-    p.scale(5);
+    p.translate(0, 0, -150);
+    p.scale(5 * dezoomFactor);
     p.stroke(255);
     p.noFill();
 
@@ -102,6 +124,10 @@ const sketch = (p: p5) => {
       lastMouseY = p.mouseY;
     }
   };
+
+  p.windowResized = () => {
+    resizeCanvasToParent();
+  };
 };
 
 const ProcessingCanvas: React.FC = () => {
@@ -114,12 +140,24 @@ const ProcessingCanvas: React.FC = () => {
     // Create a new p5 instance
     p5InstanceRef.current = new p5(sketch, canvasRef.current);
 
-    // Cleanup function to remove p5 instance
+    // Resize canvas when parent container resizes
+    const resizeObserver = new ResizeObserver(() => {
+      p5InstanceRef.current?.resizeCanvas(
+        canvasRef.current?.offsetWidth ? canvasRef.current?.offsetWidth : 0,
+        canvasRef.current?.offsetHeight || 0
+      );
+    });
+
+    resizeObserver.observe(canvasRef.current);
+
+    // Cleanup function to remove p5 instance and observer
     return () => {
       if (p5InstanceRef.current) {
         p5InstanceRef.current.remove();
         p5InstanceRef.current = null;
       }
+
+      resizeObserver.disconnect();
     };
   }, []);
 
