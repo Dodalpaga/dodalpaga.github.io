@@ -96,14 +96,27 @@ const BifurcationCanvas: React.FC = () => {
   }, []);
 
   return (
-    <div
-      ref={canvasRef}
-      style={{
-        width: '100%',
-        height: '100%',
-        overflow: 'hidden', // Prevent scrollbars
-      }}
-    ></div>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <div
+        ref={canvasRef}
+        style={{
+          width: '100%',
+          height: '100%',
+          overflow: 'hidden', // Prevent scrollbars
+        }}
+      ></div>
+
+      {/* Display Approximated Pi */}
+      <div
+        style={{
+          padding: '1rem',
+          backgroundColor: '#f0f0f0',
+          textAlign: 'center',
+        }}
+      >
+        <p>Bifurcation diagram</p>
+      </div>
+    </div>
   );
 };
 

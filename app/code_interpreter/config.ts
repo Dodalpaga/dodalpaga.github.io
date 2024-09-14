@@ -2,6 +2,11 @@ import { CodeSnippetsProps } from './EditorComponent';
 
 export const languageOptions = [
   {
+    language: 'python',
+    version: '3.10.0',
+    aliases: ['py', 'py3', 'python3', 'python3.10'],
+  },
+  {
     language: 'javascript',
     version: '18.15.0',
     aliases: ['node-javascript', 'node-js', 'javascript', 'js'],
@@ -16,11 +21,6 @@ export const languageOptions = [
     language: 'php',
     version: '8.2.3',
     aliases: [],
-  },
-  {
-    language: 'python',
-    version: '3.10.0',
-    aliases: ['py', 'py3', 'python3', 'python3.10'],
   },
   {
     language: 'ruby',

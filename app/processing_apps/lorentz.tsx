@@ -4,7 +4,7 @@
 import React, { useRef, useEffect } from 'react';
 import p5 from 'p5';
 
-const sketch = (p: p5) => {
+function sketch(p: p5) {
   let x = 0.01;
   let y = 0;
   let z = 0;
@@ -64,6 +64,11 @@ const sketch = (p: p5) => {
     z += dz;
 
     points.push(p.createVector(x, y, z));
+
+    // Limit the points array to the last 250 points
+    if (points.length > 1500) {
+      points.shift(); // Remove the first (oldest) point
+    }
 
     // Camera position using spherical coordinates
     const radius = 600; // Fixed distance from the origin
@@ -128,27 +133,29 @@ const sketch = (p: p5) => {
   p.windowResized = () => {
     resizeCanvasToParent();
   };
-};
+}
 
 const LorentzCanvas: React.FC = () => {
-  const canvasRef = useRef<HTMLDivElement>(null);
+  const canvasRefLorentz = useRef<HTMLDivElement>(null);
   const p5InstanceRef = useRef<p5 | null>(null);
 
   useEffect(() => {
-    if (!canvasRef.current) return;
+    if (!canvasRefLorentz.current) return;
 
     // Create a new p5 instance
-    p5InstanceRef.current = new p5(sketch, canvasRef.current);
+    p5InstanceRef.current = new p5(sketch, canvasRefLorentz.current);
 
     // Resize canvas when parent container resizes
     const resizeObserver = new ResizeObserver(() => {
       p5InstanceRef.current?.resizeCanvas(
-        canvasRef.current?.offsetWidth ? canvasRef.current?.offsetWidth : 0,
-        canvasRef.current?.offsetHeight || 0
+        canvasRefLorentz.current?.offsetWidth
+          ? canvasRefLorentz.current?.offsetWidth
+          : 0,
+        canvasRefLorentz.current?.offsetHeight || 0
       );
     });
 
-    resizeObserver.observe(canvasRef.current);
+    resizeObserver.observe(canvasRefLorentz.current);
 
     // Cleanup function to remove p5 instance and observer
     return () => {
@@ -162,14 +169,27 @@ const LorentzCanvas: React.FC = () => {
   }, []);
 
   return (
-    <div
-      ref={canvasRef}
-      style={{
-        width: '100%',
-        height: '100%',
-        overflow: 'hidden', // Prevent scrollbars
-      }}
-    ></div>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <div
+        ref={canvasRefLorentz}
+        style={{
+          width: '100%',
+          height: '100%',
+          overflow: 'hidden', // Prevent scrollbars
+        }}
+      ></div>
+
+      {/* Display Approximated Pi */}
+      <div
+        style={{
+          padding: '1rem',
+          backgroundColor: '#f0f0f0',
+          textAlign: 'center',
+        }}
+      >
+        <p>Lorentz Attractor</p>
+      </div>
+    </div>
   );
 };
 

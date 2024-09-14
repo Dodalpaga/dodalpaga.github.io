@@ -13,31 +13,31 @@ import '../globals.css'; // Ensure global styles are correctly imported
 const apps = [
   {
     title: 'Satellite Imagery Segmenter',
-    image: '/assets/sentinel-2.png', // Update with your actual image path
+    image: '/assets/earth.jpg', // Update with your actual image path
     link: '/satellite_segmentation', // Update with your actual routes
     description:
-      'This is a brief description of App 1, highlighting its main features and purpose.',
+      'Select a tile from the Earth map, and this app will provide a segmented version of that tile, highlighting different features and regions. Ideal for analyzing satellite images and extracting valuable insights.',
   },
   {
     title: 'Code Interpreter',
-    image: '/assets/template.png', // Update with your actual image path
+    image: '/assets/cmd.jpg', // Update with your actual image path
     link: '/code_interpreter', // Update with your actual routes
     description:
-      'This is a brief description of a template, showcasing its unique functionalities.',
+      'An advanced code editor with support for multiple programming languages including JavaScript, Python, and more. This tool allows you to write, interpret, and execute code directly within the app, making it perfect for testing and debugging.',
   },
   {
     title: 'Processing Apps',
-    image: '/assets/template.png', // Update with your actual image path
+    image: '/assets/drawing.jpg', // Update with your actual image path
     link: '/processing_apps', // Update with your actual routes
     description:
-      'This is a brief description of a template, showcasing its unique functionalities.',
+      'Explore and interact with sketches created using the p5.js framework. This app gathers and showcases various creative and interactive visual projects, providing an engaging experience for users interested in generative art and creative coding.',
   },
   {
     title: 'Template',
     image: '/assets/template.png', // Update with your actual image path
     link: '/template', // Update with your actual routes
     description:
-      'This is a brief description of a template, showcasing its unique functionalities.',
+      'A customizable template designed to kickstart your project. This app provides a flexible framework for various use cases, allowing you to quickly adapt it to your specific needs and functionalities.',
   },
 ];
 
@@ -92,6 +92,11 @@ export default function Content() {
                   width: '100%', // Full width of the card
                   objectFit: 'contain', // Maintain aspect ratio and fit within the card
                   objectPosition: 'center', // Center image horizontally and vertically
+                  maskImage:
+                    'radial-gradient(circle, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0.7) 50%, rgba(0, 0, 0, 0) 60%)',
+                  WebkitMaskImage:
+                    'radial-gradient(circle, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0.7) 50%, rgba(0, 0, 0, 0) 60%)',
+                  backgroundColor: '#e5e7eb', // Background color behind transparent areas of image
                 }}
               />
               <CardContent
@@ -111,7 +116,7 @@ export default function Content() {
               {/* Description overlay */}
               <div className="card-overlay">
                 <Typography variant="h4">{app.title}</Typography>
-                <Typography variant="body2">{app.description}</Typography>
+                <Typography variant="body1">{app.description}</Typography>
               </div>
             </Card>
           </Grid>
