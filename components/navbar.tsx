@@ -53,6 +53,18 @@ const NavBar = ({ brandName, imageSrcPath }: NavBarProps) => (
       </Link>
       <Box sx={{ flexGrow: 1, display: 'flex', ml: 2 }}>
         <List sx={{ display: 'flex' }}>
+          {['Profile'].map((text) => (
+            <NavLink
+              key={text}
+              component="a"
+              button
+              href={`/${text.toLowerCase().replace(' ', '')}`}
+            >
+              <ListItemText primary={text} />
+            </NavLink>
+          ))}
+        </List>
+        <List sx={{ display: 'flex' }}>
           {['Projects'].map((text) => (
             <NavLink
               key={text}

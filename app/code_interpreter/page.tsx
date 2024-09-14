@@ -23,6 +23,7 @@ export default function Template() {
       </div>
       <div
         className="flex flex-col items-center justify-between p-4"
+        // This is used when you want ti make the content fit in window height : (no scrolling)
         style={{
           height: 'calc(100vh - 146px)',
           position: 'relative',
