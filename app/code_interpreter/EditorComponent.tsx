@@ -20,7 +20,7 @@ export interface CodeSnippetsProps {
 }
 export default function EditorComponent() {
   const { theme } = useTheme();
-  const [sourceCode, setSourceCode] = useState(codeSnippets['javascript']);
+  const [sourceCode, setSourceCode] = useState(codeSnippets['python']);
   const [languageOption, setLanguageOption] = useState(languageOptions[0]);
   const [loading, setLoading] = useState(false);
   const [output, setOutput] = useState([]);
