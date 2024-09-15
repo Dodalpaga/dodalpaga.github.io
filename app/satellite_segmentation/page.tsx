@@ -19,12 +19,12 @@ export default function App1() {
   return (
     <main className="flex min-h-screen flex-col justify-between">
       <div className="flex flex-col items-center justify-between p-4">
-        <NavBar brandName="My Brand" imageSrcPath={imagePath.src} />
+        <NavBar brandName="Dorian Voydie" imageSrcPath={imagePath.src} />
       </div>
       <div className="flex flex-col items-center justify-between p-4">
         {isLoading ? <Loading /> : <Content />}
       </div>
-      <Footer brandName="My Brand" />
+      <Footer brandName="Dorian Voydie" />
     </main>
   );
 }

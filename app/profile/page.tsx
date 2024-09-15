@@ -22,12 +22,12 @@ export default function Template() {
         className="flex flex-col items-center justify-between p-4"
         style={{ height: '84px' }}
       >
-        <NavBar brandName="My Brand" imageSrcPath={imagePath.src} />
+        <NavBar brandName="Dorian Voydie" imageSrcPath={imagePath.src} />
       </div>
       <div className="flex flex-col items-center justify-between">
         {isLoading ? <Loading /> : <Content />}
       </div>
-      <Footer brandName="My Brand" />
+      <Footer brandName="Dorian Voydie" />
     </main>
   );
 }

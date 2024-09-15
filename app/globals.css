@@ -117,14 +117,12 @@ body {
 
 .left-fixed {
   position: fixed;
-  display: flex;
-  flex-direction: column;
   background-color: #f5f5f5;
   top: 84px;
   left: 0;
   padding: 10px;
   margin: 10px;
-  width: calc(20% - 20px);
+  width: calc(350px - 20px);
   height: calc(100vh - 104px);
   border-radius: 10px;
   box-shadow: 0 14px 16px rgba(0, 0, 0, 0.2);
@@ -148,4 +146,108 @@ body {
 .left-fixed .card :hover {
   transform: scale(1.05);
   transition: transform 0.3s ease;
+}
+
+.left-fixed .profile-picture-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: calc(100% - 100px);
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.right-scrollable {
+  margin-left: 350px;
+  width: calc(100% - 350px);
+}
+
+/* Responsive on max width 1150px */
+@media (max-width: 1150px) {
+  .left-fixed {
+    position: static;
+    display: flex;
+    flex-direction: column;
+    background-color: #f5f5f5;
+    top: 84px;
+    left: 0;
+    padding: 10px;
+    margin: 10px;
+    width: calc(100% - 20px);
+    height: calc(100vh - 104px);
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    box-shadow: 0 14px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  .left-fixed .left-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* Ensure the card takes up full available height */
+    flex-grow: 1; /* Allow the card to take up remaining space */
+    flex-shrink: 1; /* Allow the card to shrink if necessary */
+  }
+
+  .left-fixed .skill-stack {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .left-fixed .contact-stack {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .left-fixed .title {
+    display: none;
+  }
+
+  .left-fixed .card {
+    width: min(600px, 50%);
+  }
+
+  .right-scrollable {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .left-fixed {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    box-sizing: border-box; /* Prevent content from overflowing */
+    margin-bottom: 84px;
+  }
+
+  .left-fixed .left-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+
+  .left-fixed .card {
+    width: min(200px, 80%);
+    flex-grow: 1; /* Allow the card to take up remaining space */
+    flex-shrink: 1; /* Allow the card to shrink if necessary */
+    height: 100%; /* Ensure the card takes up full available height */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Ensure the content inside the card is centered */
+    align-items: center;
+  }
 }
