@@ -3,6 +3,10 @@
 import * as React from 'react';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
+import { List, ListItem } from '@mui/material';
+import CountUp from 'react-countup';
+import Divider from '@mui/material/Divider';
+import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import Chip from '@mui/material/Chip';
@@ -19,7 +23,6 @@ const sectionStyle = {
   display: 'flex',
   flexDirection: 'column',
   width: '100%',
-  height: 'calc(100vh - 84px)',
   textAlign: 'center',
   position: 'relative',
 };
@@ -29,8 +32,13 @@ const titleStyle = {
 };
 
 const descriptionStyle = {
-  marginBottom: '40px',
-  color: '#666',
+  color: '#333',
+};
+
+const descriptionItemStyle = {
+  display: 'list-item',
+  textAlign: 'left',
+  padding: '4px',
 };
 
 export default function Content() {
@@ -175,38 +183,383 @@ export default function Content() {
       {/* Main Scrollable Content Section */}
       <div className="right-scrollable">
         {/* Experience Section */}
-        <section id="experience" style={sectionStyle}>
+        <section id="experience-section" style={sectionStyle}>
           <Typography variant="h4" gutterBottom sx={titleStyle}>
             Experience
           </Typography>
-          <Typography variant="body1" sx={descriptionStyle}>
-            Here’s a summary of my professional experience.
-          </Typography>
-        </section>
 
-        {/* Projects Section */}
-        <section id="projects" style={sectionStyle}>
-          <Typography variant="h4" gutterBottom sx={titleStyle}>
-            Projects
-          </Typography>
-          <Typography variant="body1" sx={descriptionStyle}>
-            Check out some of my projects.
-          </Typography>
+          {/* Experience Thales */}
+          <div className="experience">
+            {/* Dates and location */}
+            <Typography variant="body2" sx={descriptionStyle}>
+              Dec 2022 - Present
+            </Typography>
+            <Typography variant="body2" sx={descriptionStyle}>
+              Toulouse Area, France
+            </Typography>
+
+            {/* Company Name */}
+            <Typography variant="h5" sx={descriptionStyle}>
+              Thales Services Numériques
+            </Typography>
+
+            {/* Description */}
+            <Typography variant="body1" sx={descriptionStyle}>
+              Participated in various{' '}
+              <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                international projects
+              </Typography>
+              , initially as a Data Engineer on the European{' '}
+              <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                Galileo
+              </Typography>{' '}
+              system software, and then as a Python Developer on the ground
+              segment of the{' '}
+              <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                Euclid
+              </Typography>{' '}
+              satellite. I contributed to numerous proposal writings and studies
+              for{' '}
+              <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                CNES
+              </Typography>{' '}
+              and achieved a strong{' '}
+              <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                mastery of Python
+              </Typography>
+              .
+            </Typography>
+
+            {/* Detailed responsibilities */}
+            <List
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                width: 'calc(100% - 40px)',
+                marginLeft: 'auto' /* Pushes the List to the right */,
+              }}
+            >
+              <ListItem sx={descriptionItemStyle}>
+                <Typography variant="body1" sx={descriptionStyle}>
+                  -{' '}
+                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                    Applied AI
+                  </Typography>{' '}
+                  and{' '}
+                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                    data science
+                  </Typography>{' '}
+                  expertise in the fields of{' '}
+                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                    satellite image analysis
+                  </Typography>
+                  ,{' '}
+                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                    generative AI
+                  </Typography>{' '}
+                  and{' '}
+                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                    signal processing
+                  </Typography>
+                  .
+                </Typography>
+              </ListItem>
+              <ListItem sx={descriptionItemStyle}>
+                <Typography variant="body1" sx={descriptionStyle}>
+                  - Developed and{' '}
+                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                    deployed pipelines
+                  </Typography>{' '}
+                  to automate data processing workflows,
+                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                    {' '}
+                    reducing processing time by 50%
+                  </Typography>{' '}
+                  in some cases.
+                </Typography>
+              </ListItem>
+              <ListItem sx={descriptionItemStyle}>
+                <Typography variant="body1" sx={descriptionStyle}>
+                  - Created{' '}
+                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                    AI-based
+                  </Typography>{' '}
+                  conversational agents to improve user interactions.
+                </Typography>
+              </ListItem>
+              <ListItem sx={descriptionItemStyle}>
+                <Typography variant="body1" sx={descriptionStyle}>
+                  - Built full-stack{' '}
+                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                    containerized
+                  </Typography>{' '}
+                  applications using{' '}
+                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                    Docker
+                  </Typography>
+                  , deploying{' '}
+                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                    APIs
+                  </Typography>{' '}
+                  and monitoring solutions, leading to real-time data analysis
+                  capabilities.
+                </Typography>
+              </ListItem>
+              <ListItem sx={descriptionItemStyle}>
+                <Typography variant="body1" sx={descriptionStyle}>
+                  - Collaborated with cross-functional teams to{' '}
+                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                    respond to CFTs
+                  </Typography>{' '}
+                  (Call for Tenders) and deliver studies for the CNES.
+                </Typography>
+              </ListItem>
+            </List>
+
+            <Typography variant="h6" sx={{ ...descriptionStyle, padding: 2 }}>
+              Projects developed :{' '}
+              <Typography
+                variant="h6"
+                component="span"
+                sx={{ fontWeight: 'bold' }}
+              >
+                <CountUp
+                  end={4}
+                  duration={5}
+                  enableScrollSpy={true} // set this to true
+                  scrollSpyOnce={true} // set this to true
+                />
+              </Typography>
+            </Typography>
+
+            <Stack direction="row" spacing={1}>
+              <Box
+                style={{
+                  textAlign: 'left',
+                }}
+                sx={{ p: 2, border: '1px dashed grey', borderRadius: '15px' }}
+              >
+                <Typography variant="body1" sx={descriptionStyle}>
+                  Python
+                </Typography>
+                <Chip label="Pandas" />
+                <Chip label="Numpy" />
+                <Chip label="Pytorch" />
+              </Box>
+              <Box
+                style={{
+                  textAlign: 'left',
+                }}
+                sx={{ p: 2, border: '1px dashed grey', borderRadius: '15px' }}
+              >
+                <Typography variant="body1" sx={descriptionStyle}>
+                  Artificial Intelligence
+                </Typography>
+                <Chip label="Machine Learning" />
+                <Chip label="Deep Learning" />
+                <Chip label="NLP" />
+                <Chip label="LLM" />
+              </Box>
+              <Box
+                style={{
+                  textAlign: 'left',
+                }}
+                sx={{ p: 2, border: '1px dashed grey', borderRadius: '15px' }}
+              >
+                <Typography variant="body1" sx={descriptionStyle}>
+                  Backend
+                </Typography>
+                <Chip label="REST APIs" />
+                <Chip label="Docker" />
+                <Chip label="SQL" />
+                <Chip label="Prometheus" />
+              </Box>
+              <Box
+                style={{
+                  textAlign: 'left',
+                }}
+                sx={{ p: 2, border: '1px dashed grey', borderRadius: '15px' }}
+              >
+                <Typography variant="body1" sx={descriptionStyle}>
+                  Projects Management
+                </Typography>
+                <Chip label="GitLab (& CI)" />
+                <Chip label="Confluence" />
+                <Chip label="JIRA" />
+              </Box>
+            </Stack>
+          </div>
+
+          <Divider sx={{ m: 2 }} />
+
+          {/* Experience Atos */}
+          <div className="experience">
+            {/* Dates and location */}
+            <Typography variant="body2" sx={descriptionStyle}>
+              Sep 2021 - Nov 2022
+            </Typography>
+            <Typography variant="body2" sx={descriptionStyle}>
+              Toulouse Area, France
+            </Typography>
+
+            {/* Company Name */}
+            <Typography variant="h5" sx={descriptionStyle}>
+              Atos France
+            </Typography>
+
+            {/* Description */}
+            <Typography variant="body1" sx={descriptionStyle}>
+              In parallel with my{' '}
+              <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                MsC
+              </Typography>{' '}
+              (called VALDOM, in apprenticeship contract between INSA Toulouse &
+              ENSEEIHT), I contributed to various{' '}
+              <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                AI and embedded machine learning
+              </Typography>{' '}
+              projects, including{' '}
+              <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                predictive maintenance
+              </Typography>{' '}
+              of physical systems and{' '}
+              <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                defect detection
+              </Typography>{' '}
+              on aircraft fuselages.
+            </Typography>
+
+            {/* Detailed responsibilities */}
+            <List
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                width: 'calc(100% - 40px)',
+                marginLeft: 'auto',
+              }}
+            >
+              <ListItem sx={descriptionItemStyle}>
+                <Typography variant="body1" sx={descriptionStyle}>
+                  - Developed{' '}
+                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                    embedded instrumentation
+                  </Typography>{' '}
+                  and conducted experiments on{' '}
+                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                    Raspberry Pi
+                  </Typography>{' '}
+                  and{' '}
+                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                    Jetson Nano
+                  </Typography>
+                  .
+                </Typography>
+              </ListItem>
+              <ListItem sx={descriptionItemStyle}>
+                <Typography variant="body1" sx={descriptionStyle}>
+                  -{' '}
+                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                    Analyzed
+                  </Typography>{' '}
+                  and{' '}
+                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                    structured
+                  </Typography>{' '}
+                  data, and designed architectures for{' '}
+                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                    machine learning models
+                  </Typography>
+                  .
+                </Typography>
+              </ListItem>
+              <ListItem sx={descriptionItemStyle}>
+                <Typography variant="body1" sx={descriptionStyle}>
+                  - Developed{' '}
+                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                    computer vision AI models
+                  </Typography>{' '}
+                  to visually detect defects on aircraft fuselages.
+                </Typography>
+              </ListItem>
+              <ListItem sx={descriptionItemStyle}>
+                <Typography variant="body1" sx={descriptionStyle}>
+                  - Created dashboards for{' '}
+                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                    data visualization
+                  </Typography>{' '}
+                  of model predictions.
+                </Typography>
+              </ListItem>
+            </List>
+            <Typography variant="body1" sx={descriptionStyle}>
+              Authored a paper for the{' '}
+              <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                IFAC 2023 conference
+              </Typography>{' '}
+              and contributed to a{' '}
+              <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                patent
+              </Typography>
+              .
+            </Typography>
+
+            {/* Skills Stack */}
+            <Stack direction="row" spacing={1}>
+              <Box
+                style={{
+                  textAlign: 'left',
+                }}
+                sx={{ p: 2, border: '1px dashed grey', borderRadius: '15px' }}
+              >
+                <Typography variant="body1" sx={descriptionStyle}>
+                  Embedded Systems
+                </Typography>
+                <Chip label="Raspberry Pi" />
+                <Chip label="Jetson Nano" />
+              </Box>
+              <Box
+                style={{
+                  textAlign: 'left',
+                }}
+                sx={{ p: 2, border: '1px dashed grey', borderRadius: '15px' }}
+              >
+                <Typography variant="body1" sx={descriptionStyle}>
+                  Machine Learning
+                </Typography>
+                <Chip label="Computer Vision" />
+                <Chip label="Data Analysis" />
+              </Box>
+              <Box
+                style={{
+                  textAlign: 'left',
+                }}
+                sx={{ p: 2, border: '1px dashed grey', borderRadius: '15px' }}
+              >
+                <Typography variant="body1" sx={descriptionStyle}>
+                  Data Visualization
+                </Typography>
+                <Chip label="Dashboards" />
+                <Chip label="Grafana" />
+                <Chip label="Predictive Models" />
+              </Box>
+            </Stack>
+          </div>
+          <Divider sx={{ m: 2 }} style={{ marginBottom: '68px' }} />
         </section>
 
         {/* Contact Section */}
         <section
-          id="contact"
+          id="coding"
           style={{
             ...sectionStyle, // Keep the base section styles
             height: 'calc(100vh - 134px)', // Specific height for the contact section
           }}
         >
           <Typography variant="h4" gutterBottom sx={titleStyle}>
-            Contact
+            My Latest Coding
           </Typography>
           <Typography variant="body1" sx={descriptionStyle}>
-            Feel free to get in touch with me!
+            Coming soon...
           </Typography>
         </section>
       </div>

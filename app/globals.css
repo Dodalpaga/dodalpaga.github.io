@@ -164,6 +164,10 @@ body {
   width: calc(100% - 350px);
 }
 
+.experience {
+  text-align: left;
+}
+
 /* Responsive on max width 1150px */
 @media (max-width: 1150px) {
   .left-fixed {
