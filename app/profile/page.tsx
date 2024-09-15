@@ -18,10 +18,13 @@ export default function Template() {
 
   return (
     <main className="flex min-h-screen flex-col justify-between">
-      <div className="flex flex-col items-center justify-between p-4">
+      <div
+        className="flex flex-col items-center justify-between p-4"
+        style={{ height: '84px' }}
+      >
         <NavBar brandName="My Brand" imageSrcPath={imagePath.src} />
       </div>
-      <div className="flex flex-col items-center justify-between p-4">
+      <div className="flex flex-col items-center justify-between">
         {isLoading ? <Loading /> : <Content />}
       </div>
       <Footer brandName="My Brand" />
