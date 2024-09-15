@@ -5,32 +5,38 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Link from 'next/link';
 import { List, ListItem, ListItemText } from '@mui/material';
-import { styled, alpha } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 
 interface NavBarProps {
   brandName: string;
   imageSrcPath: string;
 }
 
-const Documentation = styled(Box)(({ theme }) => ({
-  position: 'relative',
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginLeft: theme.spacing(1),
-}));
-
-const NavLink = styled(ListItem)(({ theme }) => ({
+const NavLink = styled(ListItem)(() => ({
   textTransform: 'capitalize',
   color: 'inherit',
 }));
 
 const NavBar = ({ brandName, imageSrcPath }: NavBarProps) => (
-  <AppBar position="static" color="default">
+  <AppBar
+    position="fixed"
+    color="default"
+    style={{
+      top: 0,
+      left: 0,
+      margin: '10px',
+      width: 'calc(100% - 20px)',
+      borderRadius: '10px',
+      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.2)',
+      transition: 'transform 0.3s ease',
+    }}
+  >
     <Toolbar>
-      <Link href="/" passHref>
+      <Link
+        href="/"
+        passHref
+        style={{ textDecoration: 'none', width: '300px' }}
+      >
         <Box
           sx={{
             display: 'flex',
@@ -46,12 +52,20 @@ const NavBar = ({ brandName, imageSrcPath }: NavBarProps) => (
             height={60}
             style={{ marginRight: 8 }}
           />
-          <Typography variant="h6" component="div">
+          <Typography variant="h6" component="div" noWrap={true}>
             {brandName}
           </Typography>
         </Box>
       </Link>
-      <Box sx={{ flexGrow: 1, display: 'flex', ml: 2 }}>
+      <Box
+        sx={{
+          flexGrow: 1,
+          display: 'flex',
+          ml: 2,
+          justifyContent: 'right',
+          width: '100%',
+        }}
+      >
         <List sx={{ display: 'flex' }}>
           {['Profile'].map((text) => (
             <NavLink
@@ -76,19 +90,19 @@ const NavBar = ({ brandName, imageSrcPath }: NavBarProps) => (
             </NavLink>
           ))}
         </List>
-      </Box>
-      <Documentation>
         <List sx={{ display: 'flex' }}>
-          <NavLink
-            key="Documentation"
-            button
-            component="a"
-            href="/documentation"
-          >
-            <ListItemText primary="Documentation" />
-          </NavLink>
+          {['Documentation'].map((text) => (
+            <NavLink
+              key={text}
+              component="a"
+              button
+              href={`/${text.toLowerCase().replace(' ', '')}`}
+            >
+              <ListItemText primary={text} />
+            </NavLink>
+          ))}
         </List>
-      </Documentation>
+      </Box>
     </Toolbar>
   </AppBar>
 );
