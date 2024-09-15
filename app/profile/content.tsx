@@ -3,7 +3,6 @@
 import * as React from 'react';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import Chip from '@mui/material/Chip';
@@ -34,16 +33,6 @@ const descriptionStyle = {
   color: '#666',
 };
 
-const buttonStyle = {
-  padding: '10px 20px',
-  fontSize: '16px',
-  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.2)',
-  transition: 'transform 0.3s ease',
-  '&:hover': {
-    transform: 'scale(1.05)',
-    boxShadow: '0 6px 8px rgba(0, 0, 0, 0.3)',
-  },
-};
 export default function Content() {
   return (
     <Container
@@ -195,16 +184,6 @@ export default function Content() {
           </Typography>
         </section>
 
-        {/* Skills Section */}
-        <section id="skills" style={sectionStyle}>
-          <Typography variant="h4" gutterBottom sx={titleStyle}>
-            Skills
-          </Typography>
-          <Typography variant="body1" sx={descriptionStyle}>
-            These are the skills I’ve acquired over the years.
-          </Typography>
-        </section>
-
         {/* Projects Section */}
         <section id="projects" style={sectionStyle}>
           <Typography variant="h4" gutterBottom sx={titleStyle}>
@@ -229,9 +208,6 @@ export default function Content() {
           <Typography variant="body1" sx={descriptionStyle}>
             Feel free to get in touch with me!
           </Typography>
-          <Button variant="contained" color="primary" sx={buttonStyle}>
-            Get in Touch
-          </Button>
         </section>
       </div>
     </Container>
