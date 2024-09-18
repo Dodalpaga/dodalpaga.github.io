@@ -1,12 +1,12 @@
 'use client';
 import React from 'react';
 import imagePath from '../../public/assets/mountain.png';
-import NavBar from '../../components/navbar';
-import Footer from '../../components/footer';
+import NavBar from '../../../components/navbar';
+import Footer from '../../../components/footer';
+import Loading from '../../../components/loading';
 import Content from './content';
-import Loading from '../../components/loading';
 
-export default function Template() {
+export default function SandboxApp() {
   const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
@@ -21,15 +21,7 @@ export default function Template() {
       <div className="flex flex-col items-center justify-between p-4">
         <NavBar brandName="Dorian Voydie" imageSrcPath={imagePath.src} />
       </div>
-      <div
-        className="flex flex-col items-center justify-between p-4"
-        // This is used when you want ti make the content fit in window height : (no scrolling)
-        style={{
-          height: 'calc(100vh - 146px)',
-          position: 'relative',
-          bottom: '0',
-        }}
-      >
+      <div className="flex flex-col items-center justify-between p-4">
         {isLoading ? <Loading /> : <Content />}
       </div>
       <Footer brandName="Dorian Voydie" />

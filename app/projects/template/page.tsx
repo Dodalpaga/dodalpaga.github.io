@@ -1,12 +1,12 @@
 'use client';
 import React from 'react';
-import imagePath from '../../public/assets/mountain.png';
-import NavBar from '../../components/navbar';
-import Footer from '../../components/footer';
+import imagePath from '../../../public/assets/mountain.png';
+import NavBar from '../../../components/navbar';
+import Footer from '../../../components/footer';
 import Content from './content';
-import Loading from '../../components/loading';
+import Loading from '../../../components/loading';
 
-export default function SandboxApp() {
+export default function Template() {
   const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {

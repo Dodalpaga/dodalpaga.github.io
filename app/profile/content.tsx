@@ -549,14 +549,14 @@ export default function Content() {
 
         {/* Contact Section */}
         <section
-          id="coding"
+          id="education"
           style={{
             ...sectionStyle, // Keep the base section styles
             height: 'calc(100vh - 134px)', // Specific height for the contact section
           }}
         >
           <Typography variant="h4" gutterBottom sx={titleStyle}>
-            My Latest Coding
+            Education
           </Typography>
           <Typography variant="body1" sx={descriptionStyle}>
             Coming soon...

@@ -90,7 +90,7 @@ const NavBar = ({ brandName, imageSrcPath }: NavBarProps) => (
             </NavLink>
           ))}
         </List>
-        <List sx={{ display: 'flex' }}>
+        {/* <List sx={{ display: 'flex' }}>
           {['Documentation'].map((text) => (
             <NavLink
               key={text}
@@ -101,7 +101,7 @@ const NavBar = ({ brandName, imageSrcPath }: NavBarProps) => (
               <ListItemText primary={text} />
             </NavLink>
           ))}
-        </List>
+        </List> */}
       </Box>
     </Toolbar>
   </AppBar>
