@@ -8,7 +8,7 @@ const sketch = (p: p5) => {
   let time = 0;
   let wave: number[] = [];
 
-  let n1 = 10;
+  let n1 = 5;
 
   let zoomFactor = 1; // Dynamic zoom factor
 

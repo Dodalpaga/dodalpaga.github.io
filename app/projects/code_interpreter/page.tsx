@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import imagePath from '../../public/assets/mountain.png';
+import imagePath from '../../../public/assets/mountain.png';
 import NavBar from '../../../components/navbar';
 import Footer from '../../../components/footer';
 import Content from './content';
