@@ -76,6 +76,14 @@ const apps = [
       'This website is a work in progress for SEAWOLF, a boat manufacturing company developed by Laurent SOURDILLE who developed his own open-hull boat designed for fishing and diving for professionals and private customers.',
   },
   {
+    title: 'VBSO Website',
+    image: '/assets/vbso.png', // Update with your actual image path
+    link: 'https://vbso.fr/', // Update with your actual routes
+    target: '_blank',
+    description:
+      'The Saint-Orens Volleyball Club (VBSO) is a local sports association near Toulouse, offering competitive teams for men, women, and mixed groups, as well as recreational volleyball for adults. The club also focuses on youth development with training for ages 9-18.',
+  },
+  {
     title: 'Template',
     image: '/assets/template.png', // Update with your actual image path
     link: '/projects/template', // Update with your actual routes
