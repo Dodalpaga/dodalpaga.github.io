@@ -15,8 +15,26 @@ import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import CodeIcon from '@mui/icons-material/Code';
 import GitHubIcon from '@mui/icons-material/GitHub';
-
 import '../globals.css'; // Ensure global styles are correctly imported
+
+// Helper function to compute the years spent
+const getYearsSpent = (startDateString: string) => {
+  const startDate = new Date(startDateString);
+  const currentDate = new Date();
+
+  const yearsSpent = currentDate.getFullYear() - startDate.getFullYear();
+  const monthDifference = Math.abs(
+    currentDate.getMonth() - startDate.getMonth()
+  );
+  console.log(monthDifference);
+
+  // If you spend more than 6 months on the project, consider it a full year
+  if (monthDifference > 6) {
+    return yearsSpent - 1;
+  }
+
+  return yearsSpent;
+};
 
 const sectionStyle = {
   padding: '10px 20px 20px 20px',
@@ -42,6 +60,12 @@ const descriptionItemStyle = {
 };
 
 export default function Content() {
+  // Thales Start Date
+  const startDate = 'Dec 2022';
+  const yearsSpent = getYearsSpent('2022-12-01');
+
+  const totalExperience = getYearsSpent('2021-09-01');
+
   return (
     <Container
       maxWidth={false}
@@ -171,11 +195,43 @@ export default function Content() {
               }}
             >
               <Chip label="Machine Learning" variant="outlined" />
+              <Chip label="Python" variant="outlined" />
               <Chip label="Data Science" variant="outlined" />
               <Chip label="Generative AI" variant="outlined" />
               <Chip label="React.js" variant="outlined" />
               <Chip label="Next.js" variant="outlined" />
+              <Chip label="Typescript" variant="outlined" />
             </Stack>
+          </div>
+          <Typography
+            className="title"
+            color="textSecondary"
+            variant="h5"
+            gutterBottom
+          >
+            Coding Stats
+          </Typography>
+          <div
+            id="skill-set-container"
+            style={{
+              width: '100%',
+              alignItems: 'center',
+              marginBottom: '10px',
+            }}
+          >
+            <img
+              src="https://github-readme-stats.vercel.app/api?username=Dodalpaga&title_color=444444&text_color=444444&hide_rank=true&include_all_commits=true&show_icons=true&theme=transparent&count_private=true&hide=contribs,issues"
+              alt="GitHub Stats"
+            />
+            <img
+              src="https://github-readme-streak-stats.herokuapp.com?user=Dodalpaga&theme=transparent&currStreakLabel=444444&currStreakNum=EB5454&fire=EB5454&ring=444444&sideNums=444444&sideLabels=444444"
+              alt="GitHub Streak"
+            />
+
+            <img
+              src="https://github-readme-stats.vercel.app/api/top-langs/?username=Dodalpaga&title_color=444444&text_color=444444&layout=compact&theme=transparent&count_private=true&hide=c,java,c%2B%2B,css,procfile"
+              alt="Top Languages"
+            />
           </div>
         </div>
       </div>
@@ -184,15 +240,16 @@ export default function Content() {
       <div className="right-scrollable">
         {/* Experience Section */}
         <section id="experience-section" style={sectionStyle}>
-          <Typography variant="h4" gutterBottom sx={titleStyle}>
-            Experience
+          <Typography variant="h4">Experience</Typography>
+          <Typography variant="h6" gutterBottom sx={titleStyle}>
+            ({totalExperience}+ years)
           </Typography>
 
           {/* Experience Thales */}
           <div className="experience">
             {/* Dates and location */}
             <Typography variant="body2" sx={descriptionStyle}>
-              Dec 2022 - Present
+              {startDate} - Present (~{yearsSpent} years)
             </Typography>
             <Typography variant="body2" sx={descriptionStyle}>
               Toulouse Area, France
@@ -316,10 +373,13 @@ export default function Content() {
               </ListItem>
             </List>
 
-            <Typography variant="h6" sx={{ ...descriptionStyle, padding: 2 }}>
+            <Typography
+              variant="body1"
+              sx={{ ...descriptionStyle, padding: 1 }}
+            >
               Projects developed :{' '}
               <Typography
-                variant="h6"
+                variant="body2"
                 component="span"
                 sx={{ fontWeight: 'bold' }}
               >
@@ -396,7 +456,7 @@ export default function Content() {
           <div className="experience">
             {/* Dates and location */}
             <Typography variant="body2" sx={descriptionStyle}>
-              Sep 2021 - Nov 2022
+              Sep 2021 - Nov 2022 (~1 year)
             </Typography>
             <Typography variant="body2" sx={descriptionStyle}>
               Toulouse Area, France
