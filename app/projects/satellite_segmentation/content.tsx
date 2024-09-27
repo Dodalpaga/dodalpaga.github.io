@@ -39,7 +39,7 @@ export default function Content() {
       console.log(imageData); // Log the image data URL to verify it's being generated
 
       // Send a POST request to the FastAPI endpoint with the base64 image
-      fetch('http://localhost:8000/api/image_segmentation', {
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
