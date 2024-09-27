@@ -3,12 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "fastapi-dev": "pip3 install -r requirements.txt && python3 -m uvicorn api.index:app --reload",
-    "next-dev": "next dev",
-    "dev": "concurrently \"npm run next-dev\" \"npm run fastapi-dev\"",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "back": "pip3 install -r requirements.txt && python3 -m uvicorn api.index:app --reload",
+    "front": "next dev",
+    "dev": "concurrently \"npm run front\" \"npm run back\""
   },
   "dependencies": {
     "@babel/preset-env": "^7.25.4",
@@ -19,6 +16,7 @@
     "@emotion/cache": "^11.13.1",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
+    "@headlessui/react": "^2.1.8",
     "@heroicons/react": "^2.1.5",
     "@maptiler/sdk": "^2.2.1",
     "@monaco-editor/react": "^4.6.0",
@@ -45,11 +43,10 @@
     "monaco-editor-webpack-plugin": "^7.1.0",
     "monaco-jsx-highlighter": "^2.77.77",
     "next": "^14.2.8",
+    "next-themes": "^0.3.0",
     "next-transpile-modules": "^10.0.1",
-    "nextra": "^2.13.4",
-    "nextra-theme-docs": "^2.13.4",
     "p5": "^1.10.0",
-    "postcss": "^8.4.45",
+    "postcss": "^8.4.47",
     "prettier": "^3.3.3",
     "radix-ui": "^1.0.1",
     "react": "^18.2.0",
