@@ -1,9 +1,7 @@
-'use client';
-
 import React, { useRef, useEffect, useState } from 'react';
 
-const PiApproximationCanvas: React.FC = () => {
-  const canvasRef = useRef<HTMLDivElement>(null);
+const PiCanvas: React.FC = () => {
+  const canvasRef = useRef<HTMLDivElement | null>(null);
   const p5InstanceRef = useRef<any | null>(null);
   const [approximatedPi, setApproximatedPi] = useState(0);
   const [isBrowser, setIsBrowser] = useState(false);
@@ -14,33 +12,76 @@ const PiApproximationCanvas: React.FC = () => {
     return p5;
   };
 
+  useEffect(() => {
+    setIsBrowser(typeof window !== 'undefined');
+
+    if (isBrowser && canvasRef.current) {
+      loadP5().then((p5) => {
+        p5InstanceRef.current = new p5((p: any) => {
+          // Call the sketch with the updatePiCallback as an argument
+          sketch(p, (approxPi: number) => {
+            setApproximatedPi(approxPi);
+          });
+        }, canvasRef.current!); // Use non-null assertion
+
+        // Resize canvas when parent container resizes
+        const resizeObserver = new ResizeObserver(() => {
+          p5InstanceRef.current?.resizeCanvas(
+            canvasRef.current?.offsetWidth || 0,
+            canvasRef.current?.offsetHeight || 0
+          );
+        });
+
+        // Check if canvasRef.current is not null before observing
+        if (canvasRef.current) {
+          resizeObserver.observe(canvasRef.current);
+        }
+
+        // Cleanup function to remove p5 instance and observer
+        return () => {
+          if (p5InstanceRef.current) {
+            p5InstanceRef.current.remove();
+            p5InstanceRef.current = null;
+          }
+          resizeObserver.disconnect();
+        };
+      });
+    }
+  }, [isBrowser]);
+
   const sketch = (p: any, updatePiCallback: (approxPi: number) => void) => {
     const r = 200;
     let total = 0;
     let circle = 0;
     let recordPI = 0;
-    let dezoomFactor = 1;
+    let dezoomFactor = 1; // Initialize dezoom factor
+
+    // Store the canvas element
     let canvasParent: HTMLElement | null = null;
 
-    // Adjust canvas size to the parent element
     const resizeCanvasToParent = () => {
       if (canvasParent) {
         const parentWidth = canvasParent.offsetWidth;
         const parentHeight = canvasParent.offsetHeight;
 
-        // Resize canvas and adjust dezoom factor based on the parent width
+        // Set canvas width to 1/3 of the parent's width and full height
         p.resizeCanvas(parentWidth, parentHeight);
-        dezoomFactor = parentWidth / 600; // Scale according to the new width
+
+        // Adjust dezoom factor based on the canvas width
+        dezoomFactor = parentWidth / 600; // Assuming 600 was the original fixed width
       }
     };
 
     p.setup = () => {
-      const canvas = p.createCanvas(p.windowWidth, p.windowHeight);
+      // Create the canvas and set its size to 1/3 of parent's width and full height
+      const canvas = p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
       canvasParent = canvas.elt.parentElement; // Get the parent element of the canvas
+
       resizeCanvasToParent();
 
-      p.background(0);
-      p.translate(p.width / 2, p.height / 2);
+      p.colorMode(p.HSB);
+      p.background('#E4E8E8');
+      // p.translate(p.width / 2, p.height / 2);
       p.stroke(255);
       p.strokeWeight(4);
       p.noFill();
@@ -50,7 +91,7 @@ const PiApproximationCanvas: React.FC = () => {
     };
 
     p.draw = () => {
-      p.translate(p.width / 2, p.height / 2); // Center the origin
+      // p.translate(p.width / 2, p.height / 2); // Center the origin
 
       for (let i = 0; i < 250; i++) {
         const x = p.random(-r, r) * dezoomFactor; // Apply scaling
@@ -61,11 +102,11 @@ const PiApproximationCanvas: React.FC = () => {
         if (d < r * r * dezoomFactor * dezoomFactor) {
           // Adjust circle boundary
           circle++;
-          p.stroke(66, 135, 245);
+          p.stroke(223, 58, 58);
         } else {
-          p.stroke(108, 66, 245);
+          p.stroke(125, 11, 11);
         }
-        p.strokeWeight(1);
+        p.strokeWeight(0.1);
         p.point(x, y); // Draw the point
 
         // Calculate Pi approximation
@@ -86,47 +127,12 @@ const PiApproximationCanvas: React.FC = () => {
     };
   };
 
-  useEffect(() => {
-    setIsBrowser(typeof window !== 'undefined');
-
-    if (isBrowser && canvasRef.current) {
-      loadP5().then((p5) => {
-        p5InstanceRef.current = new p5((p: any) => {
-          // Call the sketch with the updatePiCallback as an argument
-          sketch(p, (approxPi: number) => {
-            setApproximatedPi(approxPi);
-          });
-        }, canvasRef.current);
-
-        // Resize canvas when parent container resizes
-        const resizeObserver = new ResizeObserver(() => {
-          p5InstanceRef.current?.resizeCanvas(
-            canvasRef.current?.offsetWidth || 0,
-            canvasRef.current?.offsetHeight || 0
-          );
-        });
-
-        resizeObserver.observe(canvasRef.current);
-
-        // Cleanup function to remove p5 instance and observer
-        return () => {
-          if (p5InstanceRef.current) {
-            p5InstanceRef.current.remove();
-            p5InstanceRef.current = null;
-          }
-          resizeObserver.disconnect();
-        };
-      });
-    }
-  }, [isBrowser]);
-
   if (!isBrowser) {
     return null; // Or a loading indicator
   }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      {/* Canvas Element */}
       <div
         ref={canvasRef}
         style={{
@@ -136,7 +142,7 @@ const PiApproximationCanvas: React.FC = () => {
         }}
       ></div>
 
-      {/* Display Approximated Pi */}
+      {/* Display Lorentz Attractor */}
       <div
         style={{
           padding: '1rem',
@@ -150,4 +156,4 @@ const PiApproximationCanvas: React.FC = () => {
   );
 };
 
-export default PiApproximationCanvas;
+export default PiCanvas;

@@ -1,9 +1,7 @@
-'use client';
-
 import React, { useRef, useEffect, useState } from 'react';
 
 const LorentzCanvas: React.FC = () => {
-  const canvasRefLorentz = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLDivElement | null>(null);
   const p5InstanceRef = useRef<any | null>(null);
   const [isBrowser, setIsBrowser] = useState(false);
 
@@ -12,6 +10,38 @@ const LorentzCanvas: React.FC = () => {
     const p5 = (await import('p5')).default; // Access default export
     return p5;
   };
+
+  useEffect(() => {
+    setIsBrowser(typeof window !== 'undefined');
+
+    if (isBrowser && canvasRef.current) {
+      loadP5().then((p5) => {
+        p5InstanceRef.current = new p5(sketch, canvasRef.current!); // Use non-null assertion
+
+        // Resize canvas when parent container resizes
+        const resizeObserver = new ResizeObserver(() => {
+          p5InstanceRef.current?.resizeCanvas(
+            canvasRef.current?.offsetWidth || 0,
+            canvasRef.current?.offsetHeight || 0
+          );
+        });
+
+        // Check if canvasRef.current is not null before observing
+        if (canvasRef.current) {
+          resizeObserver.observe(canvasRef.current);
+        }
+
+        // Cleanup function to remove p5 instance and observer
+        return () => {
+          if (p5InstanceRef.current) {
+            p5InstanceRef.current.remove();
+            p5InstanceRef.current = null;
+          }
+          resizeObserver.disconnect();
+        };
+      });
+    }
+  }, [isBrowser]);
 
   const sketch = (p: any) => {
     let x = 0.01;
@@ -24,7 +54,7 @@ const LorentzCanvas: React.FC = () => {
     const c = 8.0 / 3.0;
 
     // Array to store points
-    const points: p5.Vector[] = [];
+    const points: any[] = [];
 
     // Camera properties
     let camAngleX = 0;
@@ -74,7 +104,7 @@ const LorentzCanvas: React.FC = () => {
 
       points.push(p.createVector(x, y, z));
 
-      // Limit the points array to the last 250 points
+      // Limit the points array to the last 1500 points
       if (points.length > 1500) {
         points.shift(); // Remove the first (oldest) point
       }
@@ -144,35 +174,6 @@ const LorentzCanvas: React.FC = () => {
     };
   };
 
-  useEffect(() => {
-    setIsBrowser(typeof window !== 'undefined');
-
-    if (isBrowser && canvasRefLorentz.current) {
-      loadP5().then((p5) => {
-        p5InstanceRef.current = new p5(sketch, canvasRefLorentz.current);
-
-        // Resize canvas when parent container resizes
-        const resizeObserver = new ResizeObserver(() => {
-          p5InstanceRef.current?.resizeCanvas(
-            canvasRefLorentz.current?.offsetWidth || 0,
-            canvasRefLorentz.current?.offsetHeight || 0
-          );
-        });
-
-        resizeObserver.observe(canvasRefLorentz.current);
-
-        // Cleanup function to remove p5 instance and observer
-        return () => {
-          if (p5InstanceRef.current) {
-            p5InstanceRef.current.remove();
-            p5InstanceRef.current = null;
-          }
-          resizeObserver.disconnect();
-        };
-      });
-    }
-  }, [isBrowser]);
-
   if (!isBrowser) {
     return null; // Or a loading indicator
   }
@@ -180,7 +181,7 @@ const LorentzCanvas: React.FC = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <div
-        ref={canvasRefLorentz}
+        ref={canvasRef}
         style={{
           width: '100%',
           height: '100%',
