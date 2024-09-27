@@ -75,4 +75,6 @@ const ExampleMap = forwardRef<MapRef, MapProps>(({ lng, lat, zoom }, ref) => {
   );
 });
 
+ExampleMap.displayName = 'ExampleMap';
+
 export default ExampleMap;

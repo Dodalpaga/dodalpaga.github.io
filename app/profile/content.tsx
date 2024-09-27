@@ -106,8 +106,8 @@ export default function Content() {
             About
           </Typography>
           <Typography color="textPrimary" variant="body1" gutterBottom>
-            I'm a Data Scientist, but i also like to build websites, and develop
-            apps in Python.
+            I&apos;m a Data Scientist, but i also like to build websites, and
+            develop apps in Python.
           </Typography>
         </div>
 
