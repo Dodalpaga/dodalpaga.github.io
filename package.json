@@ -5,7 +5,10 @@
   "scripts": {
     "back": "pip3 install -r requirements.txt && python3 -m uvicorn api.index:app --reload",
     "front": "next dev",
-    "dev": "concurrently \"npm run front\" \"npm run back\""
+    "dev": "concurrently \"npm run front\" \"npm run back\"",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
     "@babel/preset-env": "^7.25.4",
