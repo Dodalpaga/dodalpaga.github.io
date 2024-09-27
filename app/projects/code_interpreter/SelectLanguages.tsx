@@ -1,5 +1,5 @@
 'use client';
-import { Fragment, useState } from 'react';
+import { Fragment } from 'react';
 import { Listbox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 import { languageOptions } from './config';
@@ -21,9 +21,6 @@ export default function SelectLanguages({
   onSelect: any;
   selectedLanguageOption: selectedLanguageOptionProps;
 }) {
-  // const [selected, setSelected] = useState(languageOptions[0]);
-  // console.log(selected);
-
   return (
     <Listbox value={selectedLanguageOption} onChange={onSelect}>
       {({ open }) => (

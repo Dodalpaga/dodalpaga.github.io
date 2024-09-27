@@ -15,6 +15,10 @@ interface NavBarProps {
 const NavLink = styled(ListItem)(() => ({
   textTransform: 'capitalize',
   color: 'inherit',
+  cursor: 'pointer',
+  '&:hover': {
+    backgroundColor: '#f0f0f0',
+  },
 }));
 
 const NavBar = ({ brandName, imageSrcPath }: NavBarProps) => (
@@ -68,40 +72,30 @@ const NavBar = ({ brandName, imageSrcPath }: NavBarProps) => (
       >
         <List sx={{ display: 'flex' }}>
           {['Profile'].map((text) => (
-            <NavLink
+            <Link
               key={text}
-              component="a"
-              button
               href={`/${text.toLowerCase().replace(' ', '')}`}
+              passHref
             >
-              <ListItemText primary={text} />
-            </NavLink>
+              <NavLink>
+                <ListItemText primary={text} />
+              </NavLink>
+            </Link>
           ))}
         </List>
         <List sx={{ display: 'flex' }}>
           {['Projects'].map((text) => (
-            <NavLink
+            <Link
               key={text}
-              component="a"
-              button
               href={`/${text.toLowerCase().replace(' ', '')}`}
+              passHref
             >
-              <ListItemText primary={text} />
-            </NavLink>
+              <NavLink>
+                <ListItemText primary={text} />
+              </NavLink>
+            </Link>
           ))}
         </List>
-        {/* <List sx={{ display: 'flex' }}>
-          {['Documentation'].map((text) => (
-            <NavLink
-              key={text}
-              component="a"
-              button
-              href={`/${text.toLowerCase().replace(' ', '')}`}
-            >
-              <ListItemText primary={text} />
-            </NavLink>
-          ))}
-        </List> */}
       </Box>
     </Toolbar>
   </AppBar>

@@ -39,10 +39,10 @@ const getYearsSpent = (startDateString: string) => {
 const sectionStyle = {
   padding: '10px 20px 20px 20px',
   display: 'flex',
-  flexDirection: 'column',
+  flexDirection: 'column' as 'column', // Explicitly set as one of the allowed values
   width: '100%',
-  textAlign: 'center',
-  position: 'relative',
+  textAlign: 'center' as 'center', // TypeScript might also need this to be explicit
+  position: 'relative' as 'relative', // Similar for position
 };
 
 const titleStyle = {
@@ -604,19 +604,32 @@ export default function Content() {
               </Box>
             </Stack>
           </div>
-          <Divider sx={{ m: 2 }} style={{ marginBottom: '68px' }} />
         </section>
 
-        {/* Contact Section */}
+        {/* Education Section */}
         <section
           id="education"
           style={{
             ...sectionStyle, // Keep the base section styles
-            height: 'calc(100vh - 134px)', // Specific height for the contact section
           }}
         >
           <Typography variant="h4" gutterBottom sx={titleStyle}>
             Education
+          </Typography>
+          <Typography variant="body1" sx={descriptionStyle}>
+            Coming soon...
+          </Typography>
+        </section>
+
+        {/* Coding Section */}
+        <section
+          id="coding"
+          style={{
+            ...sectionStyle, // Keep the base section styles
+          }}
+        >
+          <Typography variant="h4" gutterBottom sx={titleStyle}>
+            Coding
           </Typography>
           <Typography variant="body1" sx={descriptionStyle}>
             Coming soon...

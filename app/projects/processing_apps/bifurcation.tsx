@@ -13,21 +13,25 @@ const sketch = (p: p5) => {
   let x: number;
   let px: number, py: number;
   let isAnimating = true;
+  let zoomFactor = 1;
+  let canvasParent: HTMLElement | null = null;
 
-  const updateZoomFactor = () => {
-    const parent = p.canvas.parentElement;
-    if (parent) {
-      const parentWidth = parent.offsetWidth;
-      const parentHeight = parent.offsetHeight;
+  // Adjust canvas size to the parent element
+  const resizeCanvasToParent = () => {
+    if (canvasParent) {
+      const parentWidth = canvasParent.offsetWidth;
+      const parentHeight = canvasParent.offsetHeight;
 
-      // Update zoom factor based on parent dimensions
+      // Resize canvas and adjust dezoom factor based on the parent width
       p.resizeCanvas(parentWidth, parentHeight);
+      zoomFactor = parentWidth / 600; // Scale according to the new width
     }
   };
 
   p.setup = () => {
-    p.createCanvas(p.windowWidth, p.windowHeight);
-    updateZoomFactor();
+    const canvas = p.createCanvas(p.windowWidth, p.windowHeight);
+    canvasParent = canvas.elt.parentElement; // Get the parent element of the canvas
+    resizeCanvasToParent();
     p.colorMode(p.HSB);
     p.background('#E4E8E8');
   };
@@ -55,7 +59,7 @@ const sketch = (p: p5) => {
   };
 
   p.windowResized = () => {
-    updateZoomFactor();
+    resizeCanvasToParent();
   };
 
   // Logistic function
