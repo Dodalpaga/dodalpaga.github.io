@@ -1,11 +1,10 @@
 import React, { useRef, useEffect, useState } from 'react';
 
 const FourrierCanvas = () => {
-  const canvasRef = useRef(null);
-  const p5InstanceRef = useRef(null);
+  const canvasRef = useRef<HTMLDivElement | null>(null);
+  const p5InstanceRef = useRef<any | null>(null);
   const [isBrowser, setIsBrowser] = useState(false);
 
-  // Dynamically import p5
   const loadP5 = async () => {
     const p5 = (await import('p5')).default; // Access default export
     return p5;
@@ -14,59 +13,69 @@ const FourrierCanvas = () => {
   useEffect(() => {
     setIsBrowser(typeof window !== 'undefined');
 
-    if (isBrowser) {
+    if (isBrowser && canvasRef.current) {
       loadP5().then((p5) => {
-        p5InstanceRef.current = new p5(sketch, canvasRef.current);
-      });
+        p5InstanceRef.current = new p5(sketch, canvasRef.current!); // Use non-null assertion
 
-      const resizeObserver = new ResizeObserver(() => {
-        p5InstanceRef.current?.resizeCanvas(
-          canvasRef.current?.offsetWidth || 0,
-          canvasRef.current?.offsetHeight || 0
-        );
-      });
+        // Resize canvas when parent container resizes
+        const resizeObserver = new ResizeObserver(() => {
+          p5InstanceRef.current?.resizeCanvas(
+            canvasRef.current?.offsetWidth || 0,
+            canvasRef.current?.offsetHeight || 0
+          );
+        });
 
-      resizeObserver.observe(canvasRef.current);
-
-      return () => {
-        if (p5InstanceRef.current) {
-          p5InstanceRef.current.remove();
-          p5InstanceRef.current = null;
+        // Check if canvasRef.current is not null before observing
+        if (canvasRef.current) {
+          resizeObserver.observe(canvasRef.current);
         }
-        resizeObserver.disconnect();
-      };
+
+        // Cleanup function to remove p5 instance and observer
+        return () => {
+          if (p5InstanceRef.current) {
+            p5InstanceRef.current.remove();
+            p5InstanceRef.current = null;
+          }
+          resizeObserver.disconnect();
+        };
+      });
     }
   }, [isBrowser]);
 
-  // Sketch function
-  const sketch = (p) => {
+  const sketch = (p: any) => {
     let time = 0;
-    let wave = [];
+    let wave: number[] = [];
     let n1 = 5;
     let zoomFactor = 1;
-    let canvasParent = null;
+
+    // Store the canvas element
+    let canvasParent: HTMLElement | null = null;
 
     const resizeCanvasToParent = () => {
       if (canvasParent) {
         const parentWidth = canvasParent.offsetWidth;
         const parentHeight = canvasParent.offsetHeight;
+
+        // Set canvas width to 1/3 of the parent's width and full height
         p.resizeCanvas(parentWidth, parentHeight);
-        zoomFactor = parentWidth / 600;
+
+        // Adjust dezoom factor based on the canvas width
+        zoomFactor = parentWidth / 600; // Assuming 600 was the original fixed width
       }
     };
 
     p.setup = () => {
-      const canvas = p.createCanvas(p.windowWidth, p.windowHeight);
-      canvasParent = canvas.elt.parentElement;
-      resizeCanvasToParent();
+      // Create the canvas and set its size to 1/3 of parent's width and full height
+      const canvas = p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
+      canvasParent = canvas.elt.parentElement; // Get the parent element of the canvas
       p.colorMode(p.HSB);
       p.background('#E4E8E8');
     };
 
     p.draw = () => {
       p.clear();
-      const cx = p.width / 4;
-      const cy = p.height / 2;
+      const cx = -p.width / 4;
+      const cy = 0;
       p.translate(cx, cy);
       p.scale(zoomFactor);
 
