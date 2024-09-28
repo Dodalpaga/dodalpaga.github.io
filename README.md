@@ -8,3 +8,21 @@
 <p align="center">Simple Next.js boilerplate that uses <a href="https://fastapi.tiangolo.com/">FastAPI</a> as the API backend.</p>
 
 Forked from `https://github.com/digitros/nextjs-fastapi`
+
+# Install dependencies
+
+```bash
+npm install
+```
+
+# Development
+
+```bash
+npm run dev
+```
+
+# Deployment
+
+```bash
+npm run build
+```
