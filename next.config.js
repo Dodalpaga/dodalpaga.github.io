@@ -1,7 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  basePath: '/PortfolioV2',
   output: 'export',
-  // reactStrictMode: true,
+  reactStrictMode: true,
   images: {
     unoptimized: true,
     remotePatterns: [
