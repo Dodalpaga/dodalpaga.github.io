@@ -13,7 +13,7 @@ import '../globals.css'; // Ensure global styles are correctly imported
 const apps = [
   {
     title: 'Satellite Imagery Segmenter',
-    image: '/assets/earth.jpg', // Update with your actual image path
+    image: `${process.env.NEXT_PUBLIC_BASE_PATH}/assets/earth.jpg`, // Update with your actual image path
     link: '/projects/satellite_segmentation', // Update with your actual routes
     target: '',
     description:
@@ -21,7 +21,7 @@ const apps = [
   },
   {
     title: 'Code Interpreter',
-    image: '/assets/cmd.jpg', // Update with your actual image path
+    image: `${process.env.NEXT_PUBLIC_BASE_PATH}/assets/cmd.jpg`, // Update with your actual image path
     link: '/projects/code_interpreter', // Update with your actual routes
     target: '',
     description:
@@ -29,7 +29,7 @@ const apps = [
   },
   {
     title: 'Processing Apps',
-    image: '/assets/drawing.jpg', // Update with your actual image path
+    image: `${process.env.NEXT_PUBLIC_BASE_PATH}/assets/drawing.jpg`, // Update with your actual image path
     link: '/projects/processing_apps', // Update with your actual routes
     target: '',
     description:
@@ -37,7 +37,7 @@ const apps = [
   },
   {
     title: 'Guess What',
-    image: '/assets/guesswhat.png', // Update with your actual image path
+    image: `${process.env.NEXT_PUBLIC_BASE_PATH}/assets/guesswhat.png`, // Update with your actual image path
     link: 'https://guess-what.onrender.com/', // Update with your actual routes
     target: '_blank',
     description:
@@ -45,7 +45,7 @@ const apps = [
   },
   {
     title: 'Richesses du Monde',
-    image: '/assets/richesses_du_monde.png', // Update with your actual image path
+    image: `${process.env.NEXT_PUBLIC_BASE_PATH}/assets/richesses_du_monde.png`, // Update with your actual image path
     link: 'https://richesses-du-monde.onrender.com/', // Update with your actual routes
     target: '_blank',
     description:
@@ -53,7 +53,7 @@ const apps = [
   },
   {
     title: 'Cognitive Game',
-    image: '/assets/cognitive.png', // Update with your actual image path
+    image: `${process.env.NEXT_PUBLIC_BASE_PATH}/assets/cognitive.png`, // Update with your actual image path
     link: 'https://cognitive-game.netlify.app/', // Update with your actual routes
     target: '_blank',
     description:
@@ -61,7 +61,7 @@ const apps = [
   },
   {
     title: 'Three.js website template',
-    image: '/assets/threejs.png', // Update with your actual image path
+    image: `${process.env.NEXT_PUBLIC_BASE_PATH}/assets/threejs.png`, // Update with your actual image path
     link: 'https://boat-configurator.netlify.app/', // Update with your actual routes
     target: '_blank',
     description:
@@ -69,7 +69,7 @@ const apps = [
   },
   {
     title: 'SEAWOLF Website',
-    image: '/assets/SEAWOLF.png', // Update with your actual image path
+    image: `${process.env.NEXT_PUBLIC_BASE_PATH}/assets/SEAWOLF.png`, // Update with your actual image path
     link: 'https://seawolf.netlify.app/', // Update with your actual routes
     target: '_blank',
     description:
@@ -77,7 +77,7 @@ const apps = [
   },
   {
     title: 'VBSO Website',
-    image: '/assets/vbso.png', // Update with your actual image path
+    image: `${process.env.NEXT_PUBLIC_BASE_PATH}/assets/vbso.png`, // Update with your actual image path
     link: 'https://vbso.fr/', // Update with your actual routes
     target: '_blank',
     description:
@@ -85,7 +85,7 @@ const apps = [
   },
   {
     title: 'Template',
-    image: '/assets/template.png', // Update with your actual image path
+    image: `${process.env.NEXT_PUBLIC_BASE_PATH}/assets/template.png`, // Update with your actual image path
     link: '/projects/template', // Update with your actual routes
     target: '',
     description:
@@ -94,6 +94,7 @@ const apps = [
 ];
 
 export default function Content() {
+  console.log(`${process.env.NEXT_PUBLIC_BASE_PATH}`);
   return (
     <Container
       maxWidth={false}
