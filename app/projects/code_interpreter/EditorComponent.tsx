@@ -13,31 +13,33 @@ import { useTheme } from 'next-themes';
 import { Button } from './ui/button';
 import { Loader, Play, TriangleAlert } from 'lucide-react';
 import { codeSnippets, languageOptions } from './config';
-import { compileCode } from './compile';
+import axios from 'axios';
 import toast from 'react-hot-toast';
+
 export interface CodeSnippetsProps {
   [key: string]: string;
 }
+
 export default function EditorComponent() {
   const { theme } = useTheme();
   const [sourceCode, setSourceCode] = useState(codeSnippets['python']);
   const [languageOption, setLanguageOption] = useState(languageOptions[0]);
   const [loading, setLoading] = useState(false);
-  const [output, setOutput] = useState([]);
+  const [output, setOutput] = useState<string[]>([]);
   const [err, setErr] = useState(false);
-  // const language = languageOption.language;
-  // console.log(language);
   const editorRef = useRef(null);
-  // console.log(sourceCode);
+
   function handleEditorDidMount(editor: any) {
     editorRef.current = editor;
     editor.focus();
   }
+
   function handleOnchange(value: string | undefined) {
     if (value) {
       setSourceCode(value);
     }
   }
+
   function onSelect(value: selectedLanguageOptionProps) {
     setLanguageOption(value);
     setSourceCode(codeSnippets[value.language]);
@@ -54,10 +56,13 @@ export default function EditorComponent() {
         },
       ],
     };
+
     try {
-      const result = await compileCode(requestData);
-      setOutput(result.run.output.split('\n'));
-      console.log(result);
+      const response = await axios.post(
+        'https://emkc.org/api/v2/piston/execute',
+        requestData
+      );
+      setOutput(response.data.run.output.split('\n'));
       setLoading(false);
       setErr(false);
       toast.success('Compiled Successfully');
@@ -68,7 +73,7 @@ export default function EditorComponent() {
       console.log(error);
     }
   }
-  // console.log(languageOption);
+
   return (
     <div
       style={{
@@ -81,9 +86,7 @@ export default function EditorComponent() {
       {/* EDITOR HEADER */}
       <div
         className="flex items-center justify-between pb-3"
-        style={{
-          height: '50px',
-        }}
+        style={{ height: '50px' }}
       >
         <div className="flex items-center">
           <div className="w-[230px]">
@@ -94,13 +97,11 @@ export default function EditorComponent() {
           </div>
         </div>
       </div>
-      {/* EDITOR  */}
+
+      {/* EDITOR */}
       <div
         className="bg-slate-400 dark:bg-slate-950 p-3 rounded-2xl"
-        style={{
-          height: 'calc(100% - 50px)',
-          width: '100%',
-        }}
+        style={{ height: 'calc(100% - 50px)', width: '100%' }}
       >
         <ResizablePanelGroup
           direction="horizontal"
@@ -122,7 +123,7 @@ export default function EditorComponent() {
           <ResizablePanel defaultSize={50} minSize={35}>
             {/* Header */}
             <div className="space-y-3 bg-slate-300 dark:bg-slate-900 min-h-screen">
-              <div className="flex items-center justify-between  bg-slate-400 dark:bg-slate-950 px-6 py-2">
+              <div className="flex items-center justify-between bg-slate-400 dark:bg-slate-950 px-6 py-2">
                 <h2>Output</h2>
                 {loading ? (
                   <Button
@@ -144,28 +145,23 @@ export default function EditorComponent() {
                   </Button>
                 )}
               </div>
-              <div className=" px-6 space-y-2">
+              <div className="px-6 space-y-2">
                 {err ? (
                   <div className="flex items-center space-x-2 text-red-500 border border-red-600 px-6 py-6">
                     <TriangleAlert className="w-5 h-5 mr-2 flex-shrink-0" />
                     <p className="text-xs">
-                      Failed to Compile the Code , Please try again !
+                      Failed to Compile the Code, Please try again!
                     </p>
                   </div>
                 ) : (
-                  <>
-                    {output.map((item) => {
-                      return (
-                        <p className="text-sm" key={item}>
-                          {item}
-                        </p>
-                      );
-                    })}
-                  </>
+                  output.map((item, index) => (
+                    <p className="text-sm" key={index}>
+                      {item}
+                    </p>
+                  ))
                 )}
               </div>
             </div>
-            {/* Body */}
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>
