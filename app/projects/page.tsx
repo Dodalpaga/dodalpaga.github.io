@@ -1,7 +1,6 @@
 // page.tsx
 'use client';
 import React from 'react';
-import imagePath from '../../public/assets/mountain.png';
 import NavBar from '../../components/navbar';
 import Footer from '../../components/footer';
 import Content from './content';
@@ -9,6 +8,7 @@ import Loading from '../../components/loading';
 
 export default function Projects() {
   const [isLoading, setIsLoading] = React.useState(true);
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
   React.useEffect(() => {
     const timer = setTimeout(() => {
@@ -23,7 +23,10 @@ export default function Projects() {
         className="flex flex-col items-center justify-between p-4"
         style={{ height: '84px' }}
       >
-        <NavBar brandName="Dorian Voydie" imageSrcPath={imagePath.src} />
+        <NavBar
+          brandName="Dorian Voydie"
+          imageSrcPath={`${basePath}/assets/mountain.png`}
+        />
       </div>
       <div className="flex flex-col items-center justify-between p-4">
         {isLoading ? <Loading /> : <Content />}

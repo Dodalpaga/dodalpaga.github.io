@@ -86,7 +86,7 @@ export default function Content() {
             <Card className="card">
               <CardMedia
                 component="img"
-                image={'/assets/id.png'}
+                image={`${process.env.NEXT_PUBLIC_BASE_PATH}/assets/id.png`}
                 alt={'Profile Picture'}
                 sx={{
                   height: '100%', // Adjust height as needed
