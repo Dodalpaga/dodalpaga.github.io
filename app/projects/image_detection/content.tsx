@@ -41,6 +41,7 @@ export default function Content() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
         },
         body: JSON.stringify({ base64_image: uploadedImage }),
       }
