@@ -5,6 +5,7 @@ import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress'; // Import CircularProgress for loading symbol
 import Image from 'next/image';
+import { Select, MenuItem, InputLabel, FormControl } from '@mui/material'; // Import Select and related components
 
 // Define the MapRef type
 type MapRef = {
@@ -19,6 +20,7 @@ export default function Content() {
     'https://www.un-autre-regard-sur-la-terre.org/document/blogUARST/Histoire/30%20ans%20du%20satellite%20SPOT%201/Toulouse%20vu%20par%20SPOT/Spot%205%20-%20Toulouse%20-%20Apr%e8s%20AZF%20-%2017-06-2002%20-%20Vignette.jpg'
   );
   const [loading, setLoading] = React.useState<boolean>(false); // State for loading
+  const [modelName, setModelName] = React.useState<string>('FastSAM-s.pt'); // State for selected model
 
   const handleExportImage = () => {
     if (!mapRef.current) {
@@ -39,13 +41,17 @@ export default function Content() {
       console.log(imageData); // Log the image data URL to verify it's being generated
 
       // Send a POST request to the FastAPI endpoint with the base64 image
-      fetch(`${process.env.NEXT_PUBLIC_API_URL_IMG_SEGMENTATION}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ base64_image: imageData }),
-      })
+      fetch(
+        `${process.env.NEXT_PUBLIC_API_URL_IMG_SEGMENTATION}` +
+          `?model_name=${modelName}`, // Use selected model name
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ base64_image: imageData }),
+        }
+      )
         .then((response) => response.json())
         .then((data) => {
           console.log('Response from FastAPI:', data);
@@ -103,6 +109,21 @@ export default function Content() {
           )}
         </div>
       </Stack>
+
+      {/* Model selection dropdown */}
+      <FormControl variant="outlined" sx={{ mb: 2, minWidth: 120 }}>
+        <InputLabel id="model-select-label">Model</InputLabel>
+        <Select
+          labelId="model-select-label"
+          value={modelName}
+          onChange={(event) => setModelName(event.target.value)}
+          label="Model"
+        >
+          <MenuItem value="FastSAM-s.pt">FastSAM-s</MenuItem>
+          <MenuItem value="FastSAM-x.pt">FastSAM-x</MenuItem>
+        </Select>
+      </FormControl>
+
       <Button variant="contained" onClick={handleExportImage}>
         Export Map Image
       </Button>
