@@ -43,6 +43,7 @@ export default function Content() {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*',
         },
+        mode: 'cors',
         body: JSON.stringify({ base64_image: uploadedImage }),
       }
     )
