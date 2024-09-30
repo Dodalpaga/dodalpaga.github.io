@@ -20,7 +20,7 @@ export default function Home() {
 
       <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-3 lg:text-left">
         <a
-          href="/profile"
+          href={process.env.NEXT_PUBLIC_BASE_PATH + '/profile'}
           className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800 hover:dark:bg-opacity-30"
           rel="noopener noreferrer"
         >
@@ -36,7 +36,7 @@ export default function Home() {
         </a>
 
         <a
-          href="/projects"
+          href={process.env.NEXT_PUBLIC_BASE_PATH + '/projects'}
           className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800 hover:dark:bg-opacity-30"
           rel="noopener noreferrer"
         >
@@ -52,7 +52,7 @@ export default function Home() {
         </a>
 
         <a
-          href="/template"
+          href={process.env.NEXT_PUBLIC_BASE_PATH + '/template'}
           className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
           rel="noopener noreferrer"
         >
@@ -71,7 +71,10 @@ export default function Home() {
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm ">
         <p className="flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
           You can check the backend API&nbsp;
-          <Link href={`${process.env.NEXT_PUBLIC_API_URL_DOCS}`}>
+          <Link
+            href={`${process.env.NEXT_PUBLIC_API_URL_DOCS}`}
+            target="_blank"
+          >
             <code className="font-mono font-bold">here</code>
           </Link>
         </p>

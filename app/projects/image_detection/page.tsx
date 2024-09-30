@@ -29,7 +29,12 @@ export default function App1() {
           imageSrcPath={`${basePath}/assets/mountain.png`}
         />
       </div>
-      <div className="flex flex-col items-center justify-between p-4">
+      <div
+        className="flex flex-col items-center justify-between p-4"
+        style={{
+          height: 'calc(100vh - 146px)',
+        }}
+      >
         {isLoading ? <Loading /> : <Content />}
       </div>
       <Footer brandName="Dorian Voydie" />
