@@ -2,33 +2,28 @@ import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from '@mui/material/CircularProgress'; // Import CircularProgress for loading symbol
 import Image from 'next/image';
-import {
-  Select,
-  MenuItem,
-  InputLabel,
-  FormControl,
-  FormHelperText,
-} from '@mui/material';
-import styles from './styles.module.css'; // Import the CSS module
+import { Select, MenuItem, InputLabel, FormControl } from '@mui/material';
+import './styles.css'; // Import regular CSS
 
 export default function Content() {
-  const [uploadedImage, setUploadedImage] = React.useState<string | null>(null);
+  const [uploadedImage, setUploadedImage] = React.useState<string | null>(null); // State for uploaded image
   const [processedImage, setProcessedImage] = React.useState<string | null>(
     null
-  );
-  const [loading, setLoading] = React.useState<boolean>(false);
-  const [modelName, setModelName] = React.useState<string>('yolov8l.pt');
+  ); // State for processed image
+  const [loading, setLoading] = React.useState<boolean>(false); // State for loading
+  const [modelName, setModelName] = React.useState<string>('yolov8l.pt'); // State for selected model
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('ok');
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
         setUploadedImage(reader.result as string);
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(file); // Convert the image to base64
     }
   };
 
@@ -38,11 +33,12 @@ export default function Content() {
       return;
     }
 
-    setLoading(true);
+    setLoading(true); // Set loading to true when starting the request
 
+    // Send a POST request to the FastAPI endpoint with the base64 image
     fetch(
       `${process.env.NEXT_PUBLIC_API_URL_IMG_DETECTION}` +
-        `?model_name=${modelName}`,
+        `?model_name=${modelName}`, // Use selected model name
       {
         method: 'POST',
         headers: {
@@ -55,13 +51,14 @@ export default function Content() {
     )
       .then((response) => response.json())
       .then((data) => {
+        // Set the returned base64 image as the processed image
         setProcessedImage(data.base64_image);
       })
       .catch((error) => {
         console.error('Error:', error);
       })
       .finally(() => {
-        setLoading(false);
+        setLoading(false); // Set loading to false after the request is complete
       });
   };
 
@@ -78,10 +75,10 @@ export default function Content() {
     >
       <Stack
         spacing={2}
-        className={`${styles.container} ${styles.flex} ${styles['flex-col']} ${styles['items-center']} ${styles['justify-center']}`}
+        id="buttons-stack" // Use the ID for CSS targeting
         direction="row"
-        id={styles['buttons-stack']}
       >
+        {/* Model selection dropdown */}
         <FormControl
           variant="outlined"
           sx={{
@@ -106,11 +103,9 @@ export default function Content() {
             <MenuItem value="yolov8l.pt">YOLOv8l</MenuItem>
             <MenuItem value="yolov8x.pt">YOLOv8x</MenuItem>
           </Select>
-          <FormHelperText id="my-helper-text">
-            Select the detection model
-          </FormHelperText>
         </FormControl>
 
+        {/* Upload image button */}
         <Button
           variant="contained"
           component="label"
@@ -128,6 +123,7 @@ export default function Content() {
           />
         </Button>
 
+        {/* Process image button */}
         <Button
           variant="contained"
           onClick={handleProcessImage}
@@ -142,21 +138,12 @@ export default function Content() {
       </Stack>
 
       <Stack
-        spacing={2}
-        className={`${styles.container} ${styles['flex-col']} ${styles['items-center']} ${styles['justify-between']} ${styles.p4}`}
+        spacing={4}
+        id="images-stack" // Use the ID for CSS targeting
         direction="row"
-        id={styles['images-stack']}
       >
-        <div
-          style={{
-            position: 'relative',
-            width: '100%',
-            height: 'calc(100% - 250px)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
+        {/* Left side: uploaded image */}
+        <div className="image-container">
           {uploadedImage ? (
             <Image
               src={uploadedImage}
@@ -172,22 +159,21 @@ export default function Content() {
               }}
             />
           ) : (
-            <div>No image uploaded</div>
+            <div
+              style={{
+                display: 'flex',
+                textAlign: 'center',
+              }}
+            >
+              No image uploaded
+            </div>
           )}
         </div>
 
-        <div
-          style={{
-            position: 'relative',
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
+        {/* Right side: processed image or loading */}
+        <div className="image-container">
           {loading ? (
-            <CircularProgress />
+            <CircularProgress /> // Show loading symbol while waiting for the image processing
           ) : processedImage ? (
             <Image
               src={processedImage}
@@ -203,7 +189,14 @@ export default function Content() {
               }}
             />
           ) : (
-            <div>No processed image</div>
+            <div
+              style={{
+                display: 'flex',
+                textAlign: 'center',
+              }}
+            >
+              No processed image
+            </div>
           )}
         </div>
       </Stack>
