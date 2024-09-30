@@ -2,17 +2,24 @@ import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
-import CircularProgress from '@mui/material/CircularProgress'; // Import CircularProgress for loading symbol
+import CircularProgress from '@mui/material/CircularProgress';
 import Image from 'next/image';
-import { Select, MenuItem, InputLabel, FormControl } from '@mui/material'; // Import Select and related components
+import {
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+  FormHelperText,
+} from '@mui/material';
+import styles from './styles.module.css'; // Import the CSS module
 
 export default function Content() {
-  const [uploadedImage, setUploadedImage] = React.useState<string | null>(null); // State for uploaded image
+  const [uploadedImage, setUploadedImage] = React.useState<string | null>(null);
   const [processedImage, setProcessedImage] = React.useState<string | null>(
     null
-  ); // State for processed image
-  const [loading, setLoading] = React.useState<boolean>(false); // State for loading
-  const [modelName, setModelName] = React.useState<string>('yolov8l.pt'); // State for selected model
+  );
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const [modelName, setModelName] = React.useState<string>('yolov8l.pt');
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -21,7 +28,7 @@ export default function Content() {
       reader.onloadend = () => {
         setUploadedImage(reader.result as string);
       };
-      reader.readAsDataURL(file); // Convert the image to base64
+      reader.readAsDataURL(file);
     }
   };
 
@@ -31,12 +38,11 @@ export default function Content() {
       return;
     }
 
-    setLoading(true); // Set loading to true when starting the request
+    setLoading(true);
 
-    // Send a POST request to the FastAPI endpoint with the base64 image
     fetch(
       `${process.env.NEXT_PUBLIC_API_URL_IMG_DETECTION}` +
-        `?model_name=${modelName}`, // Use selected model name
+        `?model_name=${modelName}`,
       {
         method: 'POST',
         headers: {
@@ -49,37 +55,103 @@ export default function Content() {
     )
       .then((response) => response.json())
       .then((data) => {
-        // Set the returned base64 image as the processed image
         setProcessedImage(data.base64_image);
       })
       .catch((error) => {
         console.error('Error:', error);
       })
       .finally(() => {
-        setLoading(false); // Set loading to false after the request is complete
+        setLoading(false);
       });
   };
 
   return (
     <Container
-      maxWidth={false} // Pass boolean false, not a string
+      maxWidth={false}
       sx={{
         display: 'flex',
         alignItems: 'center',
         flexDirection: 'column',
+        justifyContent: 'center',
+        height: '100%',
       }}
     >
       <Stack
         spacing={2}
+        className={`${styles.container} ${styles.flex} ${styles['flex-col']} ${styles['items-center']} ${styles['justify-center']}`}
         direction="row"
-        className="container flex flex-col items-center justify-between p-4"
+        id={styles['buttons-stack']}
       >
-        {/* Left side: uploaded image */}
+        <FormControl
+          variant="outlined"
+          sx={{
+            minWidth: 120,
+            height: '100%',
+          }}
+        >
+          <InputLabel id="model-select-label">Model</InputLabel>
+          <Select
+            labelId="model-select-label"
+            value={modelName}
+            onChange={(event) => setModelName(event.target.value)}
+            label="Model"
+            sx={{
+              minWidth: 120,
+              height: '100%',
+            }}
+          >
+            <MenuItem value="yolov8n.pt">YOLOv8n</MenuItem>
+            <MenuItem value="yolov8s.pt">YOLOv8s</MenuItem>
+            <MenuItem value="yolov8m.pt">YOLOv8m</MenuItem>
+            <MenuItem value="yolov8l.pt">YOLOv8l</MenuItem>
+            <MenuItem value="yolov8x.pt">YOLOv8x</MenuItem>
+          </Select>
+          <FormHelperText id="my-helper-text">
+            Select the detection model
+          </FormHelperText>
+        </FormControl>
+
+        <Button
+          variant="contained"
+          component="label"
+          style={{
+            minWidth: 120,
+            height: '100%',
+          }}
+        >
+          Upload
+          <input
+            type="file"
+            accept="image/*"
+            hidden
+            onChange={handleImageUpload}
+          />
+        </Button>
+
+        <Button
+          variant="contained"
+          onClick={handleProcessImage}
+          disabled={!uploadedImage}
+          sx={{
+            minWidth: 120,
+            height: '100%',
+          }}
+        >
+          Process
+        </Button>
+      </Stack>
+
+      <Stack
+        spacing={2}
+        className={`${styles.container} ${styles['flex-col']} ${styles['items-center']} ${styles['justify-between']} ${styles.p4}`}
+        direction="row"
+        id={styles['images-stack']}
+      >
         <div
           style={{
             position: 'relative',
             width: '100%',
-            height: 'calc(100vh - 250px)',
+            height: 'calc(100% - 250px)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -97,26 +169,25 @@ export default function Content() {
                 width: 'auto',
                 maxHeight: '100%',
                 maxWidth: '100%',
-              }} // optional styling
+              }}
             />
           ) : (
             <div>No image uploaded</div>
           )}
         </div>
 
-        {/* Right side: processed image or loading */}
         <div
           style={{
             position: 'relative',
             width: '100%',
-            height: 'calc(100vh - 250px)',
+            height: '100%',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
           }}
         >
           {loading ? (
-            <CircularProgress /> // Show loading symbol while waiting for the image processing
+            <CircularProgress />
           ) : processedImage ? (
             <Image
               src={processedImage}
@@ -129,50 +200,13 @@ export default function Content() {
                 width: 'auto',
                 maxHeight: '100%',
                 maxWidth: '100%',
-              }} //
+              }}
             />
           ) : (
             <div>No processed image</div>
           )}
         </div>
       </Stack>
-
-      {/* Model selection dropdown */}
-      <FormControl variant="outlined" sx={{ mb: 2, minWidth: 120 }}>
-        <InputLabel id="model-select-label">Model</InputLabel>
-        <Select
-          labelId="model-select-label"
-          value={modelName}
-          onChange={(event) => setModelName(event.target.value)}
-          label="Model"
-        >
-          <MenuItem value="yolov8n.pt">YOLOv8n</MenuItem>
-          <MenuItem value="yolov8s.pt">YOLOv8s</MenuItem>
-          <MenuItem value="yolov8m.pt">YOLOv8m</MenuItem>
-          <MenuItem value="yolov8l.pt">YOLOv8l</MenuItem>
-          <MenuItem value="yolov8x.pt">YOLOv8x</MenuItem>
-        </Select>
-      </FormControl>
-
-      {/* Upload image button */}
-      <Button variant="contained" component="label">
-        Upload Image
-        <input
-          type="file"
-          accept="image/*"
-          hidden
-          onChange={handleImageUpload}
-        />
-      </Button>
-
-      {/* Process image button */}
-      <Button
-        variant="contained"
-        onClick={handleProcessImage}
-        disabled={!uploadedImage}
-      >
-        Process Image
-      </Button>
     </Container>
   );
 }
