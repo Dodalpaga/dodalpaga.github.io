@@ -6,6 +6,7 @@ import React, {
 } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import './mapbox.css';
 
 type MapProps = {
   lng: number;
@@ -60,17 +61,8 @@ const ExampleMap = forwardRef<MapRef, MapProps>(({ lng, lat, zoom }, ref) => {
   }));
 
   return (
-    <div
-      style={{
-        position: 'relative',
-        width: '100%',
-        height: 'calc(100vh - 250px)',
-      }}
-    >
-      <div
-        ref={mapContainer}
-        style={{ position: 'absolute', width: '100%', height: '100%' }}
-      />
+    <div className="map-container">
+      <div ref={mapContainer} style={{ width: '100%', height: '100%' }} />
     </div>
   );
 });
