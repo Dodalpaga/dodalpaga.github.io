@@ -1,0 +1,64 @@
+#page-content {
+  height: calc(
+    100vh - 146px
+  ); /* For larger screens, keeping height minus navbar */
+}
+
+.image-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#buttons-stack {
+  height: 10%; /* Default height */
+  min-height: 32px; /* Ensure minimum height for readability */
+  max-height: 50px;
+}
+
+#images-stack {
+  flex-grow: 1; /* Allow this stack to grow and occupy the remaining space */
+  overflow-y: auto; /* Optional: enable scrolling if content exceeds available height */
+}
+
+@media (max-width: 800px) {
+  #page-content {
+    height: auto; /* Remove height limitation */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    overflow-y: auto; /* Enable scrolling if necessary */
+    margin-top: 0; /* Ensure no top margin */
+  }
+
+  #buttons-stack {
+    height: auto; /* Allow buttons stack to adjust height */
+    min-height: 32px; /* Keep minimum height for readability */
+    max-height: none; /* Remove max-height restriction */
+    flex-direction: column;
+  }
+
+  #buttons-stack button {
+    margin: 4px;
+  }
+
+  #buttons-stack label {
+    margin: 4px;
+  }
+
+  #images-stack {
+    flex-grow: 1; /* Maintain the ability to grow */
+    flex-direction: column;
+    height: auto; /* Allow it to take up remaining space */
+    overflow-y: auto; /* Enable scrolling if content exceeds available height */
+    margin-top: 10px; /* Optional: Add some margin to separate from buttons */
+  }
+
+  .image-container {
+    margin-left: 0 !important;
+    margin-top: 10px !important;
+  }
+}
