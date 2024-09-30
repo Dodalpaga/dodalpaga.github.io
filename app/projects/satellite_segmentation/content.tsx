@@ -6,6 +6,7 @@ import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress'; // Import CircularProgress for loading symbol
 import Image from 'next/image';
 import { Select, MenuItem, InputLabel, FormControl } from '@mui/material'; // Import Select and related components
+import './styles.css'; // Ensure the correct CSS file is imported
 
 // Define the MapRef type
 type MapRef = {
@@ -76,25 +77,47 @@ export default function Content() {
         display: 'flex',
         alignItems: 'center',
         flexDirection: 'column',
+        justifyContent: 'center',
+        height: '100%',
       }}
     >
       <Stack
         spacing={2}
+        id="buttons-stack" // Use the ID for CSS targeting
         direction="row"
-        className="container flex flex-col items-center justify-between p-4"
       >
-        <ExampleMap ref={mapRef} lng={1.444209} lat={43.604652} zoom={11.8} />
+        {/* Model selection dropdown */}
+        <FormControl variant="outlined" sx={{ minWidth: 120, height: '100%' }}>
+          <InputLabel id="model-select-label">Model</InputLabel>
+          <Select
+            labelId="model-select-label"
+            value={modelName}
+            onChange={(event) => setModelName(event.target.value)}
+            label="Model"
+            sx={{
+              minWidth: 120,
+              height: '100%',
+            }}
+          >
+            <MenuItem value="FastSAM-s.pt">FastSAM-s</MenuItem>
+            <MenuItem value="FastSAM-x.pt">FastSAM-x</MenuItem>
+          </Select>
+        </FormControl>
 
-        <div
-          style={{
-            position: 'relative',
-            width: '100%',
-            height: 'calc(100vh - 250px)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
+        <Button variant="contained" onClick={handleExportImage}>
+          Export Map Image
+        </Button>
+      </Stack>
+      <Stack
+        spacing={4}
+        id="images-stack" // Use the ID for CSS targeting
+        direction="row"
+      >
+        <div className="image-container">
+          <ExampleMap ref={mapRef} lng={1.444209} lat={43.604652} zoom={11.8} />
+        </div>
+
+        <div className="image-container">
           {loading ? (
             <CircularProgress /> // Show loading symbol while waiting for the image
           ) : (
@@ -111,24 +134,6 @@ export default function Content() {
           )}
         </div>
       </Stack>
-
-      {/* Model selection dropdown */}
-      <FormControl variant="outlined" sx={{ mb: 2, minWidth: 120 }}>
-        <InputLabel id="model-select-label">Model</InputLabel>
-        <Select
-          labelId="model-select-label"
-          value={modelName}
-          onChange={(event) => setModelName(event.target.value)}
-          label="Model"
-        >
-          <MenuItem value="FastSAM-s.pt">FastSAM-s</MenuItem>
-          <MenuItem value="FastSAM-x.pt">FastSAM-x</MenuItem>
-        </Select>
-      </FormControl>
-
-      <Button variant="contained" onClick={handleExportImage}>
-        Export Map Image
-      </Button>
     </Container>
   );
 }
