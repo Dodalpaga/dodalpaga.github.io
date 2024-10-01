@@ -31,9 +31,12 @@ export default function Content() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const resizeIframe = (iframe: HTMLIFrameElement) => {
-    if (iframe) {
-      iframe.style.height =
-        iframe.contentWindow.document.documentElement.scrollHeight + 'px';
+    if (iframe && iframe.contentWindow) {
+      // Check if contentWindow is available
+      const doc = iframe.contentWindow.document.documentElement;
+      if (doc) {
+        iframe.style.height = doc.scrollHeight + 'px'; // Set the height based on the document height
+      }
     }
   };
 
