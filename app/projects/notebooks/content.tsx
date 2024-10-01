@@ -1,8 +1,8 @@
-// content.tsx
 'use client';
 import * as React from 'react';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
+import { useState } from 'react';
 import '../../globals.css'; // Ensure global styles are correctly imported
 
 const sectionStyle = {
@@ -15,6 +15,23 @@ const sectionStyle = {
 };
 
 export default function Content() {
+  // State to track which notebook to display
+  const [selectedNotebook, setSelectedNotebook] = useState<string>('');
+
+  const notebooks = [
+    {
+      name: 'Cluster First',
+      path:
+        process.env.NEXT_PUBLIC_BASE_PATH +
+        '/notebooks/CVRP/Cluster first.html',
+    },
+    {
+      name: 'Route First',
+      path:
+        process.env.NEXT_PUBLIC_BASE_PATH + '/notebooks/CVRP/Route first.html',
+    },
+  ];
+
   return (
     <Container
       maxWidth={false}
@@ -42,17 +59,32 @@ export default function Content() {
         </div>
 
         <div className="left-container">
-          <Typography variant="h6">Notebook 1</Typography>
-          <Typography variant="h6">Notebook 2</Typography>
-          <Typography variant="h6">Notebook 3</Typography>
+          {notebooks.map((notebook) => (
+            <Typography
+              key={notebook.name}
+              variant="h6"
+              onClick={() => setSelectedNotebook(notebook.path)}
+              style={{ cursor: 'pointer', color: 'blue' }}
+            >
+              {notebook.name}
+            </Typography>
+          ))}
         </div>
       </div>
 
       {/* Main Scrollable Content Section */}
       <div className="right-scrollable">
-        {/* Experience Section */}
+        {/* Display Notebook Content */}
         <section id="notebook-section" style={sectionStyle}>
-          <Typography variant="h4">Notebook</Typography>
+          {selectedNotebook ? (
+            <iframe
+              src={selectedNotebook}
+              title="Notebook Content"
+              style={{ width: '100%', height: '80vh', border: 'none' }}
+            />
+          ) : (
+            <Typography variant="h4">Select a notebook to display</Typography>
+          )}
         </section>
       </div>
     </Container>
