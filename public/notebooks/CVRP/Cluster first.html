@@ -5,7 +5,9 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Cluster first</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <style type="text/css">
-    pre { line-height: 125%; }
+    pre { line-height: 125%; 
+      white-space: pre-wrap;
+      word-wrap: break-word;}
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
 span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
 td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
@@ -3785,6 +3787,8 @@ button.jp-Dialog-close-button {
   font-family: var(--jp-code-font-family);
 }
 
+
+
 .jp-RenderedText pre,
 .jp-RenderedJavaScript pre,
 .jp-RenderedHTMLCommon pre {
@@ -6393,7 +6397,7 @@ cell outputs.
   padding: var(--jp-notebook-padding);
   outline: none;
   overflow: auto;
-  background: var(--jp-layout-color0);
+  background-color: transparent;
 }
 
 .jp-Notebook.jp-mod-scrollPastEnd::after {
