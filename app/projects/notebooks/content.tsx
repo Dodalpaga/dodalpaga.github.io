@@ -15,15 +15,27 @@ const sectionStyle = {
   display: 'flex',
   flexDirection: 'column' as 'column', // Explicitly set as one of the allowed values
   width: '100%',
-  height: '80vh', // Set to a specific height to allow scrolling
   textAlign: 'center' as 'center', // TypeScript might also need this to be explicit
   position: 'relative' as 'relative', // Similar for position
+};
+
+// General style for left panel links
+const linkStyle = {
+  cursor: 'pointer',
+  marginLeft: '10px', // Add a margin to separate links
 };
 
 export default function Content() {
   // State to track which notebook to display
   const [selectedContent, setSelectedContent] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const resizeIframe = (iframe: HTMLIFrameElement) => {
+    if (iframe) {
+      iframe.style.height =
+        iframe.contentWindow.document.documentElement.scrollHeight + 'px';
+    }
+  };
 
   // Function to handle content selection
   const handleContentSelection = (path: string) => {
@@ -88,21 +100,21 @@ export default function Content() {
               <Typography
                 variant="h6"
                 onClick={() => handleContentSelection(readme.path)}
-                style={{ cursor: 'pointer', color: 'blue' }}
+                style={linkStyle} // Apply general link style
               >
                 {readme.name}
               </Typography>
               <Typography
                 variant="h6"
                 onClick={() => handleContentSelection(notebook1.path)}
-                style={{ cursor: 'pointer', color: 'blue' }}
+                style={linkStyle} // Apply general link style
               >
                 {notebook1.name}
               </Typography>
               <Typography
                 variant="h6"
                 onClick={() => handleContentSelection(notebook2.path)}
-                style={{ cursor: 'pointer', color: 'blue' }}
+                style={linkStyle} // Apply general link style
               >
                 {notebook2.name}
               </Typography>
@@ -116,19 +128,21 @@ export default function Content() {
         {/* Display Notebook Content */}
         <section id="notebook-section" style={sectionStyle}>
           {selectedContent ? (
-            <div style={{ height: '100%' }}>
-              {' '}
-              {/* Full height for iframe container */}
+            <div style={{ height: 'auto', overflowY: 'hidden' }}>
+              {/* Allow full height for the iframe */}
               {isLoading ? (
                 <Loading />
               ) : (
                 <iframe
                   src={selectedContent}
+                  onLoad={(event) =>
+                    resizeIframe(event.target as HTMLIFrameElement)
+                  } // Use event.target to get the iframe
                   title="Notebook Content"
                   style={{
                     width: '100%',
-                    height: '100%', // Make the iframe full height
                     border: 'none',
+                    backgroundColor: 'transparent',
                   }}
                 />
               )}
