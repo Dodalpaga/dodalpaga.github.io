@@ -121,12 +121,12 @@ export default function Content() {
             variant="h4"
             gutterBottom
           >
-            Projects
+            My Notebooks
           </Typography>
         </div>
 
         {/* Accordion for CVRP Project */}
-        <Accordion>
+        <Accordion style={{ marginBottom: '16px' }}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography variant="h5">CVRP</Typography>
           </AccordionSummary>
@@ -158,7 +158,7 @@ export default function Content() {
         </Accordion>
 
         {/* Accordion for MeteoNet Project */}
-        <Accordion>
+        <Accordion style={{ marginBottom: '16px' }}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography variant="h5">MeteoNet</Typography>
           </AccordionSummary>
@@ -168,7 +168,7 @@ export default function Content() {
         </Accordion>
 
         {/* Accordion for Random Project */}
-        <Accordion>
+        <Accordion style={{ marginBottom: '16px' }}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography variant="h5">Random Projects</Typography>
           </AccordionSummary>
