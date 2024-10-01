@@ -22,7 +22,8 @@ const sectionStyle = {
 // General style for left panel links
 const linkStyle = {
   cursor: 'pointer',
-  marginLeft: '10px', // Add a margin to separate links
+  marginLeft: '10px', // Add a margin to separate links from border
+  marginBottom: '10px', // Add a margin to separate links from each other
 };
 
 export default function Content() {
@@ -50,21 +51,52 @@ export default function Content() {
   };
 
   // Explicitly defining each notebook
-  const notebook1 = {
+  const cvrp_cluster_first = {
     name: 'Cluster First.ipynb',
     path:
       process.env.NEXT_PUBLIC_BASE_PATH + '/notebooks/CVRP/Cluster first.html',
   };
 
-  const notebook2 = {
+  const cvrp_route_first = {
     name: 'Route First.ipynb',
     path:
       process.env.NEXT_PUBLIC_BASE_PATH + '/notebooks/CVRP/Route first.html',
   };
 
-  const readme = {
+  const cvrp_readme = {
     name: 'README.md',
     path: process.env.NEXT_PUBLIC_BASE_PATH + '/notebooks/CVRP/README.html', // Path to your HTML file
+  };
+
+  const dqn = {
+    name: 'DQN.ipynb',
+    path: process.env.NEXT_PUBLIC_BASE_PATH + '/notebooks/random/dqn.html', // Path to your HTML file
+  };
+  const ecg = {
+    name: 'ECG.ipynb',
+    path: process.env.NEXT_PUBLIC_BASE_PATH + '/notebooks/random/ecg.html', // Path to your HTML file
+  };
+  const frozen_lake = {
+    name: 'Frozen Lake.ipynb',
+    path:
+      process.env.NEXT_PUBLIC_BASE_PATH + '/notebooks/random/frozen_lake.html', // Path to your HTML file
+  };
+  const ml = {
+    name: 'Machine Learning.ipynb',
+    path: process.env.NEXT_PUBLIC_BASE_PATH + '/notebooks/random/ml.html', // Path to your HTML file
+  };
+  const ozone = {
+    name: 'Ozone.ipynb',
+    path: process.env.NEXT_PUBLIC_BASE_PATH + '/notebooks/random/ozone.html', // Path to your HTML file
+  };
+  const persistence = {
+    name: 'Persistence Multiplicative.ipynb',
+    path:
+      process.env.NEXT_PUBLIC_BASE_PATH + '/notebooks/random/persistence.html', // Path to your HTML file
+  };
+  const taxi = {
+    name: 'Taxi.ipynb',
+    path: process.env.NEXT_PUBLIC_BASE_PATH + '/notebooks/random/taxi.html', // Path to your HTML file
   };
 
   return (
@@ -102,24 +134,84 @@ export default function Content() {
             <div className="left-container">
               <Typography
                 variant="h6"
-                onClick={() => handleContentSelection(readme.path)}
+                onClick={() => handleContentSelection(cvrp_readme.path)}
                 style={linkStyle} // Apply general link style
               >
-                {readme.name}
+                {cvrp_readme.name}
               </Typography>
               <Typography
                 variant="h6"
-                onClick={() => handleContentSelection(notebook1.path)}
+                onClick={() => handleContentSelection(cvrp_cluster_first.path)}
                 style={linkStyle} // Apply general link style
               >
-                {notebook1.name}
+                {cvrp_cluster_first.name}
               </Typography>
               <Typography
                 variant="h6"
-                onClick={() => handleContentSelection(notebook2.path)}
+                onClick={() => handleContentSelection(cvrp_route_first.path)}
                 style={linkStyle} // Apply general link style
               >
-                {notebook2.name}
+                {cvrp_route_first.name}
+              </Typography>
+            </div>
+          </AccordionDetails>
+        </Accordion>
+
+        {/* Accordion for Random Project */}
+        <Accordion>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography variant="h5">Random Projects</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <div className="left-container">
+              <Typography
+                variant="h6"
+                onClick={() => handleContentSelection(dqn.path)}
+                style={linkStyle} // Apply general link style
+              >
+                {dqn.name}
+              </Typography>
+              <Typography
+                variant="h6"
+                onClick={() => handleContentSelection(ecg.path)}
+                style={linkStyle} // Apply general link style
+              >
+                {ecg.name}
+              </Typography>
+              <Typography
+                variant="h6"
+                onClick={() => handleContentSelection(frozen_lake.path)}
+                style={linkStyle} // Apply general link style
+              >
+                {frozen_lake.name}
+              </Typography>
+              <Typography
+                variant="h6"
+                onClick={() => handleContentSelection(ml.path)}
+                style={linkStyle} // Apply general link style
+              >
+                {ml.name}
+              </Typography>
+              <Typography
+                variant="h6"
+                onClick={() => handleContentSelection(ozone.path)}
+                style={linkStyle} // Apply general link style
+              >
+                {ozone.name}
+              </Typography>
+              <Typography
+                variant="h6"
+                onClick={() => handleContentSelection(persistence.path)}
+                style={linkStyle} // Apply general link style
+              >
+                {persistence.name}
+              </Typography>
+              <Typography
+                variant="h6"
+                onClick={() => handleContentSelection(taxi.path)}
+                style={linkStyle} // Apply general link style
+              >
+                {taxi.name}
               </Typography>
             </div>
           </AccordionDetails>
