@@ -15,6 +15,7 @@ const sectionStyle = {
   display: 'flex',
   flexDirection: 'column' as 'column', // Explicitly set as one of the allowed values
   width: '100%',
+  height: '80vh', // Set to a specific height to allow scrolling
   textAlign: 'center' as 'center', // TypeScript might also need this to be explicit
   position: 'relative' as 'relative', // Similar for position
 };
@@ -115,17 +116,21 @@ export default function Content() {
         {/* Display Notebook Content */}
         <section id="notebook-section" style={sectionStyle}>
           {selectedContent ? (
-            <div>
+            <div style={{ height: '100%' }}>
+              {' '}
+              {/* Full height for iframe container */}
               {isLoading ? (
                 <Loading />
               ) : (
-                <div>
-                  <iframe
-                    src={selectedContent}
-                    title="Notebook Content"
-                    style={{ width: '100%', height: '80vh', border: 'none' }}
-                  />
-                </div>
+                <iframe
+                  src={selectedContent}
+                  title="Notebook Content"
+                  style={{
+                    width: '100%',
+                    height: '100%', // Make the iframe full height
+                    border: 'none',
+                  }}
+                />
               )}
             </div>
           ) : (
