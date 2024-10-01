@@ -100,7 +100,7 @@ export default function Content() {
           <Typography
             className="title"
             color="textSecondary"
-            variant="h5"
+            variant="h4"
             gutterBottom
           >
             About
