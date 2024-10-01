@@ -1,0 +1,186 @@
+<html><head><style>body {
+   color: black;
+   background-color:white;
+}
+</style></head><body><h1 id="cvrp">CVRP</h1>
+<h2 id="introduction-aux-vrp">Introduction aux VRP</h2>
+<p>Les problèmes de tournées de véhicules ou <strong>Vehicle Routing Problem</strong> sont des problèmes d’optimisation combinatoire complexes et trouvant de nombreuses applications dans le secteur industriel, plus particulièrement en logistique. Les VRP sont une combinaison de contraintes d’allocation de ressources (répartition de la charge dans les véhicules) et de construction de séquence. La difficulté étant que dans l’industrie ces problèmes prennent rapidement une dimension gigantesque d’où l’intérêt d’avoir des heuristiques pour les résoudre.</p>
+<h3 id="contexte-des-probl-mes-cvrp">Contexte des problèmes CVRP</h3>
+<p>L&#39;objectif de ce projet est d&#39;implémenter des méthodes approchées permettant de résoudre un problème de planification de tournées de véhicules.</p>
+<p>Il s&#39;agit des problèmes de type CVRP : <strong><em>Capacited Vehicle Routing Problem</em></strong>. Notre entreprise de livraison dispose d&#39;une flotte de camions avec une capacité limitée. Nous avons un ensemble de clients à desservir en partant d&#39;un point de départ : le dépôt de notre entreprise. Nous connaissons la localisation de chacun des clients dans la section NODE_COORD_SECTION du fichier vrp qui sera présenté dans la partie b). Chaque demande d&#39;un client représente une quantité qu&#39;il faut livrer du dépôt à la localisation du client. Le but est donc de planifier les tournées des véhicules afin de minimiser la somme des distances parcourues (temps de transport).<br/>
+<strong>Fonction objectif</strong> : “minimiser la somme des trajets réalisés”<br/>
+Il est nécessaire de respecter :</p>
+<ul>
+<li>la contrainte de capacité des camions</li>
+<li>la contrainte qui impose de satisfaire tous les clients</li>
+</ul>
+<p>Il faut donc trouver les chemins les plus courts pour organiser la tournée en respectant les contraintes de capacités.<br/></p>
+<h3 id="comprendre-le-format-des-jeux-de-donn-es">Comprendre le format des jeux de données</h3>
+<p>Une instance est un problème défini par un ensemble de clients et leur demande associée à satisfaire. De nombreux types d’instances ont été créés au cours des années et sont disponibles sur le site de &quot;CVRP LIB - All instances” :
+Lien : <a href="http://vrp.galgos.inf.puc-rio.br/index.php/en/">CVRPLIB<a/></p>
+<p>Pour chaque instance, nous pouvons avoir accès à une visualisation graphique modélisant le problème “Plotted Instance”, au fichier vrp et à un fichier solution.</p>
+<center>
+
+<img src="img/1.png">
+</center>
+En sélectionnant une <a href="http://vrp.galgos.inf.puc-rio.br/index.php/en/plotted-instances?data=X-n120-k6">Instance<a/>, plusieurs informations sont directement affichées :
+
+<center>
+
+<img src="img/2.png">
+<img src="img/3.png">
+</center>
+
+<p>Notamment, on peut afficher la meilleure solution trouvée à l&#39;heure actuelle, potentiellement la solution optimale dans le cas où la colonne <em>Opt</em> est inscrite &quot;yes&quot;</p>
+<center>
+
+<img src="img/4.png">
+</center>
+
+<h3 id="premi-re-heuristique-route-first">Première heuristique : Route First</h3>
+<pre><code class="lang-python"><span class="hljs-comment"># Initialisation</span>
+L1 = [ client1, client2, ..., clientn ]
+routes = [ ]
+
+<span class="hljs-comment"># Définition d’une fonction pour la création primaire des routes</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">create_routes</span><span class="hljs-params">(L1, truckcapacity)</span></span>:
+    <span class="hljs-keyword">while</span> L1 <span class="hljs-keyword">not</span> <span class="hljs-symbol">empty:</span>
+        <span class="hljs-comment"># Initialisation d’une nouvelle route</span>
+        route = closest_client(warehouse,L1)
+        <span class="hljs-keyword">while</span> demands(route) &lt; truck_capacity :
+            nextclient = closest_client(route[-<span class="hljs-number">1</span>] , L1)
+            route.append(nextclient)
+            L1.remove(nextclient)
+        routes.append(route)
+</code></pre>
+<p>La fonction “closest_client” prend en compte deux arguments : l’identifiant d’un client C1 (ou du dépôt) et une liste d’identifiants de client Cx. Elle retourne le client Cp dans Cx qui a la distance euclidienne avec C1 la plus faible.</p>
+<p>Nous avons ensuite créé des méthodes nous permettant d’évaluer notre heuristique, à savoir :<br/></p>
+<ul>
+<li>get_route_cost(route) : permet de calculer la distance parcourue par une route (fonction coût)</li>
+<li>get_route_capacity(route) : permet de calculer la somme des demandes des clients sur une route</li>
+</ul>
+<p>En prenant pour initialisation les identifiants des clients dans leur ordre chronologique (i.e. [ 0, 1, 2, …, n ]) voici ce que l’on peut obtenir comme résultats sur l&#39;instance X-n120-k6 :<br/></p>
+<ul>
+<li>Cost | Capacity for route 0 : 1705 | 21</li>
+<li>Cost | Capacity for route 1 : 2212 | 21</li>
+<li>Cost | Capacity for route 2 : 2985 | 21</li>
+<li>Cost | Capacity for route 3 : 2811 | 21</li>
+<li>Cost | Capacity for route 4 : 3430 | 21</li>
+<li>Cost | Capacity for route 5 : 2705 | 14<br/></li>
+</ul>
+<p>Total cost = 15848<br/></p>
+<p>Routes : [[19, 115, 106, 60, 118, 93, 9, 87, 51, 49, 37, 30, 72, 24, 28, 79, 15, 83, 92, 54, 69], [95, 70, 53, 111, 44, 2, 77, 38, 41, 48, 1, 42, 75, 112, 63, 108, 81, 97, 12, 98, 8], [31, 90, 20, 11, 78, 117, 29, 66, 32, 22, 13, 57, 82, 14, 43, 17, 16, 102, 40, 4, 25], [86, 71, 61, 39, 110, 101, 33, 26, 10, 55, 0, 23, 36, 56, 99, 76, 58, 21, 3, 94, 59], [7, 113, 89, 91, 5, 34, 52, 80, 68, 67, 84, 88, 50, 62, 103, 104, 100, 46, 116, 107, 65], [35, 114, 47, 64, 85, 73, 109, 105, 6, 96, 45, 74, 18, 27]]</p>
+<center>
+
+<img src="img/5.png">
+</center>
+
+<h3 id="seconde-heuristique-cluster-first">Seconde heuristique : Cluster First</h3>
+<pre><code class="lang-python">from sklearn.cluster <span class="hljs-built_in">import</span> KMeans
+<span class="hljs-attr">km</span> = KMeans(
+     <span class="hljs-attr">init="k-means++",</span>
+     <span class="hljs-attr">n_clusters=nb_clusters,</span>
+     <span class="hljs-attr">n_init=100,</span>
+     <span class="hljs-attr">max_iter=600,</span>
+     <span class="hljs-attr">random_state=42</span>
+)
+km.fit(df)
+<span class="hljs-attr">clusters</span> = km.labels_
+<span class="hljs-attr">centroids</span> = km.cluster_centers_
+</code></pre>
+<p>On commence par créer des routes sans forcément respecter la condition de capacité :</p>
+<center>
+
+<img src="img/6.png">
+</center>
+
+<pre><code><span class="hljs-selector-tag">Voici</span> <span class="hljs-selector-tag">les</span> <span class="hljs-selector-tag">regroupements</span> <span class="hljs-selector-tag">de</span> <span class="hljs-selector-tag">clients</span> <span class="hljs-selector-tag">par</span> <span class="hljs-selector-tag">clusters</span> :
+<span class="hljs-selector-attr">[[0, 3, 21, 23, 36, 52, 56, 58, 59, 67, 68, 76, 80, 94, 99]</span>,
+<span class="hljs-selector-attr">[6, 8, 13, 14, 17, 18, 22, 27, 32, 35, 43, 47, 57, 64, 73, 82, 85, 96, 105,
+    109, 114]</span>,
+<span class="hljs-selector-attr">[9, 15, 19, 20, 24, 28, 29, 30, 31, 37, 49, 51, 53, 54, 60, 66, 70, 72, 79,
+    83, 87, 90, 92, 93, 95, 106, 115, 117]</span>,
+<span class="hljs-selector-attr">[1, 2, 7, 11, 12, 38, 41, 42, 44, 48, 63, 69, 75, 77, 78, 81, 97, 98, 108,
+    111, 112, 113]</span>,
+<span class="hljs-selector-attr">[5, 10, 26, 33, 34, 39, 55, 61, 71, 86, 89, 91, 101, 110]</span>,
+<span class="hljs-selector-attr">[4, 16, 25, 40, 45, 46, 50, 62, 65, 74, 84, 88, 100, 102, 103, 104, 107, 116]</span>]
+
+<span class="hljs-selector-tag">Voici</span> <span class="hljs-selector-tag">la</span> <span class="hljs-selector-tag">demande</span> <span class="hljs-selector-tag">de</span> <span class="hljs-selector-tag">chaque</span> <span class="hljs-selector-tag">cluster</span> (<span class="hljs-attribute">rappel </span>: capacité max = <span class="hljs-number">21</span>) :
+<span class="hljs-selector-attr">[15, 21, 28, 22, 14, 18]</span>
+
+<span class="hljs-selector-tag">Voici</span> <span class="hljs-selector-tag">la</span> <span class="hljs-selector-tag">liste</span> <span class="hljs-selector-tag">des</span> <span class="hljs-selector-tag">clusters</span> <span class="hljs-selector-tag">capacitaires</span> :
+<span class="hljs-selector-attr">[0, 1, 4, 5]</span>
+
+<span class="hljs-selector-tag">Voici</span> <span class="hljs-selector-tag">la</span> <span class="hljs-selector-tag">liste</span> <span class="hljs-selector-tag">des</span> <span class="hljs-selector-tag">clusters</span> <span class="hljs-selector-tag">exc</span>é<span class="hljs-selector-tag">dentaires</span> :
+<span class="hljs-selector-attr">[2, 3]</span>
+</code></pre><p>Ensuite on applique l&#39;heuristique suivante :<br/>
+<em>“Les clusters excédentaires donnent par proximité aux clusters capacitaires”</em></p>
+<center>
+
+<img src="img/7.png">
+</center>
+
+<p>Désormais nous avons un groupe de routes constituées par proximité entre les voisins, et respectant la condition de capacité des camions. Il est possible que nous ne trouvions pas d’équilibre et qu’il reste toujours un ou plusieurs clusters excédentaires. Dans ce cas, il faut augmenter <strong>le nombre de clusters de 1</strong> et refaire toute la méthode.</p>
+<p>Ensuite, localement sur chaque route on choisit le parcours le plus court :</p>
+<center>
+
+<img src="img/8.png">
+</center>
+
+<h3 id="r-sultats">Résultats</h3>
+<table>
+<thead>
+<tr>
+<th>Instance</th>
+<th>Opt</th>
+<th>Upper Bound</th>
+<th>Best Route First</th>
+<th>Best Cluster First</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>X-n106-k14</td>
+<td>yes</td>
+<td>26362</td>
+<td>27982</td>
+<td>32787</td>
+</tr>
+<tr>
+<td>X-n110-k13</td>
+<td>yes</td>
+<td>14971</td>
+<td>16908</td>
+<td>22368</td>
+</tr>
+<tr>
+<td>X-n115-k10</td>
+<td>yes</td>
+<td>12747</td>
+<td>15029</td>
+<td>19931</td>
+</tr>
+<tr>
+<td>X-n313-k71</td>
+<td>no</td>
+<td>94043</td>
+<td>104643</td>
+<td>139757</td>
+</tr>
+<tr>
+<td>X-n1001-k43</td>
+<td>no</td>
+<td>72355</td>
+<td>83764</td>
+<td>123013</td>
+</tr>
+<tr>
+<td>X-n190-k8</td>
+<td>yes</td>
+<td>16980</td>
+<td>19060</td>
+<td>21758</td>
+</tr>
+</tbody>
+</table>
+</body></html>
