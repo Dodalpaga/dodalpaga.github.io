@@ -16,21 +16,25 @@ const sectionStyle = {
 
 export default function Content() {
   // State to track which notebook to display
-  const [selectedNotebook, setSelectedNotebook] = useState<string>('');
+  const [selectedContent, setSelectedContent] = useState<string>('');
 
-  const notebooks = [
-    {
-      name: 'Cluster First',
-      path:
-        process.env.NEXT_PUBLIC_BASE_PATH +
-        '/notebooks/CVRP/Cluster first.html',
-    },
-    {
-      name: 'Route First',
-      path:
-        process.env.NEXT_PUBLIC_BASE_PATH + '/notebooks/CVRP/Route first.html',
-    },
-  ];
+  // Explicitly defining each notebook
+  const notebook1 = {
+    name: 'Cluster First',
+    path:
+      process.env.NEXT_PUBLIC_BASE_PATH + '/notebooks/CVRP/Cluster first.html',
+  };
+
+  const notebook2 = {
+    name: 'Route First',
+    path:
+      process.env.NEXT_PUBLIC_BASE_PATH + '/notebooks/CVRP/Route first.html',
+  };
+
+  const readme = {
+    name: 'README',
+    path: process.env.NEXT_PUBLIC_BASE_PATH + '/notebooks/CVRP/README.html', // Path to your HTML file
+  };
 
   return (
     <Container
@@ -59,16 +63,27 @@ export default function Content() {
         </div>
 
         <div className="left-container">
-          {notebooks.map((notebook) => (
-            <Typography
-              key={notebook.name}
-              variant="h6"
-              onClick={() => setSelectedNotebook(notebook.path)}
-              style={{ cursor: 'pointer', color: 'blue' }}
-            >
-              {notebook.name}
-            </Typography>
-          ))}
+          <Typography
+            variant="h6"
+            onClick={() => setSelectedContent(notebook1.path)}
+            style={{ cursor: 'pointer', color: 'blue' }}
+          >
+            {notebook1.name}
+          </Typography>
+          <Typography
+            variant="h6"
+            onClick={() => setSelectedContent(notebook2.path)}
+            style={{ cursor: 'pointer', color: 'blue' }}
+          >
+            {notebook2.name}
+          </Typography>
+          <Typography
+            variant="h6"
+            onClick={() => setSelectedContent(readme.path)}
+            style={{ cursor: 'pointer', color: 'blue' }}
+          >
+            {readme.name}
+          </Typography>
         </div>
       </div>
 
@@ -76,9 +91,9 @@ export default function Content() {
       <div className="right-scrollable">
         {/* Display Notebook Content */}
         <section id="notebook-section" style={sectionStyle}>
-          {selectedNotebook ? (
+          {selectedContent ? (
             <iframe
-              src={selectedNotebook}
+              src={selectedContent}
               title="Notebook Content"
               style={{ width: '100%', height: '80vh', border: 'none' }}
             />
