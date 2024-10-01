@@ -128,7 +128,7 @@ export default function Content() {
         {/* Accordion for CVRP Project */}
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography variant="h5">CVRP Project</Typography>
+            <Typography variant="h5">CVRP</Typography>
           </AccordionSummary>
           <AccordionDetails>
             <div className="left-container">
@@ -154,6 +154,16 @@ export default function Content() {
                 {cvrp_route_first.name}
               </Typography>
             </div>
+          </AccordionDetails>
+        </Accordion>
+
+        {/* Accordion for MeteoNet Project */}
+        <Accordion>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography variant="h5">MeteoNet</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <div className="left-container">TODO</div>
           </AccordionDetails>
         </Accordion>
 
