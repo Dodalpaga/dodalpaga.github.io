@@ -21,6 +21,15 @@ const apps = [
       highlighting different features and regions. Ideal for analyzing satellite images and extracting valuable insights.',
   },
   {
+    title: 'Coding Notebooks',
+    image: `${process.env.NEXT_PUBLIC_BASE_PATH}/assets/Jupyter_logo.png`, // Update with your actual image path
+    link: '/projects/notebooks', // Update with your actual routes
+    target: '',
+    description:
+      'Select a tile from the Earth map, and this app will provide a segmented version of that tile, \
+      highlighting different features and regions. Ideal for analyzing satellite images and extracting valuable insights.',
+  },
+  {
     title: 'Image Detection',
     image: `${process.env.NEXT_PUBLIC_BASE_PATH}/assets/detection.jpeg`, // Update with your actual image path
     link: '/projects/image_detection', // Update with your actual routes
