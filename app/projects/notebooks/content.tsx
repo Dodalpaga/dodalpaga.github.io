@@ -99,6 +99,17 @@ export default function Content() {
     path: process.env.NEXT_PUBLIC_BASE_PATH + '/notebooks/random/taxi.html', // Path to your HTML file
   };
 
+  const meteonet_eda = {
+    name: 'EDA.ipynb',
+    path: process.env.NEXT_PUBLIC_BASE_PATH + '/notebooks/meteonet/EDA.html', // Path to your HTML file
+  };
+
+  const meteonet_modelling = {
+    name: 'Modelling.ipynb',
+    path:
+      process.env.NEXT_PUBLIC_BASE_PATH + '/notebooks/meteonet/Modelling.html', // Path to your HTML file
+  };
+
   return (
     <Container
       maxWidth={false}
@@ -163,7 +174,22 @@ export default function Content() {
             <Typography variant="h5">MeteoNet</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <div className="left-container">TODO</div>
+            <div className="left-container">
+              <Typography
+                variant="h6"
+                onClick={() => handleContentSelection(meteonet_eda.path)}
+                style={linkStyle} // Apply general link style
+              >
+                {meteonet_eda.name}
+              </Typography>
+              <Typography
+                variant="h6"
+                onClick={() => handleContentSelection(meteonet_modelling.path)}
+                style={linkStyle} // Apply general link style
+              >
+                {meteonet_modelling.name}
+              </Typography>
+            </div>
           </AccordionDetails>
         </Accordion>
 
