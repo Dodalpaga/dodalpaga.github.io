@@ -10,10 +10,10 @@ import { useState } from 'react';
 import Loading from '../../../components/loading';
 import '../../globals.css'; // Ensure global styles are correctly imported
 
-const sectionStyle = {
+const sectionStyle: React.CSSProperties = {
   padding: '10px 20px 20px 20px',
   display: 'flex',
-  flexDirection: 'column',
+  flexDirection: 'column', // This should be fine, but you may need to ensure TypeScript understands it
   width: '100%',
   textAlign: 'center',
   position: 'relative',
