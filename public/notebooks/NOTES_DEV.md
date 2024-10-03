@@ -18,7 +18,7 @@ I also added transparent background here :
 .jp-Notebook {
   padding: var(--jp-notebook-padding);
   outline: none;
-  overflow: auto;
+  overflow: hidden;
   background-color: transparent;
 }
 ```
