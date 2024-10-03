@@ -13,101 +13,78 @@ import '../../globals.css'; // Ensure global styles are correctly imported
 const sectionStyle = {
   padding: '10px 20px 20px 20px',
   display: 'flex',
-  flexDirection: 'column' as 'column', // Explicitly set as one of the allowed values
+  flexDirection: 'column',
   width: '100%',
-  textAlign: 'center' as 'center', // TypeScript might also need this to be explicit
-  position: 'relative' as 'relative', // Similar for position
+  textAlign: 'center',
+  position: 'relative',
 };
 
 // General style for left panel links
 const linkStyle = {
   cursor: 'pointer',
-  marginLeft: '10px', // Add a margin to separate links from border
-  marginBottom: '10px', // Add a margin to separate links from each other
+  marginLeft: '10px',
+  marginBottom: '10px',
+};
+
+// Notebook structure
+const notebooks = {
+  CVRP: [
+    { name: 'README.md', path: 'CVRP/README.html' },
+    { name: 'Cluster First', path: 'CVRP/Cluster first.html' },
+    { name: 'Route First', path: 'CVRP/Route first.html' },
+  ],
+  MeteoNet: [
+    { name: 'EDA', path: 'meteonet/EDA.html' },
+    { name: 'Modelling', path: 'meteonet/Modelling.html' },
+  ],
+  Random: [
+    { name: 'DQN', path: 'random/dqn.html' },
+    { name: 'ECG', path: 'random/ecg.html' },
+    { name: 'Frozen Lake', path: 'random/frozen_lake.html' },
+    { name: 'Machine Learning', path: 'random/ml.html' },
+    { name: 'Ozone', path: 'random/ozone.html' },
+    {
+      name: 'Persistence Multiplicative',
+      path: 'random/persistence.html',
+    },
+    { name: 'Taxi', path: 'random/taxi.html' },
+  ],
+  Kaggle: [
+    { name: 'Covid 19 Vaccines', path: 'kaggle/covid-19.html' },
+    { name: 'Fish recognition', path: 'kaggle/fish.html' },
+    { name: 'Heart Attacks', path: 'kaggle/heart-1.html' },
+    { name: 'Heart Attacks 2', path: 'kaggle/heart-2.html' },
+    { name: 'Holiday Packages', path: 'kaggle/holiday.html' },
+    { name: 'Mice Trisomy', path: 'kaggle/mice.html' },
+    { name: 'Pokemon Stats', path: 'kaggle/pokemon.html' },
+    { name: 'Road Accidents', path: 'kaggle/road-injuries.html' },
+    { name: 'Stroke Detection', path: 'kaggle/stroke.html' },
+    { name: 'Weather Forecasting', path: 'kaggle/weather-forecasting.html' },
+  ],
 };
 
 export default function Content() {
-  // State to track which notebook to display
   const [selectedContent, setSelectedContent] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const resizeIframe = (iframe: HTMLIFrameElement) => {
     if (iframe && iframe.contentWindow) {
-      // Check if contentWindow is available
       const doc = iframe.contentWindow.document.documentElement;
       if (doc) {
-        iframe.style.height = doc.scrollHeight + 'px'; // Set the height based on the document height
+        iframe.style.height = doc.scrollHeight + 'px';
       }
     }
   };
 
-  // Function to handle content selection
   const handleContentSelection = (path: string) => {
     setIsLoading(true);
-    setSelectedContent(path);
+    console.log(process.env.NEXT_PUBLIC_BASE_PATH + '/notebooks/' + path);
+    setSelectedContent(
+      process.env.NEXT_PUBLIC_BASE_PATH + '/notebooks/' + path
+    );
     setTimeout(() => {
       setIsLoading(false);
-    }, 500); // Adjust the timeout duration as needed
-  };
-
-  // Explicitly defining each notebook
-  const cvrp_cluster_first = {
-    name: 'Cluster First.ipynb',
-    path:
-      process.env.NEXT_PUBLIC_BASE_PATH + '/notebooks/CVRP/Cluster first.html',
-  };
-
-  const cvrp_route_first = {
-    name: 'Route First.ipynb',
-    path:
-      process.env.NEXT_PUBLIC_BASE_PATH + '/notebooks/CVRP/Route first.html',
-  };
-
-  const cvrp_readme = {
-    name: 'README.md',
-    path: process.env.NEXT_PUBLIC_BASE_PATH + '/notebooks/CVRP/README.html', // Path to your HTML file
-  };
-
-  const dqn = {
-    name: 'DQN.ipynb',
-    path: process.env.NEXT_PUBLIC_BASE_PATH + '/notebooks/random/dqn.html', // Path to your HTML file
-  };
-  const ecg = {
-    name: 'ECG.ipynb',
-    path: process.env.NEXT_PUBLIC_BASE_PATH + '/notebooks/random/ecg.html', // Path to your HTML file
-  };
-  const frozen_lake = {
-    name: 'Frozen Lake.ipynb',
-    path:
-      process.env.NEXT_PUBLIC_BASE_PATH + '/notebooks/random/frozen_lake.html', // Path to your HTML file
-  };
-  const ml = {
-    name: 'Machine Learning.ipynb',
-    path: process.env.NEXT_PUBLIC_BASE_PATH + '/notebooks/random/ml.html', // Path to your HTML file
-  };
-  const ozone = {
-    name: 'Ozone.ipynb',
-    path: process.env.NEXT_PUBLIC_BASE_PATH + '/notebooks/random/ozone.html', // Path to your HTML file
-  };
-  const persistence = {
-    name: 'Persistence Multiplicative.ipynb',
-    path:
-      process.env.NEXT_PUBLIC_BASE_PATH + '/notebooks/random/persistence.html', // Path to your HTML file
-  };
-  const taxi = {
-    name: 'Taxi.ipynb',
-    path: process.env.NEXT_PUBLIC_BASE_PATH + '/notebooks/random/taxi.html', // Path to your HTML file
-  };
-
-  const meteonet_eda = {
-    name: 'EDA.ipynb',
-    path: process.env.NEXT_PUBLIC_BASE_PATH + '/notebooks/meteonet/EDA.html', // Path to your HTML file
-  };
-
-  const meteonet_modelling = {
-    name: 'Modelling.ipynb',
-    path:
-      process.env.NEXT_PUBLIC_BASE_PATH + '/notebooks/meteonet/Modelling.html', // Path to your HTML file
+    }, 500);
   };
 
   return (
@@ -115,15 +92,14 @@ export default function Content() {
       maxWidth={false}
       sx={{
         display: 'flex',
-        flexDirection: 'column', // Align the left div and the right content
-        height: '100%', // Ensure full height for content
+        flexDirection: 'column',
+        height: '100%',
         alignItems: 'flex-start',
       }}
       style={{
         padding: 0,
       }}
     >
-      {/* Fixed Left Section */}
       <div className="left-fixed">
         <div className="left-container">
           <Typography
@@ -136,131 +112,34 @@ export default function Content() {
           </Typography>
         </div>
 
-        {/* Accordion for CVRP Project */}
-        <Accordion style={{ marginBottom: '16px' }}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography variant="h5">CVRP</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <div className="left-container">
-              <Typography
-                variant="h6"
-                onClick={() => handleContentSelection(cvrp_readme.path)}
-                style={linkStyle} // Apply general link style
-              >
-                {cvrp_readme.name}
-              </Typography>
-              <Typography
-                variant="h6"
-                onClick={() => handleContentSelection(cvrp_cluster_first.path)}
-                style={linkStyle} // Apply general link style
-              >
-                {cvrp_cluster_first.name}
-              </Typography>
-              <Typography
-                variant="h6"
-                onClick={() => handleContentSelection(cvrp_route_first.path)}
-                style={linkStyle} // Apply general link style
-              >
-                {cvrp_route_first.name}
-              </Typography>
-            </div>
-          </AccordionDetails>
-        </Accordion>
-
-        {/* Accordion for MeteoNet Project */}
-        <Accordion style={{ marginBottom: '16px' }}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography variant="h5">MeteoNet</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <div className="left-container">
-              <Typography
-                variant="h6"
-                onClick={() => handleContentSelection(meteonet_eda.path)}
-                style={linkStyle} // Apply general link style
-              >
-                {meteonet_eda.name}
-              </Typography>
-              <Typography
-                variant="h6"
-                onClick={() => handleContentSelection(meteonet_modelling.path)}
-                style={linkStyle} // Apply general link style
-              >
-                {meteonet_modelling.name}
-              </Typography>
-            </div>
-          </AccordionDetails>
-        </Accordion>
-
-        {/* Accordion for Random Project */}
-        <Accordion style={{ marginBottom: '16px' }}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography variant="h5">Random Projects</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <div className="left-container">
-              <Typography
-                variant="h6"
-                onClick={() => handleContentSelection(dqn.path)}
-                style={linkStyle} // Apply general link style
-              >
-                {dqn.name}
-              </Typography>
-              <Typography
-                variant="h6"
-                onClick={() => handleContentSelection(ecg.path)}
-                style={linkStyle} // Apply general link style
-              >
-                {ecg.name}
-              </Typography>
-              <Typography
-                variant="h6"
-                onClick={() => handleContentSelection(frozen_lake.path)}
-                style={linkStyle} // Apply general link style
-              >
-                {frozen_lake.name}
-              </Typography>
-              <Typography
-                variant="h6"
-                onClick={() => handleContentSelection(ml.path)}
-                style={linkStyle} // Apply general link style
-              >
-                {ml.name}
-              </Typography>
-              <Typography
-                variant="h6"
-                onClick={() => handleContentSelection(ozone.path)}
-                style={linkStyle} // Apply general link style
-              >
-                {ozone.name}
-              </Typography>
-              <Typography
-                variant="h6"
-                onClick={() => handleContentSelection(persistence.path)}
-                style={linkStyle} // Apply general link style
-              >
-                {persistence.name}
-              </Typography>
-              <Typography
-                variant="h6"
-                onClick={() => handleContentSelection(taxi.path)}
-                style={linkStyle} // Apply general link style
-              >
-                {taxi.name}
-              </Typography>
-            </div>
-          </AccordionDetails>
-        </Accordion>
+        {/* Map over notebooks to create accordions */}
+        {Object.entries(notebooks).map(([folder, files]) => (
+          <Accordion style={{ marginBottom: '16px' }} key={folder}>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography variant="h5">{folder}</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <div className="left-container">
+                {files.map((file) => (
+                  <Typography
+                    key={file.path}
+                    variant="h6"
+                    onClick={() => handleContentSelection(file.path)}
+                    style={linkStyle}
+                  >
+                    {file.name}
+                  </Typography>
+                ))}
+              </div>
+            </AccordionDetails>
+          </Accordion>
+        ))}
       </div>
 
-      {/* Main Scrollable Content Section */}
       <div className="right-scrollable">
-        {/* Display Notebook Content */}
         <section id="notebook-section" style={sectionStyle}>
           {selectedContent ? (
             <div style={{ height: 'auto', overflowY: 'hidden' }}>
-              {/* Allow full height for the iframe */}
               {isLoading ? (
                 <Loading />
               ) : (
@@ -268,7 +147,7 @@ export default function Content() {
                   src={selectedContent}
                   onLoad={(event) =>
                     resizeIframe(event.target as HTMLIFrameElement)
-                  } // Use event.target to get the iframe
+                  }
                   title="Notebook Content"
                   style={{
                     width: '100%',
