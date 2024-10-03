@@ -66,6 +66,9 @@ const notebooks = {
 export default function Content() {
   const [selectedContent, setSelectedContent] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [expandedAccordion, setExpandedAccordion] = useState<string | false>(
+    false
+  );
 
   const resizeIframe = (iframe: HTMLIFrameElement) => {
     if (iframe && iframe.contentWindow) {
@@ -74,6 +77,10 @@ export default function Content() {
         iframe.style.height = doc.scrollHeight + 'px';
       }
     }
+  };
+
+  const handleAccordionChange = (folder: string) => {
+    setExpandedAccordion(expandedAccordion === folder ? false : folder);
   };
 
   const handleContentSelection = (path: string) => {
@@ -114,7 +121,12 @@ export default function Content() {
 
         {/* Map over notebooks to create accordions */}
         {Object.entries(notebooks).map(([folder, files]) => (
-          <Accordion style={{ marginBottom: '16px' }} key={folder}>
+          <Accordion
+            style={{ marginBottom: '16px' }}
+            key={folder}
+            expanded={expandedAccordion === folder}
+            onChange={() => handleAccordionChange(folder)}
+          >
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography variant="h5">{folder}</Typography>
             </AccordionSummary>
