@@ -26,8 +26,6 @@ const NavBar = ({ brandName, imageSrcPath }: NavBarProps) => (
     position="fixed"
     color="default"
     style={{
-      top: 0,
-      left: 0,
       margin: '10px',
       width: 'calc(100% - 20px)',
       borderRadius: '10px',

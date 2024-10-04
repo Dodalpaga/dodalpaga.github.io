@@ -69,12 +69,14 @@ export default function Content() {
   const [expandedAccordion, setExpandedAccordion] = useState<string | false>(
     false
   );
+  const [isIframeReady, setIsIframeReady] = useState<boolean>(false); // For controlling visibility after resizing
 
   const resizeIframe = (iframe: HTMLIFrameElement) => {
     if (iframe && iframe.contentWindow) {
       const doc = iframe.contentWindow.document.documentElement;
       if (doc) {
         iframe.style.height = doc.scrollHeight + 'px';
+        setIsIframeReady(true); // Once resized, mark iframe as ready
       }
     }
   };
@@ -85,7 +87,7 @@ export default function Content() {
 
   const handleContentSelection = (path: string) => {
     setIsLoading(true);
-    console.log(process.env.NEXT_PUBLIC_BASE_PATH + '/notebooks/' + path);
+    setIsIframeReady(false); // Reset iframe ready state
     setSelectedContent(
       process.env.NEXT_PUBLIC_BASE_PATH + '/notebooks/' + path
     );
@@ -165,6 +167,9 @@ export default function Content() {
                     width: '100%',
                     border: 'none',
                     backgroundColor: 'transparent',
+                    visibility: isIframeReady ? 'visible' : 'hidden', // Hide the iframe until it's resized
+                    opacity: isIframeReady ? 1 : 0, // Smooth transition
+                    transition: 'opacity 0.3s ease-in-out', // Fade in for a better UX
                   }}
                 />
               )}

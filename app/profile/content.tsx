@@ -11,6 +11,7 @@ import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
+import Grid from '@mui/material/Grid';
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import CodeIcon from '@mui/icons-material/Code';
@@ -81,7 +82,7 @@ export default function Content() {
     >
       {/* Fixed Left Section */}
       <div className="left-fixed">
-        <div className="left-container">
+        <div className="introduction left-container">
           <div className="profile-picture-container">
             <Card className="card">
               <CardMedia
@@ -100,7 +101,7 @@ export default function Content() {
           <Typography
             className="title"
             color="textSecondary"
-            variant="h4"
+            variant="h5"
             gutterBottom
           >
             About
@@ -211,28 +212,25 @@ export default function Content() {
           >
             Coding Stats
           </Typography>
-          <div
+          <Stack
             id="skill-set-container"
-            style={{
-              width: '100%',
-              alignItems: 'center',
-              marginBottom: '10px',
-            }}
+            direction="row"
+            useFlexGap
+            sx={{ flexWrap: 'wrap' }}
           >
             <img
               src="https://github-readme-stats.vercel.app/api?username=Dodalpaga&title_color=444444&text_color=444444&hide_rank=true&include_all_commits=true&show_icons=true&theme=transparent&count_private=true&hide=contribs,issues"
               alt="GitHub Stats"
             />
             <img
-              src="https://github-readme-streak-stats.herokuapp.com?user=Dodalpaga&theme=transparent&currStreakLabel=444444&currStreakNum=EB5454&fire=EB5454&ring=444444&sideNums=444444&sideLabels=444444"
-              alt="GitHub Streak"
-            />
-
-            <img
               src="https://github-readme-stats.vercel.app/api/top-langs/?username=Dodalpaga&title_color=444444&text_color=444444&layout=compact&theme=transparent&count_private=true&hide=c,java,c%2B%2B,css,procfile"
               alt="Top Languages"
             />
-          </div>
+            <img
+              src="https://github-readme-streak-stats.herokuapp.com?user=Dodalpaga&theme=transparent&currStreakLabel=444444&currStreakNum=EB5454&fire=EB5454&ring=444444&sideNums=444444&sideLabels=444444"
+              alt="GitHub Streak"
+            />
+          </Stack>
         </div>
       </div>
 
@@ -241,7 +239,7 @@ export default function Content() {
         {/* Experience Section */}
         <section id="experience-section" style={sectionStyle}>
           <Typography variant="h4">Experience</Typography>
-          <Typography variant="h6" gutterBottom sx={titleStyle}>
+          <Typography variant="body1" gutterBottom sx={titleStyle}>
             ({totalExperience}+ years)
           </Typography>
 
@@ -392,7 +390,15 @@ export default function Content() {
               </Typography>
             </Typography>
 
-            <Stack direction="row" spacing={1}>
+            <Stack
+              spacing={{ xs: 1, sm: 2 }}
+              direction="row"
+              useFlexGap
+              sx={{
+                flexWrap: 'wrap',
+                justifyContent: 'center',
+              }}
+            >
               <Box
                 style={{
                   textAlign: 'left',
@@ -564,7 +570,15 @@ export default function Content() {
             </Typography>
 
             {/* Skills Stack */}
-            <Stack direction="row" spacing={1}>
+            <Stack
+              spacing={{ xs: 1, sm: 2 }}
+              direction="row"
+              useFlexGap
+              sx={{
+                flexWrap: 'wrap',
+                justifyContent: 'center',
+              }}
+            >
               <Box
                 style={{
                   textAlign: 'left',
@@ -615,21 +629,6 @@ export default function Content() {
         >
           <Typography variant="h4" gutterBottom sx={titleStyle}>
             Education
-          </Typography>
-          <Typography variant="body1" sx={descriptionStyle}>
-            Coming soon...
-          </Typography>
-        </section>
-
-        {/* Coding Section */}
-        <section
-          id="coding"
-          style={{
-            ...sectionStyle, // Keep the base section styles
-          }}
-        >
-          <Typography variant="h4" gutterBottom sx={titleStyle}>
-            Coding
           </Typography>
           <Typography variant="body1" sx={descriptionStyle}>
             Coming soon...
