@@ -21,13 +21,12 @@ const apps = [
       highlighting different features and regions. Ideal for analyzing satellite images and extracting valuable insights.',
   },
   {
-    title: 'Coding Notebooks',
+    title: 'Jupyter Notebooks',
     image: `${process.env.NEXT_PUBLIC_BASE_PATH}/assets/Jupyter_logo.png`, // Update with your actual image path
     link: '/projects/notebooks', // Update with your actual routes
     target: '',
     description:
-      'Select a tile from the Earth map, and this app will provide a segmented version of that tile, \
-      highlighting different features and regions. Ideal for analyzing satellite images and extracting valuable insights.',
+      'A collection of my notebooks focused on artificial intelligence, machine learning, and algorithmic problem-solving.',
   },
   {
     title: 'Image Detection',
@@ -35,10 +34,7 @@ const apps = [
     link: '/projects/image_detection', // Update with your actual routes
     target: '',
     description:
-      'Utilizing the power of YOLO (You Only Look Once), this application enables real-time object detection within images. \
-      By processing the uploaded images, the app identifies and highlights various objects, providing users with instant visual feedback. \
-      Ideal for applications in surveillance, traffic monitoring, and inventory management, this tool transforms static images into dynamic insights, \
-      enhancing the ability to analyze and interpret visual data effectively.',
+      'Utilizing the power of YOLO (You Only Look Once), this application enables real-time object detection within images.',
   },
   {
     title: 'Code Interpreter',
@@ -94,7 +90,7 @@ const apps = [
     link: 'https://seawolf.netlify.app/', // Update with your actual routes
     target: '_blank',
     description:
-      'This website is a work in progress for SEAWOLF, a boat manufacturing company developed by Laurent SOURDILLE who developed his own open-hull boat designed for fishing and diving for professionals and private customers.',
+      'This website is a work in progress for SEAWOLF, a boat manufacturing company developed by Laurent SOURDILLE who developed his own open-hull boat designed for fishing and diving.',
   },
   {
     title: 'VBSO Website',
