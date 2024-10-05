@@ -88,9 +88,7 @@ export default function Content() {
   const handleContentSelection = (path: string) => {
     setIsLoading(true);
     setIsIframeReady(false); // Reset iframe ready state
-    setSelectedContent(
-      process.env.NEXT_PUBLIC_BASE_PATH + '/notebooks/' + path
-    );
+    setSelectedContent('/notebooks/' + path);
     setTimeout(() => {
       setIsLoading(false);
     }, 500);

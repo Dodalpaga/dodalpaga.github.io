@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  basePath: process.env.NEXT_PUBLIC_BASE_PATH || '', // Make sure this is set correctly
   output: 'export',
   reactStrictMode: true,
   images: {

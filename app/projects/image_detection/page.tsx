@@ -8,7 +8,6 @@ import './styles.css'; // Ensure the correct CSS file is imported
 
 export default function App1() {
   const [isLoading, setIsLoading] = React.useState(true);
-  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
   React.useEffect(() => {
     const timer = setTimeout(() => {
@@ -28,7 +27,7 @@ export default function App1() {
       >
         <NavBar
           brandName="Dorian Voydie"
-          imageSrcPath={`${basePath}/assets/mountain.png`}
+          imageSrcPath={`/assets/mountain.png`}
         />
       </div>
 
