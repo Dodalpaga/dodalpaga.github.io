@@ -7,7 +7,6 @@ import Content from './content';
 
 export default function SandboxApp() {
   const [isLoading, setIsLoading] = React.useState(true);
-  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
   React.useEffect(() => {
     const timer = setTimeout(() => {
@@ -21,7 +20,7 @@ export default function SandboxApp() {
       <div className="flex flex-col items-center justify-between p-4">
         <NavBar
           brandName="Dorian Voydie"
-          imageSrcPath={`${basePath}/assets/mountain.png`}
+          imageSrcPath={`/assets/mountain.png`}
         />
       </div>
       <div className="flex flex-col items-center justify-between p-4">

@@ -7,7 +7,6 @@ import Loading from '../../components/loading';
 
 export default function Template() {
   const [isLoading, setIsLoading] = React.useState(true);
-  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
   React.useEffect(() => {
     const timer = setTimeout(() => {
@@ -24,7 +23,7 @@ export default function Template() {
       >
         <NavBar
           brandName="Dorian Voydie"
-          imageSrcPath={`${basePath}/assets/mountain.png`}
+          imageSrcPath={`/assets/mountain.png`}
         />
       </div>
       <div className="flex flex-col items-center justify-between">
