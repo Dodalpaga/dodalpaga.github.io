@@ -22,8 +22,7 @@ const sectionStyle: React.CSSProperties = {
 // General style for left panel links
 const linkStyle = {
   cursor: 'pointer',
-  marginLeft: '10px',
-  marginBottom: '10px',
+  margin: '5px',
 };
 
 // Notebook structure
@@ -85,10 +84,11 @@ export default function Content() {
     setExpandedAccordion(expandedAccordion === folder ? false : folder);
   };
 
-  const handleContentSelection = (path: string) => {
+  const handleContentSelection = (folder: string, path: string) => {
     setIsLoading(true);
     setIsIframeReady(false); // Reset iframe ready state
     setSelectedContent('/notebooks/' + path);
+    setExpandedAccordion(false); // Close the accordion
     setTimeout(() => {
       setIsLoading(false);
     }, 500);
@@ -107,18 +107,7 @@ export default function Content() {
         padding: 0,
       }}
     >
-      <div className="left-fixed">
-        <div className="left-container">
-          <Typography
-            className="title"
-            color="textSecondary"
-            variant="h4"
-            gutterBottom
-          >
-            My Notebooks
-          </Typography>
-        </div>
-
+      <div className="left-fixed left-notebook">
         {/* Map over notebooks to create accordions */}
         {Object.entries(notebooks).map(([folder, files]) => (
           <Accordion
@@ -131,12 +120,12 @@ export default function Content() {
               <Typography variant="h5">{folder}</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <div className="left-container">
+              <div className="left-container left-notebook-container">
                 {files.map((file) => (
                   <Typography
                     key={file.path}
                     variant="h6"
-                    onClick={() => handleContentSelection(file.path)}
+                    onClick={() => handleContentSelection(folder, file.path)}
                     style={linkStyle}
                   >
                     {file.name}

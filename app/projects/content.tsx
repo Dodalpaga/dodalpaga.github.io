@@ -12,7 +12,7 @@ import '../globals.css'; // Ensure global styles are correctly imported
 
 const apps = [
   {
-    title: 'Satellite Imagery Segmenter',
+    title: 'Satellite Segmenter',
     image: `/assets/earth.jpg`, // Update with your actual image path
     link: '/projects/satellite_segmentation', // Update with your actual routes
     target: '',
@@ -127,26 +127,7 @@ export default function Content() {
         {apps.map((app, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
             <Link href={app.link} target={app.target}>
-              <Card
-                className="card"
-                sx={{
-                  position: 'relative',
-                  cursor: 'pointer',
-                  backdropFilter: 'blur(10px)',
-                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                  borderRadius: 2,
-                  boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
-                  transition: 'transform 0.3s ease',
-                  '&:hover': {
-                    transform: 'scale(1.05)',
-                  },
-                  overflow: 'hidden',
-                  width: '100%', // Set width to 100% of the grid item
-                  aspectRatio: '1 / 1', // Maintain a 1:1 aspect ratio
-                  display: 'flex',
-                  flexDirection: 'column',
-                }}
-              >
+              <Card className="card">
                 <CardMedia
                   component="img"
                   image={app.image}
@@ -160,7 +141,6 @@ export default function Content() {
                       'radial-gradient(circle, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0.7) 50%, rgba(0, 0, 0, 0) 60%)',
                     WebkitMaskImage:
                       'radial-gradient(circle, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0.7) 50%, rgba(0, 0, 0, 0) 60%)',
-                    backgroundColor: '#e5e7eb', // Background color behind transparent areas of image
                   }}
                 />
                 <CardContent
