@@ -3,87 +3,29 @@
 @tailwind utilities;
 
 :root {
-  --background: 0 0% 100%;
-  --foreground: 222.2 84% 4.9%;
-
-  --card: 0 0% 100%;
-  --card-foreground: 222.2 84% 4.9%;
-
-  --popover: 0 0% 100%;
-  --popover-foreground: 222.2 84% 4.9%;
-
-  --primary: 222.2 47.4% 11.2%;
-  --primary-foreground: 210 40% 98%;
-
-  --secondary: 210 40% 96.1%;
-  --secondary-foreground: 222.2 47.4% 11.2%;
-
-  --muted: 210 40% 96.1%;
-  --muted-foreground: 215.4 16.3% 46.9%;
-
-  --accent: 210 40% 96.1%;
-  --accent-foreground: 222.2 47.4% 11.2%;
-
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 210 40% 98%;
-
-  --border: 214.3 31.8% 91.4%;
-  --input: 214.3 31.8% 91.4%;
-  --ring: 222.2 84% 4.9%;
-
-  --radius: 0.5rem;
-
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --background: rgb(235, 235, 235);
+  --foreground: rgb(15, 15, 15);
+  --background-transparent: rgba(255, 255, 255, 0.8);
+  --background-start-rgb: rgb(214, 219, 220);
+  --background-end-rgb: rgb(255, 255, 255);
+  --card: rgb(255, 255, 255);
 }
 
-.dark {
-  --background: 222.2 84% 4.9%;
-  --foreground: 210 40% 98%;
-
-  --card: 222.2 84% 4.9%;
-  --card-foreground: 210 40% 98%;
-
-  --popover: 222.2 84% 4.9%;
-  --popover-foreground: 210 40% 98%;
-
-  --primary: 210 40% 98%;
-  --primary-foreground: 222.2 47.4% 11.2%;
-
-  --secondary: 217.2 32.6% 17.5%;
-  --secondary-foreground: 210 40% 98%;
-
-  --muted: 217.2 32.6% 17.5%;
-  --muted-foreground: 215 20.2% 65.1%;
-
-  --accent: 217.2 32.6% 17.5%;
-  --accent-foreground: 210 40% 98%;
-
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 210 40% 98%;
-
-  --border: 217.2 32.6% 17.5%;
-  --input: 217.2 32.6% 17.5%;
-  --ring: 212.7 26.8% 83.9%;
-}
-
-/* @media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) {
   :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --background: rgb(15, 15, 15);
+    --foreground: rgb(255, 255, 255);
+    --background-transparent: rgba(29, 29, 29, 0.8);
+    --background-start-rgb: rgb(51, 51, 51);
+    --background-end-rgb: rgb(24, 24, 24);
+    --card: rgb(61, 61, 61);
   }
-} */
+}
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  color: var(--foreground);
+  background: linear-gradient(to bottom, transparent, var(--background-end-rgb))
+    var(--background-start-rgb);
   background-attachment: fixed;
   background-size: cover;
   background-position: center;
@@ -99,23 +41,40 @@ html::-webkit-scrollbar {
   display: none;
 }
 
-/* globals.css */
-.card-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(255, 255, 255, 0.9);
-  color: #000000;
+.card {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  background-color: var(--card) !important;
+  color: var(--foreground) !important;
+  position: relative;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  border-radius: 10px; /* Border radius 2 in MUI translates to 8px */
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  overflow: hidden;
+  width: 100%; /* Set width to 100% of the grid item */
+  aspect-ratio: 1 / 1; /* Maintain a 1:1 aspect ratio */
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+/* globals.css */
+.card-overlay {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: var(--background-transparent);
+  color: var(--foreground);
   justify-content: center;
+  text-align: center;
   opacity: 0;
   transition: opacity 0.3s ease;
   padding: 16px;
-  text-align: center;
   border-radius: 8px; /* To match the card's border radius */
   z-index: 1;
   pointer-events: none; /* Prevent overlay from blocking clicks */
@@ -127,7 +86,7 @@ html::-webkit-scrollbar {
 
 .left-fixed {
   position: fixed;
-  background-color: #f5f5f5;
+  background-color: var(--background);
   top: 84px;
   left: 0;
   padding: 10px;
@@ -143,7 +102,7 @@ html::-webkit-scrollbar {
 .left-fixed .card {
   position: relative;
   cursor: pointer;
-  background-color: rgba(255, 255, 255, 0);
+  background-color: var(--background);
   border-radius: 50%; /* Ensures the card is a perfect circle */
   transition: transform 0.3s ease;
   overflow: hidden;
@@ -187,7 +146,6 @@ html::-webkit-scrollbar {
   .left-fixed {
     position: relative;
     display: flex;
-    flex-direction: column;
     background-color: #f5f5f5;
     top: 0;
     left: 0;
@@ -199,12 +157,32 @@ html::-webkit-scrollbar {
     align-items: center;
     border-radius: 10px;
     box-shadow: 0 14px 16px rgba(0, 0, 0, 0.2);
+    overflow: visible;
+  }
+
+  .left-profile {
+    flex-direction: column;
+  }
+
+  .MuiAccordion-root {
+    margin-top: 0 !important; /* Ensure there's no top margin */
+  }
+
+  .left-notebook {
+    display: flex;
+    flex-direction: row;
+    justify-content: center; /* Align the remaining accordions to the top */
+    align-items: flex-start;
+    height: auto; /* Allow height to adjust based on content */
+  }
+
+  .left-notebook-container {
+    align-items: flex-start !important;
   }
 
   .left-fixed .left-container {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
     height: 100%; /* Ensure the card takes up full available height */
     flex-grow: 1; /* Allow the card to take up remaining space */
@@ -268,8 +246,6 @@ html::-webkit-scrollbar {
   .left-fixed .left-container {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
     height: 100%;
   }
 

@@ -50,10 +50,6 @@ const titleStyle = {
   marginBottom: '20px',
 };
 
-const descriptionStyle = {
-  color: '#333',
-};
-
 const descriptionItemStyle = {
   display: 'list-item',
   textAlign: 'left',
@@ -81,32 +77,31 @@ export default function Content() {
       }}
     >
       {/* Fixed Left Section */}
-      <div className="left-fixed">
+      <div className="left-fixed left-profile">
         <div className="introduction left-container">
           <div className="profile-picture-container">
-            <Card className="card">
+            <Card
+              className="card"
+              sx={{
+                width: 'auto',
+              }}
+            >
               <CardMedia
                 component="img"
                 image={`/assets/id.png`}
                 alt={'Profile Picture'}
                 sx={{
                   height: '100%', // Adjust height as needed
-                  width: '100%', // Full width of the card
                   objectFit: 'contain', // Maintain aspect ratio and fit within the card
                   objectPosition: 'center', // Center image horizontally and vertically
                 }}
               />
             </Card>
           </div>
-          <Typography
-            className="title"
-            color="textSecondary"
-            variant="h5"
-            gutterBottom
-          >
+          <Typography className="title" variant="h5" gutterBottom>
             About
           </Typography>
-          <Typography color="textPrimary" variant="body1" gutterBottom>
+          <Typography variant="body1" gutterBottom>
             I&apos;m a Data Scientist, but i also like to build websites, and
             develop apps in Python.
           </Typography>
@@ -114,12 +109,7 @@ export default function Content() {
 
         <div className="left-container">
           {' '}
-          <Typography
-            className="title"
-            color="textSecondary"
-            variant="h5"
-            gutterBottom
-          >
+          <Typography className="title" variant="h5" gutterBottom>
             Get in touch
           </Typography>
           <div
@@ -169,12 +159,7 @@ export default function Content() {
               />
             </Stack>
           </div>
-          <Typography
-            className="title"
-            color="textSecondary"
-            variant="h5"
-            gutterBottom
-          >
+          <Typography className="title" variant="h5" gutterBottom>
             Skill set
           </Typography>
           <div
@@ -204,12 +189,7 @@ export default function Content() {
               <Chip label="Typescript" variant="outlined" />
             </Stack>
           </div>
-          <Typography
-            className="title"
-            color="textSecondary"
-            variant="h5"
-            gutterBottom
-          >
+          <Typography className="title" variant="h5" gutterBottom>
             Coding Stats
           </Typography>
           <Stack
@@ -246,20 +226,16 @@ export default function Content() {
           {/* Experience Thales */}
           <div className="experience">
             {/* Dates and location */}
-            <Typography variant="body2" sx={descriptionStyle}>
+            <Typography variant="body2">
               {startDate} - Present (~{yearsSpent} years)
             </Typography>
-            <Typography variant="body2" sx={descriptionStyle}>
-              Toulouse Area, France
-            </Typography>
+            <Typography variant="body2">Toulouse Area, France</Typography>
 
             {/* Company Name */}
-            <Typography variant="h5" sx={descriptionStyle}>
-              Thales Services Numériques
-            </Typography>
+            <Typography variant="h5">Thales Services Numériques</Typography>
 
             {/* Description */}
-            <Typography variant="body1" sx={descriptionStyle}>
+            <Typography variant="body1">
               Participated in various{' '}
               <Typography component="span" sx={{ fontWeight: 'bold' }}>
                 international projects
@@ -295,7 +271,7 @@ export default function Content() {
               }}
             >
               <ListItem sx={descriptionItemStyle}>
-                <Typography variant="body1" sx={descriptionStyle}>
+                <Typography variant="body1">
                   -{' '}
                   <Typography component="span" sx={{ fontWeight: 'bold' }}>
                     Applied AI
@@ -320,7 +296,7 @@ export default function Content() {
                 </Typography>
               </ListItem>
               <ListItem sx={descriptionItemStyle}>
-                <Typography variant="body1" sx={descriptionStyle}>
+                <Typography variant="body1">
                   - Developed and{' '}
                   <Typography component="span" sx={{ fontWeight: 'bold' }}>
                     deployed pipelines
@@ -334,7 +310,7 @@ export default function Content() {
                 </Typography>
               </ListItem>
               <ListItem sx={descriptionItemStyle}>
-                <Typography variant="body1" sx={descriptionStyle}>
+                <Typography variant="body1">
                   - Created{' '}
                   <Typography component="span" sx={{ fontWeight: 'bold' }}>
                     AI-based
@@ -343,7 +319,7 @@ export default function Content() {
                 </Typography>
               </ListItem>
               <ListItem sx={descriptionItemStyle}>
-                <Typography variant="body1" sx={descriptionStyle}>
+                <Typography variant="body1">
                   - Built full-stack{' '}
                   <Typography component="span" sx={{ fontWeight: 'bold' }}>
                     containerized
@@ -361,7 +337,7 @@ export default function Content() {
                 </Typography>
               </ListItem>
               <ListItem sx={descriptionItemStyle}>
-                <Typography variant="body1" sx={descriptionStyle}>
+                <Typography variant="body1">
                   - Collaborated with cross-functional teams to{' '}
                   <Typography component="span" sx={{ fontWeight: 'bold' }}>
                     respond to CFTs
@@ -371,10 +347,7 @@ export default function Content() {
               </ListItem>
             </List>
 
-            <Typography
-              variant="body1"
-              sx={{ ...descriptionStyle, padding: 1 }}
-            >
+            <Typography variant="body1" sx={{ padding: 1 }}>
               Projects developed :{' '}
               <Typography
                 variant="body2"
@@ -405,9 +378,7 @@ export default function Content() {
                 }}
                 sx={{ p: 2, border: '1px dashed grey', borderRadius: '15px' }}
               >
-                <Typography variant="body1" sx={descriptionStyle}>
-                  Python
-                </Typography>
+                <Typography variant="body1">Python</Typography>
                 <Chip label="Pandas" />
                 <Chip label="Numpy" />
                 <Chip label="Pytorch" />
@@ -418,9 +389,7 @@ export default function Content() {
                 }}
                 sx={{ p: 2, border: '1px dashed grey', borderRadius: '15px' }}
               >
-                <Typography variant="body1" sx={descriptionStyle}>
-                  Artificial Intelligence
-                </Typography>
+                <Typography variant="body1">Artificial Intelligence</Typography>
                 <Chip label="Machine Learning" />
                 <Chip label="Deep Learning" />
                 <Chip label="NLP" />
@@ -432,9 +401,7 @@ export default function Content() {
                 }}
                 sx={{ p: 2, border: '1px dashed grey', borderRadius: '15px' }}
               >
-                <Typography variant="body1" sx={descriptionStyle}>
-                  Backend
-                </Typography>
+                <Typography variant="body1">Backend</Typography>
                 <Chip label="REST APIs" />
                 <Chip label="Docker" />
                 <Chip label="SQL" />
@@ -446,9 +413,7 @@ export default function Content() {
                 }}
                 sx={{ p: 2, border: '1px dashed grey', borderRadius: '15px' }}
               >
-                <Typography variant="body1" sx={descriptionStyle}>
-                  Projects Management
-                </Typography>
+                <Typography variant="body1">Projects Management</Typography>
                 <Chip label="GitLab (& CI)" />
                 <Chip label="Confluence" />
                 <Chip label="JIRA" />
@@ -461,20 +426,16 @@ export default function Content() {
           {/* Experience Atos */}
           <div className="experience">
             {/* Dates and location */}
-            <Typography variant="body2" sx={descriptionStyle}>
+            <Typography variant="body2">
               Sep 2021 - Nov 2022 (~1 year)
             </Typography>
-            <Typography variant="body2" sx={descriptionStyle}>
-              Toulouse Area, France
-            </Typography>
+            <Typography variant="body2">Toulouse Area, France</Typography>
 
             {/* Company Name */}
-            <Typography variant="h5" sx={descriptionStyle}>
-              Atos France
-            </Typography>
+            <Typography variant="h5">Atos France</Typography>
 
             {/* Description */}
-            <Typography variant="body1" sx={descriptionStyle}>
+            <Typography variant="body1">
               In parallel with my{' '}
               <Typography component="span" sx={{ fontWeight: 'bold' }}>
                 MsC
@@ -505,7 +466,7 @@ export default function Content() {
               }}
             >
               <ListItem sx={descriptionItemStyle}>
-                <Typography variant="body1" sx={descriptionStyle}>
+                <Typography variant="body1">
                   - Developed{' '}
                   <Typography component="span" sx={{ fontWeight: 'bold' }}>
                     embedded instrumentation
@@ -522,7 +483,7 @@ export default function Content() {
                 </Typography>
               </ListItem>
               <ListItem sx={descriptionItemStyle}>
-                <Typography variant="body1" sx={descriptionStyle}>
+                <Typography variant="body1">
                   -{' '}
                   <Typography component="span" sx={{ fontWeight: 'bold' }}>
                     Analyzed
@@ -539,7 +500,7 @@ export default function Content() {
                 </Typography>
               </ListItem>
               <ListItem sx={descriptionItemStyle}>
-                <Typography variant="body1" sx={descriptionStyle}>
+                <Typography variant="body1">
                   - Developed{' '}
                   <Typography component="span" sx={{ fontWeight: 'bold' }}>
                     computer vision AI models
@@ -548,7 +509,7 @@ export default function Content() {
                 </Typography>
               </ListItem>
               <ListItem sx={descriptionItemStyle}>
-                <Typography variant="body1" sx={descriptionStyle}>
+                <Typography variant="body1">
                   - Created dashboards for{' '}
                   <Typography component="span" sx={{ fontWeight: 'bold' }}>
                     data visualization
@@ -557,7 +518,7 @@ export default function Content() {
                 </Typography>
               </ListItem>
             </List>
-            <Typography variant="body1" sx={descriptionStyle}>
+            <Typography variant="body1">
               Authored a paper for the{' '}
               <Typography component="span" sx={{ fontWeight: 'bold' }}>
                 IFAC 2023 conference
@@ -585,9 +546,7 @@ export default function Content() {
                 }}
                 sx={{ p: 2, border: '1px dashed grey', borderRadius: '15px' }}
               >
-                <Typography variant="body1" sx={descriptionStyle}>
-                  Embedded Systems
-                </Typography>
+                <Typography variant="body1">Embedded Systems</Typography>
                 <Chip label="Raspberry Pi" />
                 <Chip label="Jetson Nano" />
               </Box>
@@ -597,9 +556,7 @@ export default function Content() {
                 }}
                 sx={{ p: 2, border: '1px dashed grey', borderRadius: '15px' }}
               >
-                <Typography variant="body1" sx={descriptionStyle}>
-                  Machine Learning
-                </Typography>
+                <Typography variant="body1">Machine Learning</Typography>
                 <Chip label="Computer Vision" />
                 <Chip label="Data Analysis" />
               </Box>
@@ -609,9 +566,7 @@ export default function Content() {
                 }}
                 sx={{ p: 2, border: '1px dashed grey', borderRadius: '15px' }}
               >
-                <Typography variant="body1" sx={descriptionStyle}>
-                  Data Visualization
-                </Typography>
+                <Typography variant="body1">Data Visualization</Typography>
                 <Chip label="Dashboards" />
                 <Chip label="Grafana" />
                 <Chip label="Predictive Models" />
@@ -630,9 +585,7 @@ export default function Content() {
           <Typography variant="h4" gutterBottom sx={titleStyle}>
             Education
           </Typography>
-          <Typography variant="body1" sx={descriptionStyle}>
-            Coming soon...
-          </Typography>
+          <Typography variant="body1">Coming soon...</Typography>
         </section>
       </div>
     </Container>

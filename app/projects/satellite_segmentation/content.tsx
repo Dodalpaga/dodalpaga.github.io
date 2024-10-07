@@ -87,8 +87,33 @@ export default function Content() {
         direction="row"
       >
         {/* Model selection dropdown */}
-        <FormControl variant="outlined" sx={{ minWidth: 120, height: '100%' }}>
-          <InputLabel id="model-select-label">Model</InputLabel>
+        <FormControl
+          variant="outlined"
+          sx={{
+            minWidth: 120,
+            height: '100%',
+            '& .MuiOutlinedInput-root': {
+              color: 'var(--foreground)',
+              '& fieldset': {
+                borderColor: 'var(--foreground)',
+              },
+              '&:hover fieldset': {
+                borderColor: 'var(--foreground)',
+              },
+              '&.Mui-focused fieldset': {
+                borderColor: 'var(--foreground)',
+              },
+            },
+          }}
+        >
+          <InputLabel
+            id="model-select-label"
+            sx={{
+              color: 'var(--foreground)',
+            }}
+          >
+            Model
+          </InputLabel>
           <Select
             labelId="model-select-label"
             value={modelName}
@@ -97,6 +122,10 @@ export default function Content() {
             sx={{
               minWidth: 120,
               height: '100%',
+              color: 'var(--foreground)',
+              '& .MuiSelect-icon': {
+                color: 'var(--foreground)',
+              },
             }}
           >
             <MenuItem value="FastSAM-s.pt">FastSAM-s</MenuItem>
