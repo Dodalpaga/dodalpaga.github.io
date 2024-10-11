@@ -55,18 +55,6 @@ const descriptionItemStyle = {
   padding: '4px',
 };
 
-const rgbToHex = (rgb: string) => {
-  const result = rgb.match(/\d+/g);
-  if (!result) return '#444444'; // Fallback color
-  return result
-    .slice(0, 3)
-    .map((num) => {
-      const hex = parseInt(num, 10).toString(16);
-      return hex.length === 1 ? '0' + hex : hex;
-    })
-    .join('');
-};
-
 export default function Content() {
   const { theme } = useThemeContext();
   const startDate = 'Dec 2022';
