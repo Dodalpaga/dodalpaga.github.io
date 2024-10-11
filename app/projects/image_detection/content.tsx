@@ -83,9 +83,28 @@ export default function Content() {
           sx={{
             minWidth: 120,
             height: '100%',
+            '& .MuiOutlinedInput-root': {
+              color: 'var(--foreground)',
+              '& fieldset': {
+                borderColor: 'var(--foreground)',
+              },
+              '&:hover fieldset': {
+                borderColor: 'var(--foreground)',
+              },
+              '&.Mui-focused fieldset': {
+                borderColor: 'var(--foreground)',
+              },
+            },
           }}
         >
-          <InputLabel id="model-select-label">Model</InputLabel>
+          <InputLabel
+            sx={{
+              color: 'var(--foreground)',
+            }}
+            id="model-select-label"
+          >
+            Model
+          </InputLabel>
           <Select
             labelId="model-select-label"
             value={modelName}
@@ -94,6 +113,10 @@ export default function Content() {
             sx={{
               minWidth: 120,
               height: '100%',
+              color: 'var(--foreground)',
+              '& .MuiSelect-icon': {
+                color: 'var(--foreground)',
+              },
             }}
           >
             <MenuItem value="yolov8n.pt">YOLOv8n</MenuItem>

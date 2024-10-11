@@ -6,14 +6,15 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'; // Icon for the accordion
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Loading from '../../../components/loading';
 import '../../globals.css'; // Ensure global styles are correctly imported
+import { useThemeContext } from '../../../context/ThemeContext';
 
 const sectionStyle: React.CSSProperties = {
   padding: '10px 20px 20px 20px',
   display: 'flex',
-  flexDirection: 'column', // This should be fine, but you may need to ensure TypeScript understands it
+  flexDirection: 'column',
   width: '100%',
   textAlign: 'center',
   position: 'relative',
@@ -42,10 +43,7 @@ const notebooks = {
     { name: 'Frozen Lake', path: 'random/frozen_lake.html' },
     { name: 'Machine Learning', path: 'random/ml.html' },
     { name: 'Ozone', path: 'random/ozone.html' },
-    {
-      name: 'Persistence Multiplicative',
-      path: 'random/persistence.html',
-    },
+    { name: 'Persistence Multiplicative', path: 'random/persistence.html' },
     { name: 'Taxi', path: 'random/taxi.html' },
   ],
   Kaggle: [
@@ -63,19 +61,21 @@ const notebooks = {
 };
 
 export default function Content() {
+  const { theme } = useThemeContext(); // Access the current theme from context
   const [selectedContent, setSelectedContent] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [expandedAccordion, setExpandedAccordion] = useState<string | false>(
     false
   );
-  const [isIframeReady, setIsIframeReady] = useState<boolean>(false); // For controlling visibility after resizing
+  const [isIframeReady, setIsIframeReady] = useState<boolean>(false);
+  const iframeRef = useRef<HTMLIFrameElement | null>(null);
 
   const resizeIframe = (iframe: HTMLIFrameElement) => {
     if (iframe && iframe.contentWindow) {
       const doc = iframe.contentWindow.document.documentElement;
       if (doc) {
         iframe.style.height = doc.scrollHeight + 'px';
-        setIsIframeReady(true); // Once resized, mark iframe as ready
+        setIsIframeReady(true); // Mark iframe as ready
       }
     }
   };
@@ -84,7 +84,7 @@ export default function Content() {
     setExpandedAccordion(expandedAccordion === folder ? false : folder);
   };
 
-  const handleContentSelection = (folder: string, path: string) => {
+  const handleContentSelection = (path: string) => {
     setIsLoading(true);
     setIsIframeReady(false); // Reset iframe ready state
     setSelectedContent('/notebooks/' + path);
@@ -93,6 +93,63 @@ export default function Content() {
       setIsLoading(false);
     }, 500);
   };
+
+  // Inject styles into the iframe's document
+  const injectStyles = (iframe: HTMLIFrameElement, theme: 'light' | 'dark') => {
+    const style = document.createElement('style');
+
+    // Set the styles based on the theme
+    if (theme === 'dark') {
+      style.textContent = `
+        thead,
+        caption,
+        div.text_cell_render,
+        p,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        li {
+          color: white !important; /* Override color for dark theme */
+        }
+        .jp-OutputArea-output pre {
+          color: white !important; /* Override color for dark theme */
+        }
+      `;
+    } else {
+      style.textContent = `
+        thead,
+        caption,
+        div.text_cell_render,
+        p,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        li {
+          color: black !important; /* Override color for light theme */
+        }
+        .jp-OutputArea-output pre {
+          color: black !important; /* Override color for light theme */
+        }
+      `;
+    }
+
+    // Append the style element to the iframe's head
+    iframe.contentDocument?.head.appendChild(style);
+  };
+
+  React.useEffect(() => {
+    // Check if iframe is available
+    if (iframeRef.current) {
+      // Inject styles based on the current theme
+      injectStyles(iframeRef.current, theme);
+    }
+  }, [theme]); // Dependency on theme
 
   return (
     <Container
@@ -108,7 +165,6 @@ export default function Content() {
       }}
     >
       <div className="left-fixed left-notebook">
-        {/* Map over notebooks to create accordions */}
         {Object.entries(notebooks).map(([folder, files]) => (
           <Accordion
             style={{ marginBottom: '16px' }}
@@ -125,7 +181,7 @@ export default function Content() {
                   <Typography
                     key={file.path}
                     variant="h6"
-                    onClick={() => handleContentSelection(folder, file.path)}
+                    onClick={() => handleContentSelection(file.path)}
                     style={linkStyle}
                   >
                     {file.name}
@@ -145,10 +201,13 @@ export default function Content() {
                 <Loading />
               ) : (
                 <iframe
+                  ref={iframeRef}
                   src={selectedContent}
-                  onLoad={(event) =>
-                    resizeIframe(event.target as HTMLIFrameElement)
-                  }
+                  onLoad={(event) => {
+                    const iframe = event.target as HTMLIFrameElement;
+                    resizeIframe(iframe);
+                    injectStyles(iframe, theme); // Inject styles after resizing
+                  }}
                   title="Notebook Content"
                   style={{
                     width: '100%',
