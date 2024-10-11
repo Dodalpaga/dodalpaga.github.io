@@ -19,6 +19,7 @@ export default function Content() {
         alignItems: 'center',
         justifyContent: 'center',
         padding: 4,
+        marginTop: 6,
       }}
     >
       <Grid container spacing={4}>
@@ -30,26 +31,7 @@ export default function Content() {
           { Component: PiApproximationCanvas },
         ].map(({ Component }, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
-            <Card
-              className="card"
-              sx={{
-                position: 'relative',
-                cursor: 'pointer',
-                backdropFilter: 'blur(10px)',
-                backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                borderRadius: 2,
-                boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
-                transition: 'transform 0.3s ease',
-                '&:hover': {
-                  transform: 'scale(1.05)',
-                },
-                overflow: 'hidden',
-                width: '100%',
-                aspectRatio: '1 / 1',
-                display: 'flex',
-                flexDirection: 'column',
-              }}
-            >
+            <Card className="card">
               <Component />
             </Card>
           </Grid>

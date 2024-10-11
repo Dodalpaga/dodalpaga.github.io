@@ -87,8 +87,7 @@ const LorentzCanvas: React.FC = () => {
 
       resizeCanvasToParent();
 
-      p.colorMode(p.HSB);
-      p.background('#E4E8E8');
+      p.colorMode(p.RGB);
       p.noCursor(); // Hide the cursor
     };
 
@@ -193,7 +192,6 @@ const LorentzCanvas: React.FC = () => {
       <div
         style={{
           padding: '1rem',
-          backgroundColor: '#f0f0f0',
           textAlign: 'center',
         }}
       >

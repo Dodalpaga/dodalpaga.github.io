@@ -26,7 +26,10 @@ export default function SelectLanguages({
       {({ open }) => (
         <>
           <div className="relative">
-            <Listbox.Button className="relative w-full cursor-default rounded-md bg-white py-2 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6">
+            <Listbox.Button
+              style={{ backgroundColor: 'var(--background' }}
+              className="relative w-full cursor-default rounded-md py-2 pl-3 pr-10 text-left shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6"
+            >
               <span className="flex items-center">
                 <span className="ml-3 block truncate capitalize">
                   {selectedLanguageOption.language} (
@@ -48,7 +51,10 @@ export default function SelectLanguages({
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Listbox.Options className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+              <Listbox.Options
+                style={{ backgroundColor: 'var(--background' }}
+                className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+              >
                 {languageOptions.map((item) => (
                   <Listbox.Option
                     key={item.language}

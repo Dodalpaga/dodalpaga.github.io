@@ -73,8 +73,7 @@ const BifurcationCanvas = () => {
       // Create the canvas and set its size to 1/3 of parent's width and full height
       const canvas = p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
       canvasParent = canvas.elt.parentElement; // Get the parent element of the canvas
-      p.colorMode(p.HSB);
-      p.background('#E4E8E8');
+      p.colorMode(p.RGB);
     };
 
     p.draw = () => {
@@ -127,7 +126,6 @@ const BifurcationCanvas = () => {
       <div
         style={{
           padding: '1rem',
-          backgroundColor: '#f0f0f0',
           textAlign: 'center',
         }}
       >
