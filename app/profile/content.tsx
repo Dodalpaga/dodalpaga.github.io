@@ -11,12 +11,12 @@ import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
-import Grid from '@mui/material/Grid';
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import CodeIcon from '@mui/icons-material/Code';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import '../globals.css'; // Ensure global styles are correctly imported
+import { useThemeContext } from '../../context/ThemeContext';
 
 // Helper function to compute the years spent
 const getYearsSpent = (startDateString: string) => {
@@ -68,21 +68,13 @@ const rgbToHex = (rgb: string) => {
 };
 
 export default function Content() {
-  // Thales Start Date
+  const { theme } = useThemeContext();
   const startDate = 'Dec 2022';
   const yearsSpent = getYearsSpent('2022-12-01');
-
   const totalExperience = getYearsSpent('2021-09-01');
 
-  const [foreground, setForeground] = React.useState('#444444'); // Default color
-
-  React.useEffect(() => {
-    const rootStyle = getComputedStyle(document.documentElement);
-    const color = rootStyle.getPropertyValue('--foreground').trim();
-    if (color) {
-      setForeground(rgbToHex(color));
-    }
-  }, []);
+  // Define foreground colors based on the theme
+  const foreground = theme === 'dark' ? 'FFFFFF' : '000000'; // Adjust colors as necessary
 
   return (
     <Container

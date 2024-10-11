@@ -9,6 +9,7 @@ import { styled } from '@mui/material/styles';
 import { useState, useEffect } from 'react';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
+import { useThemeContext } from '../context/ThemeContext';
 
 interface NavBarProps {
   brandName: string;
@@ -25,24 +26,7 @@ const NavLink = styled(ListItem)(() => ({
 }));
 
 const NavBar = ({ brandName, imageSrcPath }: NavBarProps) => {
-  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
-    if (typeof window !== 'undefined') {
-      const storedTheme = localStorage.getItem('theme');
-      return storedTheme === 'light' || storedTheme === 'dark'
-        ? storedTheme
-        : 'light';
-    }
-    return 'light';
-  });
-
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('theme', theme);
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
-  };
+  const { theme, toggleTheme } = useThemeContext();
 
   return (
     <AppBar
