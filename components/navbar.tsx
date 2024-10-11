@@ -29,18 +29,7 @@ const NavBar = ({ brandName, imageSrcPath }: NavBarProps) => {
   const { theme, toggleTheme } = useThemeContext();
 
   return (
-    <AppBar
-      position="fixed"
-      color="default"
-      className="navbar"
-      style={{
-        margin: '10px',
-        width: 'calc(100% - 20px)',
-        borderRadius: '10px',
-        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.2)',
-        transition: 'transform 0.3s ease',
-      }}
-    >
+    <AppBar className="navbar">
       <Toolbar>
         <Link
           href="/"
@@ -60,9 +49,19 @@ const NavBar = ({ brandName, imageSrcPath }: NavBarProps) => {
               alt="Logo"
               width={60}
               height={60}
-              style={{ marginRight: 8 }}
+              style={{
+                marginRight: 8,
+                filter: theme === 'dark' ? 'invert(1)' : 'invert(0)',
+              }}
             />
-            <Typography variant="h6" component="div" noWrap={true}>
+            <Typography
+              variant="h6"
+              component="div"
+              noWrap={true}
+              sx={{
+                color: 'var(--foreground)',
+              }}
+            >
               {brandName}
             </Typography>
           </Box>
@@ -105,11 +104,13 @@ const NavBar = ({ brandName, imageSrcPath }: NavBarProps) => {
           </List>
           <IconButton
             onClick={toggleTheme}
-            className="w-12 h-12 rounded-full flex items-center justify-center bg-gray-200 dark:bg-gray-800"
+            className="w-12 h-12 rounded-full flex items-center justify-center"
             sx={{
               '&:hover': {
                 backgroundColor: 'transparent',
               },
+              color: 'var(--foreground)',
+              opacity: 0.8,
             }}
           >
             {theme === 'light' ? <DarkModeIcon /> : <LightModeIcon />}

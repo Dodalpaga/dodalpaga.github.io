@@ -44,19 +44,19 @@ html::-webkit-scrollbar {
   flex-direction: column;
   background-color: var(--card) !important;
   color: var(--foreground) !important;
-  position: relative;
-  cursor: pointer;
-  backdrop-filter: blur(10px);
-  border-radius: 10px; /* Border radius 2 in MUI translates to 8px */
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
-  overflow: hidden;
+  position: relative !important;
+  cursor: pointer !important;
+  backdrop-filter: blur(10px) !important;
+  border-radius: 10px !important; /* Border radius 2 in MUI translates to 8px */
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
+  transition: transform 0.3s ease !important;
+  overflow: hidden !important;
   width: 100%; /* Set width to 100% of the grid item */
   aspect-ratio: 1 / 1; /* Maintain a 1:1 aspect ratio */
 }
 
 .card:hover {
-  transform: scale(1.05);
+  transform: scale(1.05) !important;
 }
 
 /* globals.css */
@@ -143,8 +143,33 @@ span {
   color: var(--foreground);
 }
 
-.navbar span {
-  color: rgba(0, 0, 0, 0.87);
+.navbar {
+  background-color: var(--background) !important;
+  position: fixed;
+  color: var(--foreground);
+  margin: 10px;
+  width: calc(100% - 20px) !important;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.navbar img {
+  filter: invert(100%);
+}
+
+.footer {
+  background-color: var(--background);
+  color: var(--foreground);
+  width: 100%;
+  box-shadow: var(
+    --background
+  ); /* Adjust according to your theme's shadow variable */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px; /* Adjust height as needed */
+  z-index: 10;
 }
 
 .api-banner {

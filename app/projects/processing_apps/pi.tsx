@@ -79,9 +79,7 @@ const PiCanvas: React.FC = () => {
 
       resizeCanvasToParent();
 
-      p.colorMode(p.HSB);
-      p.background('#E4E8E8');
-      // p.translate(p.width / 2, p.height / 2);
+      p.colorMode(p.RGB);
       p.stroke(255);
       p.strokeWeight(4);
       p.noFill();
@@ -102,9 +100,9 @@ const PiCanvas: React.FC = () => {
         if (d < r * r * dezoomFactor * dezoomFactor) {
           // Adjust circle boundary
           circle++;
-          p.stroke(223, 58, 58);
+          p.stroke(120, 48, 48);
         } else {
-          p.stroke(125, 11, 11);
+          p.stroke(150, 180, 230);
         }
         p.strokeWeight(0.1);
         p.point(x, y); // Draw the point
@@ -146,7 +144,6 @@ const PiCanvas: React.FC = () => {
       <div
         style={{
           padding: '1rem',
-          backgroundColor: '#f0f0f0',
           textAlign: 'center',
         }}
       >
