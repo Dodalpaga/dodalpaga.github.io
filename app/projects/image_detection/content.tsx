@@ -16,7 +16,6 @@ export default function Content() {
   const [modelName, setModelName] = React.useState<string>('yolov8l.pt'); // State for selected model
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('ok');
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();

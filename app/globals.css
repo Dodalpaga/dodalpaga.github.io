@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+:root[data-theme='light'] {
   --background: rgb(235, 235, 235);
   --foreground: rgb(15, 15, 15);
   --background-transparent: rgba(255, 255, 255, 0.8);
@@ -11,15 +11,13 @@
   --card: rgb(255, 255, 255);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: rgb(15, 15, 15);
-    --foreground: rgb(255, 255, 255);
-    --background-transparent: rgba(29, 29, 29, 0.8);
-    --background-start-rgb: rgb(51, 51, 51);
-    --background-end-rgb: rgb(24, 24, 24);
-    --card: rgb(61, 61, 61);
-  }
+:root[data-theme='dark'] {
+  --background: rgb(32, 32, 32);
+  --foreground: rgb(255, 255, 255);
+  --background-transparent: rgba(29, 29, 29, 0.8);
+  --background-start-rgb: rgb(51, 51, 51);
+  --background-end-rgb: rgb(24, 24, 24);
+  --card: rgb(61, 61, 61);
 }
 
 body {
@@ -141,12 +139,19 @@ html::-webkit-scrollbar {
   text-align: left;
 }
 
+span {
+  color: var(--foreground);
+}
+
+.navbar span {
+  color: rgba(0, 0, 0, 0.87);
+}
+
 /* Responsive on max width 1150px */
 @media (max-width: 1150px) {
   .left-fixed {
     position: relative;
     display: flex;
-    background-color: #f5f5f5;
     top: 0;
     left: 0;
     padding: 10px;
