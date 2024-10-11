@@ -27,7 +27,6 @@ const getYearsSpent = (startDateString: string) => {
   const monthDifference = Math.abs(
     currentDate.getMonth() - startDate.getMonth()
   );
-  console.log(monthDifference);
 
   // If you spend more than 6 months on the project, consider it a full year
   if (monthDifference > 6) {
@@ -56,12 +55,34 @@ const descriptionItemStyle = {
   padding: '4px',
 };
 
+const rgbToHex = (rgb: string) => {
+  const result = rgb.match(/\d+/g);
+  if (!result) return '#444444'; // Fallback color
+  return result
+    .slice(0, 3)
+    .map((num) => {
+      const hex = parseInt(num, 10).toString(16);
+      return hex.length === 1 ? '0' + hex : hex;
+    })
+    .join('');
+};
+
 export default function Content() {
   // Thales Start Date
   const startDate = 'Dec 2022';
   const yearsSpent = getYearsSpent('2022-12-01');
 
   const totalExperience = getYearsSpent('2021-09-01');
+
+  const [foreground, setForeground] = React.useState('#444444'); // Default color
+
+  React.useEffect(() => {
+    const rootStyle = getComputedStyle(document.documentElement);
+    const color = rootStyle.getPropertyValue('--foreground').trim();
+    if (color) {
+      setForeground(rgbToHex(color));
+    }
+  }, []);
 
   return (
     <Container
@@ -199,15 +220,15 @@ export default function Content() {
             sx={{ flexWrap: 'wrap' }}
           >
             <img
-              src="https://github-readme-stats.vercel.app/api?username=Dodalpaga&title_color=444444&text_color=444444&hide_rank=true&include_all_commits=true&show_icons=true&theme=transparent&count_private=true&hide=contribs,issues"
+              src={`https://github-readme-stats.vercel.app/api?username=Dodalpaga&title_color=${encodeURIComponent(foreground)}&text_color=${encodeURIComponent(foreground)}&hide_rank=true&include_all_commits=true&show_icons=true&theme=transparent&count_private=true&hide=contribs,issues`}
               alt="GitHub Stats"
             />
             <img
-              src="https://github-readme-stats.vercel.app/api/top-langs/?username=Dodalpaga&title_color=444444&text_color=444444&layout=compact&theme=transparent&count_private=true&hide=c,java,c%2B%2B,css,procfile"
+              src={`https://github-readme-stats.vercel.app/api/top-langs/?username=Dodalpaga&title_color=${encodeURIComponent(foreground)}&text_color=${encodeURIComponent(foreground)}&layout=compact&theme=transparent&count_private=true&hide=c,java,c%2B%2B,css,procfile`}
               alt="Top Languages"
             />
             <img
-              src="https://github-readme-streak-stats.herokuapp.com?user=Dodalpaga&theme=transparent&currStreakLabel=444444&currStreakNum=EB5454&fire=EB5454&ring=444444&sideNums=444444&sideLabels=444444"
+              src={`https://github-readme-streak-stats.herokuapp.com?user=Dodalpaga&theme=transparent&currStreakLabel=${encodeURIComponent(foreground)}&currStreakNum=EB5454&fire=EB5454&ring=${encodeURIComponent(foreground)}&sideNums=${encodeURIComponent(foreground)}&sideLabels=${encodeURIComponent(foreground)}`}
               alt="GitHub Streak"
             />
           </Stack>

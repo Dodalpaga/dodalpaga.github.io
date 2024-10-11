@@ -39,8 +39,6 @@ export default function Content() {
         return;
       }
 
-      console.log(imageData); // Log the image data URL to verify it's being generated
-
       // Send a POST request to the FastAPI endpoint with the base64 image
       fetch(
         `${process.env.NEXT_PUBLIC_API_URL_IMG_SEGMENTATION}` +
