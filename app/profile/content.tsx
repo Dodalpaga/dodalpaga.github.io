@@ -674,8 +674,8 @@ export default function Content() {
                       Supmicrotech ENSMM
                     </Typography>
                     <Typography variant="body2">
-                      Ecole d'ingénieur, avec spécialisation en conception et
-                      réalisation d'objets connectés. Compétences clef :
+                      Ecole d&apos;ingénieur, avec spécialisation en conception
+                      et réalisation d&apos;objets connectés. Compétences clef :
                       Embedded Systems, Machine Learning, Network, Cloud, OOP.
                     </Typography>
                   </CardContent>
