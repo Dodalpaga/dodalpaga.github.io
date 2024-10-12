@@ -65,7 +65,7 @@ export default function Content() {
   const totalExperience = getYearsSpent('2021-09-01');
 
   // Define foreground colors based on the theme
-  const foreground = theme === 'dark' ? 'FFFFFF' : '000000'; // Adjust colors as necessary
+  const foreground = theme === 'dark' ? 'ffffff' : '000000'; // Adjust colors as necessary
 
   return (
     <Container
