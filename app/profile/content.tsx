@@ -3,12 +3,15 @@
 import * as React from 'react';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import { List, ListItem } from '@mui/material';
+import { Link, List, ListItem } from '@mui/material';
 import CountUp from 'react-countup';
 import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
+import CardContent from '@mui/material/CardContent';
+import CardActionArea from '@mui/material/CardActionArea';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
@@ -586,7 +589,100 @@ export default function Content() {
           <Typography variant="h4" gutterBottom sx={titleStyle}>
             Education
           </Typography>
-          <Typography variant="body1">Coming soon...</Typography>
+          <Grid container spacing={2}>
+            <Link></Link>
+            <Grid
+              item
+              xs={12}
+              sm={6}
+              md={6}
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <Card
+                sx={{
+                  maxWidth: 345,
+                  backgroundColor: 'var(--background)',
+                  color: 'var(--foreground)',
+                }}
+              >
+                <CardActionArea
+                  href="https://www.insa-toulouse.fr/valorisation-des-donnees-massives/"
+                  target="_blank"
+                >
+                  <CardMedia
+                    component="img"
+                    height="140"
+                    image="/assets/insa-toulouse.webp"
+                    alt="insa toulouse"
+                    sx={{
+                      padding: '10px',
+                      maxHeight: '100px',
+                      objectFit: 'contain',
+                    }}
+                  />
+                  <CardContent>
+                    <Typography gutterBottom variant="h5" component="div">
+                      INSA Toulouse
+                    </Typography>
+                    <Typography variant="body2">
+                      MsC spécialisé VALDOM : Valorisation des données massives.
+                      Compétences clef : Big Data, Machine Learning, Cloud.
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Grid>
+            <Grid
+              item
+              xs={12}
+              sm={6}
+              md={6}
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <Card
+                sx={{
+                  maxWidth: 345,
+                  backgroundColor: 'var(--background)',
+                  color: 'var(--foreground)',
+                }}
+              >
+                <CardActionArea
+                  href="https://www.supmicrotech.fr/"
+                  target="_blank"
+                >
+                  <CardMedia
+                    component="img"
+                    height="140"
+                    image="/assets/ensmm.png"
+                    alt="ensmm"
+                    sx={{
+                      padding: '10px',
+                      maxHeight: '100px',
+                      objectFit: 'contain',
+                    }}
+                  />
+                  <CardContent>
+                    <Typography gutterBottom variant="h5" component="div">
+                      Supmicrotech ENSMM
+                    </Typography>
+                    <Typography variant="body2">
+                      Ecole d'ingénieur, avec spécialisation en conception et
+                      réalisation d'objets connectés. Compétences clef :
+                      Embedded Systems, Machine Learning, Network, Cloud, OOP.
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Grid>
+          </Grid>
         </section>
       </div>
     </Container>

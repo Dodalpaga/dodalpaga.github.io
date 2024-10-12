@@ -4,7 +4,9 @@
 
 :root[data-theme='light'] {
   --background: rgb(235, 235, 235);
+  --background-2: rgb(190, 190, 190);
   --foreground: rgb(15, 15, 15);
+  --foreground-2: rgb(50, 50, 50);
   --background-transparent: rgba(255, 255, 255, 0.8);
   --background-start-rgb: rgb(214, 219, 220);
   --background-end-rgb: rgb(255, 255, 255);
@@ -13,7 +15,9 @@
 
 :root[data-theme='dark'] {
   --background: rgb(32, 32, 32);
+  --background-2: rgb(65, 65, 65);
   --foreground: rgb(255, 255, 255);
+  --foreground-2: rgb(200, 200, 200);
   --background-transparent: rgba(29, 29, 29, 0.8);
   --background-start-rgb: rgb(51, 51, 51);
   --background-end-rgb: rgb(24, 24, 24);
@@ -100,8 +104,8 @@ html::-webkit-scrollbar {
 .left-fixed .card {
   position: relative;
   cursor: pointer;
-  background-color: var(--background);
-  border-radius: 50%; /* Ensures the card is a perfect circle */
+  background-color: var(--background) !important;
+  border-radius: 50% !important; /* Ensures the card is a perfect circle */
   transition: transform 0.3s ease;
   overflow: hidden;
   max-height: 200px;
@@ -141,21 +145,6 @@ html::-webkit-scrollbar {
 
 span {
   color: var(--foreground);
-}
-
-.navbar {
-  background-color: var(--background) !important;
-  position: fixed;
-  color: var(--foreground);
-  margin: 10px;
-  width: calc(100% - 20px) !important;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s ease;
-}
-
-.navbar img {
-  filter: invert(100%);
 }
 
 .footer {
