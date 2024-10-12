@@ -6,10 +6,10 @@ import Box from '@mui/material/Box';
 import Link from 'next/link';
 import { List, ListItem, ListItemText, IconButton } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { useState, useEffect } from 'react';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import { useThemeContext } from '../context/ThemeContext';
+import './navbar.css';
 
 interface NavBarProps {
   brandName: string;
@@ -57,6 +57,7 @@ const NavBar = ({ brandName, imageSrcPath }: NavBarProps) => {
             <Typography
               variant="h6"
               component="div"
+              className="brandName"
               noWrap={true}
               sx={{
                 color: 'var(--foreground)',
@@ -83,7 +84,13 @@ const NavBar = ({ brandName, imageSrcPath }: NavBarProps) => {
                 href={`/${text.toLowerCase().replace(' ', '')}`}
                 passHref
               >
-                <NavLink>
+                <NavLink
+                  sx={{
+                    '&:hover': {
+                      backgroundColor: 'var(--background-2)',
+                    },
+                  }}
+                >
                   <ListItemText primary={text} />
                 </NavLink>
               </Link>
@@ -96,7 +103,13 @@ const NavBar = ({ brandName, imageSrcPath }: NavBarProps) => {
                 href={`/${text.toLowerCase().replace(' ', '')}`}
                 passHref
               >
-                <NavLink>
+                <NavLink
+                  sx={{
+                    '&:hover': {
+                      backgroundColor: 'var(--background-2)',
+                    },
+                  }}
+                >
                   <ListItemText primary={text} />
                 </NavLink>
               </Link>
@@ -107,10 +120,9 @@ const NavBar = ({ brandName, imageSrcPath }: NavBarProps) => {
             className="w-12 h-12 rounded-full flex items-center justify-center"
             sx={{
               '&:hover': {
-                backgroundColor: 'transparent',
+                backgroundColor: 'var(--background-2)',
               },
-              color: 'var(--foreground)',
-              opacity: 0.8,
+              color: 'var(--foreground-2)',
             }}
           >
             {theme === 'light' ? <DarkModeIcon /> : <LightModeIcon />}
