@@ -26,7 +26,10 @@ export default function Template() {
           imageSrcPath={`/assets/mountain.png`}
         />
       </div>
-      <div className="flex flex-col items-center justify-between">
+      <div
+        className="flex flex-col items-center justify-between"
+        style={{ width: '100%' }}
+      >
         {isLoading ? <Loading /> : <Content />}
       </div>
       <Footer brandName="Dorian Voydie" />

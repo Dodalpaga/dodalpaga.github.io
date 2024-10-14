@@ -41,6 +41,7 @@ export default function EditorComponent() {
   }
 
   function onSelect(value: selectedLanguageOptionProps) {
+    console.log(value);
     setLanguageOption(value);
     setSourceCode(codeSnippets[value.language]);
   }
@@ -111,12 +112,12 @@ export default function EditorComponent() {
             <Editor
               theme={theme === 'dark' ? 'vs-dark' : 'vs-light'}
               height="100%"
-              defaultLanguage={languageOption.language}
+              defaultLanguage={languageOption.language} // Set the default language
               defaultValue={sourceCode}
               onMount={handleEditorDidMount}
               value={sourceCode}
               onChange={handleOnchange}
-              language={languageOption.language}
+              language={languageOption.language} // Dynamically update language here
             />
           </ResizablePanel>
           <ResizableHandle withHandle />

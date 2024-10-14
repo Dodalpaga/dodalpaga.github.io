@@ -10,6 +10,7 @@ function classNames(...classes: string[]) {
 
 export type selectedLanguageOptionProps = {
   language: string;
+  displayName: string;
   version: string;
   aliases: string[];
   runtime?: string;
@@ -32,7 +33,7 @@ export default function SelectLanguages({
             >
               <span className="flex items-center">
                 <span className="ml-3 block truncate capitalize">
-                  {selectedLanguageOption.language} (
+                  {selectedLanguageOption.displayName} (
                   {selectedLanguageOption.version})
                 </span>
               </span>
@@ -75,7 +76,7 @@ export default function SelectLanguages({
                               'ml-3 block truncate capitalize'
                             )}
                           >
-                            {item.language}({item.version})
+                            {item.displayName}({item.version})
                           </span>
                         </div>
 

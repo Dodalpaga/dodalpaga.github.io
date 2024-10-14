@@ -2,6 +2,7 @@
 import * as React from 'react';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -9,6 +10,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'; // Icon for the acc
 import { useState, useRef } from 'react';
 import Loading from '../../../components/loading';
 import '../../globals.css'; // Ensure global styles are correctly imported
+import './styles.css';
 import { useThemeContext } from '../../../context/ThemeContext';
 
 const sectionStyle: React.CSSProperties = {
@@ -152,45 +154,45 @@ export default function Content() {
   }, [theme]); // Dependency on theme
 
   return (
-    <Container
-      maxWidth={false}
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-        alignItems: 'flex-start',
-      }}
-      style={{
-        padding: 0,
-      }}
-    >
+    <Container>
       <div className="left-fixed left-notebook">
-        {Object.entries(notebooks).map(([folder, files]) => (
-          <Accordion
-            style={{ marginBottom: '16px' }}
-            key={folder}
-            expanded={expandedAccordion === folder}
-            onChange={() => handleAccordionChange(folder)}
-          >
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography variant="h5">{folder}</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <div className="left-container left-notebook-container">
-                {files.map((file) => (
-                  <Typography
-                    key={file.path}
-                    variant="h6"
-                    onClick={() => handleContentSelection(file.path)}
-                    style={linkStyle}
-                  >
-                    {file.name}
-                  </Typography>
-                ))}
-              </div>
-            </AccordionDetails>
-          </Accordion>
-        ))}
+        <Grid className="accordion-grid" container spacing={2}>
+          {Object.entries(notebooks).map(([folder, files]) => (
+            <Grid
+              className="accordion-grid-item"
+              item
+              xs={12}
+              sm={6}
+              md={3}
+              key={folder}
+            >
+              <Accordion
+                style={{ marginBottom: '16px' }}
+                key={folder}
+                expanded={expandedAccordion === folder}
+                onChange={() => handleAccordionChange(folder)}
+              >
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography variant="h5">{folder}</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <div className="left-container left-notebook-container">
+                    {files.map((file) => (
+                      <Typography
+                        key={file.path}
+                        variant="h6"
+                        onClick={() => handleContentSelection(file.path)}
+                        style={linkStyle}
+                      >
+                        {file.name}
+                      </Typography>
+                    ))}
+                  </div>
+                </AccordionDetails>
+              </Accordion>
+            </Grid>
+          ))}
+        </Grid>
       </div>
 
       <div className="right-scrollable">

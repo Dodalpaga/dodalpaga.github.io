@@ -1,0 +1,50 @@
+.profile-picture-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: calc(100% - 100px);
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+/* Responsive on max width 1150px */
+@media (max-width: 1150px) {
+  .left-profile {
+    flex-direction: column;
+  }
+
+  .introduction {
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+  }
+
+  #skill-set-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    gap: 10px; /* Adds spacing between images */
+  }
+
+  #skill-set-container img {
+    max-height: 200px;
+  }
+
+  .skill-stack {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .contact-stack {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+}
