@@ -18,7 +18,7 @@ export default function Home() {
       <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-3 lg:text-left">
         <a
           href={'/profile'}
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800 hover:dark:bg-opacity-30"
+          className="group rounded-lg border border-transparent px-5 py-4 transition-colors"
           rel="noopener noreferrer"
         >
           <h2 className={`mb-3 text-2xl font-semibold`}>
@@ -34,7 +34,7 @@ export default function Home() {
 
         <a
           href={'/projects'}
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800 hover:dark:bg-opacity-30"
+          className="group rounded-lg border border-transparent px-5 py-4 transition-colors"
           rel="noopener noreferrer"
         >
           <h2 className={`mb-3 text-2xl font-semibold`}>
@@ -50,7 +50,7 @@ export default function Home() {
 
         <a
           href={'/template'}
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
+          className="group rounded-lg border border-transparent px-5 py-4 transition-colors"
           rel="noopener noreferrer"
         >
           <h2 className={`mb-3 text-2xl font-semibold`}>
@@ -65,7 +65,7 @@ export default function Home() {
         </a>
       </div>
 
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm ">
+      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm">
         <p className="api-banner flex w-full justify-center border-b border-gray-300 from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:from-inherit lg:static lg:w-auto lg:rounded-xl">
           You can check the backend API&nbsp;
           <Link

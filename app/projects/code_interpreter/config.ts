@@ -4,59 +4,70 @@ export const languageOptions = [
   {
     language: 'python',
     version: '3.10.0',
+    displayName: 'Python',
     aliases: ['py', 'py3', 'python3', 'python3.10'],
   },
   {
     language: 'javascript',
     version: '18.15.0',
+    displayName: 'JavaScript',
     aliases: ['node-javascript', 'node-js', 'javascript', 'js'],
     runtime: 'node',
   },
   {
     language: 'typescript',
     version: '5.0.3',
+    displayName: 'TypeScript',
     aliases: ['ts', 'node-ts', 'tsc', 'typescript5', 'ts5'],
   },
   {
     language: 'php',
     version: '8.2.3',
+    displayName: 'PHP',
     aliases: [],
   },
   {
     language: 'ruby',
     version: '3.0.1',
+    displayName: 'Ruby',
     aliases: ['ruby3', 'rb'],
   },
   {
     language: 'rust',
     version: '1.68.2',
+    displayName: 'Rust',
     aliases: ['rs'],
   },
   {
     language: 'csharp',
     version: '6.12.0',
+    displayName: 'C#', // Display name with symbols
     aliases: ['mono', 'mono-csharp', 'mono-c#', 'mono-cs', 'c#', 'cs'],
     runtime: 'mono',
   },
   {
-    language: 'c++',
+    language: 'cpp',
     version: '10.2.0',
+    displayName: 'C++', // Display name with symbols
     aliases: ['cpp', 'g++'],
     runtime: 'gcc',
   },
   {
     language: 'go',
     version: '1.16.2',
+    displayName: 'Go',
     aliases: ['go', 'golang'],
   },
   {
     language: 'java',
     version: '15.0.2',
+    displayName: 'Java',
     aliases: [],
   },
   {
     language: 'c',
     version: '10.2.0',
+    displayName: 'C',
     aliases: ['gcc'],
     runtime: 'gcc',
   },
@@ -94,7 +105,8 @@ fn main() {
   println!("{}", sum(3, 4));
 }`, // Output: 7
 
-  'csharp.net': `public class Program
+  csharp: `using System;
+public class Program
 {
     public static int Sum(int a, int b)
     {
@@ -109,7 +121,8 @@ class MainClass
     }
 }`, // Output: 7
 
-  'c++': `int sum(int a, int b) {
+  cpp: `#include <iostream>
+int sum(int a, int b) {
   return a + b;
 }
 int main() {
@@ -117,7 +130,10 @@ int main() {
   return 0;
 }`, // Output: 7
 
-  go: `func sum(a, b int) int {
+  go: `package main // Declare the package at the top
+
+import "fmt" // Import the fmt package
+func sum(a, b int) int {
   return a + b
 }
 func main() {
@@ -125,12 +141,12 @@ func main() {
 }`, // Output: 7
 
   java: `public class Main {
-    public static int sum(int a, int b) {
-        return a + b;
-    }
-    public static void main(String[] args) {
-        System.out.println(sum(3, 4));
-    }
+  public static int sum(int a, int b) {
+      return a + b;
+  }
+  public static void main(String[] args) {
+      System.out.println(sum(3, 4));
+  }
 }`, // Output: 7
 
   c: `int sum(int a, int b) {

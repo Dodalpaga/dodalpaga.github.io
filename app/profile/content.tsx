@@ -19,6 +19,7 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import CodeIcon from '@mui/icons-material/Code';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import '../globals.css'; // Ensure global styles are correctly imported
+import './styles.css';
 import { useThemeContext } from '../../context/ThemeContext';
 
 // Helper function to compute the years spent

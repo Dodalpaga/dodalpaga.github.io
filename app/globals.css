@@ -59,8 +59,9 @@ html::-webkit-scrollbar {
   aspect-ratio: 1 / 1; /* Maintain a 1:1 aspect ratio */
 }
 
-.card:hover {
-  transform: scale(1.05) !important;
+.card :hover {
+  transform: scale(1.05);
+  transition: transform 0.3s ease;
 }
 
 /* globals.css */
@@ -114,22 +115,6 @@ html::-webkit-scrollbar {
   flex-direction: column;
 }
 
-.left-fixed .card :hover {
-  transform: scale(1.05);
-  transition: transform 0.3s ease;
-}
-
-.left-fixed .profile-picture-container {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: calc(100% - 100px);
-  align-items: center;
-  justify-content: center;
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
-
 #skill-set-container img {
   width: 100%;
 }
@@ -172,36 +157,16 @@ span {
     position: relative;
     display: flex;
     top: 0;
-    left: 0;
     padding: 10px;
     margin: 10px;
-    width: calc(100% - 20px);
+    width: auto;
     height: 100%;
-    justify-content: center;
-    align-items: center;
     border-radius: 10px;
     box-shadow: 0 14px 16px rgba(0, 0, 0, 0.2);
-    overflow: visible;
   }
 
   .left-profile {
     flex-direction: column;
-  }
-
-  .MuiAccordion-root {
-    margin-top: 0 !important; /* Ensure there's no top margin */
-  }
-
-  .left-notebook {
-    display: flex;
-    flex-direction: row;
-    justify-content: center; /* Align the remaining accordions to the top */
-    align-items: flex-start;
-    height: auto; /* Allow height to adjust based on content */
-  }
-
-  .left-notebook-container {
-    align-items: flex-start !important;
   }
 
   .left-fixed .left-container {
@@ -211,39 +176,6 @@ span {
     height: 100%; /* Ensure the card takes up full available height */
     flex-grow: 1; /* Allow the card to take up remaining space */
     flex-shrink: 1; /* Allow the card to shrink if necessary */
-  }
-
-  .left-fixed .introduction {
-    display: flex;
-    flex-direction: row;
-    text-align: center;
-  }
-
-  #skill-set-container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    width: 100%;
-    gap: 10px; /* Adds spacing between images */
-  }
-
-  #skill-set-container img {
-    max-height: 200px;
-  }
-
-  .left-fixed .skill-stack {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .left-fixed .contact-stack {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
   }
 
   .left-fixed .title {
