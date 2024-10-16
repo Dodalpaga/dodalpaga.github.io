@@ -9,6 +9,19 @@
   margin-bottom: 20px;
 }
 
+.content-container {
+  padding: 0 !important;
+}
+
+#profile-section {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  padding: 10px;
+}
+
 /* Responsive on max width 1150px */
 @media (max-width: 1150px) {
   .left-profile {

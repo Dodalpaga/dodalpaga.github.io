@@ -40,15 +40,6 @@ const getYearsSpent = (startDateString: string) => {
   return yearsSpent;
 };
 
-const sectionStyle = {
-  padding: '10px 20px 20px 20px',
-  display: 'flex',
-  flexDirection: 'column' as 'column', // Explicitly set as one of the allowed values
-  width: '100%',
-  textAlign: 'center' as 'center', // TypeScript might also need this to be explicit
-  position: 'relative' as 'relative', // Similar for position
-};
-
 const titleStyle = {
   marginBottom: '20px',
 };
@@ -69,18 +60,7 @@ export default function Content() {
   const foreground = theme === 'dark' ? 'ffffff' : '000000'; // Adjust colors as necessary
 
   return (
-    <Container
-      maxWidth={false}
-      sx={{
-        display: 'flex',
-        flexDirection: 'column', // Align the left div and the right content
-        height: '100%', // Ensure full height for content
-        alignItems: 'flex-start',
-      }}
-      style={{
-        padding: 0,
-      }}
-    >
+    <Container maxWidth={false} className="content-container">
       {/* Fixed Left Section */}
       <div className="left-fixed left-profile">
         <div className="introduction left-container">
@@ -222,7 +202,7 @@ export default function Content() {
       {/* Main Scrollable Content Section */}
       <div className="right-scrollable">
         {/* Experience Section */}
-        <section id="experience-section" style={sectionStyle}>
+        <section id="profile-section">
           <Typography variant="h4">Experience</Typography>
           <Typography variant="body1" gutterBottom sx={titleStyle}>
             ({totalExperience}+ years)
@@ -581,12 +561,7 @@ export default function Content() {
         </section>
 
         {/* Education Section */}
-        <section
-          id="education"
-          style={{
-            ...sectionStyle, // Keep the base section styles
-          }}
-        >
+        <section id="profile-section">
           <Typography variant="h4" gutterBottom sx={titleStyle}>
             Education
           </Typography>
