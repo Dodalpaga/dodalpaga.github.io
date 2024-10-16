@@ -9,6 +9,19 @@
   max-width: 100% !important;
 }
 
+.content-container {
+  padding: 0 !important;
+}
+
+#notebook-section {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  padding: 10px;
+}
+
 /* For smaller screens (<1150px) */
 @media (max-width: 1150px) {
   .left-notebook {

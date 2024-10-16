@@ -13,15 +13,6 @@ import '../../globals.css'; // Ensure global styles are correctly imported
 import './styles.css';
 import { useThemeContext } from '../../../context/ThemeContext';
 
-const sectionStyle: React.CSSProperties = {
-  padding: '10px 20px 20px 20px',
-  display: 'flex',
-  flexDirection: 'column',
-  width: '100%',
-  textAlign: 'center',
-  position: 'relative',
-};
-
 // General style for left panel links
 const linkStyle = {
   cursor: 'pointer',
@@ -154,7 +145,7 @@ export default function Content() {
   }, [theme]); // Dependency on theme
 
   return (
-    <Container>
+    <Container maxWidth={false} className="content-container">
       <div className="left-fixed left-notebook">
         <Grid className="accordion-grid" container spacing={2}>
           {Object.entries(notebooks).map(([folder, files]) => (
@@ -196,7 +187,7 @@ export default function Content() {
       </div>
 
       <div className="right-scrollable">
-        <section id="notebook-section" style={sectionStyle}>
+        <section id="notebook-section">
           {selectedContent ? (
             <div style={{ height: 'auto', overflowY: 'hidden' }}>
               {isLoading ? (
