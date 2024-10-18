@@ -22,7 +22,7 @@ const apps = [
   },
   {
     title: 'Jupyter Notebooks',
-    image: `/assets/Jupyter_logo.png`, // Update with your actual image path
+    image: `/assets/jupyter.jpg`, // Update with your actual image path
     link: '/projects/notebooks', // Update with your actual routes
     target: '',
     description:
@@ -70,7 +70,7 @@ const apps = [
   },
   {
     title: 'Cognitive Game',
-    image: `/assets/cognitive.png`, // Update with your actual image path
+    image: `/assets/cognitive.jpg`, // Update with your actual image path
     link: 'https://cognitive-game.netlify.app/', // Update with your actual routes
     target: '_blank',
     description:
