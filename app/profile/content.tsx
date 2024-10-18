@@ -16,11 +16,45 @@ import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
-import CodeIcon from '@mui/icons-material/Code';
 import GitHubIcon from '@mui/icons-material/GitHub';
+import CodeIcon from '@mui/icons-material/Code';
 import '../globals.css'; // Ensure global styles are correctly imported
 import './styles.css';
 import { useThemeContext } from '../../context/ThemeContext';
+import InfoCard from '../../components/infocard';
+import CustomChip from '../../components/customchip';
+import {
+  SiPandas,
+  SiNumpy,
+  SiPytorch,
+  SiScikitlearn,
+  SiTensorflow,
+  SiLangchain,
+  SiFastapi,
+  SiDjango,
+  SiDocker,
+  SiPostgresql,
+  SiPrometheus,
+  SiPostman,
+  SiGrafana,
+  SiStreamlit,
+  SiReact,
+  SiGitlab,
+  SiConfluence,
+  SiJira,
+  SiNextdotjs,
+  SiRaspberrypi,
+  SiNvidia,
+  SiOpencv,
+  SiPlotly,
+  SiJenkins,
+  SiFolium,
+  SiElasticsearch,
+  SiKibana,
+  SiLogstash,
+} from 'react-icons/si';
+import { VscGraphScatter } from 'react-icons/vsc';
+import { GiHistogram } from 'react-icons/gi';
 
 // Helper function to compute the years spent
 const getYearsSpent = (startDateString: string) => {
@@ -210,15 +244,13 @@ export default function Content() {
 
           {/* Experience Thales */}
           <div className="experience">
-            {/* Dates and location */}
-            <Typography variant="body2">
-              {startDate} - Present (~{yearsSpent} years)
-            </Typography>
-            <Typography variant="body2">Toulouse Area, France</Typography>
-
-            {/* Company Name */}
-            <Typography variant="h5">Thales Services Numériques</Typography>
-
+            <InfoCard
+              startDate={startDate}
+              yearsSpent={yearsSpent}
+              companyName="Thales Services Numériques"
+              location="Toulouse Area, France"
+              imageSrc="/assets/thales.png"
+            />
             {/* Description */}
             <Typography variant="body1">
               Participated in various{' '}
@@ -355,53 +387,109 @@ export default function Content() {
               sx={{
                 flexWrap: 'wrap',
                 justifyContent: 'center',
+                marginTop: '20px',
               }}
             >
               <Box
                 style={{
-                  textAlign: 'left',
+                  textAlign: 'center',
                 }}
-                sx={{ p: 2, border: '1px dashed grey', borderRadius: '15px' }}
+                sx={{
+                  p: '0 5px',
+                  border: '1px dashed grey',
+                  borderRadius: '15px',
+                }}
               >
-                <Typography variant="body1">Python</Typography>
-                <Chip label="Pandas" />
-                <Chip label="Numpy" />
-                <Chip label="Pytorch" />
+                <Typography variant="h6">Scientific Development</Typography>
+                <CustomChip label="Pandas" icons={[<SiPandas />]} />
+                <CustomChip label="Numpy" icons={[<SiNumpy />]} />
+                <CustomChip label="Pytorch" icons={[<SiPytorch />]} />
+                <CustomChip label="Streamlit" icons={[<SiStreamlit />]} />
+                <CustomChip label="Folium" icons={[<SiFolium />]} />
               </Box>
               <Box
                 style={{
-                  textAlign: 'left',
+                  textAlign: 'center',
                 }}
-                sx={{ p: 2, border: '1px dashed grey', borderRadius: '15px' }}
+                sx={{
+                  p: '0 5px',
+                  border: '1px dashed grey',
+                  borderRadius: '15px',
+                }}
               >
-                <Typography variant="body1">Artificial Intelligence</Typography>
-                <Chip label="Machine Learning" />
-                <Chip label="Deep Learning" />
-                <Chip label="NLP" />
-                <Chip label="LLM" />
+                <Typography variant="h6">Software Development</Typography>
+                <CustomChip
+                  label="Django / FastAPI"
+                  icons={[<SiFastapi />, <SiDjango />]}
+                />
+                <CustomChip label="Docker" icons={[<SiDocker />]} />
+                <CustomChip label="SQL" icons={[<SiPostgresql />]} />
+                <CustomChip label="Prometheus" icons={[<SiPrometheus />]} />
+                <CustomChip label="Postman" icons={[<SiPostman />]} />
+                <CustomChip label="Jenkins" icons={[<SiJenkins />]} />
               </Box>
               <Box
                 style={{
-                  textAlign: 'left',
+                  textAlign: 'center',
                 }}
-                sx={{ p: 2, border: '1px dashed grey', borderRadius: '15px' }}
+                sx={{
+                  p: '0 5px',
+                  border: '1px dashed grey',
+                  borderRadius: '15px',
+                }}
               >
-                <Typography variant="body1">Backend</Typography>
-                <Chip label="REST APIs" />
-                <Chip label="Docker" />
-                <Chip label="SQL" />
-                <Chip label="Prometheus" />
+                <Typography variant="h6">Artificial Intelligence</Typography>
+                <CustomChip label="Scikit Learn" icons={[<SiScikitlearn />]} />
+                <CustomChip label="Tensorflow" icons={[<SiTensorflow />]} />
+                <CustomChip label="LangChain" icons={[<SiLangchain />]} />
               </Box>
               <Box
                 style={{
-                  textAlign: 'left',
+                  textAlign: 'center',
                 }}
-                sx={{ p: 2, border: '1px dashed grey', borderRadius: '15px' }}
+                sx={{
+                  p: '0 5px',
+                  border: '1px dashed grey',
+                  borderRadius: '15px',
+                }}
               >
-                <Typography variant="body1">Projects Management</Typography>
-                <Chip label="GitLab (& CI)" />
-                <Chip label="Confluence" />
-                <Chip label="JIRA" />
+                <Typography variant="h6">Frontend</Typography>
+                <CustomChip label="Next.js" icons={[<SiNextdotjs />]} />
+                <CustomChip label="React" icons={[<SiReact />]} />
+                <CustomChip label="Grafana" icons={[<SiGrafana />]} />
+              </Box>
+              <Box
+                style={{
+                  textAlign: 'center',
+                }}
+                sx={{
+                  p: '0 5px',
+                  border: '1px dashed grey',
+                  borderRadius: '15px',
+                }}
+              >
+                <Typography variant="h6">Data Management</Typography>
+                <CustomChip
+                  label="ElasticSearch"
+                  icons={[<SiElasticsearch />]}
+                />
+                <CustomChip label="Kibana" icons={[<SiKibana />]} />
+                <CustomChip label="Logstash" icons={[<SiLogstash />]} />
+              </Box>
+              <Box
+                style={{
+                  textAlign: 'center',
+                }}
+                sx={{
+                  p: '0 5px',
+                  border: '1px dashed grey',
+                  borderRadius: '15px',
+                }}
+              >
+                <Typography variant="h6">Projects Management & CICD</Typography>
+                <CustomChip label="GitLab (& CI)" icons={[<SiGitlab />]} />
+                <CustomChip label="Confluence" icons={[<SiConfluence />]} />
+                <CustomChip label="JIRA" icons={[<SiJira />]} />
               </Box>
             </Stack>
           </div>
@@ -410,15 +498,14 @@ export default function Content() {
 
           {/* Experience Atos */}
           <div className="experience">
-            {/* Dates and location */}
-            <Typography variant="body2">
-              Sep 2021 - Nov 2022 (~1 year)
-            </Typography>
-            <Typography variant="body2">Toulouse Area, France</Typography>
-
-            {/* Company Name */}
-            <Typography variant="h5">Atos France</Typography>
-
+            <InfoCard
+              startDate="Sept 2021"
+              endDate="Nov 2022"
+              yearsSpent={1}
+              companyName="Atos France"
+              location="Toulouse Area, France"
+              imageSrc="/assets/atos.png"
+            />
             {/* Description */}
             <Typography variant="body1">
               In parallel with my{' '}
@@ -523,38 +610,57 @@ export default function Content() {
               sx={{
                 flexWrap: 'wrap',
                 justifyContent: 'center',
+                marginTop: '20px',
               }}
             >
               <Box
                 style={{
-                  textAlign: 'left',
+                  textAlign: 'center',
                 }}
-                sx={{ p: 2, border: '1px dashed grey', borderRadius: '15px' }}
+                sx={{
+                  p: '0 5px',
+                  border: '1px dashed grey',
+                  borderRadius: '15px',
+                }}
               >
-                <Typography variant="body1">Embedded Systems</Typography>
-                <Chip label="Raspberry Pi" />
-                <Chip label="Jetson Nano" />
+                <Typography variant="h6">Embedded Systems</Typography>
+                <CustomChip label="Raspberry Pi" icons={[<SiRaspberrypi />]} />
+                <CustomChip label="Jetson Nano" icons={[<SiNvidia />]} />
               </Box>
               <Box
                 style={{
-                  textAlign: 'left',
+                  textAlign: 'center',
                 }}
-                sx={{ p: 2, border: '1px dashed grey', borderRadius: '15px' }}
+                sx={{
+                  p: '0 5px',
+                  border: '1px dashed grey',
+                  borderRadius: '15px',
+                }}
               >
-                <Typography variant="body1">Machine Learning</Typography>
-                <Chip label="Computer Vision" />
-                <Chip label="Data Analysis" />
+                <Typography variant="h6">Machine Learning</Typography>
+                <CustomChip label="OpenCV" icons={[<SiOpencv />]} />
+                <CustomChip
+                  label="Data Analysis"
+                  icons={[<VscGraphScatter />]}
+                />
+                <CustomChip
+                  label="Predictive Models"
+                  icons={[<GiHistogram />]}
+                />
               </Box>
               <Box
                 style={{
-                  textAlign: 'left',
+                  textAlign: 'center',
                 }}
-                sx={{ p: 2, border: '1px dashed grey', borderRadius: '15px' }}
+                sx={{
+                  p: '0 5px',
+                  border: '1px dashed grey',
+                  borderRadius: '15px',
+                }}
               >
-                <Typography variant="body1">Data Visualization</Typography>
-                <Chip label="Dashboards" />
-                <Chip label="Grafana" />
-                <Chip label="Predictive Models" />
+                <Typography variant="h6">Data Visualization</Typography>
+                <CustomChip label="Dash Plotly" icons={[<SiPlotly />]} />
+                <CustomChip label="Grafana" icons={[<SiGrafana />]} />
               </Box>
             </Stack>
           </div>

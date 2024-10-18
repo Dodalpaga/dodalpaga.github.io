@@ -1,0 +1,17 @@
+.card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.textContainer {
+  text-align: left;
+  flex: 1; /* Allow this container to take up remaining space */
+}
+
+.image {
+  width: 100%; /* Adjust as needed */
+  height: auto; /* Maintain aspect ratio */
+  max-width: 200px; /* Limit the size of the image */
+}
