@@ -401,11 +401,17 @@ export default function Content() {
                 }}
               >
                 <Typography variant="h6">Scientific Development</Typography>
-                <CustomChip label="Pandas" icons={[<SiPandas />]} />
-                <CustomChip label="Numpy" icons={[<SiNumpy />]} />
-                <CustomChip label="Pytorch" icons={[<SiPytorch />]} />
-                <CustomChip label="Streamlit" icons={[<SiStreamlit />]} />
-                <CustomChip label="Folium" icons={[<SiFolium />]} />
+                <CustomChip label="Pandas" icons={[<SiPandas key="skill" />]} />
+                <CustomChip label="Numpy" icons={[<SiNumpy key="skill" />]} />
+                <CustomChip
+                  label="Pytorch"
+                  icons={[<SiPytorch key="skill" />]}
+                />
+                <CustomChip
+                  label="Streamlit"
+                  icons={[<SiStreamlit key="skill" />]}
+                />
+                <CustomChip label="Folium" icons={[<SiFolium key="skill" />]} />
               </Box>
               <Box
                 style={{
@@ -420,13 +426,25 @@ export default function Content() {
                 <Typography variant="h6">Software Development</Typography>
                 <CustomChip
                   label="Django / FastAPI"
-                  icons={[<SiFastapi />, <SiDjango />]}
+                  icons={[<SiFastapi key="skill" />, <SiDjango key="skill" />]}
                 />
-                <CustomChip label="Docker" icons={[<SiDocker />]} />
-                <CustomChip label="SQL" icons={[<SiPostgresql />]} />
-                <CustomChip label="Prometheus" icons={[<SiPrometheus />]} />
-                <CustomChip label="Postman" icons={[<SiPostman />]} />
-                <CustomChip label="Jenkins" icons={[<SiJenkins />]} />
+                <CustomChip label="Docker" icons={[<SiDocker key="skill" />]} />
+                <CustomChip
+                  label="SQL"
+                  icons={[<SiPostgresql key="skill" />]}
+                />
+                <CustomChip
+                  label="Prometheus"
+                  icons={[<SiPrometheus key="skill" />]}
+                />
+                <CustomChip
+                  label="Postman"
+                  icons={[<SiPostman key="skill" />]}
+                />
+                <CustomChip
+                  label="Jenkins"
+                  icons={[<SiJenkins key="skill" />]}
+                />
               </Box>
               <Box
                 style={{
@@ -439,9 +457,18 @@ export default function Content() {
                 }}
               >
                 <Typography variant="h6">Artificial Intelligence</Typography>
-                <CustomChip label="Scikit Learn" icons={[<SiScikitlearn />]} />
-                <CustomChip label="Tensorflow" icons={[<SiTensorflow />]} />
-                <CustomChip label="LangChain" icons={[<SiLangchain />]} />
+                <CustomChip
+                  label="Scikit Learn"
+                  icons={[<SiScikitlearn key="skill" />]}
+                />
+                <CustomChip
+                  label="Tensorflow"
+                  icons={[<SiTensorflow key="skill" />]}
+                />
+                <CustomChip
+                  label="LangChain"
+                  icons={[<SiLangchain key="skill" />]}
+                />
               </Box>
               <Box
                 style={{
@@ -454,9 +481,15 @@ export default function Content() {
                 }}
               >
                 <Typography variant="h6">Frontend</Typography>
-                <CustomChip label="Next.js" icons={[<SiNextdotjs />]} />
-                <CustomChip label="React" icons={[<SiReact />]} />
-                <CustomChip label="Grafana" icons={[<SiGrafana />]} />
+                <CustomChip
+                  label="Next.js"
+                  icons={[<SiNextdotjs key="skill" />]}
+                />
+                <CustomChip label="React" icons={[<SiReact key="skill" />]} />
+                <CustomChip
+                  label="Grafana"
+                  icons={[<SiGrafana key="skill" />]}
+                />
               </Box>
               <Box
                 style={{
@@ -471,10 +504,13 @@ export default function Content() {
                 <Typography variant="h6">Data Management</Typography>
                 <CustomChip
                   label="ElasticSearch"
-                  icons={[<SiElasticsearch />]}
+                  icons={[<SiElasticsearch key="skill" />]}
                 />
-                <CustomChip label="Kibana" icons={[<SiKibana />]} />
-                <CustomChip label="Logstash" icons={[<SiLogstash />]} />
+                <CustomChip label="Kibana" icons={[<SiKibana key="skill" />]} />
+                <CustomChip
+                  label="Logstash"
+                  icons={[<SiLogstash key="skill" />]}
+                />
               </Box>
               <Box
                 style={{
@@ -487,9 +523,15 @@ export default function Content() {
                 }}
               >
                 <Typography variant="h6">Projects Management & CICD</Typography>
-                <CustomChip label="GitLab (& CI)" icons={[<SiGitlab />]} />
-                <CustomChip label="Confluence" icons={[<SiConfluence />]} />
-                <CustomChip label="JIRA" icons={[<SiJira />]} />
+                <CustomChip
+                  label="GitLab (& CI)"
+                  icons={[<SiGitlab key="skill" />]}
+                />
+                <CustomChip
+                  label="Confluence"
+                  icons={[<SiConfluence key="skill" />]}
+                />
+                <CustomChip label="JIRA" icons={[<SiJira key="skill" />]} />
               </Box>
             </Stack>
           </div>
@@ -624,8 +666,14 @@ export default function Content() {
                 }}
               >
                 <Typography variant="h6">Embedded Systems</Typography>
-                <CustomChip label="Raspberry Pi" icons={[<SiRaspberrypi />]} />
-                <CustomChip label="Jetson Nano" icons={[<SiNvidia />]} />
+                <CustomChip
+                  label="Raspberry Pi"
+                  icons={[<SiRaspberrypi key="skill" />]}
+                />
+                <CustomChip
+                  label="Jetson Nano"
+                  icons={[<SiNvidia key="skill" />]}
+                />
               </Box>
               <Box
                 style={{
@@ -638,14 +686,14 @@ export default function Content() {
                 }}
               >
                 <Typography variant="h6">Machine Learning</Typography>
-                <CustomChip label="OpenCV" icons={[<SiOpencv />]} />
+                <CustomChip label="OpenCV" icons={[<SiOpencv key="skill" />]} />
                 <CustomChip
                   label="Data Analysis"
-                  icons={[<VscGraphScatter />]}
+                  icons={[<VscGraphScatter key="skill" />]}
                 />
                 <CustomChip
                   label="Predictive Models"
-                  icons={[<GiHistogram />]}
+                  icons={[<GiHistogram key="skill" />]}
                 />
               </Box>
               <Box
@@ -659,8 +707,14 @@ export default function Content() {
                 }}
               >
                 <Typography variant="h6">Data Visualization</Typography>
-                <CustomChip label="Dash Plotly" icons={[<SiPlotly />]} />
-                <CustomChip label="Grafana" icons={[<SiGrafana />]} />
+                <CustomChip
+                  label="Dash Plotly"
+                  icons={[<SiPlotly key="skill" />]}
+                />
+                <CustomChip
+                  label="Grafana"
+                  icons={[<SiGrafana key="skill" />]}
+                />
               </Box>
             </Stack>
           </div>
