@@ -1,7 +1,13 @@
 import React from 'react';
 import { Chip, Box } from '@mui/material'; // Ensure you have MUI installed
 
-const CustomChip = ({ label, icons }) => (
+// Définition des types pour les props
+interface CustomChipProps {
+  label: string; // ou 'React.ReactNode' si le label peut être un élément React
+  icons: React.ReactNode[]; // Un tableau d'éléments React pour les icônes
+}
+
+const CustomChip: React.FC<CustomChipProps> = ({ label, icons }) => (
   <Chip
     sx={{
       display: 'flex',
