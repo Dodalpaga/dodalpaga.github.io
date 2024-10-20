@@ -18,7 +18,7 @@ type MapRef = {
 export default function Content() {
   const mapRef = React.useRef<MapRef | null>(null); // MapRef can be null
   const [mapImage, setMapImage] = React.useState<string>(
-    'https://www.un-autre-regard-sur-la-terre.org/document/blogUARST/Histoire/30%20ans%20du%20satellite%20SPOT%201/Toulouse%20vu%20par%20SPOT/Spot%205%20-%20Toulouse%20-%20Apr%e8s%20AZF%20-%2017-06-2002%20-%20Vignette.jpg'
+    '/assets/segmentation_toulouse.png'
   );
   const [loading, setLoading] = React.useState<boolean>(false); // State for loading
   const [modelName, setModelName] = React.useState<string>('FastSAM-s.pt'); // State for selected model
@@ -141,7 +141,7 @@ export default function Content() {
         direction="row"
       >
         <div className="image-container">
-          <ExampleMap ref={mapRef} lng={1.444209} lat={43.604652} zoom={11.8} />
+          <ExampleMap ref={mapRef} lng={1.42} lat={43.6} zoom={13} />
         </div>
 
         <div className="image-container">
