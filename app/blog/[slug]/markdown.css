@@ -1,0 +1,54 @@
+/* styles/markdown.css */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 84px; /* Adjust for your navbar height */
+}
+
+.markdown a {
+  color: var(--foreground); /* Your link color */
+  text-decoration: none; /* Remove underline */
+}
+
+.markdown a:hover {
+  text-decoration: underline; /* Underline on hover */
+}
+
+.markdown {
+  font-family: Arial, sans-serif; /* Use your preferred font */
+  line-height: 1.6; /* Better line spacing */
+  padding: 1rem; /* Add some padding around the content */
+}
+
+.markdown h1 {
+  font-size: 2.5rem; /* Size for h1 */
+  margin-top: 0.5rem; /* Space above */
+  margin-bottom: 0.5rem; /* Space below */
+}
+
+.markdown h2 {
+  font-size: 2rem; /* Size for h2 */
+  margin-top: 1.5rem; /* Space above */
+  margin-bottom: 0.5rem; /* Space below */
+}
+
+.markdown h3 {
+  font-size: 1.75rem; /* Size for h3 */
+  margin-top: 1.5rem; /* Space above */
+  margin-bottom: 0.5rem; /* Space below */
+}
+
+.markdown p {
+  margin-bottom: 1rem; /* Space below paragraphs */
+}
+
+.markdown ul,
+.markdown ol {
+  margin-left: 1.5rem; /* Indent lists */
+}
+
+.markdown blockquote {
+  border-left: 4px solid var(--foreground-2); /* Style for blockquotes */
+  padding-left: 1rem;
+  margin: 1rem 0;
+  color: var(--foreground-2);
+}
