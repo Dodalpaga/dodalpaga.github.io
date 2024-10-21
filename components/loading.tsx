@@ -1,4 +1,5 @@
 // components/loading.tsx
+'use client';
 import { Skeleton, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
 

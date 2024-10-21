@@ -1,4 +1,5 @@
 // components/NavBar.tsx
+'use client';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
@@ -98,6 +99,25 @@ const NavBar = ({ brandName, imageSrcPath }: NavBarProps) => {
           </List>
           <List sx={{ display: 'flex' }}>
             {['Projects'].map((text) => (
+              <Link
+                key={text}
+                href={`/${text.toLowerCase().replace(' ', '')}`}
+                passHref
+              >
+                <NavLink
+                  sx={{
+                    '&:hover': {
+                      backgroundColor: 'var(--background-2)',
+                    },
+                  }}
+                >
+                  <ListItemText primary={text} />
+                </NavLink>
+              </Link>
+            ))}
+          </List>
+          <List sx={{ display: 'flex' }}>
+            {['Blog'].map((text) => (
               <Link
                 key={text}
                 href={`/${text.toLowerCase().replace(' ', '')}`}
