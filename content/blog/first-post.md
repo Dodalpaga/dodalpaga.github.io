@@ -2,16 +2,14 @@
 title: 'Deploying a Next.js Static Website to GitHub Pages'
 description: 'Step-by-step guide to deploy your Next.js static site using GitHub Pages'
 image: 'https://via.placeholder.com/1200x600'
-date: '22/10/2024'
+date: '2024-10-22'
 ---
 
-<div style="text-align: center;">
-  <img src="https://via.placeholder.com/1200x600" alt="Deployment Header Image" width="100%">
+<div style="display:flex; justify-content:center;">
+  <img style="border-radius: 20px; max-height:300px" src="https://miro.medium.com/v2/resize:fit:1400/1*2CW2GABDQgu1Fj6N0GkHew.png" alt="Deployment Header Image" height="50%">
 </div>
 
-# Deploying a Next.js Static Website to GitHub Pages
-
-## Introduction
+# Introduction
 
 In this article, we'll walk you through the process of deploying a **Next.js static website** to **GitHub Pages**. From setting up your project to configuring GitHub Pages, this comprehensive guide will help you get your site live and accessible to the world.
 
@@ -19,8 +17,7 @@ In this article, we'll walk you through the process of deploying a **Next.js sta
 
 # Table of Contents
 
-- [Deploying a Next.js Static Website to GitHub Pages](#deploying-a-nextjs-static-website-to-github-pages)
-  - [Introduction](#introduction)
+- [Introduction](#introduction)
 - [Table of Contents](#table-of-contents)
 - [Requirements](#requirements)
 - [Setting Up the Next.js Project](#setting-up-the-nextjs-project)

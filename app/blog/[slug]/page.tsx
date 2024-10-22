@@ -7,6 +7,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeSlug from 'rehype-slug'; // Import rehype-slug
 import rehypeFormat from 'rehype-format'; // Optional for formatting
+import rehypeRaw from 'rehype-raw'; // Import rehype-raw
 import './markdown.css';
 import './blog.css';
 import { Metadata } from 'next';
@@ -39,7 +40,7 @@ const PostPage = async ({ params }: { params: { slug: string } }) => {
         </div>
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
-          rehypePlugins={[rehypeSlug, rehypeFormat]}
+          rehypePlugins={[rehypeSlug, rehypeRaw, rehypeFormat]} // Add rehypeRaw here
           className="markdown"
         >
           {content}

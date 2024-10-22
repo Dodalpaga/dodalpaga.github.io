@@ -2,7 +2,7 @@
 title: 'Work in progress'
 description: 'This markdown file is a template for upcoming articles'
 image: 'https://via.placeholder.com/600x300'
-date: '19/10/2024'
+date: '2024-10-19'
 ---
 
 # Table of Contents
