@@ -1,58 +1,50 @@
 ---
-title: 'Work in progress'
-description: 'This markdown file is a template for upcoming articles'
-image: 'https://via.placeholder.com/600x300'
+title: 'Deploying a Next.js Static Website to GitHub Pages'
+description: 'Step-by-step guide to deploy your Next.js static site using GitHub Pages'
+image: 'https://via.placeholder.com/1200x600'
+date: '22/10/2024'
+---
+
+<div style="text-align: center;">
+  <img src="https://via.placeholder.com/1200x600" alt="Deployment Header Image" width="100%">
+</div>
+
+# Deploying a Next.js Static Website to GitHub Pages
+
+## Introduction
+
+In this article, we'll walk you through the process of deploying a **Next.js static website** to **GitHub Pages**. From setting up your project to configuring GitHub Pages, this comprehensive guide will help you get your site live and accessible to the world.
+
 ---
 
 # Table of Contents
 
+- [Deploying a Next.js Static Website to GitHub Pages](#deploying-a-nextjs-static-website-to-github-pages)
+  - [Introduction](#introduction)
 - [Table of Contents](#table-of-contents)
-- [Introduction](#introduction)
-- [Images and Figures](#images-and-figures)
-- [Tables](#tables)
-- [Lists and Nested Lists](#lists-and-nested-lists)
-  - [Unordered List](#unordered-list)
-  - [Ordered List](#ordered-list)
-- [Quotes and Callouts](#quotes-and-callouts)
+- [Requirements](#requirements)
+- [Setting Up the Next.js Project](#setting-up-the-nextjs-project)
 
-# Introduction
+---
 
-This post showcases various features of Markdown rendering in our blog setup. We'll cover images, tables, lists, and more!
+# Requirements
 
-# Images and Figures
+Before we begin, ensure you have the following tools installed:
 
-![Sample Image](https://via.placeholder.com/600x300 'Sample Image')
+- [Node.js](https://nodejs.org/en/) (v14 or later)
+- [Git](https://git-scm.com/)
+- A GitHub account
 
-Figure 1: A placeholder image demonstrating how images are rendered in Markdown.
+Optional:
 
-# Tables
+- A domain name (if you plan to use a custom domain for your GitHub Pages site)
 
-Here’s a sample table:
+# Setting Up the Next.js Project
 
-| Feature   | Description                  | Enabled |
-| --------- | ---------------------------- | ------- |
-| Feature 1 | This is a description of F1. | Yes     |
-| Feature 2 | This is a description of F2. | No      |
-| Feature 3 | This is a description of F3. | Yes     |
+The first step is to create a **Next.js** project and prepare it for static export.
 
-# Lists and Nested Lists
-
-## Unordered List
-
-- Item 1
-  - Subitem 1.1
-  - Subitem 1.2
-- Item 2
-- Item 3
-
-## Ordered List
-
-1. First Item
-2. Second Item
-3. Third Item
-
-# Quotes and Callouts
-
-> **Note:** Remember to check the syntax for proper rendering.
-
-> "This is a famous quote." — Author
+```bash
+npx create-next-app@latest my-static-site
+cd my-static-site
+npm run dev
+```
