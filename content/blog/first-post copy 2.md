@@ -57,3 +57,9 @@ Here’s a sample table:
 > **Note:** Remember to check the syntax for proper rendering.
 
 > "This is a famous quote." — Author
+
+```python
+def function(self):
+  self.foo = "bar"
+  return self.foo
+```
