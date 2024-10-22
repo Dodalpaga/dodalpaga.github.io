@@ -9,6 +9,9 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button'; // For pagination buttons
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import Pagination from '@mui/material/Pagination'; // MUI Pagination component
 import '../globals.css';
 
 type BlogPost = {
@@ -26,9 +29,7 @@ export default function Content({ blogPosts }: { blogPosts: BlogPost[] }) {
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const currentPosts = blogPosts.slice(indexOfFirstPost, indexOfLastPost);
-  console.log(indexOfFirstPost);
-  console.log(indexOfLastPost);
-  console.log(currentPosts);
+
   // Calculate the total number of pages
   const totalPages = Math.ceil(blogPosts.length / postsPerPage);
 
@@ -44,6 +45,14 @@ export default function Content({ blogPosts }: { blogPosts: BlogPost[] }) {
     }
   };
 
+  // Function to handle page changes via the Pagination component
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    setCurrentPage(value);
+  };
+
   return (
     <Container
       maxWidth={false}
@@ -55,33 +64,17 @@ export default function Content({ blogPosts }: { blogPosts: BlogPost[] }) {
         padding: 4,
       }}
     >
-      {/* Pagination buttons */}
-      <div
-        style={{
-          marginBottom: '20px',
-          display: 'flex',
-          justifyContent: 'space-between',
-          width: '100%',
-        }}
-      >
-        <Button
-          variant="contained"
-          disabled={currentPage === 1}
-          onClick={handlePreviousPage}
-        >
-          Previous
-        </Button>
-        <Typography variant="body1">
-          Page {currentPage} of {totalPages}
-        </Typography>
-        <Button
-          variant="contained"
-          disabled={currentPage === totalPages}
-          onClick={handleNextPage}
-        >
-          Next
-        </Button>
-      </div>
+      {/* MUI Pagination Component */}
+      <Pagination
+        count={totalPages} // Total number of pages
+        page={currentPage} // Current active page
+        onChange={handlePageChange} // Handle page change
+        color="primary" // Styling
+        size="large" // Make it larger for better visibility
+        sx={{ marginBottom: '20px' }} // Add margin below the pagination
+      />
+
+      {/* Blog posts grid */}
       <Grid container spacing={4}>
         {currentPosts.map((post, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
