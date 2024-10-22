@@ -111,7 +111,6 @@ const apps = [
 ];
 
 export default function Content() {
-  console.log(``);
   return (
     <Container
       maxWidth={false}

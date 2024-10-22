@@ -20,6 +20,7 @@ export default async function BlogPage() {
       description: data.description,
       slug: filename.replace('.md', ''),
       image: data.image || '/default-image.png',
+      date: data.date,
     };
   });
 

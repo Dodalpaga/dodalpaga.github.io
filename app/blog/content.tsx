@@ -16,6 +16,7 @@ type BlogPost = {
   description: string;
   slug: string;
   image: string;
+  date: string; // Add a date field in ISO format (e.g., '2024-10-22')
 };
 
 export default function Content({ blogPosts }: { blogPosts: BlogPost[] }) {
@@ -25,24 +26,25 @@ export default function Content({ blogPosts }: { blogPosts: BlogPost[] }) {
   // Get the current posts for the page
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = blogPosts.slice(indexOfFirstPost, indexOfLastPost);
+
+  // Sort blog posts by date (most recent first), and by title (alphabetically) for posts with the same date
+  const sortedPosts = blogPosts.sort((a, b) => {
+    const dateComparison =
+      new Date(b.date).getTime() - new Date(a.date).getTime();
+    if (dateComparison === 0) {
+      // If dates are the same, sort by title alphabetically
+      return a.title.localeCompare(b.title);
+    }
+    return dateComparison;
+  });
+
+  console.log(sortedPosts);
+
+  const currentPosts = sortedPosts.slice(indexOfFirstPost, indexOfLastPost);
 
   // Calculate the total number of pages
   const totalPages = Math.ceil(blogPosts.length / postsPerPage);
 
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  const handlePreviousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  // Function to handle page changes via the Pagination component
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
     value: number
@@ -60,30 +62,28 @@ export default function Content({ blogPosts }: { blogPosts: BlogPost[] }) {
         justifyContent: 'center',
       }}
     >
-      {/* MUI Pagination Component */}
       <Pagination
-        count={totalPages} // Total number of pages
-        page={currentPage} // Current active page
-        onChange={handlePageChange} // Handle page change
+        count={totalPages}
+        page={currentPage}
+        onChange={handlePageChange}
         variant="outlined"
-        size="large" // Make it larger for better visibility
+        size="large"
         sx={{
           marginBottom: '20px',
           color: 'var(--foreground)',
           '& button': {
-            color: 'var(--foreground)', // Default button text color
-            borderColor: 'var(--foreground)', // Default button border color
+            color: 'var(--foreground)',
+            borderColor: 'var(--foreground)',
           },
           '& .Mui-selected': {
-            color: 'var(--foreground-2)', // Active button text color
-            borderColor: 'var(--foreground-2)', // Active button border color
+            color: 'var(--foreground-2)',
+            borderColor: 'var(--foreground-2)',
             opacity: 0.5,
           },
-        }} // Add margin below the pagination
+        }}
         shape="rounded"
       />
 
-      {/* Blog posts grid */}
       <Grid container spacing={4}>
         {currentPosts.map((post, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
