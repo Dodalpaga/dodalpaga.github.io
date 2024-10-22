@@ -8,9 +8,6 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
-import Button from '@mui/material/Button'; // For pagination buttons
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import Pagination from '@mui/material/Pagination'; // MUI Pagination component
 import '../globals.css';
 
@@ -61,7 +58,6 @@ export default function Content({ blogPosts }: { blogPosts: BlogPost[] }) {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: 4,
       }}
     >
       {/* MUI Pagination Component */}
@@ -69,9 +65,22 @@ export default function Content({ blogPosts }: { blogPosts: BlogPost[] }) {
         count={totalPages} // Total number of pages
         page={currentPage} // Current active page
         onChange={handlePageChange} // Handle page change
-        color="primary" // Styling
+        variant="outlined"
         size="large" // Make it larger for better visibility
-        sx={{ marginBottom: '20px' }} // Add margin below the pagination
+        sx={{
+          marginBottom: '20px',
+          color: 'var(--foreground)',
+          '& button': {
+            color: 'var(--foreground)', // Default button text color
+            borderColor: 'var(--foreground)', // Default button border color
+          },
+          '& .Mui-selected': {
+            color: 'var(--foreground-2)', // Active button text color
+            borderColor: 'var(--foreground-2)', // Active button border color
+            opacity: 0.5,
+          },
+        }} // Add margin below the pagination
+        shape="rounded"
       />
 
       {/* Blog posts grid */}
