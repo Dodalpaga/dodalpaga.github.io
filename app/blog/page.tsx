@@ -34,7 +34,7 @@ export default async function BlogPage() {
           imageSrcPath={`/assets/mountain.png`}
         />
       </div>
-      <div className="flex flex-col items-center justify-between p-4">
+      <div className="flex flex-col items-center justify-start p-4 flex-grow">
         <Content blogPosts={blogPosts} />
       </div>
       <Footer brandName="Dorian Voydie" />
