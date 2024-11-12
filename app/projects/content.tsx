@@ -53,6 +53,13 @@ const apps = [
       'Explore and interact with sketches created using the p5.js framework. This app gathers and showcases various creative and interactive visual projects, providing an engaging experience for users interested in generative art and creative coding.',
   },
   {
+    title: 'Music Production',
+    image: `/assets/drawing.jpg`, // Update with your actual image path
+    link: '/projects/media_player', // Update with your actual routes
+    target: '',
+    description: 'Lorem ipsum',
+  },
+  {
     title: 'Guess What',
     image: `/assets/guesswhat.png`, // Update with your actual image path
     link: 'https://guess-what.onrender.com/', // Update with your actual routes

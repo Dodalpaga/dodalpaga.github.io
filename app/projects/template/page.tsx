@@ -17,7 +17,10 @@ export default function Template() {
 
   return (
     <main className="flex min-h-screen flex-col justify-between">
-      <div className="flex flex-col items-center justify-start p-4 flex-grow">
+      <div
+        className="flex flex-col items-center justify-start p-4"
+        style={{ height: '84px' }}
+      >
         <NavBar
           brandName="Dorian Voydie"
           imageSrcPath={`/assets/mountain.png`}
