@@ -20,6 +20,7 @@ const Playlist = () => {
         flexDirection: 'column',
         justifyContent: 'center',
         height: '100%',
+        padding: '0px !important',
         width: '100%',
       }}
     >
