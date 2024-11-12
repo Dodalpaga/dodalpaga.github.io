@@ -7,7 +7,7 @@ export const tracks: Track[] = [
   },
   {
     title: 'Hazy After Hours',
-    url: '/music/Testmp3',
+    url: '/music/Test.mp3',
   },
   {
     title: 'Sample Video',

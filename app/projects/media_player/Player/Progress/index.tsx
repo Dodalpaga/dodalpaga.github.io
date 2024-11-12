@@ -12,7 +12,7 @@ const Progress = () => {
     <Box display="flex" alignItems="center" width={'100%'} mt={2}>
       <Typography>{formatTime(currentTime)}</Typography>
 
-      <Box clone mx={2} width={'100%'}>
+      <Box mx={2} width={'100%'}>
         <Slider
           min={0}
           max={1}

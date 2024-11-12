@@ -1,5 +1,5 @@
 export { usePlayerState, useCurrentTime } from './hooks';
 
-export { Track } from './types';
+export type { Track } from './types';
 
 export { default } from './player';

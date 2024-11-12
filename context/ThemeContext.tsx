@@ -1,4 +1,3 @@
-// context/ThemeContext.tsx
 'use client';
 import { createContext, useContext, useState, useEffect } from 'react';
 
@@ -12,23 +11,26 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
-    if (typeof window !== 'undefined') {
-      const storedTheme = localStorage.getItem('theme');
-      return storedTheme === 'light' || storedTheme === 'dark'
-        ? storedTheme
-        : 'light';
-    }
-    return 'light';
-  });
+  // Default theme is 'light', it will be updated in useEffect
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
+  // This effect will run only on the client-side after the first render
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('theme', theme);
-  }, [theme]);
+    const storedTheme = localStorage.getItem('theme');
+    const preferredTheme =
+      storedTheme === 'light' || storedTheme === 'dark' ? storedTheme : 'light'; // fallback to 'light' if no valid theme is found
+    setTheme(preferredTheme);
+    document.documentElement.setAttribute('data-theme', preferredTheme);
+  }, []); // Empty dependency array ensures this runs once after initial render
 
+  // Toggle theme between 'light' and 'dark'
   const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
+    setTheme((prevTheme) => {
+      const newTheme = prevTheme === 'light' ? 'dark' : 'light';
+      localStorage.setItem('theme', newTheme); // Store the selected theme
+      document.documentElement.setAttribute('data-theme', newTheme); // Update theme in DOM
+      return newTheme;
+    });
   };
 
   return (
