@@ -11,15 +11,18 @@ const Video: FC = () => {
     const videoWrapperElement = videoWrapperRef.current!;
     const video = player.getElement();
 
-    video.remove();
-    video.classList.remove('visuallyhidden');
-    videoWrapperElement.append(video);
+    if (video) {
+      // Vérification si l'élément video n'est pas null
+      video.remove();
+      video.classList.remove('visuallyhidden');
+      videoWrapperElement.append(video);
 
-    return () => {
-      videoWrapperElement.removeChild(video);
-      video.classList.add('visuallyhidden');
-      document.body.append(video);
-    };
+      return () => {
+        videoWrapperElement.removeChild(video);
+        video.classList.add('visuallyhidden');
+        document.body.append(video);
+      };
+    }
   }, []);
 
   return <div ref={videoWrapperRef} className={classes.root} />;
