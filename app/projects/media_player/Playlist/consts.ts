@@ -13,4 +13,8 @@ export const tracks: Track[] = [
     title: 'Sample Video',
     url: '/videos/80s.mp4',
   },
+  {
+    title: 'Test Video',
+    url: '/videos/test.mp4',
+  },
 ];
