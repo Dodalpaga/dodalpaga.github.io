@@ -3,7 +3,6 @@ import Container from '@mui/material/Container';
 
 import Playlist from './Playlist';
 import Player from './Player';
-import { keyframes } from '@mui/system';
 
 export default function Content() {
   return (
