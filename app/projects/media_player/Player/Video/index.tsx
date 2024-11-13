@@ -1,5 +1,4 @@
 import React, { useRef, useEffect, FC } from 'react';
-
 import player from '../../libs/player';
 import { useStyles } from './styles';
 
@@ -12,9 +11,12 @@ const Video: FC = () => {
     const video = player.getElement();
 
     if (video) {
-      // Vérification si l'élément video n'est pas null
       video.remove();
       video.classList.remove('visuallyhidden');
+      // Set video to fill the container while maintaining aspect ratio
+      video.style.width = '100%';
+      video.style.height = '100%';
+      video.style.objectFit = 'contain'; // Ensures video scales and keeps aspect ratio
       videoWrapperElement.append(video);
 
       return () => {
@@ -25,7 +27,13 @@ const Video: FC = () => {
     }
   }, []);
 
-  return <div ref={videoWrapperRef} className={classes.root} />;
+  return (
+    <div
+      ref={videoWrapperRef}
+      className={classes.root}
+      style={{ width: '100%', height: '100%' }}
+    />
+  );
 };
 
 export default Video;

@@ -12,16 +12,17 @@ export default function Content() {
         alignItems: 'flex-start',
         flexDirection: 'row',
         justifyContent: 'flex-start',
-        height: '100vh',
+        height: 'calc(100vh - 80px)', // Ajustez "80px" à la hauteur de votre pied de page
+        overflow: 'auto',
       }}
     >
       {/* Wrapper for Playlist */}
-      <div style={{ width: '30%' }}>
+      <div style={{ width: '30%', height: '100%' }}>
         <Playlist />
       </div>
 
       {/* Wrapper for Player */}
-      <div style={{ width: '70%' }}>
+      <div style={{ width: '70%', height: '100%' }}>
         <Player />
       </div>
     </Container>

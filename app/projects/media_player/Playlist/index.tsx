@@ -24,7 +24,12 @@ const Playlist = () => {
         width: '100%',
       }}
     >
-      <List>
+      <List
+        sx={{
+          overflowY: 'auto', // Enable vertical scroll
+          maxHeight: '100%', // Make it fit the container's height
+        }}
+      >
         {state.tracks.map((track, index) => (
           <Track index={index} key={track.url} />
         ))}

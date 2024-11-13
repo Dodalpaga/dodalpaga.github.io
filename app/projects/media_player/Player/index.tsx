@@ -9,7 +9,7 @@ import Video from './Video';
 const Player = () => {
   const { currentTrack, playing } = usePlayerState();
   const [isShowVideo, setIsShowVideo] = useState(false);
-  const [volume, setVolume] = useState(player.volume()); // Initialize volume from player
+  const [volume, setVolume] = useState(player.volume());
 
   if (!currentTrack) {
     return null;
@@ -30,7 +30,16 @@ const Player = () => {
   };
 
   return (
-    <Box mt={4} style={{ width: '100%' }}>
+    <Box
+      mt={4}
+      style={{
+        margin: 'auto',
+        width: '100%',
+        height: '100%', // Set to full viewport height
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
       <Progress />
 
       <Box display="flex" alignItems="center">
@@ -65,7 +74,7 @@ const Player = () => {
       </Box>
 
       {isShowVideo && (
-        <Box mt={2}>
+        <Box mt={2} flexGrow={1} style={{ flex: 1, overflow: 'hidden' }}>
           <Video />
         </Box>
       )}

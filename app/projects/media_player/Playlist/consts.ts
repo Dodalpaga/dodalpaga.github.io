@@ -10,7 +10,31 @@ export const tracks: Track[] = [
     url: '/music/Test.mp3',
   },
   {
-    title: '1982',
-    url: '/videos/80s.mp4',
+    title: 'Ambient.wav',
+    url: '/music/Ambient.wav',
+  },
+  {
+    title: 'Anime.mp3',
+    url: '/music/Anime.mp3',
+  },
+  {
+    title: 'Cool.mp3',
+    url: '/music/Cool.mp3',
+  },
+  {
+    title: 'NB1.mp3',
+    url: '/music/NB1.mp3',
+  },
+  {
+    title: 'New.wav',
+    url: '/music/New.wav',
+  },
+  {
+    title: 'Synthtrap.mp3',
+    url: '/music/Synthtrap.mp3',
+  },
+  {
+    title: '1982.mp4',
+    url: '/videos/1982.mp4',
   },
 ];
