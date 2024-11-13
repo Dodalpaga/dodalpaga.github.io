@@ -2,15 +2,15 @@ import { Track } from '../libs/player';
 
 export const tracks: Track[] = [
   {
-    title: 'Tech House Vibes',
+    title: 'Song.mp3',
     url: '/music/Song.mp3',
   },
   {
-    title: 'Hazy After Hours',
+    title: 'Test.mp3',
     url: '/music/Test.mp3',
   },
   {
-    title: 'Test Video',
-    url: '/videos/test.mp4',
+    title: '1982',
+    url: '/videos/80s.mp4',
   },
 ];
