@@ -10,10 +10,6 @@ export const tracks: Track[] = [
     url: '/music/Test.mp3',
   },
   {
-    title: 'Sample Video',
-    url: '/videos/80s.mp4',
-  },
-  {
     title: 'Test Video',
     url: '/videos/test.mp4',
   },
