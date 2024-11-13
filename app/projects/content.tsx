@@ -54,10 +54,11 @@ const apps = [
   },
   {
     title: 'Music Production',
-    image: `/assets/drawing.jpg`, // Update with your actual image path
+    image: `/assets/music_producer.jpg`, // Update with your actual image path
     link: '/projects/media_player', // Update with your actual routes
     target: '',
-    description: 'Lorem ipsum',
+    description:
+      'I produce electronic music in my free time, experimenting with different sounds and styles to create unique tracks.',
   },
   {
     title: 'Guess What',
