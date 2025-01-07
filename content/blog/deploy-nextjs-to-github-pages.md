@@ -165,7 +165,7 @@ However, you can manage secrets using **GitHub Actions** to securely build and d
 
    - Create a `.github/workflows/nextjs.yml` file in your repository.
    - In your GitHub Actions workflow file, you can reference these secrets
-   - Here is an [example](assets/deploy-nextjs-to-github-pages/nextjs.yml)
+   - Here is an [example](/assets/deploy-nextjs-to-github-pages/nextjs.yml)
 
 4. **Accessing Secrets in TypeScript**:
 
