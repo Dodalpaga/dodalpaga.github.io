@@ -1,15 +1,17 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
-import NavBar from '../../../components/navbar';
-import Footer from '../../../components/footer';
+import NavBar from '@/components/navbar';
+import Footer from '@/components/footer';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeSlug from 'rehype-slug'; // Import rehype-slug
 import rehypeFormat from 'rehype-format'; // Optional for formatting
 import rehypeRaw from 'rehype-raw'; // Import rehype-raw
-import './markdown.css';
+import rehypeHighlight from 'rehype-highlight';
 import './blog.css';
+import './markdown.css';
+import 'highlight.js/styles/github.css'; // Example theme
 import { Metadata } from 'next';
 
 const PostPage = async ({ params }: { params: { slug: string } }) => {
@@ -40,7 +42,7 @@ const PostPage = async ({ params }: { params: { slug: string } }) => {
         </div>
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
-          rehypePlugins={[rehypeSlug, rehypeRaw, rehypeFormat]} // Add rehypeRaw here
+          rehypePlugins={[rehypeSlug, rehypeRaw, rehypeFormat, rehypeHighlight]}
           className="markdown"
         >
           {content}

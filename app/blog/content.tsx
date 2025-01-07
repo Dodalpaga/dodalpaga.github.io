@@ -108,6 +108,7 @@ export default function Content({ blogPosts }: { blogPosts: BlogPost[] }) {
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'center',
+                    height: '100%',
                   }}
                 >
                   <Typography variant="h6" component="div">

@@ -9,6 +9,7 @@
   --bg-color-2: rgb(253, 195, 195);
   --bg-color-3: rgb(177, 245, 186);
   --bg-color-4: rgb(225, 215, 252);
+  --blue: rgb(48, 48, 214);
   --foreground: rgb(15, 15, 15);
   --foreground-2: rgb(50, 50, 50);
   --background-transparent: rgba(255, 255, 255, 0.8);
@@ -24,6 +25,7 @@
   --bg-color-2: rgb(58, 20, 20);
   --bg-color-3: rgb(17, 73, 24);
   --bg-color-4: rgb(39, 29, 63);
+  --blue: rgb(159, 159, 226);
   --foreground: rgb(255, 255, 255);
   --foreground-2: rgb(200, 200, 200);
   --background-transparent: rgba(29, 29, 29, 0.8);

@@ -1,4 +1,3 @@
-// app/blog/page.tsx
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
@@ -10,7 +9,10 @@ export default async function BlogPage() {
   const postsDirectory = path.join(process.cwd(), 'content/blog');
   const filenames = fs.readdirSync(postsDirectory);
 
-  const blogPosts = filenames.map((filename) => {
+  // Filter for only .md files
+  const mdFilenames = filenames.filter((filename) => filename.endsWith('.md'));
+
+  const blogPosts = mdFilenames.map((filename) => {
     const filePath = path.join(postsDirectory, filename);
     const fileContents = fs.readFileSync(filePath, 'utf8');
     const { data } = matter(fileContents);

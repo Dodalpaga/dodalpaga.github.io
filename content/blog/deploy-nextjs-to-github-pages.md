@@ -26,7 +26,6 @@ In this article, we'll walk you through the process of deploying a **Next.js sta
 - [Deploying the Static Website](#deploying-the-static-website)
 - [Managing Secrets in GitHub Pages](#managing-secrets-in-github-pages)
 - [Conclusion](#conclusion)
-  - [For more information on GitHub Pages action integration, refer to https://github.com/webmasterish/actions](#for-more-information-on-github-pages-action-integration-refer-to-httpsgithubcomwebmasterishactions)
 
 ---
 
@@ -37,10 +36,7 @@ Before we begin, ensure you have the following tools installed:
 - [Node.js](https://nodejs.org/en/) (v14 or later)
 - [Git](https://git-scm.com/)
 - A GitHub account
-
-Optional:
-
-- A domain name (if you plan to use a custom domain for your GitHub Pages site)
+- (Optional) A domain name (if you plan to use a custom domain for your GitHub Pages site)
 
 # Setting Up the Next.js Project
 
@@ -54,13 +50,9 @@ npm run dev
 
 # Next Js configuration
 
-<h5 a>
-  <strong>
-    <code>next.config.js</code>
-  </strong>
-</h5>
+<div class="code-title">next.config.js</div>
 
-```js filename="index.js"
+```js
 module.exports = {
   output: 'export',
   images: {
@@ -173,99 +165,7 @@ However, you can manage secrets using **GitHub Actions** to securely build and d
 
    - Create a `.github/workflows/nextjs.yml` file in your repository.
    - In your GitHub Actions workflow file, you can reference these secrets
-     Here’s an example:
-
-   ```yaml
-   name: Deploy Next.js site to Pages
-
-   on:
-     push:
-       branches: ['main']
-     workflow_dispatch:
-
-   permissions:
-     contents: read
-     pages: write
-     id-token: write
-
-   concurrency:
-     group: 'pages'
-     cancel-in-progress: false
-
-   jobs:
-     build:
-       runs-on: ubuntu-latest
-       steps:
-         - name: Checkout
-           uses: actions/checkout@v4
-
-         - name: Detect package manager
-           id: detect-package-manager
-           run: |
-             if [ -f "${{ github.workspace }}/yarn.lock" ]; then
-               echo "manager=yarn" >> $GITHUB_OUTPUT
-               echo "command=install" >> $GITHUB_OUTPUT
-               echo "runner=yarn" >> $GITHUB_OUTPUT
-               exit 0
-             elif [ -f "${{ github.workspace }}/package.json" ]; then
-               echo "manager=npm" >> $GITHUB_OUTPUT
-               echo "command=ci" >> $GITHUB_OUTPUT
-               echo "runner=npx --no-install" >> $GITHUB_OUTPUT
-               exit 0
-             else
-               echo "Unable to determine package manager"
-               exit 1
-             fi
-
-         - name: Setup Node
-           uses: actions/setup-node@v4
-           with:
-             node-version: '20'
-             cache: ${{ steps.detect-package-manager.outputs.manager }}
-
-         - name: Setup Pages
-           uses: actions/configure-pages@v5
-           with:
-             static_site_generator: next
-
-         - name: Restore cache
-           uses: actions/cache@v4
-           with:
-             path: .next/cache
-             key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
-             restore-keys: |
-               ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-
-
-         - name: Install dependencies
-           run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
-
-         - name: Debug Secrets
-           run: |
-             echo "NEXT_PUBLIC_API_URL_DOCS: ${{ secrets.NEXT_PUBLIC_API_URL_DOCS }}"
-             echo "NEXT_PUBLIC_MAPTILER_API_KEY: ${{ secrets.NEXT_PUBLIC_MAPTILER_API_KEY }}"
-
-         - name: Build with Next.js
-           run: ${{ steps.detect-package-manager.outputs.runner }} next build
-           env:
-             NEXT_PUBLIC_API_URL_DOCS: ${{ secrets.NEXT_PUBLIC_API_URL_DOCS }}
-             NEXT_PUBLIC_MAPTILER_API_KEY: ${{ secrets.NEXT_PUBLIC_MAPTILER_API_KEY }}
-
-         - name: Upload artifact
-           uses: actions/upload-pages-artifact@v3
-           with:
-             path: ./out
-
-     deploy:
-       environment:
-         name: github-pages
-         url: ${{ steps.deployment.outputs.page_url }}
-       runs-on: ubuntu-latest
-       needs: build
-       steps:
-         - name: Deploy to GitHub Pages
-           id: deployment
-           uses: actions/deploy-pages@v4
-   ```
+   - Here is an [example](assets/deploy-nextjs-to-github-pages/nextjs.yml)
 
 4. **Accessing Secrets in TypeScript**:
 
@@ -285,4 +185,4 @@ Deploying a Next.js static site to GitHub Pages is straightforward with the prop
 
 Happy deploying!
 
-## For more information on GitHub Pages action integration, refer to https://github.com/webmasterish/actions
+> For more information on GitHub Pages action integration, refer to https://github.com/webmasterish/actions

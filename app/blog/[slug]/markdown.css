@@ -4,9 +4,30 @@ html {
   scroll-padding-top: 84px; /* Adjust for your navbar height */
 }
 
+.code-title {
+  color: black;
+  background-color: white;
+  width: fit-content;
+  border-radius: 5px;
+  padding: 5px 10px;
+  left: 5px;
+  position: relative;
+  font-weight: bold;
+}
+
+code {
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.hljs-property {
+  color: rgb(48, 48, 214);
+}
+
 .markdown a {
-  color: var(--foreground); /* Your link color */
+  color: var(--blue); /* Your link color */
   text-decoration: none; /* Remove underline */
+  word-wrap: break-word;
 }
 
 .markdown a:hover {
@@ -50,5 +71,5 @@ html {
   border-left: 4px solid var(--foreground-2); /* Style for blockquotes */
   padding-left: 1rem;
   margin: 1rem 0;
-  color: var(--foreground-2);
+  /* color: var(--foreground-2); */
 }
