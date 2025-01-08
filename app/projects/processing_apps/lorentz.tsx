@@ -48,6 +48,9 @@ const LorentzCanvas: React.FC = () => {
     const b = 28;
     const c = 8.0 / 3.0;
 
+    const canva_offset_height = 180;
+    const canva_offset_width = 40;
+
     const points: any[] = [];
 
     let camAngleX = 0;
@@ -117,9 +120,9 @@ const LorentzCanvas: React.FC = () => {
       }
 
       const radius = 600;
-      const eyeX = radius * Math.sin(camAngleY) * Math.cos(camAngleX);
+      const eyeX = radius * Math.cos(camAngleX) * Math.sin(camAngleY);
       const eyeY = radius * Math.sin(camAngleX);
-      const eyeZ = radius * Math.cos(camAngleY) * Math.cos(camAngleX);
+      const eyeZ = radius * Math.cos(camAngleX) * Math.cos(camAngleY);
 
       p.camera(eyeX, eyeY, eyeZ, 0, 0, 0, 0, 1, 0);
 
@@ -139,10 +142,10 @@ const LorentzCanvas: React.FC = () => {
       const rect = canvasParent?.getBoundingClientRect();
       if (
         rect &&
-        p.mouseX >= rect.left &&
-        p.mouseX <= rect.right &&
-        p.mouseY >= rect.top &&
-        p.mouseY <= rect.bottom
+        p.mouseX >= rect.left - canva_offset_width &&
+        p.mouseX <= rect.right - canva_offset_width &&
+        p.mouseY >= rect.top - canva_offset_height &&
+        p.mouseY <= rect.bottom - canva_offset_height
       ) {
         lastMouseX = p.mouseX;
         lastMouseY = p.mouseY;
@@ -160,8 +163,13 @@ const LorentzCanvas: React.FC = () => {
     p.mouseDragged = () => {
       if (isRotating) {
         const sensitivity = 0.01;
+        const maxCamAngleX = p.HALF_PI - 0.01; // Slightly less than 90 degrees to avoid flipping
+
         camAngleX -= (p.mouseY - lastMouseY) * sensitivity;
+        camAngleX = p.constrain(camAngleX, -maxCamAngleX, maxCamAngleX); // Clamp camAngleX within bounds
+
         camAngleY -= (p.mouseX - lastMouseX) * sensitivity;
+        camAngleY = camAngleY % p.TWO_PI; // Keep camAngleY within a complete circle
         lastMouseX = p.mouseX;
         lastMouseY = p.mouseY;
       }
