@@ -46,6 +46,7 @@ const FourrierCanvas = () => {
     let time = 0;
     let wave: number[] = [];
     let n1 = 5;
+    let number_of_points = 500;
     let zoomFactor = 1;
 
     // Store the canvas element
@@ -73,7 +74,7 @@ const FourrierCanvas = () => {
 
     p.draw = () => {
       p.clear();
-      const cx = -p.width / 4;
+      const cx = -p.width / 2;
       const cy = 0;
       p.translate(cx, cy);
       p.scale(zoomFactor);
@@ -106,10 +107,10 @@ const FourrierCanvas = () => {
       }
       p.endShape();
 
-      time += 0.05;
+      time += 0.2;
 
-      if (wave.length > 250) {
-        wave.splice(250);
+      if (wave.length > number_of_points) {
+        wave.splice(number_of_points);
       }
     };
 

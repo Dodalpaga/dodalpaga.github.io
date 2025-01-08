@@ -5,9 +5,8 @@ const LorentzCanvas: React.FC = () => {
   const p5InstanceRef = useRef<any | null>(null);
   const [isBrowser, setIsBrowser] = useState(false);
 
-  // Dynamically import p5
   const loadP5 = async () => {
-    const p5 = (await import('p5')).default; // Access default export
+    const p5 = (await import('p5')).default;
     return p5;
   };
 
@@ -16,9 +15,8 @@ const LorentzCanvas: React.FC = () => {
 
     if (isBrowser && canvasRef.current) {
       loadP5().then((p5) => {
-        p5InstanceRef.current = new p5(sketch, canvasRef.current!); // Use non-null assertion
+        p5InstanceRef.current = new p5(sketch, canvasRef.current!);
 
-        // Resize canvas when parent container resizes
         const resizeObserver = new ResizeObserver(() => {
           p5InstanceRef.current?.resizeCanvas(
             canvasRef.current?.offsetWidth || 0,
@@ -26,12 +24,10 @@ const LorentzCanvas: React.FC = () => {
           );
         });
 
-        // Check if canvasRef.current is not null before observing
         if (canvasRef.current) {
           resizeObserver.observe(canvasRef.current);
         }
 
-        // Cleanup function to remove p5 instance and observer
         return () => {
           if (p5InstanceRef.current) {
             p5InstanceRef.current.remove();
@@ -48,23 +44,19 @@ const LorentzCanvas: React.FC = () => {
     let y = 0;
     let z = 0;
 
-    // Parameters for the Lorenz system
     const a = 10;
     const b = 28;
     const c = 8.0 / 3.0;
 
-    // Array to store points
     const points: any[] = [];
 
-    // Camera properties
     let camAngleX = 0;
     let camAngleY = 0;
     let lastMouseX = 0;
     let lastMouseY = 0;
     let isRotating = false;
-    let dezoomFactor = 1; // Initialize dezoom factor
+    let dezoomFactor = 1;
 
-    // Store the canvas element
     let canvasParent: HTMLElement | null = null;
 
     const resizeCanvasToParent = () => {
@@ -72,24 +64,21 @@ const LorentzCanvas: React.FC = () => {
         const parentWidth = canvasParent.offsetWidth;
         const parentHeight = canvasParent.offsetHeight;
 
-        // Set canvas width to 1/3 of the parent's width and full height
         p.resizeCanvas(parentWidth, parentHeight);
 
-        // Adjust dezoom factor based on the canvas width
-        dezoomFactor = parentWidth / 600; // Assuming 600 was the original fixed width
+        dezoomFactor = parentWidth / 600;
       }
     };
 
     p.setup = () => {
-      // Create the canvas and set its size to 1/3 of parent's width and full height
       const canvas = p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
-      canvasParent = canvas.elt.parentElement; // Get the parent element of the canvas
+      canvasParent = canvas.elt.parentElement;
 
       resizeCanvasToParent();
 
-      p.colorMode(p.RGB);
-      p.noCursor(); // Hide the cursor
+      p.colorMode(p.HSB);
     };
+    let maxDistance = 5.6;
 
     p.draw = () => {
       p.clear();
@@ -100,57 +89,67 @@ const LorentzCanvas: React.FC = () => {
       x += dx;
       y += dy;
       z += dz;
+      const newPoint = p.createVector(x, y, z);
+      if (points.length > 0) {
+        const prevPoint = points[points.length - 1];
+        const distance = p.dist(
+          prevPoint.x,
+          prevPoint.y,
+          prevPoint.z,
+          newPoint.x,
+          newPoint.y,
+          newPoint.z
+        );
 
-      points.push(p.createVector(x, y, z));
+        if (distance > maxDistance) {
+          maxDistance = distance;
+        }
 
-      // Limit the points array to the last 1500 points
-      if (points.length > 1500) {
-        points.shift(); // Remove the first (oldest) point
+        newPoint.hue = p.map(distance, 0, maxDistance, 240, 0); // 240 (blue) to 0 (red)
+      } else {
+        newPoint.hue = 240; // Default to blue for the first point
       }
 
-      // Camera position using spherical coordinates
-      const radius = 600; // Fixed distance from the origin
+      points.push(newPoint);
+
+      if (points.length > 1500) {
+        points.shift();
+      }
+
+      const radius = 600;
       const eyeX = radius * Math.sin(camAngleY) * Math.cos(camAngleX);
       const eyeY = radius * Math.sin(camAngleX);
       const eyeZ = radius * Math.cos(camAngleY) * Math.cos(camAngleX);
 
-      p.camera(
-        eyeX,
-        eyeY,
-        eyeZ, // Camera position
-        0,
-        0,
-        0, // LookAt position
-        0,
-        1,
-        0 // Up vector
-      );
+      p.camera(eyeX, eyeY, eyeZ, 0, 0, 0, 0, 1, 0);
 
       p.translate(0, 0, -150);
       p.scale(5 * dezoomFactor);
-      p.stroke(255);
       p.noFill();
 
-      let hu = 0;
       p.beginShape();
       for (const v of points) {
-        p.stroke(hu, 255, 255);
+        p.stroke(v.hue, 255, 255);
         p.vertex(v.x, v.y, v.z);
-        hu += 0.1;
-        if (hu > 255) {
-          hu = 0;
-        }
       }
       p.endShape();
     };
 
     p.mousePressed = () => {
-      lastMouseX = p.mouseX;
-      lastMouseY = p.mouseY;
+      const rect = canvasParent?.getBoundingClientRect();
+      if (
+        rect &&
+        p.mouseX >= rect.left &&
+        p.mouseX <= rect.right &&
+        p.mouseY >= rect.top &&
+        p.mouseY <= rect.bottom
+      ) {
+        lastMouseX = p.mouseX;
+        lastMouseY = p.mouseY;
 
-      // Check which mouse button is pressed
-      if (p.mouseButton === p.LEFT) {
-        isRotating = true;
+        if (p.mouseButton === p.LEFT) {
+          isRotating = true;
+        }
       }
     };
 
@@ -174,21 +173,27 @@ const LorentzCanvas: React.FC = () => {
   };
 
   if (!isBrowser) {
-    return null; // Or a loading indicator
+    return null;
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        cursor: 'grab',
+      }}
+    >
       <div
         ref={canvasRef}
         style={{
           width: '100%',
           height: '100%',
-          overflow: 'hidden', // Prevent scrollbars
+          overflow: 'hidden',
         }}
       ></div>
 
-      {/* Display Lorentz Attractor */}
       <div
         style={{
           padding: '1rem',

@@ -59,7 +59,6 @@ html::-webkit-scrollbar {
   background-color: var(--card) !important;
   color: var(--foreground) !important;
   position: relative !important;
-  cursor: pointer !important;
   backdrop-filter: blur(10px) !important;
   border-radius: 10px !important; /* Border radius 2 in MUI translates to 8px */
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
@@ -67,11 +66,6 @@ html::-webkit-scrollbar {
   overflow: hidden !important;
   width: 100%; /* Set width to 100% of the grid item */
   aspect-ratio: 1 / 1; /* Maintain a 1:1 aspect ratio */
-}
-
-.card :hover {
-  transform: scale(1.05);
-  transition: transform 0.3s ease;
 }
 
 /* globals.css */

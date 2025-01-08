@@ -1,5 +1,5 @@
 import * as React from 'react';
-import ExampleMap from '../../../components/mapbox';
+import ExampleMap from '@/components/mapbox';
 import Stack from '@mui/material/Stack';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';

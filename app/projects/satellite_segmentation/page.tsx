@@ -1,9 +1,9 @@
 'use client';
 import React from 'react';
-import NavBar from '../../../components/navbar';
-import Footer from '../../../components/footer';
+import NavBar from '@/components/navbar';
+import Footer from '@/components/footer';
 import Content from './content';
-import Loading from '../../../components/loading';
+import Loading from '@/components/loading';
 import './styles.css'; // Ensure the correct CSS file is imported
 
 export default function App1() {

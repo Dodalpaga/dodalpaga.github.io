@@ -1,8 +1,8 @@
 'use client';
 import React from 'react';
-import NavBar from '../../../components/navbar';
-import Footer from '../../../components/footer';
-import Loading from '../../../components/loading';
+import NavBar from '@/components/navbar';
+import Footer from '@/components/footer';
+import Loading from '@/components/loading';
 import Content from './content';
 
 export default function SandboxApp() {

@@ -55,6 +55,7 @@ const PiCanvas: React.FC = () => {
     let circle = 0;
     let recordPI = 0;
     let dezoomFactor = 1; // Initialize dezoom factor
+    let maxNumberOfPoints = 10000;
 
     // Store the canvas element
     let canvasParent: HTMLElement | null = null;
@@ -83,9 +84,7 @@ const PiCanvas: React.FC = () => {
       p.stroke(255);
       p.strokeWeight(4);
       p.noFill();
-      p.ellipse(0, 0, r * 2, r * 2); // Draw the circle
       p.rectMode(p.CENTER);
-      p.rect(0, 0, r * 2, r * 2); // Draw the square
     };
 
     p.draw = () => {
@@ -100,9 +99,9 @@ const PiCanvas: React.FC = () => {
         if (d < r * r * dezoomFactor * dezoomFactor) {
           // Adjust circle boundary
           circle++;
-          p.stroke(120, 48, 48);
+          p.stroke(64, 255, 64);
         } else {
-          p.stroke(150, 180, 230);
+          p.stroke(120, 64, 64);
         }
         p.strokeWeight(0.1);
         p.point(x, y); // Draw the point
@@ -116,6 +115,11 @@ const PiCanvas: React.FC = () => {
           recordPI = pi;
           // Update the parent component with the new approximated Pi value
           updatePiCallback(recordPI);
+        }
+
+        if (total >= maxNumberOfPoints) {
+          p.noLoop();
+          console.log('Pi computed !');
         }
       }
     };

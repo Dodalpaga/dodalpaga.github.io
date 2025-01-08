@@ -8,10 +8,10 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'; // Icon for the accordion
 import { useState, useRef } from 'react';
-import Loading from '../../../components/loading';
+import Loading from '@/components/loading';
 import '../../globals.css'; // Ensure global styles are correctly imported
 import './styles.css';
-import { useThemeContext } from '../../../context/ThemeContext';
+import { useThemeContext } from '@/context/ThemeContext';
 
 // General style for left panel links
 const linkStyle = {

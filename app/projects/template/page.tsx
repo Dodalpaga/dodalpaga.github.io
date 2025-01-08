@@ -1,9 +1,9 @@
 'use client';
 import React from 'react';
-import NavBar from '../../../components/navbar';
-import Footer from '../../../components/footer';
+import NavBar from '@/components/navbar';
+import Footer from '@/components/footer';
 import Content from './content';
-import Loading from '../../../components/loading';
+import Loading from '@/components/loading';
 
 export default function Template() {
   const [isLoading, setIsLoading] = React.useState(true);
