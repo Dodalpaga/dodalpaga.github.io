@@ -48,6 +48,9 @@ const FourrierCanvas = () => {
     let n1 = 5;
     let number_of_points = 500;
     let zoomFactor = 1;
+    const baseAmount = 0.02; // Base amount
+    const oscillationAmplitude = 0.08; // Oscillation amplitude
+    const oscillationFrequency = 0.003; // Frequency of oscillation
 
     // Store the canvas element
     let canvasParent: HTMLElement | null = null;
@@ -79,6 +82,12 @@ const FourrierCanvas = () => {
       p.translate(cx, cy);
       p.scale(zoomFactor);
 
+      // Calculate oscillating amount based on time
+      const amount =
+        baseAmount +
+        oscillationAmplitude *
+          p.abs(p.sin(oscillationFrequency * p.frameCount));
+
       let x = 0;
       let y = 0;
 
@@ -107,7 +116,8 @@ const FourrierCanvas = () => {
       }
       p.endShape();
 
-      time += 0.2;
+      // Increment time by the oscillating amount
+      time += amount;
 
       if (wave.length > number_of_points) {
         wave.splice(number_of_points);

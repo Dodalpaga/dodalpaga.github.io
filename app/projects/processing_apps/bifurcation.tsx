@@ -43,15 +43,15 @@ const BifurcationCanvas = () => {
   }, [isBrowser]);
 
   const sketch = (p: any) => {
-    let iterationNum = 200;
-    let stepSize = 0.005;
-    let initialValue = 0.1;
+    const iterationNum = 200;
+    const initialValue = 0.1;
+    const maxA = 4.0;
     let a = 2;
-    let maxA = 4.0;
-    let x: number;
-    let px: number, py: number;
+    let stepSize = 0.004;
     let isAnimating = true;
     let zoomFactor = 1;
+    let x: number;
+    let px: number, py: number;
 
     // Store the canvas element
     let canvasParent: HTMLElement | null = null;
@@ -94,6 +94,7 @@ const BifurcationCanvas = () => {
           }
         }
 
+        stepSize = Math.max(stepSize - 0.000004, 0.001);
         a += stepSize; // Increment the parameter a
 
         if (a > maxA) {
