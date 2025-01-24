@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { PlayArrow, Pause, OndemandVideo, VolumeUp } from '@mui/icons-material';
+import { PlayArrow, Pause, VolumeUp } from '@mui/icons-material';
 import { Box, Typography, IconButton, Slider } from '@mui/material';
+import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 
 import player, { usePlayerState } from '../libs/player';
 import Progress from './Progress';
@@ -8,11 +9,40 @@ import Video from './Video';
 
 const Player = () => {
   const { currentTrack, playing } = usePlayerState();
-  const [isShowVideo, setIsShowVideo] = useState(false);
   const [volume, setVolume] = useState(player.volume());
 
   if (!currentTrack) {
-    return null;
+    return (
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100%',
+          width: '100%',
+        }}
+      >
+        <KeyboardDoubleArrowDownIcon />
+        <Box
+          mt={2}
+          flexGrow={1}
+          style={{
+            display: 'flex',
+            overflow: 'hidden',
+            textAlign: 'center',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '16px',
+            width: 'max-content',
+            margin: 0,
+          }}
+        >
+          Select a track
+        </Box>
+        <KeyboardDoubleArrowDownIcon />
+      </div>
+    );
   }
 
   const handlePlay = () => {
@@ -40,21 +70,31 @@ const Player = () => {
         flexDirection: 'column',
       }}
     >
+      {/.mp4$/.test(currentTrack.url) && (
+        <Box mt={2} flexGrow={1} className="cover">
+          <Video />
+        </Box>
+      )}
+
+      {!/.mp4$/.test(currentTrack.url) && currentTrack.coverUrl && (
+        <Box mt={2} flexGrow={1} className="cover">
+          <img
+            src={currentTrack.coverUrl}
+            style={{
+              objectFit: 'contain',
+              maxWidth: '100%',
+              maxHeight: '100%',
+            }}
+          />
+        </Box>
+      )}
+
       <Progress />
 
       <Box display="flex" alignItems="center">
         <Box flexGrow={1} mr={2}>
           <Typography>{currentTrack.title}</Typography>
         </Box>
-
-        {/.mp4$/.test(currentTrack.url) && (
-          <IconButton
-            color={isShowVideo ? 'primary' : 'default'}
-            onClick={() => setIsShowVideo(!isShowVideo)}
-          >
-            <OndemandVideo />
-          </IconButton>
-        )}
 
         <IconButton color="primary" onClick={handlePlay}>
           {playing ? <Pause /> : <PlayArrow />}
@@ -72,12 +112,6 @@ const Player = () => {
           />
         </Box>
       </Box>
-
-      {isShowVideo && (
-        <Box mt={2} flexGrow={1} style={{ flex: 1, overflow: 'hidden' }}>
-          <Video />
-        </Box>
-      )}
     </Box>
   );
 };

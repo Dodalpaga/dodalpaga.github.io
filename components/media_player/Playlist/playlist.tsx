@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Container, List } from '@mui/material';
 
 import player, { usePlayerState } from '../libs/player';
-import { tracks } from './consts';
+import { tracks } from '../consts';
 import Track from './track';
 
 const Playlist = () => {
@@ -22,12 +22,14 @@ const Playlist = () => {
         height: '100%',
         padding: '0px !important',
         width: '100%',
+        background: 'var(--background)',
       }}
     >
       <List
         sx={{
           overflowY: 'auto', // Enable vertical scroll
           maxHeight: '100%', // Make it fit the container's height
+          width: '100%',
         }}
       >
         {state.tracks.map((track, index) => (

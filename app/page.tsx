@@ -65,7 +65,7 @@ export default function Home() {
         </a>
       </div>
 
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm">
+      <div className="z-10 w-full max-w-3xl items-center justify-between font-mono text-sm">
         <p className="api-banner flex w-full justify-center border-b border-gray-300 from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:from-inherit lg:static lg:w-auto lg:rounded-xl">
           You can check the backend API&nbsp;
           <Link

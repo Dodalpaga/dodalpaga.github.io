@@ -12,7 +12,6 @@ const Video: FC = () => {
 
     if (video) {
       video.remove();
-      video.classList.remove('visuallyhidden');
       // Set video to fill the container while maintaining aspect ratio
       video.style.width = '100%';
       video.style.height = '100%';
@@ -21,7 +20,6 @@ const Video: FC = () => {
 
       return () => {
         videoWrapperElement.removeChild(video);
-        video.classList.add('visuallyhidden');
         document.body.append(video);
       };
     }

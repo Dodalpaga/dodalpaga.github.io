@@ -7,6 +7,7 @@ export type AudioState = {
 export type Track = {
   url: string;
   title: string;
+  coverUrl: string | null;
 };
 
 export type State = AudioState & {

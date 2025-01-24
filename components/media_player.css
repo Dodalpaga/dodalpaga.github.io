@@ -1,0 +1,70 @@
+.media-player {
+  background: var(
+    --background,
+    rgba(255, 255, 255, 0.1)
+  ); /* Default if --background isn't set */
+  backdrop-filter: blur(50px); /* Add the blur effect */
+  -webkit-backdrop-filter: blur(10px); /* For Safari support */
+  border: 1px solid var(--background-2, rgba(255, 255, 255, 0.3)); /* Subtle border */
+  border-radius: 16px; /* Rounded corners for the glass effect */
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  margin: 10px;
+  width: 500px;
+  height: 118px; /* Initial height when shrunk */
+  z-index: 11;
+  transition:
+    height 0.3s ease,
+    opacity 0.3s ease;
+  overflow: hidden;
+  opacity: 0.8; /* Slight transparency */
+  box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.25); /* Add depth with a soft shadow */
+}
+
+.media-player .player-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.media-player .playlist-container {
+  display: none; /* Hide playlist by default */
+}
+
+.media-player .cover {
+  display: none;
+}
+
+.media-player:hover {
+  height: 500px; /* Full height on hover */
+  opacity: 1; /* Fully visible on hover */
+}
+
+.media-player:hover .playlist-container {
+  display: flex; /* Show playlist on hover */
+  width: 100%;
+  height: 45%;
+  overflow-y: auto;
+  overflow-x: auto;
+}
+
+.media-player:hover .player-container {
+  height: 55%;
+  overflow: hidden;
+}
+
+.media-player:hover .cover {
+  display: flex;
+  overflow: hidden;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Hide media player for devices with a width below 465px */
+@media (max-width: 465px) {
+  .media-player {
+    display: none;
+  }
+}

@@ -1,7 +1,6 @@
 import React from 'react';
 import Container from '@mui/material/Container';
-import Playlist from './Playlist';
-import Player from './Player';
+import Playlist from '@/components/media_player/Playlist/playlist_wide';
 
 export default function Content() {
   return (
@@ -16,15 +15,8 @@ export default function Content() {
         overflow: 'auto',
       }}
     >
-      {/* Wrapper for Playlist */}
-      <div style={{ width: '30%', height: '100%' }}>
-        <Playlist />
-      </div>
-
-      {/* Wrapper for Player */}
-      <div style={{ width: '70%', height: '100%' }}>
-        <Player />
-      </div>
+      Work in progress. You can already check out my music in the pop up in the
+      bottom right corner (Device with a width {'>'} 465px).
     </Container>
   );
 }

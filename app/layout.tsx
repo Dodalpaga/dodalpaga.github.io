@@ -1,5 +1,6 @@
 import './globals.css';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
+import MediaPlayer from '@/components/media_player';
 import { Inter } from 'next/font/google';
 import { ThemeProvider } from '../context/ThemeContext'; // Adjust path if necessary
 
@@ -21,6 +22,8 @@ export default function RootLayout({
         <ThemeProvider>
           <AppRouterCacheProvider>{children}</AppRouterCacheProvider>
         </ThemeProvider>
+
+        <MediaPlayer />
       </body>
     </html>
   );
