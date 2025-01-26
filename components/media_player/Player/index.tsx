@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { PlayArrow, Pause, VolumeUp } from '@mui/icons-material';
-import { Box, Typography, IconButton, Slider } from '@mui/material';
+import { Box, IconButton, Slider } from '@mui/material';
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
+import ScrollingTitle from '@/components/scrolling_title';
 
 import player, { usePlayerState } from '../libs/player';
 import Progress from './Progress';
@@ -60,24 +61,11 @@ const Player = () => {
   };
 
   return (
-    <Box
-      mt={4}
-      style={{
-        margin: 'auto',
-        width: '100%',
-        height: '100%', // Set to full viewport height
-        display: 'flex',
-        flexDirection: 'column',
-      }}
-    >
-      {/.mp4$/.test(currentTrack.url) && (
-        <Box mt={2} flexGrow={1} className="cover">
+    <Box mt={4} className="player-container">
+      <Box className="cover">
+        {/.mp4$/.test(currentTrack.url) ? (
           <Video />
-        </Box>
-      )}
-
-      {!/.mp4$/.test(currentTrack.url) && currentTrack.coverUrl && (
-        <Box mt={2} flexGrow={1} className="cover">
+        ) : currentTrack.coverUrl ? (
           <img
             src={currentTrack.coverUrl}
             style={{
@@ -86,30 +74,31 @@ const Player = () => {
               maxHeight: '100%',
             }}
           />
-        </Box>
-      )}
+        ) : null}
+      </Box>
 
-      <Progress />
+      {/* Right side player controls */}
+      <Box className="player-controls">
+        <Progress />
 
-      <Box display="flex" alignItems="center">
-        <Box flexGrow={1} mr={2}>
-          <Typography>{currentTrack.title}</Typography>
-        </Box>
+        <Box display="flex" alignItems="center" width={'100%'}>
+          <ScrollingTitle title={currentTrack.title} />
 
-        <IconButton color="primary" onClick={handlePlay}>
-          {playing ? <Pause /> : <PlayArrow />}
-        </IconButton>
+          <IconButton color="primary" onClick={handlePlay}>
+            {playing ? <Pause /> : <PlayArrow />}
+          </IconButton>
 
-        <Box display="flex" alignItems="center" ml={2} width={100}>
-          <VolumeUp />
-          <Slider
-            value={volume}
-            onChange={handleVolumeChange}
-            min={0}
-            max={1}
-            step={0.01}
-            aria-labelledby="volume-slider"
-          />
+          <Box display="flex" alignItems="center" ml={2} width={100}>
+            <VolumeUp />
+            <Slider
+              value={volume}
+              onChange={handleVolumeChange}
+              min={0}
+              max={1}
+              step={0.01}
+              aria-labelledby="volume-slider"
+            />
+          </Box>
         </Box>
       </Box>
     </Box>

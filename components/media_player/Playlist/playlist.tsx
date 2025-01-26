@@ -13,18 +13,7 @@ const Playlist = () => {
   }, []);
 
   return (
-    <Container
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        height: '100%',
-        padding: '0px !important',
-        width: '100%',
-        background: 'var(--background)',
-      }}
-    >
+    <Container className="playlist-container">
       <List
         sx={{
           overflowY: 'auto', // Enable vertical scroll

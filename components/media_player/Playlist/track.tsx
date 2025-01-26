@@ -1,13 +1,9 @@
 import React, { FC } from 'react';
-import {
-  ListItem,
-  ListItemText,
-  ListItemSecondaryAction,
-  IconButton,
-} from '@mui/material';
+import { ListItem, ListItemSecondaryAction, IconButton } from '@mui/material';
 import { PlayArrow, Pause } from '@mui/icons-material';
 
 import player, { usePlayerState } from '../libs/player';
+import ScrollingTitle from '@/components/scrolling_title'; // Import the ScrollingTitle component
 
 type Props = {
   index: number;
@@ -31,7 +27,8 @@ const Track: FC<Props> = ({ index }) => {
 
   return (
     <ListItem>
-      <ListItemText primary={track.title} />
+      {/* Replacing ListItemText with ScrollingTitle */}
+      <ScrollingTitle title={track.title} />
       <ListItemSecondaryAction>
         <IconButton edge="end" color="primary" onClick={() => handlePlay()}>
           {state.currentTrackIndex === index && state.playing ? (

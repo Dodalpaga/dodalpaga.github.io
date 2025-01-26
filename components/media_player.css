@@ -11,12 +11,9 @@
   bottom: 0;
   right: 0;
   margin: 10px;
-  width: 500px;
-  height: 118px; /* Initial height when shrunk */
+  max-height: 500px;
+  max-width: 500px;
   z-index: 11;
-  transition:
-    height 0.3s ease,
-    opacity 0.3s ease;
   overflow: hidden;
   opacity: 0.8; /* Slight transparency */
   box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.25); /* Add depth with a soft shadow */
@@ -24,42 +21,86 @@
 
 .media-player .player-container {
   display: flex;
+  flex-direction: row; /* Change to row for horizontal layout */
   width: 100%;
   height: 100%;
+  margin: auto;
+  align-items: center;
 }
 
-.media-player .playlist-container {
-  display: none; /* Hide playlist by default */
-}
-
-.media-player .cover {
-  display: none;
-}
-
-.media-player:hover {
-  height: 500px; /* Full height on hover */
-  opacity: 1; /* Fully visible on hover */
-}
-
-.media-player:hover .playlist-container {
-  display: flex; /* Show playlist on hover */
-  width: 100%;
-  height: 45%;
-  overflow-y: auto;
-  overflow-x: auto;
-}
-
-.media-player:hover .player-container {
-  height: 55%;
-  overflow: hidden;
-}
-
-.media-player:hover .cover {
+.media-player .player-container .cover {
   display: flex;
-  overflow: hidden;
-  text-align: center;
+  min-width: 80px;
+  min-height: 80px;
+  aspect-ratio: 1/1;
+  width: 20%;
+  padding-right: 10px;
+}
+
+.media-player .player-container .player-controls {
+  display: flex;
+  width: 80%;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+/* Default hidden state for the playlist */
+.media-player .playlist-container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0;
+  height: 100%;
+  padding: 0px !important;
+  width: 100%;
+  background: var(--background);
+  max-height: 0; /* Start collapsed */
+  overflow: auto; /* Hide overflow to make collapse work */
+  opacity: 0; /* Fully transparent */
+  transition:
+    max-height 0.3s ease 0s,
+    opacity 0.3s ease 0s;
+}
+
+.media-player:not(.fullscreen):hover {
+  opacity: 1;
+}
+
+/* Expand the playlist on hover */
+.media-player:not(.fullscreen):hover .playlist-container {
+  max-height: 300px; /* Adjust to match your content height */
+  opacity: 1; /* Fully visible */
+  overflow-y: auto; /* Enable scrolling when visible */
+}
+
+.scrolling-title-container {
+  width: auto;
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 80%;
+  width: 80%;
+  position: relative;
+}
+
+.scrolling-title {
+  display: inline-block;
+  position: relative;
+}
+
+.scrolling-title-container.scrolling .scrolling-title.animate {
+  animation: scroll-left 10s linear infinite;
+}
+
+@keyframes scroll-left {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
 }
 
 /* Hide media player for devices with a width below 465px */
@@ -67,4 +108,50 @@
   .media-player {
     display: none;
   }
+}
+
+.fullscreen {
+  opacity: 1;
+  width: calc(100vw - 20px) !important; /* Full screen width */
+  height: calc(100vh - 10px - 84px) !important; /* Full screen height */
+  max-height: none !important;
+  max-width: none !important;
+  padding-right: 24px !important;
+  display: flex;
+  flex-direction: row;
+}
+
+.fullscreen .player-container {
+  width: 80% !important;
+  flex-direction: column;
+}
+
+.fullscreen .playlist-container {
+  width: 20% !important;
+  max-height: 100%; /* Adjust to match your content height */
+  opacity: 1; /* Fully visible */
+  overflow-y: auto; /* Enable scrolling when visible */
+  padding: 10px; /* Optional: Add padding when expanded */
+}
+
+.fullscreen .player-container .cover {
+  width: 100%;
+  padding: 10px;
+  align-items: center;
+  justify-content: center;
+}
+
+.fullscreen .player-container .player-controls {
+  width: 70%;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.fullscreen-button {
+  position: fixed;
+  top: 5px;
+  right: 5px;
+  z-index: 9999;
+  margin: 0;
+  padding: 0;
 }
