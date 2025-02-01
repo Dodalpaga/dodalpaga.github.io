@@ -28,6 +28,7 @@ export default function Content() {
     ]);
 
     try {
+      console.log('input', encodeURIComponent(input));
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL_LLM}` +
           `?input=${encodeURIComponent(input)}`,
@@ -37,6 +38,7 @@ export default function Content() {
         }
       );
       const data = await response.json();
+      console.log('data', data);
 
       // Start streaming effect
       let index = 0;
