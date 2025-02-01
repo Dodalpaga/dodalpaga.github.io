@@ -21,6 +21,13 @@ const apps = [
       highlighting different features and regions. Ideal for analyzing satellite images and extracting valuable insights.',
   },
   {
+    title: 'ChatBot',
+    image: `/assets/earth.jpg`, // Update with your actual image path
+    link: '/projects/chatbot', // Update with your actual routes
+    target: '',
+    description: 'None',
+  },
+  {
     title: 'Jupyter Notebooks',
     image: `/assets/jupyter.jpg`, // Update with your actual image path
     link: '/projects/notebooks', // Update with your actual routes
