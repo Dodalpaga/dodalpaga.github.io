@@ -29,7 +29,8 @@ export default function Content() {
 
     try {
       const response = await fetch(
-        `http://localhost:8961/llm/generate?input=${encodeURIComponent(input)}`,
+        `${process.env.NEXT_PUBLIC_API_URL_LLM}` +
+          `?input=${encodeURIComponent(input)}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
