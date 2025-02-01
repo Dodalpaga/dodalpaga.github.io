@@ -28,7 +28,6 @@ export default function Content() {
     ]);
 
     try {
-      console.log('input', encodeURIComponent(input));
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL_LLM}` +
           `?input=${encodeURIComponent(input)}`,
@@ -38,7 +37,6 @@ export default function Content() {
         }
       );
       const data = await response.json();
-      console.log('data', data);
 
       // Start streaming effect
       let index = 0;
@@ -85,6 +83,10 @@ export default function Content() {
     setInput('');
   };
 
+  const clearConversation = () => {
+    setMessages([]);
+  };
+
   return (
     <Container maxWidth={false} className="chat-container">
       <Typography variant="h4" sx={{ mb: 2 }}>
@@ -119,7 +121,7 @@ export default function Content() {
           autoComplete="off"
           className="input-field"
           sx={{
-            width: '85%',
+            width: '70%',
             color: 'var(--foreground-2)',
             '& .MuiOutlinedInput-root': {
               color: 'var(--foreground-2)',
@@ -139,6 +141,19 @@ export default function Content() {
           disabled={isLoading || input.trim() === ''}
         >
           Send
+        </Button>
+
+        <Button
+          onClick={clearConversation}
+          variant="outlined"
+          sx={{
+            width: '15%',
+            marginLeft: '10px',
+            color: 'var(--foreground-2)',
+            borderColor: 'var(--foreground-2)',
+          }}
+        >
+          Clear
         </Button>
       </form>
     </Container>

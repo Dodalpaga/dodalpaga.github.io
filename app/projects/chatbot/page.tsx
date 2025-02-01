@@ -33,12 +33,12 @@ export default function App1() {
 
       {/* Main Content: Ensure it's aligned at the top */}
       <div
-        className="flex flex-col p-4"
-        id="page-content"
+        className="flex flex-col items-center justify-between p-4"
+        // This is used when you want ti make the content fit in window height : (no scrolling)
         style={{
-          flexGrow: 1, // Allow content to grow and take up available space
-          marginTop: '0', // Align content right below the navbar
-          justifyContent: 'flex-start', // Align content at the top
+          height: 'calc(100vh - 134px)',
+          position: 'relative',
+          bottom: '0',
         }}
       >
         {isLoading ? <Loading /> : <Content />}

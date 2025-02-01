@@ -64,6 +64,14 @@
   width: 100%;
 }
 
+input-field {
+  flex-grow: 1;
+}
+
+button {
+  margin-left: 10px;
+}
+
 .blinking-cursor {
   display: inline-block;
   width: 8px;
