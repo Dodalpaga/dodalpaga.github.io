@@ -4,7 +4,13 @@ import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress'; // Import CircularProgress for loading symbol
 import Image from 'next/image';
-import { Select, MenuItem, InputLabel, FormControl } from '@mui/material';
+import {
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+  Typography,
+} from '@mui/material';
 import './styles.css'; // Import regular CSS
 
 export default function Content() {
@@ -13,7 +19,9 @@ export default function Content() {
     null
   ); // State for processed image
   const [loading, setLoading] = React.useState<boolean>(false); // State for loading
-  const [modelName, setModelName] = React.useState<string>('yolov8l.pt'); // State for selected model
+  const [modelName, setModelName] = React.useState<string>(
+    'facebook/mask2former-swin-large-coco-panoptic'
+  ); // State for selected model
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -26,18 +34,22 @@ export default function Content() {
     }
   };
 
+  const [errorMessage, setErrorMessage] = React.useState<string | null>(
+    'No processed image'
+  ); // State for error message
+
   const handleProcessImage = () => {
     if (!uploadedImage) {
       console.warn('No image uploaded.');
       return;
     }
 
-    setLoading(true); // Set loading to true when starting the request
+    setLoading(true);
+    setErrorMessage(null); // Clear previous errors
+    setProcessedImage(null); // Clear previous processed image
 
-    // Send a POST request to the FastAPI endpoint with the base64 image
     fetch(
-      `${process.env.NEXT_PUBLIC_API_URL_IMG_DETECTION}` +
-        `?model_name=${modelName}`, // Use selected model name
+      `${process.env.NEXT_PUBLIC_API_URL_IMG_DETECTION}?model_name=${modelName}`,
       {
         method: 'POST',
         headers: {
@@ -48,16 +60,23 @@ export default function Content() {
         body: JSON.stringify({ base64_image: uploadedImage }),
       }
     )
-      .then((response) => response.json())
+      .then(async (response) => {
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.log(errorData);
+          throw new Error(errorData.detail || 'Unknown error occurred');
+        }
+        return response.json();
+      })
       .then((data) => {
-        // Set the returned base64 image as the processed image
         setProcessedImage(data.base64_image);
       })
       .catch((error) => {
         console.error('Error:', error);
+        setErrorMessage(error.message); // Set error message for UI
       })
       .finally(() => {
-        setLoading(false); // Set loading to false after the request is complete
+        setLoading(false);
       });
   };
 
@@ -103,13 +122,13 @@ export default function Content() {
             }}
             id="model-select-label"
           >
-            Model
+            Model from HuggingFace
           </InputLabel>
           <Select
             labelId="model-select-label"
             value={modelName}
             onChange={(event) => setModelName(event.target.value)}
-            label="Model"
+            label="Model from HuggingFace"
             sx={{
               minWidth: 120,
               height: '100%',
@@ -119,11 +138,12 @@ export default function Content() {
               },
             }}
           >
-            <MenuItem value="yolov8n.pt">YOLOv8n</MenuItem>
-            <MenuItem value="yolov8s.pt">YOLOv8s</MenuItem>
-            <MenuItem value="yolov8m.pt">YOLOv8m</MenuItem>
-            <MenuItem value="yolov8l.pt">YOLOv8l</MenuItem>
-            <MenuItem value="yolov8x.pt">YOLOv8x</MenuItem>
+            <MenuItem value="openmmlab/upernet-convnext-small">
+              UperNet (ADE20k)
+            </MenuItem>
+            <MenuItem value="facebook/mask2former-swin-large-coco-panoptic">
+              Mask2Former (COCO panoptic segmentation)
+            </MenuItem>
           </Select>
         </FormControl>
 
@@ -149,7 +169,7 @@ export default function Content() {
         <Button
           variant="contained"
           onClick={handleProcessImage}
-          disabled={!uploadedImage}
+          disabled={loading || !uploadedImage} // Disable the button when loading is true or no image is uploaded
           sx={{
             minWidth: 120,
             height: '100%',
@@ -217,7 +237,17 @@ export default function Content() {
                 textAlign: 'center',
               }}
             >
-              No processed image
+              {errorMessage && (
+                <div
+                  style={{
+                    color: 'red',
+                    marginTop: '10px',
+                    textAlign: 'center',
+                  }}
+                >
+                  {errorMessage}
+                </div>
+              )}
             </div>
           )}
         </div>
