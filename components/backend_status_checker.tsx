@@ -31,15 +31,14 @@ export default function BackendStatus() {
       .catch((err) => {
         console.log(err);
         if (err.name === 'AbortError') {
-          console.log('1');
           setStatus('timeout');
-          setMessage('Request timed out.');
+          setMessage('Backend Request timed out.');
         } else if (err.name === 'TypeError') {
-          console.log('2');
           setStatus('error');
-          setMessage('DNS resolution failed. Check your internet connection.');
+          setMessage(
+            'Backend DNS resolution failed. Check your internet connection.'
+          );
         } else {
-          console.log('3');
           setStatus('error');
           setMessage(err.message || 'An error occurred.');
         }
