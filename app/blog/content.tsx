@@ -38,8 +38,6 @@ export default function Content({ blogPosts }: { blogPosts: BlogPost[] }) {
     return dateComparison;
   });
 
-  console.log(sortedPosts);
-
   const currentPosts = sortedPosts.slice(indexOfFirstPost, indexOfLastPost);
 
   // Calculate the total number of pages

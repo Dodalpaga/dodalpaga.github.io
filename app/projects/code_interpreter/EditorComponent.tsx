@@ -41,7 +41,6 @@ export default function EditorComponent() {
   }
 
   function onSelect(value: selectedLanguageOptionProps) {
-    console.log(value);
     setLanguageOption(value);
     setSourceCode(codeSnippets[value.language]);
   }
@@ -71,7 +70,6 @@ export default function EditorComponent() {
       setErr(true);
       setLoading(false);
       toast.error('Failed to compile the Code');
-      console.log(error);
     }
   }
 

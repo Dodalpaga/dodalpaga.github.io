@@ -9,6 +9,10 @@
   --bg-color-2: rgb(253, 195, 195);
   --bg-color-3: rgb(177, 245, 186);
   --bg-color-4: rgb(225, 215, 252);
+  --text-color-1: rgb(88, 62, 36);
+  --text-color-2: rgb(58, 20, 20);
+  --text-color-3: rgb(17, 73, 24);
+  --text-color-4: rgb(39, 29, 63);
   --blue: rgb(48, 48, 214);
   --foreground: rgb(15, 15, 15);
   --foreground-2: rgb(50, 50, 50);
@@ -25,6 +29,10 @@
   --bg-color-2: rgb(58, 20, 20);
   --bg-color-3: rgb(17, 73, 24);
   --bg-color-4: rgb(39, 29, 63);
+  --text-color-1: rgb(243, 204, 168);
+  --text-color-2: rgb(253, 195, 195);
+  --text-color-3: rgb(177, 245, 186);
+  --text-color-4: rgb(225, 215, 252);
   --blue: rgb(159, 159, 226);
   --foreground: rgb(255, 255, 255);
   --foreground-2: rgb(200, 200, 200);

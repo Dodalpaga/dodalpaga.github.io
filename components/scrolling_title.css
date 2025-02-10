@@ -1,0 +1,27 @@
+.scrolling-title-container {
+  width: auto;
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 80%;
+  width: 80%;
+  position: relative;
+}
+
+.scrolling-title {
+  display: inline-block;
+  position: relative;
+}
+
+.scrolling-title-container.scrolling .scrolling-title.animate {
+  animation: scroll-left 10s linear infinite;
+}
+
+@keyframes scroll-left {
+  0% {
+    transform: translateX(85%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}

@@ -1,0 +1,51 @@
+.backend-status-container {
+  position: fixed;
+  bottom: 16px;
+  left: 16px;
+  min-width: 50px;
+  max-width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: var(--background);
+  transition: width 0.3s ease;
+  padding: 8px;
+  overflow: hidden;
+  z-index: 50;
+  transition: max-width 0.3s ease;
+}
+
+.backend-status-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+  transition: width 0.3s ease;
+}
+
+.status-icon.success {
+  color: var(--text-color-3);
+}
+
+.status-icon.timeout {
+  color: var(--text-color-1);
+}
+
+.status-icon.error {
+  color: var(--text-color-2);
+}
+
+.status-message {
+  color: var(--foreground);
+  font-size: 0.875rem;
+  white-space: nowrap;
+  padding-left: 8px;
+}
+
+.backend-status-container:hover {
+  max-width: 300px;
+}

@@ -63,7 +63,6 @@ export default function Content() {
       .then(async (response) => {
         if (!response.ok) {
           const errorData = await response.json();
-          console.log(errorData);
           throw new Error(errorData.detail || 'Unknown error occurred');
         }
         return response.json();

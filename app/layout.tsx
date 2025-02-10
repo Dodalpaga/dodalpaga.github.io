@@ -1,8 +1,9 @@
 import './globals.css';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
+import BackendStatus from '@/components/backend_status_checker';
 import MediaPlayer from '@/components/media_player';
 import { Inter } from 'next/font/google';
-import { ThemeProvider } from '../context/ThemeContext'; // Adjust path if necessary
+import { ThemeProvider } from '@/context/ThemeContext';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -22,8 +23,8 @@ export default function RootLayout({
         <ThemeProvider>
           <AppRouterCacheProvider>{children}</AppRouterCacheProvider>
         </ThemeProvider>
-
         <MediaPlayer />
+        <BackendStatus />
       </body>
     </html>
   );
