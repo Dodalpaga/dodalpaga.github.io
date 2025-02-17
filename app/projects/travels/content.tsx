@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useRef, useCallback, useState, useEffect } from 'react';
 import Container from '@mui/material/Container';
-import { Map, MapRef, Source, Layer } from '@vis.gl/react-maplibre';
+import { Map, MapRef, Source, Layer, LayerProps } from '@vis.gl/react-maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import ControlPanel from './control-panel';
 
@@ -14,18 +14,27 @@ const initialViewState = {
   pitch: 0,
 };
 
+interface CountrySelectEvent {
+  longitude: number;
+  latitude: number;
+  zoom: number;
+}
+
 export default function Content() {
-  const mapRef = useRef<MapRef>();
+  const mapRef = useRef<MapRef | null>(null); // Set initial value to `null` instead of `undefined`
   const [geojsonData, setGeojsonData] = useState(null);
   const [visitedCountries, setVisitedCountries] = useState<any[]>([]);
 
-  const onSelectCountry = useCallback(({ longitude, latitude, zoom }) => {
-    mapRef.current?.flyTo({
-      center: [longitude, latitude],
-      zoom: zoom,
-      duration: 2000,
-    });
-  }, []);
+  const onSelectCountry = useCallback(
+    ({ longitude, latitude, zoom }: CountrySelectEvent) => {
+      mapRef.current?.flyTo({
+        center: [longitude, latitude],
+        zoom: zoom,
+        duration: 2000,
+      });
+    },
+    []
+  );
 
   // Fetch GeoJSON data from the local file
   useEffect(() => {
@@ -57,7 +66,7 @@ export default function Content() {
     fetchVisitedCountries();
   }, []);
 
-  const layerStyle = {
+  const layerStyle: LayerProps = {
     id: 'countries-layer',
     type: 'fill',
     paint: {
