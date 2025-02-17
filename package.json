@@ -29,6 +29,7 @@
     "@types/node": "20.2.4",
     "@types/react": "18.2.7",
     "@types/react-dom": "18.2.4",
+    "@vis.gl/react-maplibre": "^8.0.1",
     "autoprefixer": "^10.4.14",
     "axios": "^1.7.7",
     "babel-standalone": "^6.26.0",
@@ -43,7 +44,7 @@
     "heroicons": "^2.1.5",
     "highlight.js": "^11.11.1",
     "lucide-react": "^0.439.0",
-    "maplibre-gl": "^4.6.0",
+    "maplibre-gl": "^4.7.1",
     "monaco-editor-webpack-plugin": "^7.1.0",
     "monaco-jsx-highlighter": "^2.77.77",
     "next": "^14.2.8",
@@ -59,6 +60,7 @@
     "react-hot-toast": "^2.4.1",
     "react-icons": "^5.3.0",
     "react-map-gl": "^7.1.7",
+    "react-maplibre": "^1.0.0",
     "react-markdown": "^9.0.1",
     "react-monaco-editor": "^0.56.1",
     "react-resizable-panels": "^2.1.2",
@@ -78,6 +80,7 @@
     "@types/katex": "^0.16.7",
     "@types/mathjax": "^0.0.40",
     "@types/p5": "^1.7.6",
-    "@types/trusted-types": "^2.0.7"
+    "@types/trusted-types": "^2.0.7",
+    "json-loader": "^0.5.7"
   }
 }

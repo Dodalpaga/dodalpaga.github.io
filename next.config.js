@@ -14,7 +14,23 @@ const nextConfig = {
     ],
   },
   webpack: (config) => {
+    // Fallback for 'fs' module (useful for libraries that require it)
     config.resolve.fallback = { fs: false };
+
+    // Add support for importing .geojson and .json files directly
+    config.module.rules.push(
+      {
+        test: /\.geojson$/,
+        type: 'javascript/auto', // Tells Webpack to handle this as JavaScript (since GeoJSON is a type of JSON)
+        use: 'json-loader', // Use json-loader to process .geojson files
+      },
+      {
+        test: /\.json$/,
+        type: 'javascript/auto', // Same for .json files
+        use: 'json-loader',
+      }
+    );
+
     return config;
   },
 };

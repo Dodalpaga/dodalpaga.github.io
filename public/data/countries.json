@@ -1,0 +1,114 @@
+[
+  {
+    "country": "France",
+    "continent": "Europe",
+    "description": "That's where I live, so... Yeah!",
+    "latitude": 46.88430942721118,
+    "longitude": 2.5873182849049954,
+    "zoom": 5
+  },
+  {
+    "country": "Spain",
+    "continent": "Europe",
+    "description": "...",
+    "latitude": 40.157344270746734,
+    "longitude": -2.899278152496322,
+    "zoom": 5.5
+  },
+  {
+    "country": "Italy",
+    "continent": "Europe",
+    "description": "...",
+    "latitude": 41.87194,
+    "longitude": 12.56738,
+    "zoom": 5.5
+  },
+  {
+    "country": "United Kingdom",
+    "continent": "Europe",
+    "description": "...",
+    "latitude": 55.378051,
+    "longitude": -3.435973,
+    "zoom": 5.5
+  },
+  {
+    "country": "Ireland",
+    "continent": "Europe",
+    "description": "...",
+    "latitude": 53.41291,
+    "longitude": -8.24389,
+    "zoom": 5.5
+  },
+  {
+    "country": "Scotland",
+    "continent": "Europe",
+    "description": "...",
+    "latitude": 56.4907,
+    "longitude": -4.2026,
+    "zoom": 5.5
+  },
+  {
+    "country": "Portugal",
+    "continent": "Europe",
+    "description": "...",
+    "latitude": 39.59804349002721,
+    "longitude": -8.473873686159664,
+    "zoom": 6.1
+  },
+  {
+    "country": "Belgium",
+    "continent": "Europe",
+    "description": "...",
+    "latitude": 50.8503,
+    "longitude": 4.3517,
+    "zoom": 7
+  },
+  {
+    "country": "Switzerland",
+    "continent": "Europe",
+    "description": "...",
+    "latitude": 46.8182,
+    "longitude": 8.2275,
+    "zoom": 7
+  },
+  {
+    "country": "Netherlands",
+    "continent": "Europe",
+    "description": "...",
+    "latitude": 52.3794,
+    "longitude": 4.9009,
+    "zoom": 6.7
+  },
+  {
+    "country": "Croatia",
+    "continent": "Europe",
+    "description": "...",
+    "latitude": 45.1,
+    "longitude": 15.2,
+    "zoom": 6.2
+  },
+  {
+    "country": "Bosnia and Herzegovina",
+    "continent": "Europe",
+    "description": "...",
+    "latitude": 43.8486,
+    "longitude": 18.3564,
+    "zoom": 6.8
+  },
+  {
+    "country": "Montenegro",
+    "continent": "Europe",
+    "description": "...",
+    "latitude": 42.7087,
+    "longitude": 19.3744,
+    "zoom": 7.4
+  },
+  {
+    "country": "Greece",
+    "continent": "Europe",
+    "description": "...",
+    "latitude": 39.0742,
+    "longitude": 21.8243,
+    "zoom": 5.5
+  }
+]
