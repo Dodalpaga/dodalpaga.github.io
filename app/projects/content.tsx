@@ -158,7 +158,7 @@ export default function Content() {
                   sx={{
                     height: '80%', // Adjust height as needed
                     width: '100%', // Full width of the card
-                    objectFit: 'contain', // Maintain aspect ratio and fit within the card
+                    objectFit: 'cover', // Maintain aspect ratio and fit within the card
                     objectPosition: 'center', // Center image horizontally and vertically
                     maskImage:
                       'radial-gradient(circle, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0.7) 50%, rgba(0, 0, 0, 0) 60%)',
