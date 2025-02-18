@@ -1,0 +1,145 @@
+[
+  {
+    "city": "Bruges",
+    "country": "Belgium",
+    "latitude": 51.2085526,
+    "longitude": 3.226772,
+    "images": ["/data/photos/Belgique/Bruges/canaux.jpg"]
+  },
+  {
+    "city": "Gand",
+    "country": "Belgium",
+    "latitude": 51.0538286,
+    "longitude": 3.7250121,
+    "images": ["/data/photos/Belgique/Gand/gare.jpg"]
+  },
+  {
+    "city": "Barcelone",
+    "country": "Spain",
+    "latitude": 41.3828939,
+    "longitude": 2.1774322,
+    "images": ["/data/photos/Espagne/Barcelone/sagrada-familia.jpg"]
+  },
+  {
+    "city": "Annecy",
+    "country": "France",
+    "latitude": 45.8992348,
+    "longitude": 6.1288847,
+    "images": ["/data/photos/France/Annecy/lac.jpg"]
+  },
+  {
+    "city": "Chamonix",
+    "country": "France",
+    "latitude": 45.9246705,
+    "longitude": 6.8727506,
+    "images": [
+      "/data/photos/France/Chamonix/mer-de-glace.jpg",
+      "/data/photos/France/Chamonix/vue.jpg"
+    ]
+  },
+  {
+    "city": "Les Gets",
+    "country": "France",
+    "latitude": 46.1550977,
+    "longitude": 6.6633354,
+    "images": [
+      "/data/photos/France/Les gets/landscape.jpg",
+      "/data/photos/France/Les gets/landscape2.jpg"
+    ]
+  },
+  {
+    "city": "Mont St Michel",
+    "country": "France",
+    "latitude": 48.6359541,
+    "longitude": -1.51146,
+    "images": ["/data/photos/France/Mont St Michel/mont.jpg"]
+  },
+  {
+    "city": "Oô",
+    "country": "France",
+    "latitude": 42.74,
+    "longitude": 0.49194444444444446,
+    "images": ["/data/photos/France/Oo/lac.jpg"]
+  },
+  {
+    "city": "Padirac",
+    "country": "France",
+    "latitude": 44.8581995,
+    "longitude": 1.7503915,
+    "images": [
+      "/data/photos/France/Padirac/calcaire.jpg",
+      "/data/photos/France/Padirac/maison.jpg",
+      "/data/photos/France/Padirac/reflet.jpg",
+      "/data/photos/France/Padirac/trou.jpg"
+    ]
+  },
+  {
+    "city": "Toulouse",
+    "country": "France",
+    "latitude": 43.6044622,
+    "longitude": 1.4442469,
+    "images": ["/data/photos/France/Toulouse/cité-espace.jpg"]
+  },
+  {
+    "city": "Zante",
+    "country": "Greece",
+    "latitude": 37.713833,
+    "longitude": 20.865028,
+    "images": [
+      "/data/photos/Grèce/Zante/plongee.jpg",
+      "/data/photos/Grèce/Zante/falaises.jpg"
+    ]
+  },
+  {
+    "city": "Burano",
+    "country": "Italy",
+    "latitude": 45.4853766,
+    "longitude": 12.4175208,
+    "images": ["/data/photos/Italie/Burano/burano.jpg"]
+  },
+  {
+    "city": "Keukenhof",
+    "country": "Netherlands",
+    "latitude": 52.27003,
+    "longitude": 4.547663,
+    "images": ["/data/photos/Pays bas/Keukenhof/tulipes.jpg"]
+  },
+  {
+    "city": "Zaanse Schans",
+    "country": "Netherlands",
+    "latitude": 52.47408,
+    "longitude": 4.817995,
+    "images": ["/data/photos/Pays bas/Zaanse Schans/moulins.jpg"]
+  },
+  {
+    "city": "Albufeira",
+    "country": "Portugal",
+    "latitude": 37.088241,
+    "longitude": -8.2526339,
+    "images": ["/data/photos/Portugal/Albufeira/falaises.jpeg"]
+  },
+  {
+    "city": "Azenhas do mar",
+    "country": "Portugal",
+    "latitude": 38.840956,
+    "longitude": -9.4619065,
+    "images": ["/data/photos/Portugal/Azenhas do mar/pov.jpg"]
+  },
+  {
+    "city": "Sintra",
+    "country": "Portugal",
+    "latitude": 38.80097,
+    "longitude": -9.37826,
+    "images": [
+      "/data/photos/Portugal/Sintra/chateau.jpg",
+      "/data/photos/Portugal/Sintra/chateau2.jpeg"
+    ]
+  },
+  {
+    "city": "Lausanne",
+    "country": "Switzerland",
+    "latitude": 46.5218269,
+    "longitude": 6.6327025,
+    "images": ["/data/photos/Suisse/Lausanne/montagne.jpg"]
+  }
+]
