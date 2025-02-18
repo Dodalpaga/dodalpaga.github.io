@@ -32,10 +32,7 @@
     "country": "France",
     "latitude": 45.9246705,
     "longitude": 6.8727506,
-    "images": [
-      "/data/photos/France/Chamonix/mer-de-glace.jpg",
-      "/data/photos/France/Chamonix/vue.jpg"
-    ]
+    "images": ["/data/photos/France/Chamonix/mer-de-glace.jpg"]
   },
   {
     "city": "Les Gets",
@@ -44,7 +41,7 @@
     "longitude": 6.6633354,
     "images": [
       "/data/photos/France/Les gets/landscape.jpg",
-      "/data/photos/France/Les gets/landscape2.jpg"
+      "/data/photos/France/Les gets/landscape2.jpeg"
     ]
   },
   {
@@ -102,7 +99,10 @@
     "country": "Netherlands",
     "latitude": 52.27003,
     "longitude": 4.547663,
-    "images": ["/data/photos/Pays bas/Keukenhof/tulipes.jpg"]
+    "images": [
+      "/data/photos/Pays bas/Keukenhof/tulipes.jpg",
+      "/data/photos/Pays bas/Keukenhof/tulipes2.jpg"
+    ]
   },
   {
     "city": "Zaanse Schans",
