@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { PlayArrow, Pause, VolumeUp } from '@mui/icons-material';
 import { Box, IconButton, Slider } from '@mui/material';
-import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 import ScrollingTitle from '@/components/scrolling_title';
 
 import player, { usePlayerState } from '../libs/player';
@@ -13,37 +12,7 @@ const Player = () => {
   const [volume, setVolume] = useState(player.volume());
 
   if (!currentTrack) {
-    return (
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: '100%',
-          width: '100%',
-        }}
-      >
-        <KeyboardDoubleArrowDownIcon />
-        <Box
-          mt={2}
-          flexGrow={1}
-          style={{
-            display: 'flex',
-            overflow: 'hidden',
-            textAlign: 'center',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '16px',
-            width: 'max-content',
-            margin: 0,
-          }}
-        >
-          Select a track
-        </Box>
-        <KeyboardDoubleArrowDownIcon />
-      </div>
-    );
+    return <></>;
   }
 
   const handlePlay = () => {

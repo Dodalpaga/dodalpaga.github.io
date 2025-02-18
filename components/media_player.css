@@ -1,4 +1,5 @@
 .media-player {
+  position: fixed;
   background: var(
     --background,
     rgba(255, 255, 255, 0.1)
@@ -7,25 +8,45 @@
   -webkit-backdrop-filter: blur(10px); /* For Safari support */
   border: 1px solid var(--background-2, rgba(255, 255, 255, 0.3)); /* Subtle border */
   border-radius: 16px; /* Rounded corners for the glass effect */
-  position: fixed;
+  box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.25); /* Add depth with a soft shadow */
+  opacity: 0.8; /* Slight transparency */
   bottom: 0;
   right: 0;
   margin: 10px;
-  max-height: 500px;
-  max-width: 500px;
+  padding: 10px;
   z-index: 11;
   overflow: hidden;
-  opacity: 0.8; /* Slight transparency */
-  box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.25); /* Add depth with a soft shadow */
+  width: 60px;
+  height: 60px;
+  transition:
+    width 0.5s ease,
+    height 0.5s ease,
+    opacity 0.2s ease-in-out;
+}
+
+.fullscreen-button {
+  position: fixed;
+  display: none;
+  top: 5px;
+  right: 5px;
+  z-index: 9999;
+  margin: 0;
+  padding: 0;
+}
+
+.media-player .player-container,
+.media-player .playlist-container {
+  display: none;
+  flex-direction: row; /* Change to row for horizontal layout */
+  width: 100%;
+  margin: auto;
+  align-items: center;
+  padding-right: 20px;
+  padding-left: 20px;
 }
 
 .media-player .player-container {
-  display: flex;
-  flex-direction: row; /* Change to row for horizontal layout */
-  width: 100%;
-  height: 100%;
-  margin: auto;
-  align-items: center;
+  height: 100px;
 }
 
 .media-player .player-container .cover {
@@ -45,34 +66,45 @@
   justify-content: center;
 }
 
-/* Default hidden state for the playlist */
-.media-player .playlist-container {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  justify-content: center;
-  margin: 0;
-  height: 100%;
-  padding: 0px !important;
-  width: 100%;
-  background: var(--background);
-  max-height: 0; /* Start collapsed */
-  overflow: auto; /* Hide overflow to make collapse work */
-  opacity: 0; /* Fully transparent */
-  transition:
-    max-height 0.3s ease 0s,
-    opacity 0.3s ease 0s;
+.media-player .music-icon {
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none; /* Prevents interference with hover events */
 }
 
+/* When hovering in non-fullscreen mode, use a column flex layout */
 .media-player:not(.fullscreen):hover {
-  opacity: 1;
+  display: flex;
+  flex-direction: column;
+  width: 500px;
+  height: 300px;
 }
 
-/* Expand the playlist on hover */
+/* Fix the height of the player container */
+.media-player:not(.fullscreen):hover .player-container {
+  display: flex; /* ensure it's still flex */
+  flex: 0 0 100px; /* fixed height of 100px */
+}
+
+/* Allow the playlist container to take up remaining space and scroll if needed */
 .media-player:not(.fullscreen):hover .playlist-container {
-  max-height: 300px; /* Adjust to match your content height */
-  opacity: 1; /* Fully visible */
-  overflow-y: auto; /* Enable scrolling when visible */
+  display: flex; /* ensure it's visible */
+  flex: 1 1 auto; /* take up the remaining vertical space */
+  overflow-y: auto; /* add vertical scrolling when content overflows */
+}
+
+/* Optionally, ensure the fullscreen button is visible */
+.media-player:not(.fullscreen):hover .fullscreen-button {
+  display: flex;
+}
+
+/* Hide the music icon when hovered or in fullscreen mode */
+.media-player:not(.fullscreen):hover .music-icon,
+.media-player.fullscreen .music-icon {
+  display: none;
 }
 
 /* Hide media player for devices with a width below 465px */
@@ -93,15 +125,22 @@
   flex-direction: row;
 }
 
+.fullscreen .fullscreen-button {
+  display: flex;
+}
+
 .fullscreen .player-container {
+  display: flex;
+  margin: 0;
+  height: 100%;
   width: 80% !important;
   flex-direction: column;
 }
 
 .fullscreen .playlist-container {
+  display: flex;
   width: 20% !important;
   max-height: 100%; /* Adjust to match your content height */
-  opacity: 1; /* Fully visible */
   overflow-y: auto; /* Enable scrolling when visible */
   padding: 10px; /* Optional: Add padding when expanded */
 }
@@ -117,13 +156,4 @@
   width: 70%;
   flex-direction: column;
   justify-content: center;
-}
-
-.fullscreen-button {
-  position: fixed;
-  top: 5px;
-  right: 5px;
-  z-index: 9999;
-  margin: 0;
-  padding: 0;
 }

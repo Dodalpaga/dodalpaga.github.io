@@ -9,7 +9,7 @@ import { List, ListItem, ListItemText, IconButton } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
-import { useThemeContext } from '../context/ThemeContext';
+import { useThemeContext } from '@/context/ThemeContext';
 import './navbar.css';
 
 interface NavBarProps {

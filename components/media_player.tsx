@@ -3,6 +3,7 @@ import './media_player.css';
 import Playlist from './media_player/Playlist/playlist';
 import Player from './media_player/Player';
 import Container from '@mui/material/Container';
+import { useThemeContext } from '@/context/ThemeContext';
 import { useState, useEffect } from 'react';
 import { IconButton } from '@mui/material';
 import { Fullscreen, FullscreenExit } from '@mui/icons-material';
@@ -26,14 +27,25 @@ const MediaPlayer = () => {
     setIsFullscreen((prev) => !prev);
   };
 
+  const { theme, toggleTheme } = useThemeContext();
+
   return (
     <Container
       className={`media-player ${isFullscreen ? 'fullscreen' : ''}`}
       style={{
         opacity: isPageLoaded ? 1 : 0,
-        transition: 'opacity 0.5s ease-in-out',
       }}
     >
+      {/* Music icon that shows when folded */}
+
+      <div className="music-icon">
+        <img
+          src="/assets/music-logo.png"
+          style={{ filter: theme === 'dark' ? 'invert(1)' : 'invert(0)' }}
+          alt="Music Player"
+        />
+      </div>
+
       <IconButton
         color="primary"
         onClick={toggleFullscreen}

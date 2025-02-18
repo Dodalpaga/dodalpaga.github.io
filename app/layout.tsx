@@ -22,9 +22,9 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider>
           <AppRouterCacheProvider>{children}</AppRouterCacheProvider>
+          <MediaPlayer />
+          <BackendStatus />
         </ThemeProvider>
-        <MediaPlayer />
-        <BackendStatus />
       </body>
     </html>
   );
