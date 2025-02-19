@@ -151,24 +151,14 @@ export default function Content() {
           <Grid item xs={12} sm={6} md={4} key={index}>
             <Link href={app.link} target={app.target}>
               <Card className="card">
-                <CardMedia
-                  component="img"
-                  image={app.image}
-                  alt={app.title}
-                  sx={{
-                    height: '80%', // Adjust height as needed
-                    width: '100%', // Full width of the card
-                    objectFit: 'cover', // Maintain aspect ratio and fit within the card
-                    objectPosition: 'center', // Center image horizontally and vertically
-                  }}
-                />
                 <CardContent
                   sx={{
-                    textAlign: 'center',
                     padding: 2,
-                    flexGrow: 1, // Take remaining space
+                    minHeight: '40px',
+                    height: '20%', // Adjust height as needed
                     display: 'flex',
-                    flexDirection: 'column',
+                    alignItems: 'center',
+                    textAlign: 'center',
                     justifyContent: 'center', // Center the content vertically
                   }}
                 >
@@ -176,6 +166,19 @@ export default function Content() {
                     {app.title}
                   </Typography>
                 </CardContent>
+                <CardMedia
+                  component="img"
+                  image={app.image}
+                  alt={app.title}
+                  sx={{
+                    flexGrow: 1, // Take remaining space
+                    width: '100%', // Full width of the card
+                    height: 'auto',
+                    objectFit: 'cover',
+                    objectPosition: 'center',
+                    overflow: 'hidden',
+                  }}
+                />
                 {/* Description overlay */}
                 <div className="card-overlay">
                   <Typography variant="h4">{app.title}</Typography>
