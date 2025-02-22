@@ -7,6 +7,7 @@ import ScrollingTitle from '@/components/scrolling_title';
 
 const CHECK_URL = `${process.env.NEXT_PUBLIC_API_URL_DOCS}`; // Change to your backend URL
 const TIMEOUT = 5000; // 5 seconds timeout
+const CHECK_INTERVAL = 10000; // 10 seconds interval
 
 export default function BackendStatus() {
   const [status, setStatus] = useState<'success' | 'timeout' | 'error' | null>(
@@ -15,7 +16,7 @@ export default function BackendStatus() {
   const [message, setMessage] = useState('');
   const [hover, setHover] = useState(false);
 
-  useEffect(() => {
+  const checkBackendStatus = () => {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), TIMEOUT);
 
@@ -44,6 +45,13 @@ export default function BackendStatus() {
         }
       })
       .finally(() => clearTimeout(timeoutId));
+  };
+
+  useEffect(() => {
+    checkBackendStatus(); // Initial check
+    const intervalId = setInterval(checkBackendStatus, CHECK_INTERVAL);
+
+    return () => clearInterval(intervalId);
   }, []);
 
   return (
