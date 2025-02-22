@@ -1,5 +1,7 @@
 // components/NavBar.tsx
 'use client';
+import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
@@ -28,6 +30,11 @@ const NavLink = styled(ListItem)(() => ({
 
 const NavBar = ({ brandName, imageSrcPath }: NavBarProps) => {
   const { theme, toggleTheme } = useThemeContext();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   return (
     <AppBar className="navbar">
@@ -45,16 +52,21 @@ const NavBar = ({ brandName, imageSrcPath }: NavBarProps) => {
               color: 'inherit',
             }}
           >
-            <img
+            <Image
               src={imageSrcPath}
               alt="Logo"
               width={60}
               height={60}
               style={{
                 marginRight: 8,
-                filter: theme === 'dark' ? 'invert(1)' : 'invert(0)',
+                filter: isClient
+                  ? theme === 'dark'
+                    ? 'invert(1)'
+                    : 'invert(0)'
+                  : 'none',
               }}
             />
+
             <Typography
               variant="h6"
               component="div"
@@ -145,7 +157,13 @@ const NavBar = ({ brandName, imageSrcPath }: NavBarProps) => {
               color: 'var(--foreground-2)',
             }}
           >
-            {theme === 'light' ? <DarkModeIcon /> : <LightModeIcon />}
+            {isClient ? (
+              theme === 'light' ? (
+                <DarkModeIcon />
+              ) : (
+                <LightModeIcon />
+              )
+            ) : null}
           </IconButton>
         </Box>
       </Toolbar>

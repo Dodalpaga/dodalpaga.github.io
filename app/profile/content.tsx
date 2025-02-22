@@ -4,6 +4,7 @@ import * as React from 'react';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import { Link, List, ListItem } from '@mui/material';
+import Image from 'next/image';
 import CountUp from 'react-countup';
 import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box';
@@ -217,17 +218,23 @@ export default function Content() {
             useFlexGap
             sx={{ flexWrap: 'wrap' }}
           >
-            <img
+            <Image
               src={`https://github-readme-stats.vercel.app/api?username=Dodalpaga&title_color=${encodeURIComponent(foreground)}&text_color=${encodeURIComponent(foreground)}&hide_rank=true&include_all_commits=true&show_icons=true&theme=transparent&count_private=true&hide=contribs,issues`}
               alt="GitHub Stats"
+              width={500}
+              height={200}
             />
-            <img
+            <Image
               src={`https://github-readme-stats.vercel.app/api/top-langs/?username=Dodalpaga&title_color=${encodeURIComponent(foreground)}&text_color=${encodeURIComponent(foreground)}&layout=compact&theme=transparent&count_private=true&hide=c,java,c%2B%2B,css,procfile`}
               alt="Top Languages"
+              width={500}
+              height={200}
             />
-            <img
+            <Image
               src={`https://github-readme-streak-stats.herokuapp.com?user=Dodalpaga&theme=transparent&currStreakLabel=${encodeURIComponent(foreground)}&currStreakNum=EB5454&fire=EB5454&ring=${encodeURIComponent(foreground)}&sideNums=${encodeURIComponent(foreground)}&sideLabels=${encodeURIComponent(foreground)}`}
               alt="GitHub Streak"
+              width={500}
+              height={200}
             />
           </Stack>
         </div>

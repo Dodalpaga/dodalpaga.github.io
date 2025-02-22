@@ -49,6 +49,12 @@ body {
   background-attachment: fixed;
   background-size: cover;
   background-position: center;
+  transition:
+    background 0.1s ease,
+    border 0.1s ease,
+    background-color 0.1s,
+    color 0.1s ease,
+    transform 0.1s ease;
 }
 
 html {

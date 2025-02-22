@@ -1,5 +1,6 @@
 import React from 'react';
 import { Typography } from '@mui/material'; // Adjust based on your styling library
+import Image from 'next/image';
 import styles from './infocard.module.css'; // Create this CSS file for styling
 
 interface InfoCardProps {
@@ -29,7 +30,13 @@ const InfoCard: React.FC<InfoCardProps> = ({
         <Typography variant="body2">{location}</Typography>
         <Typography variant="h5">{companyName}</Typography>
       </div>
-      <img src={imageSrc} alt={companyName} className={styles.image} />
+      <Image
+        src={imageSrc}
+        alt={companyName}
+        className={styles.image}
+        width={200}
+        height={150}
+      />
     </div>
   );
 };

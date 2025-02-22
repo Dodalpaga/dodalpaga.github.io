@@ -1,14 +1,17 @@
 import { useState } from 'react';
+import Image from 'next/image';
 
 export default function Carousel({ images }: { images: string[] }) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   return (
     <div style={{ textAlign: 'center' }}>
-      <img
+      <Image
         src={images[currentIndex]}
         alt={`Memory ${currentIndex + 1}`}
-        style={{ width: '200px', height: 'auto', borderRadius: '8px' }}
+        width={200}
+        height={150}
+        style={{ borderRadius: '8px' }}
       />
       <div
         style={{

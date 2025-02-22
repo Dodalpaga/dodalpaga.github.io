@@ -1,6 +1,7 @@
 'use client';
 import './media_player.css';
 import Playlist from './media_player/Playlist/playlist';
+import Image from 'next/image';
 import Player from './media_player/Player';
 import Container from '@mui/material/Container';
 import { useThemeContext } from '@/context/ThemeContext';
@@ -27,7 +28,12 @@ const MediaPlayer = () => {
     setIsFullscreen((prev) => !prev);
   };
 
-  const { theme, toggleTheme } = useThemeContext();
+  const { theme } = useThemeContext();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   return (
     <Container
@@ -39,9 +45,17 @@ const MediaPlayer = () => {
       {/* Music icon that shows when folded */}
 
       <div className="music-icon">
-        <img
+        <Image
           src="/assets/music-logo.png"
-          style={{ filter: theme === 'dark' ? 'invert(1)' : 'invert(0)' }}
+          width={200}
+          height={150}
+          style={{
+            filter: isClient
+              ? theme === 'dark'
+                ? 'invert(1)'
+                : 'invert(0)'
+              : 'none',
+          }}
           alt="Music Player"
         />
       </div>

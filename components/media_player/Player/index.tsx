@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { PlayArrow, Pause, VolumeUp } from '@mui/icons-material';
 import { Box, IconButton, Slider } from '@mui/material';
 import ScrollingTitle from '@/components/scrolling_title';
@@ -35,13 +36,16 @@ const Player = () => {
         {/.mp4$/.test(currentTrack.url) ? (
           <Video />
         ) : currentTrack.coverUrl ? (
-          <img
+          <Image
             src={currentTrack.coverUrl}
+            alt={currentTrack.title}
             style={{
               objectFit: 'contain',
               maxWidth: '100%',
               maxHeight: '100%',
             }}
+            width={60}
+            height={60}
           />
         ) : null}
       </Box>
