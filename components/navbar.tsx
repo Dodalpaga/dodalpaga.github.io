@@ -48,7 +48,7 @@ const NavBar = () => {
             }}
           >
             <Image
-              src={`/images/D2_transparent.png`}
+              src={`/images/D2_satellite_vect.png`}
               alt="Logo"
               width={60}
               height={60}

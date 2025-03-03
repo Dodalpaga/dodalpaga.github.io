@@ -15,7 +15,7 @@ export default function Home() {
 
       <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-2 items-center justify-center">
         <Image
-          src="/images/D2_transparent.png"
+          src="/images/D2_satellite_vect.png"
           alt="logo_shadowed"
           height={0} // Fixed height
           width={0} // Set width to 0 (ignored due to style)
