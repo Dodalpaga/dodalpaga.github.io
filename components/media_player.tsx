@@ -46,7 +46,7 @@ const MediaPlayer = () => {
 
       <div className="music-icon">
         <Image
-          src="/assets/music-logo.png"
+          src="/images/music-logo.png"
           width={200}
           height={150}
           style={{

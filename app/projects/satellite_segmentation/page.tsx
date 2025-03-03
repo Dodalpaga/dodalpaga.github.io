@@ -24,10 +24,7 @@ export default function App1() {
           height: '84px',
         }}
       >
-        <NavBar
-          brandName="Dorian Voydie"
-          imageSrcPath={`/assets/mountain.png`}
-        />
+        <NavBar />
       </div>
 
       {/* Main Content: Ensure it's aligned at the top */}

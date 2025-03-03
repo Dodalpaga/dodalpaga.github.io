@@ -18,7 +18,7 @@ type MapRef = {
 export default function Content() {
   const mapRef = React.useRef<MapRef | null>(null); // MapRef can be null
   const [mapImage, setMapImage] = React.useState<string>(
-    '/assets/segmentation_toulouse.png'
+    '/images/segmentation_toulouse.png'
   );
   const [loading, setLoading] = React.useState<boolean>(false); // State for loading
   const [modelName, setModelName] = React.useState<string>('FastSAM-s.pt'); // State for selected model

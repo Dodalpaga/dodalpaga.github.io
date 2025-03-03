@@ -108,7 +108,7 @@ export default function Content() {
             >
               <CardMedia
                 component="img"
-                image={`/assets/id.png`}
+                image={`/images/pp.jpeg`}
                 alt={'Profile Picture'}
                 sx={{
                   height: '100%', // Adjust height as needed
@@ -256,7 +256,7 @@ export default function Content() {
               yearsSpent={yearsSpent}
               companyName="Thales Services Numériques"
               location="Toulouse Area, France"
-              imageSrc="/assets/thales.png"
+              imageSrc="/images/thales.png"
             />
             {/* Description */}
             <Typography variant="body1">
@@ -553,7 +553,7 @@ export default function Content() {
               yearsSpent={1}
               companyName="Atos France"
               location="Toulouse Area, France"
-              imageSrc="/assets/atos.png"
+              imageSrc="/images/atos.png"
             />
             {/* Description */}
             <Typography variant="body1">
@@ -759,7 +759,7 @@ export default function Content() {
                   <CardMedia
                     component="img"
                     height="140"
-                    image="/assets/insa-toulouse.webp"
+                    image="/images/insa-toulouse.webp"
                     alt="insa toulouse"
                     sx={{
                       padding: '10px',
@@ -804,7 +804,7 @@ export default function Content() {
                   <CardMedia
                     component="img"
                     height="140"
-                    image="/assets/ensmm.png"
+                    image="/images/ensmm.png"
                     alt="ensmm"
                     sx={{
                       padding: '10px',

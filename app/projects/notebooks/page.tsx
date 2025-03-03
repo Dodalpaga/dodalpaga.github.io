@@ -21,10 +21,7 @@ export default function Template() {
         className="flex flex-col items-center justify-between p-4"
         style={{ height: '84px' }}
       >
-        <NavBar
-          brandName="Dorian Voydie"
-          imageSrcPath={`/assets/mountain.png`}
-        />
+        <NavBar />
       </div>
       <div
         className="flex flex-col items-center justify-between"

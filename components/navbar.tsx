@@ -14,11 +14,6 @@ import DarkModeIcon from '@mui/icons-material/DarkMode';
 import { useThemeContext } from '@/context/ThemeContext';
 import './navbar.css';
 
-interface NavBarProps {
-  brandName: string;
-  imageSrcPath: string;
-}
-
 const NavLink = styled(ListItem)(() => ({
   textTransform: 'capitalize',
   color: 'inherit',
@@ -28,7 +23,7 @@ const NavLink = styled(ListItem)(() => ({
   },
 }));
 
-const NavBar = ({ brandName, imageSrcPath }: NavBarProps) => {
+const NavBar = () => {
   const { theme, toggleTheme } = useThemeContext();
   const [isClient, setIsClient] = useState(false);
 
@@ -53,17 +48,13 @@ const NavBar = ({ brandName, imageSrcPath }: NavBarProps) => {
             }}
           >
             <Image
-              src={imageSrcPath}
+              src={`/images/D2_transparent.png`}
               alt="Logo"
               width={60}
               height={60}
               style={{
                 marginRight: 8,
-                filter: isClient
-                  ? theme === 'dark'
-                    ? 'invert(1)'
-                    : 'invert(0)'
-                  : 'none',
+                padding: '10px',
               }}
             />
 
@@ -76,7 +67,7 @@ const NavBar = ({ brandName, imageSrcPath }: NavBarProps) => {
                 color: 'var(--foreground)',
               }}
             >
-              {brandName}
+              Dorian VOYDIE
             </Typography>
           </Box>
         </Link>

@@ -32,10 +32,7 @@ export default async function BlogPage() {
         className="flex flex-col items-center justify-between p-4"
         style={{ height: '84px' }}
       >
-        <NavBar
-          brandName="Dorian Voydie"
-          imageSrcPath={`/assets/mountain.png`}
-        />
+        <NavBar />
       </div>
       <div className="flex flex-col items-center justify-start p-4 flex-grow">
         <Content blogPosts={blogPosts} />
