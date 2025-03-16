@@ -13,9 +13,9 @@ export default function Content() {
 
   // Define a map of available temperatures for each humidity level
   const availableTemperatures: { [key: number]: number[] } = {
-    1: [-30, -20, -10, 0],
-    2: [-30, -15, -5],
-    3: [-29, -17],
+    1: [-2, -3, -4, -6, -7, -15, -24, -26, -28],
+    2: [-2, -5, -10, -16, -17, -18, -26],
+    3: [-5, -13, -14],
   };
 
   // Function to find the closest temperature
