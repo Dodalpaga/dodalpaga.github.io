@@ -29,6 +29,13 @@ const apps = [
       'A chatbot you can interact with. It has been fine-tuned on my resume, previous projects, and other relevant information about me.',
   },
   {
+    title: 'Snowflakes',
+    image: `/images/snowflakes.jpeg`, // Update with your actual image path
+    link: '/projects/snowflakes', // Update with your actual routes
+    target: '',
+    description: 'Snowflakes',
+  },
+  {
     title: 'Jupyter Notebooks',
     image: `/images/jupyter.jpg`, // Update with your actual image path
     link: '/projects/notebooks', // Update with your actual routes

@@ -1,0 +1,32 @@
+.fadein {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.fadein img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0;
+  animation: fade 2s ease-in-out forwards;
+}
+
+.fadein img.visible {
+  opacity: 1;
+}
+
+@keyframes fade {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+  }
+}
