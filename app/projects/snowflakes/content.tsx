@@ -157,6 +157,13 @@ export default function Content() {
           <div style={{ color: 'white' }}>-30°C</div>
         </Stack>
       </Stack>
+      <a
+        href="https://gagarin.is/work/arctic-opposites"
+        style={{ color: 'white', padding: '3px' }}
+        target="_blank"
+      >
+        Inspiration : Gagarin
+      </a>
     </Container>
   );
 }
