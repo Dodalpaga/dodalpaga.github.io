@@ -36,6 +36,13 @@ const apps = [
     description: 'Snowflakes',
   },
   {
+    title: 'ISS',
+    image: `/images/snowflakes.jpeg`, // Update with your actual image path
+    link: '/projects/iss', // Update with your actual routes
+    target: '',
+    description: 'ISS',
+  },
+  {
     title: 'Jupyter Notebooks',
     image: `/images/jupyter.jpg`, // Update with your actual image path
     link: '/projects/notebooks', // Update with your actual routes
