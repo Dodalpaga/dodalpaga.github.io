@@ -80,14 +80,6 @@ export default function Content() {
       });
 
       setIssTrail((prevTrail) => [...prevTrail, [longitude, latitude]]);
-
-      if (mapRef.current) {
-        mapRef.current.flyTo({
-          center: [longitude, latitude],
-          zoom: 2,
-          duration: 1000,
-        });
-      }
     } catch (error) {
       console.error('Error fetching ISS location:', error);
     }
