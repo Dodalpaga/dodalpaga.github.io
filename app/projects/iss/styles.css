@@ -1,0 +1,17 @@
+.metrics {
+  display: flex;
+  overflow: auto;
+  padding: 0;
+  height: 100%;
+}
+
+@media screen and (max-width: 900px) {
+  .metrics {
+    overflow: hidden;
+    height: auto;
+  }
+  .iss-grid {
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+}

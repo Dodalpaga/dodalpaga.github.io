@@ -12,42 +12,80 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import './styles.css';
 
 interface ISSData {
-  lat: string;
-  lon: string;
+  lat: number;
+  lon: number;
+  altitude: number;
+  velocity: number;
+  visibility: string;
+}
+
+interface Astronaut {
+  id: number;
+  name: string;
+  country: string;
+  agency: string;
+  position: string;
+  spacecraft: string;
+  days_in_space: number;
+  image: string;
+  url: string;
 }
 
 interface AstronautsData {
   number: number;
-  names: string[];
+  people: Astronaut[];
+}
+
+interface Spacecraft {
+  id: number;
+  name: string;
+  country: string;
+  operator: string;
+  spacecraft_name: string;
+  docking_port: string;
+  mission_type: string;
+  image: string;
+  url: string;
+}
+
+interface DockedSpacecraftData {
+  number: number;
+  spacecraft: Spacecraft[];
 }
 
 const MAPTILER_KEY = process.env.NEXT_PUBLIC_MAPTILER_API_KEY;
 
 export default function Content() {
-  const [issData, setIssData] = useState<ISSData>({ lat: '', lon: '' });
+  const [issData, setIssData] = useState<ISSData | null>(null);
   const [astronauts, setAstronauts] = useState<AstronautsData | null>(null);
+  const [dockedSpacecraft, setDockedSpacecraft] =
+    useState<DockedSpacecraftData | null>(null);
   const [issTrail, setIssTrail] = useState<[number, number][]>([]);
   const mapRef = useRef<MapRef | null>(null);
 
-  // Fetch the current ISS position
+  // Fetch ISS Position
   const fetchISS = async () => {
     try {
-      const res = await fetch('http://api.open-notify.org/iss-now.json');
+      const res = await fetch('https://api.wheretheiss.at/v1/satellites/25544');
       const data = await res.json();
-      const { latitude, longitude } = data.iss_position;
-      setIssData({ lat: latitude, lon: longitude });
 
-      // Add the new coordinate to the trail
-      setIssTrail((prevTrail) => [
-        ...prevTrail,
-        [parseFloat(longitude), parseFloat(latitude)],
-      ]);
+      const { latitude, longitude, altitude, velocity, visibility } = data;
+
+      setIssData({
+        lat: latitude,
+        lon: longitude,
+        altitude,
+        velocity,
+        visibility,
+      });
+
+      setIssTrail((prevTrail) => [...prevTrail, [longitude, latitude]]);
 
       if (mapRef.current) {
         mapRef.current.flyTo({
-          center: [parseFloat(longitude), parseFloat(latitude)],
+          center: [longitude, latitude],
           zoom: 2,
-          duration: 2000,
+          duration: 1000,
         });
       }
     } catch (error) {
@@ -55,43 +93,55 @@ export default function Content() {
     }
   };
 
-  // Fetch the astronauts data
+  // Fetch Astronauts
   const fetchAstronauts = async () => {
     try {
-      const res = await fetch('http://api.open-notify.org/astros.json');
+      const res = await fetch(
+        'https://corquaid.github.io/international-space-station-APIs/JSON/people-in-space.json'
+      );
       const data = await res.json();
+
       setAstronauts({
         number: data.number,
-        names: data.people.map((p: { name: string }) => p.name),
+        people: data.people,
       });
     } catch (error) {
       console.error('Error fetching astronauts data:', error);
     }
   };
 
-  // On mount, fetch astronauts and ISS position, then update ISS data every 5 seconds.
+  // Fetch Docked Spacecraft
+  const fetchDockedSpacecraft = async () => {
+    try {
+      const res = await fetch(
+        'https://corquaid.github.io/international-space-station-APIs/JSON/iss-docked-spacecraft.json'
+      );
+      const data = await res.json();
+
+      setDockedSpacecraft({
+        number: data.number,
+        spacecraft: data.spacecraft,
+      });
+    } catch (error) {
+      console.error('Error fetching docked spacecraft data:', error);
+    }
+  };
+
   useEffect(() => {
     fetchAstronauts();
     fetchISS();
+    fetchDockedSpacecraft();
+
     const intervalId = setInterval(() => {
       fetchISS();
-      // Optionally, update the map's view when new ISS coordinates arrive
-      if (issData.lat && issData.lon && mapRef.current) {
-        mapRef.current.flyTo({
-          center: [parseFloat(issData.lon), parseFloat(issData.lat)],
-          zoom: 2,
-          duration: 2100,
-        });
-      }
-    }, 2000);
+    }, 20000);
+
     return () => clearInterval(intervalId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Set an initial view state; if no data, fallback to [0,0]
   const initialViewState = {
-    latitude: issData.lat ? parseFloat(issData.lat) : 0,
-    longitude: issData.lon ? parseFloat(issData.lon) : 0,
+    latitude: issData ? issData.lat : 0,
+    longitude: issData ? issData.lon : 0,
     zoom: 2,
     bearing: 0,
     pitch: 0,
@@ -100,133 +150,281 @@ export default function Content() {
   return (
     <Container
       maxWidth={false}
+      className="iss-content"
       sx={{
         display: 'flex',
         alignItems: 'center',
         height: '100%',
-        margin: 0,
         width: '100%',
+        margin: 0,
       }}
     >
-      <Box
-        sx={{ width: '100%', maxHeight: '80vh', overflowY: 'auto', padding: 0 }}
-      >
-        <Grid container spacing={4}>
-          {/* Left Column with Metrics and Astronauts */}
-          <Grid item xs={12} md={6}>
-            <Grid container spacing={2}>
-              {/* Latitude Card */}
-              <Grid item xs={12} sm={6}>
-                <Card sx={{ minWidth: 150 }}>
-                  <CardContent>
-                    <Typography variant="h6" component="div">
-                      Latitude
-                    </Typography>
-                    <Typography variant="body1">
-                      {issData.lat ? issData.lat : 'Loading...'}
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-              {/* Longitude Card */}
-              <Grid item xs={12} sm={6}>
-                <Card sx={{ minWidth: 150 }}>
-                  <CardContent>
-                    <Typography variant="h6" component="div">
-                      Longitude
-                    </Typography>
-                    <Typography variant="body1">
-                      {issData.lon ? issData.lon : 'Loading...'}
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-            </Grid>
-            {/* Astronauts List */}
-            <Grid item xs={12} sx={{ marginTop: 4 }}>
+      <Grid className="iss-grid" container spacing={4} sx={{ height: '100%' }}>
+        <Grid
+          item
+          className="map"
+          xs={12}
+          md={6}
+          sx={{ minHeight: { xs: '400px', md: '100%' } }}
+        >
+          <Card sx={{ height: '100%' }}>
+            <CardContent sx={{ padding: '0 !important', height: '100%' }}>
+              <Map
+                ref={mapRef}
+                initialViewState={initialViewState}
+                style={{ width: '100%', height: '100%' }}
+                mapStyle={`https://api.maptiler.com/maps/satellite/style.json?key=${MAPTILER_KEY}`}
+              >
+                {/* ISS Trail */}
+                {issTrail.map(([lng, lat], index) => (
+                  <Marker key={index} latitude={lat} longitude={lng}>
+                    <div
+                      style={{
+                        width: '10px',
+                        height: '10px',
+                        background: 'transparent',
+                        border: '1px dotted rgba(244, 255, 88, 0.8)',
+                        borderRadius: '50%',
+                      }}
+                    />
+                  </Marker>
+                ))}
+
+                {/* ISS Current Position */}
+                {issData && (
+                  <Marker latitude={issData.lat} longitude={issData.lon}>
+                    <div style={{ fontSize: '24px' }}>
+                      <Image
+                        src="/images/iss.png"
+                        alt="ISS"
+                        height={0}
+                        width={0}
+                        style={{
+                          width: 'auto',
+                          height: '50px',
+                          padding: '10px',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                      />
+                    </div>
+                  </Marker>
+                )}
+              </Map>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid item className="metrics" xs={12} md={6}>
+          <Grid container spacing={2}>
+            {/* Latitude & Longitude */}
+            <Grid item xs={6}>
               <Card>
                 <CardContent>
-                  {astronauts ? (
-                    <>
-                      <Typography variant="h6" component="div" gutterBottom>
-                        Astronauts in Space
-                      </Typography>
-                      <Typography variant="body1" gutterBottom>
-                        There are currently {astronauts.number} people in space.
-                      </Typography>
-                      <ul>
-                        {astronauts.names.map((name, index) => (
-                          <li key={index}>{name}</li>
-                        ))}
-                      </ul>
-                    </>
-                  ) : (
-                    <Typography variant="body1">
-                      Loading astronaut data...
-                    </Typography>
-                  )}
+                  <Typography variant="h6">Latitude</Typography>
+                  <Typography>
+                    {issData ? issData.lat.toFixed(4) : 'Loading...'}
+                  </Typography>
                 </CardContent>
               </Card>
             </Grid>
-          </Grid>
-          {/* Right Column with Map */}
-          <Grid
-            item
-            xs={12}
-            md={6}
-            sx={{ minHeight: { xs: '400px', md: '100%' } }}
-          >
-            <Card sx={{ height: '100%' }}>
-              <CardContent sx={{ padding: '0 !important', height: '100%' }}>
-                <Map
-                  ref={mapRef}
-                  initialViewState={initialViewState}
-                  style={{ width: '100%', height: '100%' }}
-                  mapStyle={`https://api.maptiler.com/maps/dataviz/style.json?key=${MAPTILER_KEY}`}
-                >
-                  {/* Render trail markers */}
-                  {issTrail.map(([lng, lat], index) => (
-                    <Marker key={index} latitude={lat} longitude={lng}>
-                      <div
-                        style={{
-                          width: '10px',
-                          height: '10px',
-                          background: 'transparent',
-                          border: '1px dotted rgba(0, 0, 0, 0.2)',
-                          borderRadius: '50%',
-                        }}
-                      />
-                    </Marker>
-                  ))}
-                  {/* Render current ISS marker */}
-                  {issData.lat && issData.lon && (
-                    <Marker
-                      latitude={parseFloat(issData.lat)}
-                      longitude={parseFloat(issData.lon)}
-                    >
-                      <div style={{ fontSize: '24px' }}>
-                        <Image
-                          src="/images/iss.png"
-                          alt="ISS"
-                          height={0} // Fixed height
-                          width={0} // Set width to 0 (ignored due to style)
-                          style={{
-                            width: 'auto',
-                            height: '50px',
-                            padding: '10px',
+            <Grid item xs={6}>
+              <Card>
+                <CardContent>
+                  <Typography variant="h6">Longitude</Typography>
+                  <Typography>
+                    {issData ? issData.lon.toFixed(4) : 'Loading...'}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+
+            {/* Altitude */}
+            <Grid item xs={6}>
+              <Card>
+                <CardContent>
+                  <Typography variant="h6">Altitude</Typography>
+                  <Typography>
+                    {issData
+                      ? `${issData.altitude.toFixed(2)} km`
+                      : 'Loading...'}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+
+            {/* Velocity */}
+            <Grid item xs={6}>
+              <Card>
+                <CardContent>
+                  <Typography variant="h6">Velocity</Typography>
+                  <Typography>
+                    {issData
+                      ? `${issData.velocity.toFixed(2)} km/h`
+                      : 'Loading...'}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+
+            {/* Visibility */}
+            <Grid item xs={12}>
+              <Card>
+                <CardContent>
+                  <Typography variant="h6">Visibility</Typography>
+                  <Typography>
+                    {issData ? issData.visibility : 'Loading...'}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+
+            {/* Astronauts */}
+            <Grid item xs={12} sx={{ marginTop: 4 }}>
+              <Typography variant="h6" sx={{ mb: 2 }}>
+                Astronauts in Space : {astronauts?.number ?? '...'}
+              </Typography>
+
+              {astronauts ? (
+                <Grid container spacing={2} wrap="wrap">
+                  {astronauts.people.map((astronaut) => (
+                    <Grid item xs={12} sm={6} md={4} lg={3} key={astronaut.id}>
+                      <Card sx={{ height: '100%' }}>
+                        <CardContent
+                          sx={{
+                            display: 'flex',
                             alignItems: 'center',
-                            justifyContent: 'center',
+                            flexDirection: 'column', // Ensure the card content aligns correctly in smaller sizes
                           }}
-                        />
-                      </div>
-                    </Marker>
-                  )}
-                </Map>
-              </CardContent>
-            </Card>
+                        >
+                          <Box
+                            sx={{
+                              width: 64,
+                              height: 64,
+                              borderRadius: '50%',
+                              overflow: 'hidden',
+                              flexShrink: 0,
+                              marginBottom: 2, // Add margin at bottom for spacing
+                            }}
+                          >
+                            <Image
+                              src={astronaut.image}
+                              alt={astronaut.name}
+                              width={64}
+                              height={64}
+                              style={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'cover',
+                              }}
+                            />
+                          </Box>
+                          <Box sx={{ textAlign: 'center' }}>
+                            <Typography
+                              variant="body1"
+                              fontWeight="bold"
+                              sx={{ wordBreak: 'break-word' }}
+                            >
+                              {astronaut.name}
+                            </Typography>
+                            <Typography
+                              variant="body2"
+                              color="text.secondary"
+                              sx={{ wordBreak: 'break-word' }}
+                            >
+                              {astronaut.agency}
+                            </Typography>
+                            <Typography
+                              variant="body2"
+                              sx={{ wordBreak: 'break-word' }}
+                            >
+                              {astronaut.position}
+                            </Typography>
+                          </Box>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                  ))}
+                </Grid>
+              ) : (
+                <Typography>Loading astronaut data...</Typography>
+              )}
+            </Grid>
+
+            {/* Docked Spacecraft */}
+            <Grid item xs={12} sx={{ marginTop: 4 }}>
+              <Typography variant="h6" sx={{ mb: 2 }}>
+                Docked Spacecrafts : {dockedSpacecraft?.number ?? '...'}
+              </Typography>
+
+              {dockedSpacecraft ? (
+                <Grid container spacing={2} wrap="wrap">
+                  {dockedSpacecraft.spacecraft.map((craft) => (
+                    <Grid item xs={12} sm={6} md={4} lg={3} key={craft.id}>
+                      <Card sx={{ height: '100%' }}>
+                        <CardContent
+                          sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            flexDirection: 'column', // Ensure the card content aligns correctly in smaller sizes
+                          }}
+                        >
+                          <Box
+                            sx={{
+                              width: 64,
+                              height: 64,
+                              borderRadius: '50%',
+                              overflow: 'hidden',
+                              flexShrink: 0,
+                              marginBottom: 2, // Add margin at bottom for spacing
+                            }}
+                          >
+                            <Image
+                              src={craft.image}
+                              alt={craft.name}
+                              width={64}
+                              height={64}
+                              style={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'cover',
+                              }}
+                            />
+                          </Box>
+                          <Box sx={{ textAlign: 'center' }}>
+                            <Typography
+                              variant="body1"
+                              fontWeight="bold"
+                              sx={{ wordBreak: 'break-word' }}
+                            >
+                              {craft.name}
+                            </Typography>
+                            <Typography
+                              variant="body2"
+                              color="text.secondary"
+                              sx={{ wordBreak: 'break-word' }}
+                            >
+                              {craft.operator}
+                            </Typography>
+                            <Typography
+                              variant="body2"
+                              sx={{ wordBreak: 'break-word' }}
+                            >
+                              Docking Port: {craft.docking_port}
+                            </Typography>
+                          </Box>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                  ))}
+                </Grid>
+              ) : (
+                <Typography>Loading docked spacecraft data...</Typography>
+              )}
+            </Grid>
           </Grid>
         </Grid>
-      </Box>
+      </Grid>
     </Container>
   );
 }
