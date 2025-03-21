@@ -141,5 +141,22 @@
     "latitude": 46.5218269,
     "longitude": 6.6327025,
     "images": ["/data/photos/Suisse/Lausanne/montagne.jpg"]
+  },
+  {
+    "city": "Rovaniemi",
+    "country": "Finland",
+    "latitude": 66.503944,
+    "longitude": 25.729391,
+    "images": [
+      "/data/photos/Finlande/Rovaniemi/aurore1.jpg",
+      "/data/photos/Finlande/Rovaniemi/aurore2.jpg",
+      "/data/photos/Finlande/Rovaniemi/aurore3.jpg",
+      "/data/photos/Finlande/Rovaniemi/aurore4.jpg",
+      "/data/photos/Finlande/Rovaniemi/chiens1.jpg",
+      "/data/photos/Finlande/Rovaniemi/chiens2.jpg",
+      "/data/photos/Finlande/Rovaniemi/moi.jpg",
+      "/data/photos/Finlande/Rovaniemi/tipi1.jpg",
+      "/data/photos/Finlande/Rovaniemi/tipi2.jpg"
+    ]
   }
 ]

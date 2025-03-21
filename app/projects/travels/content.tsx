@@ -11,7 +11,7 @@ const MAPTILER_KEY = process.env.NEXT_PUBLIC_MAPTILER_API_KEY;
 const initialViewState = {
   latitude: 46.88430942721118,
   longitude: 2.5873182849049954,
-  zoom: 5,
+  zoom: 2.5,
   bearing: 0,
   pitch: 0,
 };

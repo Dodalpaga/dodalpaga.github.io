@@ -33,14 +33,16 @@ const apps = [
     image: `/images/snowflakes.jpeg`, // Update with your actual image path
     link: '/projects/snowflakes', // Update with your actual routes
     target: '',
-    description: 'Snowflakes',
+    description:
+      'Learn how snowflakes are formed, depending on conditions such as temperature and humidity levels.',
   },
   {
     title: 'ISS',
     image: `/images/iss-artwork.jpg`, // Update with your actual image path
     link: '/projects/iss', // Update with your actual routes
     target: '',
-    description: 'ISS',
+    description:
+      'The ISS live information, such as position, people on board, spacecraft dockerd, etc.',
   },
   {
     title: 'Jupyter Notebooks',

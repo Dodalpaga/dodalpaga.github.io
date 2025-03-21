@@ -6,19 +6,12 @@ export default function Carousel({ images }: { images: string[] }) {
 
   return (
     <div style={{ textAlign: 'center' }}>
-      <Image
-        src={images[currentIndex]}
-        alt={`Memory ${currentIndex + 1}`}
-        width={200}
-        height={150}
-        style={{ borderRadius: '8px' }}
-      />
       <div
         style={{
           display: 'flex',
           justifyContent: 'space-between',
           fontSize: '24px',
-          marginTop: '16px',
+          marginBottom: '16px',
         }}
       >
         <button
@@ -36,6 +29,13 @@ export default function Carousel({ images }: { images: string[] }) {
           ▶
         </button>
       </div>
+      <Image
+        src={images[currentIndex]}
+        alt={`Memory ${currentIndex + 1}`}
+        width={200}
+        height={150}
+        style={{ borderRadius: '8px' }}
+      />
     </div>
   );
 }

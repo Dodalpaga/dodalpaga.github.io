@@ -102,5 +102,13 @@
     "latitude": 39.0742,
     "longitude": 21.8243,
     "zoom": 5.5
+  },
+  {
+    "country": "Finland",
+    "continent": "Europe",
+    "description": "...",
+    "latitude": 65.34565,
+    "longitude": 27.224126,
+    "zoom": 5.5
   }
 ]
