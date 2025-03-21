@@ -146,7 +146,7 @@ export default function Content() {
         initialViewState={initialViewState}
         mapStyle={`https://api.maptiler.com/maps/dataviz/style.json?key=${MAPTILER_KEY}`}
         interactiveLayerIds={['countries-layer']}
-        onMouseMove={onHover}
+        // onMouseMove={onHover}
       >
         {geojsonData && (
           <Source id="countries-data" type="geojson" data={geojsonData}>
