@@ -38,7 +38,7 @@ const apps = [
   },
   {
     title: 'ISS',
-    image: `/images/iss-artwork.jpg`, // Update with your actual image path
+    image: `/images/iss-artwork.png`, // Update with your actual image path
     link: '/projects/iss', // Update with your actual routes
     target: '',
     description:
