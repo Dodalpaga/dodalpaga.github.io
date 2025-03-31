@@ -36,9 +36,7 @@ export default function BackendStatus() {
           setMessage('Backend Request timed out.');
         } else if (err.name === 'TypeError') {
           setStatus('error');
-          setMessage(
-            'Backend DNS resolution failed. Check your internet connection.'
-          );
+          setMessage('Backend DNS resolution failed. Check the server status');
         } else {
           setStatus('error');
           setMessage(err.message || 'An error occurred.');

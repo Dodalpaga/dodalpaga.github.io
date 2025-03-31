@@ -10,6 +10,7 @@ import Typography from '@mui/material/Typography';
 import { Map, MapRef, Marker } from '@vis.gl/react-maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import './styles.css';
+import { notify } from '@/components/toast';
 
 interface ISSData {
   lat: number;
@@ -81,6 +82,7 @@ export default function Content() {
 
       setIssTrail((prevTrail) => [...prevTrail, [longitude, latitude]]);
     } catch (error) {
+      notify('Error fetching ISS location:' + error, 'error');
       console.error('Error fetching ISS location:', error);
     }
   };
@@ -98,6 +100,7 @@ export default function Content() {
         people: data.people,
       });
     } catch (error) {
+      notify('Error fetching astronauts data:' + error, 'error');
       console.error('Error fetching astronauts data:', error);
     }
   };
@@ -115,11 +118,13 @@ export default function Content() {
         spacecraft: data.spacecraft,
       });
     } catch (error) {
+      notify('Error fetching docked spacecraft data:' + error, 'error');
       console.error('Error fetching docked spacecraft data:', error);
     }
   };
 
   useEffect(() => {
+    notify('Fetching ...', 'info');
     fetchAstronauts();
     fetchISS();
     fetchDockedSpacecraft();

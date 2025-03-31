@@ -2,6 +2,7 @@ import './globals.css';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
 import BackendStatus from '@/components/backend_status_checker';
 import MediaPlayer from '@/components/media_player';
+import Toast from '@/components/toast';
 import { Inter } from 'next/font/google';
 import { ThemeProvider } from '@/context/ThemeContext';
 
@@ -24,6 +25,7 @@ export default function RootLayout({
           <AppRouterCacheProvider>{children}</AppRouterCacheProvider>
           <MediaPlayer />
           <BackendStatus />
+          <Toast /> {/* Added Toast container */}
         </ThemeProvider>
       </body>
     </html>
