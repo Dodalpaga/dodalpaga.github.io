@@ -1,6 +1,6 @@
 // components/Toast.tsx
 'use client';
-import { toast, ToastContainer, ToastOptions } from 'react-toastify';
+import { toast, ToastContainer, ToastOptions, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 // Define default options for the toast
@@ -12,6 +12,8 @@ const defaultOptions: ToastOptions = {
   closeOnClick: true,
   pauseOnHover: true,
   draggable: true,
+  icon: false,
+  transition: Slide,
 };
 
 // Helper function to trigger a toast

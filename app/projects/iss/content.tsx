@@ -124,14 +124,14 @@ export default function Content() {
   };
 
   useEffect(() => {
-    notify('Fetching ...', 'info');
     fetchAstronauts();
     fetchISS();
     fetchDockedSpacecraft();
 
     const intervalId = setInterval(() => {
+      notify('Fetching ...', 'info');
       fetchISS();
-    }, 20000);
+    }, 10000);
 
     return () => clearInterval(intervalId);
   }, []);
