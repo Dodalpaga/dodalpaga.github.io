@@ -38,7 +38,7 @@ const apps = [
   },
   {
     title: 'Clustering',
-    image: `/images/clustering2.png`, // Update with your actual image path
+    image: `/images/clustering.png`, // Update with your actual image path
     link: '/projects/clustering', // Update with your actual routes
     target: '',
     description:
