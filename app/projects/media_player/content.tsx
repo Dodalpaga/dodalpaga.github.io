@@ -1,6 +1,5 @@
 import React from 'react';
 import Container from '@mui/material/Container';
-import Playlist from '@/components/media_player/Playlist/playlist_wide';
 
 export default function Content() {
   return (

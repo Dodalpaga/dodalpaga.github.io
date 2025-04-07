@@ -21,9 +21,9 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import CodeIcon from '@mui/icons-material/Code';
 import '../globals.css'; // Ensure global styles are correctly imported
 import './styles.css';
-import { useThemeContext } from '../../context/ThemeContext';
-import InfoCard from '../../components/infocard';
-import CustomChip from '../../components/customchip';
+import { useThemeContext } from '@/context/ThemeContext';
+import InfoCard from '@/components/infocard';
+import CustomChip from '@/components/customchip';
 import {
   SiPandas,
   SiNumpy,

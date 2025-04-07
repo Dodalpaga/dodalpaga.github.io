@@ -1,8 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
-import NavBar from '../../components/navbar';
-import Footer from '../../components/footer';
+import NavBar from '@/components/navbar';
+import Footer from '@/components/footer';
 import Content from './content';
 
 export default async function BlogPage() {

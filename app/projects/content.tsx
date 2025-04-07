@@ -37,6 +37,14 @@ const apps = [
       'Learn how snowflakes are formed, depending on conditions such as temperature and humidity levels.',
   },
   {
+    title: 'Clustering',
+    image: `/images/clustering2.png`, // Update with your actual image path
+    link: '/projects/clustering', // Update with your actual routes
+    target: '',
+    description:
+      'Draw dots on a canvas and apply K-means clustering to group them into clusters. Adjust the number of clusters and watch the algorithm in action.',
+  },
+  {
     title: 'ISS',
     image: `/images/iss-artwork.png`, // Update with your actual image path
     link: '/projects/iss', // Update with your actual routes
