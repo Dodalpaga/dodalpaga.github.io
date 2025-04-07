@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import NavBar from '@/components/navbar';
+import { Tilt } from 'react-next-tilt';
 
 export default function Home() {
   return (
@@ -14,20 +15,23 @@ export default function Home() {
       </div>
 
       <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-2 items-center justify-center">
-        <Image
-          src="/images/D2_satellite_vect.png"
-          alt="logo_shadowed"
-          height={0} // Fixed height
-          width={0} // Set width to 0 (ignored due to style)
-          style={{
-            width: 'auto', // Maintain aspect ratio
-            maxHeight: 'calc(100vh - 300px)',
-            height: 'auto',
-            padding: '10px',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        />
+        <div className="flex items-center justify-center">
+          <Tilt borderRadius="5%" scale={1.05}>
+            <Image
+              src="/images/ToyDorian.png"
+              alt="logo_shadowed"
+              height={0} // Fixed height
+              width={0} // Set width to 0 (ignored due to style)
+              style={{
+                width: 'auto', // Maintain aspect ratio
+                maxHeight: 'calc(100vh - 300px)',
+                height: 'auto',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            />
+          </Tilt>
+        </div>
 
         <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-3 lg:text-left  items-center justify-center">
           <a
