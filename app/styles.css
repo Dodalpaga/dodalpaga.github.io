@@ -1,0 +1,35 @@
+#container {
+  height: calc(100vh - 300px); /* Set your desired height */
+  aspect-ratio: 1024 / 1536; /* Maintains square proportions since images have same dimensions */
+  background-image: url('/images/parallax/Background.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  display: grid;
+  place-items: center;
+  animation: rotate 5s ease-in-out infinite;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+#child1 {
+  width: 100%;
+  height: 100%;
+  background-image: url('/images/parallax/Mid2.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  grid-area: 1/1/1/1;
+  translate: 0 0 20px;
+}
+
+#child2 {
+  width: 100%;
+  height: 100%;
+  background-image: url('/images/parallax/Top.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  grid-area: 1/1/1/1;
+  translate: 0 0 15px;
+}

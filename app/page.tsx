@@ -1,8 +1,8 @@
 'use client';
 import Link from 'next/link';
-import Image from 'next/image';
 import NavBar from '@/components/navbar';
 import { Tilt } from 'react-next-tilt';
+import './styles.css';
 
 export default function Home() {
   return (
@@ -16,20 +16,16 @@ export default function Home() {
 
       <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-2 items-center justify-center">
         <div className="flex items-center justify-center">
-          <Tilt borderRadius="5%" scale={1.05}>
-            <Image
-              src="/images/ToyDorian.png"
-              alt="logo_shadowed"
-              height={0} // Fixed height
-              width={0} // Set width to 0 (ignored due to style)
-              style={{
-                width: 'auto', // Maintain aspect ratio
-                maxHeight: 'calc(100vh - 300px)',
-                height: 'auto',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            />
+          <Tilt
+            borderRadius="7%"
+            scale={1.07}
+            perspective="750px"
+            tiltReverse={true}
+          >
+            <div id="container">
+              <div id="child1" />
+              <div id="child2" />
+            </div>
           </Tilt>
         </div>
 
