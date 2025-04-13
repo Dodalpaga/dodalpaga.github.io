@@ -18,17 +18,13 @@ const fadeIn = keyframes`
 export default function Content() {
   return (
     <Container
-      maxWidth="md"
+      maxWidth={false} // Pass boolean false, not a string
       sx={{
         display: 'flex',
         alignItems: 'center',
         flexDirection: 'column',
-        background: 'linear-gradient(135deg, #f5f7fa, #c3cfe2)',
-        borderRadius: 2,
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-        padding: 4,
-        textAlign: 'center',
-        animation: `${fadeIn} 1s ease-in-out`,
+        justifyContent: 'center',
+        height: '100%',
       }}
     >
       <Typography variant="h4" gutterBottom sx={{ mb: 2, color: '#333' }}>

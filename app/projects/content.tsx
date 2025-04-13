@@ -37,6 +37,22 @@ const apps = [
       'Learn how snowflakes are formed, depending on conditions such as temperature and humidity levels.',
   },
   {
+    title: 'Code Interpreter',
+    image: `/images/cmd.jpg`, // Update with your actual image path
+    link: '/projects/code_interpreter', // Update with your actual routes
+    target: '',
+    description:
+      'An advanced code editor with support for multiple programming languages including JavaScript, Python, and more. This tool allows you to write, interpret, and execute code directly within the app, making it perfect for testing and debugging.',
+  },
+  {
+    title: 'Processing Apps',
+    image: `/images/drawing.jpg`, // Update with your actual image path
+    link: '/projects/processing_apps', // Update with your actual routes
+    target: '',
+    description:
+      'Explore and interact with sketches created using the p5.js framework. This app gathers and showcases various creative and interactive visual projects, providing an engaging experience for users interested in generative art and creative coding.',
+  },
+  {
     title: 'Clustering',
     image: `/images/clustering.png`, // Update with your actual image path
     link: '/projects/clustering', // Update with your actual routes
@@ -61,6 +77,38 @@ const apps = [
       'A collection of my notebooks focused on artificial intelligence, machine learning, and algorithmic problem-solving.',
   },
   {
+    title: 'Travels',
+    image: `/images/traveler.jpg`, // Update with your actual image path
+    link: '/projects/travels', // Update with your actual routes
+    target: '',
+    description:
+      'I Love to travel, you can keep track with the countries i have visited until now !',
+  },
+  {
+    title: 'Regex Matcher',
+    image: `/images/regex.png`, // Update with your actual image path
+    link: '/projects/regex', // Update with your actual routes
+    target: '',
+    description:
+      'A powerful tool for testing and validating regular expressions (regex). Quickly check your patterns against sample input and see the results in real time.',
+  },
+  {
+    title: 'Json Explorer',
+    image: `/images/json.jpg`, // Update with your actual image path
+    link: '/projects/json_explorer', // Update with your actual routes
+    target: '',
+    description:
+      'An interactive tool that lets you explore and navigate through complex JSON structures. Easily inspect and modify data, making it perfect for developers working with APIs and configurations.',
+  },
+  {
+    title: 'Mind Mapping',
+    image: `/images/mind_map.jpg`, // Update with your actual image path
+    link: '/projects/mind_map', // Update with your actual routes
+    target: '',
+    description:
+      'A dynamic mind mapping tool designed to help you organize ideas, projects, or concepts. With an intuitive interface, you can create and navigate interconnected nodes, making it easy to visualize your thoughts.',
+  },
+  {
     title: 'Image Detection',
     image: `/images/detection.jpeg`, // Update with your actual image path
     link: '/projects/image_detection', // Update with your actual routes
@@ -69,36 +117,12 @@ const apps = [
       'Utilizing the power of YOLO (You Only Look Once), this application enables real-time object detection within images.',
   },
   {
-    title: 'Code Interpreter',
-    image: `/images/cmd.jpg`, // Update with your actual image path
-    link: '/projects/code_interpreter', // Update with your actual routes
-    target: '',
-    description:
-      'An advanced code editor with support for multiple programming languages including JavaScript, Python, and more. This tool allows you to write, interpret, and execute code directly within the app, making it perfect for testing and debugging.',
-  },
-  {
-    title: 'Processing Apps',
-    image: `/images/drawing.jpg`, // Update with your actual image path
-    link: '/projects/processing_apps', // Update with your actual routes
-    target: '',
-    description:
-      'Explore and interact with sketches created using the p5.js framework. This app gathers and showcases various creative and interactive visual projects, providing an engaging experience for users interested in generative art and creative coding.',
-  },
-  {
     title: 'Music Production',
     image: `/images/music_producer.jpg`, // Update with your actual image path
     link: '/projects/media_player', // Update with your actual routes
     target: '',
     description:
       'I produce electronic music in my free time, experimenting with different sounds and styles to create unique tracks.',
-  },
-  {
-    title: 'Travels',
-    image: `/images/traveler.jpg`, // Update with your actual image path
-    link: '/projects/travels', // Update with your actual routes
-    target: '',
-    description:
-      'I Love to travel, you can keep track with the countries i have visited until now !',
   },
   {
     title: 'Guess What',
