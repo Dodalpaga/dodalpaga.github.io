@@ -12,29 +12,12 @@ import '../globals.css'; // Ensure global styles are correctly imported
 
 const apps = [
   {
-    title: 'Satellite Segmenter',
-    image: `/images/earth.jpg`, // Update with your actual image path
-    link: '/projects/satellite_segmentation', // Update with your actual routes
+    title: "What's Halfway ?",
+    image: `/images/whats_halfway.png`, // Update with your actual image path
+    link: '/projects/whats_halfway', // Update with your actual routes
     target: '',
     description:
-      'Select a tile from the Earth map, and this app will provide a segmented version of that tile, \
-      highlighting different features and regions. Ideal for analyzing satellite images and extracting valuable insights.',
-  },
-  {
-    title: 'Chat Bot',
-    image: `/images/chatbot.png`, // Update with your actual image path
-    link: '/projects/chatbot', // Update with your actual routes
-    target: '',
-    description:
-      'A chatbot you can interact with. It has been fine-tuned on my resume, previous projects, and other relevant information about me.',
-  },
-  {
-    title: 'Snowflakes',
-    image: `/images/snowflakes.jpeg`, // Update with your actual image path
-    link: '/projects/snowflakes', // Update with your actual routes
-    target: '',
-    description:
-      'Learn how snowflakes are formed, depending on conditions such as temperature and humidity levels.',
+      'Find the perfect meeting spot between multiple locations based on driving time. Or plan the shortest route through several stops—simple, fast, efficient.',
   },
   {
     title: 'Code Interpreter',
@@ -85,6 +68,22 @@ const apps = [
       'I Love to travel, you can keep track with the countries i have visited until now !',
   },
   {
+    title: 'Mind Mapping',
+    image: `/images/mind_map.jpg`, // Update with your actual image path
+    link: '/projects/mind_map', // Update with your actual routes
+    target: '',
+    description:
+      'A dynamic mind mapping tool designed to help you organize ideas, projects, or concepts. With an intuitive interface, you can create and navigate interconnected nodes, making it easy to visualize your thoughts.',
+  },
+  {
+    title: 'Snowflakes',
+    image: `/images/snowflakes.jpeg`, // Update with your actual image path
+    link: '/projects/snowflakes', // Update with your actual routes
+    target: '',
+    description:
+      'Learn how snowflakes are formed, depending on conditions such as temperature and humidity levels.',
+  },
+  {
     title: 'Regex Matcher',
     image: `/images/regex.png`, // Update with your actual image path
     link: '/projects/regex', // Update with your actual routes
@@ -101,12 +100,29 @@ const apps = [
       'An interactive tool that lets you explore and navigate through complex JSON structures. Easily inspect and modify data, making it perfect for developers working with APIs and configurations.',
   },
   {
-    title: 'Mind Mapping',
-    image: `/images/mind_map.jpg`, // Update with your actual image path
-    link: '/projects/mind_map', // Update with your actual routes
+    title: 'Music Production',
+    image: `/images/music_producer.jpg`, // Update with your actual image path
+    link: '/projects/media_player', // Update with your actual routes
     target: '',
     description:
-      'A dynamic mind mapping tool designed to help you organize ideas, projects, or concepts. With an intuitive interface, you can create and navigate interconnected nodes, making it easy to visualize your thoughts.',
+      'I produce electronic music in my free time, experimenting with different sounds and styles to create unique tracks.',
+  },
+  {
+    title: 'Satellite Segmenter',
+    image: `/images/earth.jpg`, // Update with your actual image path
+    link: '/projects/satellite_segmentation', // Update with your actual routes
+    target: '',
+    description:
+      'Select a tile from the Earth map, and this app will provide a segmented version of that tile, \
+      highlighting different features and regions. Ideal for analyzing satellite images and extracting valuable insights.',
+  },
+  {
+    title: 'Chat Bot',
+    image: `/images/chatbot.png`, // Update with your actual image path
+    link: '/projects/chatbot', // Update with your actual routes
+    target: '',
+    description:
+      'A chatbot you can interact with. It has been fine-tuned on my resume, previous projects, and other relevant information about me.',
   },
   {
     title: 'Image Detection',
@@ -115,14 +131,6 @@ const apps = [
     target: '',
     description:
       'Utilizing the power of YOLO (You Only Look Once), this application enables real-time object detection within images.',
-  },
-  {
-    title: 'Music Production',
-    image: `/images/music_producer.jpg`, // Update with your actual image path
-    link: '/projects/media_player', // Update with your actual routes
-    target: '',
-    description:
-      'I produce electronic music in my free time, experimenting with different sounds and styles to create unique tracks.',
   },
   {
     title: 'Guess What',
