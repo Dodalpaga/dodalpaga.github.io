@@ -5,9 +5,9 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import * as THREE from 'three';
 
-import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js';
-const loader = new FBXLoader();
+const loader: FBXLoader = new FBXLoader();
 
 // Interface pour les données de vos créations
 interface Creation {
@@ -141,14 +141,14 @@ const Model3D: React.FC<{
     // Chargement du modèle FBX
     loader.load(
       creation.modelPath,
-      (fbx) => {
+      (fbx: THREE.Group) => {
         fbx.scale.setScalar(0.01); // Ajustez selon la taille de vos modèles
 
         // Rotation de 90° en arrière autour de l'axe X pour aligner le "front" vers l'avant (positif Z)
         fbx.rotation.x = -Math.PI / 2;
 
         // Configuration des ombres pour tous les meshes
-        fbx.traverse((child) => {
+        fbx.traverse((child: THREE.Object3D) => {
           if (child instanceof THREE.Mesh) {
             child.castShadow = true;
             child.receiveShadow = true;
@@ -202,7 +202,7 @@ const Model3D: React.FC<{
         controls.update();
       },
       undefined,
-      (error) => {
+      (error: ErrorEvent) => {
         console.error('Erreur de chargement du modèle:', error);
       }
     );
@@ -224,7 +224,7 @@ const Model3D: React.FC<{
         cancelAnimationFrame(animationId);
       }
       if (controlsRef.current) {
-        controlsRef.current.dispose();
+        (controlsRef.current as any).dispose();
       }
       if (containerRef.current && renderer.domElement) {
         containerRef.current.removeChild(renderer.domElement);
@@ -349,7 +349,7 @@ export default function Content() {
           }}
         >
           Découvrez mes créations réalisées avec Fusion 360. Chaque projet
-          reflète ma passion pour la conception 3D et l'innovation.
+          reflète ma passion pour la conception 3D et l&#39;innovation.
         </Typography>
       </Box>
 
