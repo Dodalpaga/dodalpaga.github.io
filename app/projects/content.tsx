@@ -37,6 +37,13 @@ const apps = [
       'Learn how snowflakes are formed, depending on conditions such as temperature and humidity levels.',
   },
   {
+    title: 'CAD',
+    image: `/images/snowflakes.jpeg`, // Update with your actual image path
+    link: '/projects/cad', // Update with your actual routes
+    target: '',
+    description: 'My 3D models',
+  },
+  {
     title: 'Code Interpreter',
     image: `/images/cmd.jpg`, // Update with your actual image path
     link: '/projects/code_interpreter', // Update with your actual routes
