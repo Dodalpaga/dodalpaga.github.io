@@ -31,6 +31,18 @@ const nextConfig = {
       }
     );
 
+    // Add transpile rule for three/examples
+    config.module.rules.push({
+      test: /\.d.ts$/,
+      include: /node_modules\/three\/examples/,
+      use: {
+        loader: 'babel-loader',
+        options: {
+          presets: ['next/babel'],
+        },
+      },
+    });
+
     return config;
   },
 };

@@ -43,6 +43,13 @@ const apps = [
       'Explore and interact with sketches created using the p5.js framework. This app gathers and showcases various creative and interactive visual projects, providing an engaging experience for users interested in generative art and creative coding.',
   },
   {
+    title: 'Black Hole Simulator',
+    image: `/images/black_hole.jpg`, // Update with your actual image path
+    link: '/projects/black_hole', // Update with your actual routes
+    target: '',
+    description: 'A black hole simulation',
+  },
+  {
     title: 'Clustering',
     image: `/images/clustering.png`, // Update with your actual image path
     link: '/projects/clustering', // Update with your actual routes
