@@ -5,9 +5,8 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import * as THREE from 'three';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js';
-
-const loader: FBXLoader = new FBXLoader();
 
 // Interface pour les données de vos créations
 interface Creation {
@@ -48,8 +47,8 @@ const creations: Creation[] = [
     id: 2,
     title: 'Custom Arcade Machine',
     description:
-      "Une borne d'arcade entièrement personnalisée qui marie le charme rétro des années 80 avec les technologies modernes. Cette création unique propose une expérience de jeu immersive avec son écran haute définition, ses contrôles précis et son design authentique. L'esthétique vintage rencontre l'innovation technique pour créer un objet à la fois fonctionnel et décoratif, parfait pour les passionnés de gaming rétro.",
-    modelPath: '/models/Borne.fbx',
+      "Une borne d'arcade entièrement personnalisée qui marie le charme rétro des années 80 avec les technologies modernes. Cette création unique propose une expérience de jeu immersive avec son écran haute définition, ses contrôles précis et son design authentique. L'esthétique vintage rencontre l'innovation technique pour créer un objet à la fois fonctionnel et décoratif, parfait pour les passionnés de gaming rétro. Fabriquée à partir de découpes de bois et sticker custom. Couvre-chants en impression 3D et protège-écran en plexiglass.",
+    modelPath: '/models/Borne.glb',
     minDistance: 6,
     maxDistance: 10,
     ambientLightIntensity: 1.0,
@@ -141,79 +140,162 @@ const Model3D: React.FC<{
     controls.maxDistance = creation.maxDistance ?? 5;
     controlsRef.current = controls;
 
-    // Chargement du modèle FBX
-    loader.load(
-      creation.modelPath,
-      (fbx: THREE.Group) => {
-        fbx.scale.setScalar(0.01);
-        fbx.rotation.x = -Math.PI / 2;
+    // Déterminer l'extension du fichier
+    const ext = creation.modelPath.split('.').pop()?.toLowerCase();
 
-        fbx.traverse((child: THREE.Object3D) => {
-          if (child instanceof THREE.Mesh) {
-            child.castShadow = true;
-            child.receiveShadow = true;
-          }
-        });
+    // Chargement du modèle en fonction de l'extension
+    if (ext === 'fbx') {
+      const loader = new FBXLoader();
+      loader.load(
+        creation.modelPath,
+        (fbx: THREE.Group) => {
+          fbx.scale.setScalar(0.01);
+          fbx.rotation.x = -Math.PI / 2;
 
-        scene.add(fbx);
+          fbx.traverse((child: THREE.Object3D) => {
+            if (child instanceof THREE.Mesh) {
+              child.castShadow = true;
+              child.receiveShadow = true;
+            }
+          });
 
-        // Centrage automatique du modèle
-        const box = new THREE.Box3().setFromObject(fbx);
-        const center = box.getCenter(new THREE.Vector3());
-        const size = box.getSize(new THREE.Vector3());
-        fbx.position.sub(center);
+          scene.add(fbx);
 
-        // Ajuste la position Y pour que le bas du modèle touche le plan
-        const minY = box.min.y;
+          // Centrage automatique du modèle
+          const box = new THREE.Box3().setFromObject(fbx);
+          const center = box.getCenter(new THREE.Vector3());
+          const size = box.getSize(new THREE.Vector3());
+          fbx.position.sub(center);
 
-        // Appliquer les décalages X, Y, Z depuis la configuration
-        fbx.position.x += creation.xOffset ?? 0;
-        fbx.position.y += creation.yOffset ?? 0;
-        fbx.position.z += creation.zOffset ?? 0;
+          // Ajuste la position Y pour que le bas du modèle touche le plan
+          const minY = box.min.y;
 
-        // Calculer la position finale réelle du bas du modèle
-        const finalModelBox = new THREE.Box3().setFromObject(fbx);
-        const actualBottomY = finalModelBox.min.y;
+          // Appliquer les décalages X, Y, Z depuis la configuration
+          fbx.position.x += creation.xOffset ?? 0;
+          fbx.position.y += creation.yOffset ?? 0;
+          fbx.position.z += creation.zOffset ?? 0;
 
-        // Créer les plans pour les ombres
-        const planeGeometry = new THREE.PlaneGeometry(20, 20);
-        const planeMaterial = new THREE.ShadowMaterial({ opacity: 0.3 });
-        const plane = new THREE.Mesh(planeGeometry, planeMaterial);
-        plane.rotation.x = -Math.PI / 2;
-        plane.position.y = actualBottomY;
-        plane.receiveShadow = true;
-        scene.add(plane);
+          // Calculer la position finale réelle du bas du modèle
+          const finalModelBox = new THREE.Box3().setFromObject(fbx);
+          const actualBottomY = finalModelBox.min.y;
 
-        const planeGeometry2 = new THREE.PlaneGeometry(20, 20);
-        const planeMaterial2 = new THREE.ShadowMaterial({ opacity: 0.3 });
-        const plane2 = new THREE.Mesh(planeGeometry2, planeMaterial2);
-        plane2.rotation.x = -Math.PI / 2;
-        plane2.position.y = actualBottomY;
-        plane2.receiveShadow = true;
-        scene.add(plane2);
+          // Créer les plans pour les ombres
+          const planeGeometry = new THREE.PlaneGeometry(20, 20);
+          const planeMaterial = new THREE.ShadowMaterial({ opacity: 0.3 });
+          const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+          plane.rotation.x = -Math.PI / 2;
+          plane.position.y = actualBottomY;
+          plane.receiveShadow = true;
+          scene.add(plane);
 
-        // Ajouter l'AxesHelper pour afficher les axes X, Y, Z
-        // const axesHelper = new THREE.AxesHelper(
-        //   Math.max(size.x, size.y, size.z) * 0.5
-        // );
-        // axesHelper.position.set(0, 0, 0); // Axes à l'origine pour référence
-        // scene.add(axesHelper);
+          const planeGeometry2 = new THREE.PlaneGeometry(20, 20);
+          const planeMaterial2 = new THREE.ShadowMaterial({ opacity: 0.3 });
+          const plane2 = new THREE.Mesh(planeGeometry2, planeMaterial2);
+          plane2.rotation.x = -Math.PI / 2;
+          plane2.position.y = actualBottomY;
+          plane2.receiveShadow = true;
+          scene.add(plane2);
 
-        // Ajuste la position initiale de la caméra
-        const maxDim = Math.max(size.x, size.y, size.z);
-        const fov = camera.fov * (Math.PI / 180);
-        let cameraZ = Math.abs(maxDim / Math.sin(fov / 2)) * 1.2;
-        camera.position.set(0, 0, cameraZ);
-        camera.lookAt(0, 0, 0);
+          // Ajouter l'AxesHelper pour afficher les axes X, Y, Z
+          // const axesHelper = new THREE.AxesHelper(
+          //   Math.max(size.x, size.y, size.z) * 0.5
+          // );
+          // axesHelper.position.set(0, 0, 0); // Axes à l'origine pour référence
+          // scene.add(axesHelper);
 
-        controls.target.set(0, 0, 0);
-        controls.update();
-      },
-      undefined,
-      (error: unknown) => {
-        console.error('Erreur de chargement du modèle:', error);
-      }
-    );
+          // Ajuste la position initiale de la caméra
+          const maxDim = Math.max(size.x, size.y, size.z);
+          const fov = camera.fov * (Math.PI / 180);
+          let cameraZ = Math.abs(maxDim / Math.sin(fov / 2)) * 1.2;
+          camera.position.set(0, 0, cameraZ);
+          camera.lookAt(0, 0, 0);
+
+          controls.target.set(0, 0, 0);
+          controls.update();
+        },
+        undefined,
+        (error: unknown) => {
+          console.error('Erreur de chargement du modèle:', error);
+        }
+      );
+    } else if (ext === 'gltf' || ext === 'glb') {
+      const loader = new GLTFLoader();
+      loader.load(
+        creation.modelPath,
+        (gltf) => {
+          const model = gltf.scene;
+          model.scale.setScalar(10);
+          model.rotation.x = -Math.PI / 2;
+
+          model.traverse((child: THREE.Object3D) => {
+            if (child instanceof THREE.Mesh) {
+              child.castShadow = true;
+              child.receiveShadow = true;
+            }
+          });
+
+          scene.add(model);
+
+          // Centrage automatique du modèle
+          const box = new THREE.Box3().setFromObject(model);
+          const center = box.getCenter(new THREE.Vector3());
+          const size = box.getSize(new THREE.Vector3());
+          model.position.sub(center);
+
+          // Ajuste la position Y pour que le bas du modèle touche le plan
+          const minY = box.min.y;
+
+          // Appliquer les décalages X, Y, Z depuis la configuration
+          model.position.x += creation.xOffset ?? 0;
+          model.position.y += creation.yOffset ?? 0;
+          model.position.z += creation.zOffset ?? 0;
+
+          // Calculer la position finale réelle du bas du modèle
+          const finalModelBox = new THREE.Box3().setFromObject(model);
+          const actualBottomY = finalModelBox.min.y;
+
+          // Créer les plans pour les ombres
+          const planeGeometry = new THREE.PlaneGeometry(20, 20);
+          const planeMaterial = new THREE.ShadowMaterial({ opacity: 0.3 });
+          const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+          plane.rotation.x = -Math.PI / 2;
+          plane.position.y = actualBottomY;
+          plane.receiveShadow = true;
+          scene.add(plane);
+
+          const planeGeometry2 = new THREE.PlaneGeometry(20, 20);
+          const planeMaterial2 = new THREE.ShadowMaterial({ opacity: 0.3 });
+          const plane2 = new THREE.Mesh(planeGeometry2, planeMaterial2);
+          plane2.rotation.x = -Math.PI / 2;
+          plane2.position.y = actualBottomY;
+          plane2.receiveShadow = true;
+          scene.add(plane2);
+
+          // Ajouter l'AxesHelper pour afficher les axes X, Y, Z
+          // const axesHelper = new THREE.AxesHelper(
+          //   Math.max(size.x, size.y, size.z) * 0.5
+          // );
+          // axesHelper.position.set(0, 0, 0); // Axes à l'origine pour référence
+          // scene.add(axesHelper);
+
+          // Ajuste la position initiale de la caméra
+          const maxDim = Math.max(size.x, size.y, size.z);
+          const fov = camera.fov * (Math.PI / 180);
+          let cameraZ = Math.abs(maxDim / Math.sin(fov / 2)) * 1.2;
+          camera.position.set(0, 0, cameraZ);
+          camera.lookAt(0, 0, 0);
+
+          controls.target.set(0, 0, 0);
+          controls.update();
+        },
+        undefined,
+        (error: unknown) => {
+          console.error('Erreur de chargement du modèle:', error);
+        }
+      );
+    } else {
+      console.error('Format de fichier non supporté:', ext);
+    }
 
     // Boucle d'animation
     let animationId: number;
