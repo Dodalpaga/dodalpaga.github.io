@@ -193,11 +193,11 @@ const Model3D: React.FC<{
         scene.add(plane2);
 
         // Ajouter l'AxesHelper pour afficher les axes X, Y, Z
-        const axesHelper = new THREE.AxesHelper(
-          Math.max(size.x, size.y, size.z) * 0.5
-        );
-        axesHelper.position.set(0, 0, 0); // Axes à l'origine pour référence
-        scene.add(axesHelper);
+        // const axesHelper = new THREE.AxesHelper(
+        //   Math.max(size.x, size.y, size.z) * 0.5
+        // );
+        // axesHelper.position.set(0, 0, 0); // Axes à l'origine pour référence
+        // scene.add(axesHelper);
 
         // Ajuste la position initiale de la caméra
         const maxDim = Math.max(size.x, size.y, size.z);
