@@ -14,9 +14,9 @@
   right: 0;
   margin: 10px;
   padding: 10px;
-  z-index: 11;
+  z-index: 99;
   overflow: hidden;
-  width: 60px;
+  width: 60px !important;
   height: 60px;
   transition:
     width 0.5s ease,
@@ -26,7 +26,7 @@
 
 .fullscreen-button {
   position: fixed;
-  display: none;
+  display: none !important;
   top: 5px;
   right: 5px;
   z-index: 9999;
@@ -79,7 +79,7 @@
 .media-player:not(.fullscreen):hover {
   display: flex;
   flex-direction: column;
-  width: 500px;
+  width: 500px !important;
   height: 300px;
 }
 
@@ -98,7 +98,9 @@
 
 /* Optionally, ensure the fullscreen button is visible */
 .media-player:not(.fullscreen):hover .fullscreen-button {
-  display: flex;
+  display: flex !important;
+  position: fixed;
+  max-width: fit-content;
 }
 
 /* Hide the music icon when hovered or in fullscreen mode */
@@ -120,40 +122,58 @@
   height: calc(100vh - 10px - 84px) !important; /* Full screen height */
   max-height: none !important;
   max-width: none !important;
-  padding-right: 24px !important;
-  display: flex;
-  flex-direction: row;
+  padding: 24px !important;
+  display: flex !important; /* Ensure flexbox is applied */
+  flex-direction: row !important; /* Explicitly row for side-by-side layout */
+  align-items: stretch; /* Stretch children to full height */
+  justify-content: space-between; /* Distribute space between containers */
+  box-sizing: border-box; /* Ensure padding doesn't affect size */
 }
 
 .fullscreen .fullscreen-button {
-  display: flex;
+  display: flex !important;
+  position: fixed;
+  top: 5px;
+  right: 5px;
+  z-index: 1000; /* Ensure button is above other elements */
 }
 
 .fullscreen .player-container {
-  display: flex;
-  margin: 0;
-  height: 100%;
-  width: 80% !important;
-  flex-direction: column;
+  display: flex !important; /* Force flex display */
+  flex-direction: column; /* Stack cover and controls vertically */
+  width: 60% !important; /* Player takes 60% width */
+  height: 100% !important; /* Full height of parent */
+  padding: 10px;
+  box-sizing: border-box;
+  flex-shrink: 0; /* Prevent shrinking */
 }
 
 .fullscreen .playlist-container {
-  display: flex;
-  width: 20% !important;
-  max-height: 100%; /* Adjust to match your content height */
-  overflow-y: auto; /* Enable scrolling when visible */
-  padding: 10px; /* Optional: Add padding when expanded */
+  display: flex !important; /* Force flex display */
+  flex-direction: column; /* Stack playlist items vertically */
+  width: 40% !important; /* Playlist takes 40% width */
+  height: 100% !important; /* Full height of parent */
+  overflow-y: auto; /* Enable scrolling for playlist */
+  padding: 10px;
+  box-sizing: border-box;
+  flex-shrink: 0; /* Prevent shrinking */
 }
 
 .fullscreen .player-container .cover {
+  display: flex;
   width: 100%;
   padding: 10px;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
 }
 
 .fullscreen .player-container .player-controls {
-  width: 70%;
+  display: flex;
+  width: 100%;
   flex-direction: column;
+  align-items: center;
   justify-content: center;
+  flex: 1; /* Take remaining vertical space */
+  box-sizing: border-box;
 }

@@ -21,7 +21,7 @@ const apps = [
   },
   {
     title: 'CAD',
-    image: `/images/snowflakes.jpeg`, // Update with your actual image path
+    image: `/images/cad.jpg`, // Update with your actual image path
     link: '/projects/cad', // Update with your actual routes
     target: '',
     description: 'My 3D models',

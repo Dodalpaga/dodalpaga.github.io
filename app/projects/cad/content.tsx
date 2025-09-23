@@ -6,6 +6,7 @@ import Box from '@mui/material/Box';
 import * as THREE from 'three';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js';
+
 const loader: FBXLoader = new FBXLoader();
 
 // Interface pour les données de vos créations
@@ -13,15 +14,16 @@ interface Creation {
   id: number;
   title: string;
   description: string;
-  modelPath: string; // Chemin vers votre fichier FBX
-  minDistance?: number; // Zoom minimum (distance caméra)
-  maxDistance?: number; // Zoom maximum (distance caméra)
-  ambientLightIntensity?: number; // Intensité lumière ambiante
-  mainDirectionalLightIntensity?: number; // Intensité lumière directionnelle principale
-  fillLightIntensity?: number; // Intensité lumière de remplissage
-  pointLightIntensity?: number; // Intensité lumière ponctuelle
-  planeYPosition: number; // Position Y du plan pour les ombres
-  secondPlaneYPosition?: number; // Position Y du second plan pour les ombres
+  modelPath: string;
+  minDistance?: number;
+  maxDistance?: number;
+  ambientLightIntensity?: number;
+  mainDirectionalLightIntensity?: number;
+  fillLightIntensity?: number;
+  pointLightIntensity?: number;
+  xOffset?: number; // Décalage en X (défaut: 0)
+  yOffset?: number; // Décalage en Y (défaut: 0)
+  zOffset?: number; // Décalage en Z (défaut: 0)
 }
 
 // Données d'exemple - remplacez par vos vraies créations
@@ -30,16 +32,17 @@ const creations: Creation[] = [
     id: 1,
     title: 'Bass Pedalboard',
     description:
-      "Un pedalboard personnalisé conçu spécifiquement pour les bassistes. Cette création combine fonctionnalité et esthétisme avec un design épuré permettant une organisation optimale des pédales d'effets. Chaque détail a été pensé pour faciliter les changements d'effets en live tout en maintenant une stabilité parfaite. Le châssis robuste garantit une durabilité à toute épreuve lors des concerts et répétitions.",
+      "Un pedalboard personnalisé conçu spécifiquement pour les bassistes. Cette création combine fonctionnalité et esthétisme avec un design épuré permettant une organisation optimale des pédales d'effets. Chaque détail a été pensé pour faciliter les changements d'effets en live tout en maintenant une stabilité parfaite. Le châssis robuste garantit une durabilité à toute épreuve lors des concerts et répétitions. Fait à partir de découpes de bois et d'impression 3D plastique.",
     modelPath: '/models/Pedalboard.fbx',
-    minDistance: 2,
-    maxDistance: 5,
-    ambientLightIntensity: 3.0,
-    mainDirectionalLightIntensity: 4.0,
-    fillLightIntensity: 2.0,
-    pointLightIntensity: 2.4,
-    planeYPosition: 0,
-    secondPlaneYPosition: -0.7,
+    minDistance: 3,
+    maxDistance: 4,
+    ambientLightIntensity: 1.0,
+    mainDirectionalLightIntensity: 2.0,
+    fillLightIntensity: 1.0,
+    pointLightIntensity: 0.4,
+    xOffset: 0, // Décalage par défaut
+    yOffset: 0.5, // Décalage par défaut
+    zOffset: 0, // Décalage par défaut
   },
   {
     id: 2,
@@ -47,14 +50,15 @@ const creations: Creation[] = [
     description:
       "Une borne d'arcade entièrement personnalisée qui marie le charme rétro des années 80 avec les technologies modernes. Cette création unique propose une expérience de jeu immersive avec son écran haute définition, ses contrôles précis et son design authentique. L'esthétique vintage rencontre l'innovation technique pour créer un objet à la fois fonctionnel et décoratif, parfait pour les passionnés de gaming rétro.",
     modelPath: '/models/Borne.fbx',
-    minDistance: 6, // Plus loin pour un modèle potentiellement plus grand
-    maxDistance: 10, // Zoom out plus important
-    ambientLightIntensity: 2.5, // Légèrement réduit pour éviter le sur-éclairage
-    mainDirectionalLightIntensity: 3.5, // Réduit pour balance
-    fillLightIntensity: 1.5, // Réduit
-    pointLightIntensity: 2.0, // Réduit
-    planeYPosition: -1.5, // Plus bas pour un modèle plus grand
-    secondPlaneYPosition: -0.7,
+    minDistance: 6,
+    maxDistance: 10,
+    ambientLightIntensity: 1.0,
+    mainDirectionalLightIntensity: 2.0,
+    fillLightIntensity: 1.0,
+    pointLightIntensity: 0.4,
+    xOffset: 0, // Décalage par défaut
+    yOffset: 0, // Décalage par défaut
+    zOffset: 0, // Décalage par défaut
   },
 ];
 
@@ -120,33 +124,30 @@ const Model3D: React.FC<{
       100
     );
     pointLight.position.set(0, 5, 3);
-    pointLight.castShadow = true;
+    // pointLight.castShadow = true;
     scene.add(pointLight);
 
-    // Configuration des contrôles TrackballControls pour une rotation libre
+    // Configuration des contrôles TrackballControls
     const controls = new TrackballControls(camera, renderer.domElement);
     controls.rotateSpeed = 1.0;
     controls.zoomSpeed = 1.2;
     controls.panSpeed = 0.8;
     controls.noRotate = false;
     controls.noZoom = false;
-    controls.noPan = true; // Pan désactivé
+    controls.noPan = true;
     controls.staticMoving = false;
     controls.dynamicDampingFactor = 0.05;
-    controls.minDistance = creation.minDistance ?? 1; // Zoom minimum spécifique
-    controls.maxDistance = creation.maxDistance ?? 5; // Zoom maximum spécifique
+    controls.minDistance = creation.minDistance ?? 1;
+    controls.maxDistance = creation.maxDistance ?? 5;
     controlsRef.current = controls;
 
     // Chargement du modèle FBX
     loader.load(
       creation.modelPath,
       (fbx: THREE.Group) => {
-        fbx.scale.setScalar(0.01); // Ajustez selon la taille de vos modèles
-
-        // Rotation de 90° en arrière autour de l'axe X pour aligner le "front" vers l'avant (positif Z)
+        fbx.scale.setScalar(0.01);
         fbx.rotation.x = -Math.PI / 2;
 
-        // Configuration des ombres pour tous les meshes
         fbx.traverse((child: THREE.Object3D) => {
           if (child instanceof THREE.Mesh) {
             child.castShadow = true;
@@ -156,47 +157,55 @@ const Model3D: React.FC<{
 
         scene.add(fbx);
 
-        // Centrage automatique du modèle pour ajuster le centre de rotation
+        // Centrage automatique du modèle
         const box = new THREE.Box3().setFromObject(fbx);
         const center = box.getCenter(new THREE.Vector3());
         const size = box.getSize(new THREE.Vector3());
-        fbx.position.sub(center); // Centre le modèle à l'origine
+        fbx.position.sub(center);
 
         // Ajuste la position Y pour que le bas du modèle touche le plan
-        const minY = box.min.y; // Bas du modèle après rotation et centrage
-        fbx.position.y -= minY - creation.planeYPosition;
+        const minY = box.min.y;
+
+        // Appliquer les décalages X, Y, Z depuis la configuration
+        fbx.position.x += creation.xOffset ?? 0;
+        fbx.position.y += creation.yOffset ?? 0;
+        fbx.position.z += creation.zOffset ?? 0;
 
         // Calculer la position finale réelle du bas du modèle
         const finalModelBox = new THREE.Box3().setFromObject(fbx);
         const actualBottomY = finalModelBox.min.y;
 
-        // Créer les plans APRÈS avoir positionné le modèle, à la position réelle du bas du modèle
-        // Premier plan de sol invisible pour recevoir les ombres
+        // Créer les plans pour les ombres
         const planeGeometry = new THREE.PlaneGeometry(20, 20);
         const planeMaterial = new THREE.ShadowMaterial({ opacity: 0.3 });
         const plane = new THREE.Mesh(planeGeometry, planeMaterial);
         plane.rotation.x = -Math.PI / 2;
-        plane.position.y = actualBottomY; // Position réelle du bas du modèle
+        plane.position.y = actualBottomY;
         plane.receiveShadow = true;
         scene.add(plane);
 
-        // Second plan de sol invisible pour recevoir les ombres (même position)
         const planeGeometry2 = new THREE.PlaneGeometry(20, 20);
         const planeMaterial2 = new THREE.ShadowMaterial({ opacity: 0.3 });
         const plane2 = new THREE.Mesh(planeGeometry2, planeMaterial2);
         plane2.rotation.x = -Math.PI / 2;
-        plane2.position.y = actualBottomY; // Même position que plane
+        plane2.position.y = actualBottomY;
         plane2.receiveShadow = true;
         scene.add(plane2);
 
-        // Ajuste la position initiale de la caméra en fonction de la taille du modèle
+        // Ajouter l'AxesHelper pour afficher les axes X, Y, Z
+        const axesHelper = new THREE.AxesHelper(
+          Math.max(size.x, size.y, size.z) * 0.5
+        );
+        axesHelper.position.set(0, 0, 0); // Axes à l'origine pour référence
+        scene.add(axesHelper);
+
+        // Ajuste la position initiale de la caméra
         const maxDim = Math.max(size.x, size.y, size.z);
         const fov = camera.fov * (Math.PI / 180);
-        let cameraZ = Math.abs(maxDim / Math.sin(fov / 2)) * 1.2; // Légère marge
+        let cameraZ = Math.abs(maxDim / Math.sin(fov / 2)) * 1.2;
         camera.position.set(0, 0, cameraZ);
         camera.lookAt(0, 0, 0);
 
-        // Définit le centre de rotation (target) des contrôles à l'origine
         controls.target.set(0, 0, 0);
         controls.update();
       },
@@ -224,6 +233,8 @@ const Model3D: React.FC<{
       }
       if (controlsRef.current) {
         (controlsRef.current as any).dispose();
+        controlsRef.current.removeEventListener('start', () => {});
+        controlsRef.current.removeEventListener('end', () => {});
       }
       if (containerRef.current && renderer.domElement) {
         containerRef.current.removeChild(renderer.domElement);
@@ -261,7 +272,7 @@ const CreationRow: React.FC<{ creation: Creation; isReversed: boolean }> = ({
         flexDirection: isReversed ? 'row-reverse' : 'row',
         alignItems: 'center',
         gap: 4,
-        mb: 6,
+        mb: 2,
         width: '100%',
         '@media (max-width: 1000px)': {
           flexDirection: 'column',
@@ -289,7 +300,6 @@ const CreationRow: React.FC<{ creation: Creation; isReversed: boolean }> = ({
           variant="h5"
           gutterBottom
           sx={{
-            color: '#333',
             fontWeight: 600,
             mb: 2,
           }}
@@ -299,7 +309,6 @@ const CreationRow: React.FC<{ creation: Creation; isReversed: boolean }> = ({
         <Typography
           variant="body1"
           sx={{
-            color: '#666',
             lineHeight: 1.6,
             fontSize: '1.1rem',
           }}
@@ -325,13 +334,11 @@ export default function Content() {
       }}
     >
       {/* En-tête */}
-      <Box sx={{ textAlign: 'center', mb: 6 }}>
+      <Box sx={{ textAlign: 'center', mb: 2 }}>
         <Typography
           variant="h3"
           gutterBottom
           sx={{
-            mb: 2,
-            color: '#333',
             fontWeight: 700,
           }}
         >
@@ -340,8 +347,6 @@ export default function Content() {
         <Typography
           variant="body1"
           sx={{
-            mb: 4,
-            color: '#666',
             fontSize: '1.2rem',
             maxWidth: '600px',
             mx: 'auto',
