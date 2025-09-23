@@ -44,7 +44,7 @@ const apps = [
   },
   {
     title: 'Black Hole Simulator',
-    image: `/images/black_hole.jpg`, // Update with your actual image path
+    image: `/images/black_hole.png`, // Update with your actual image path
     link: '/projects/black_hole', // Update with your actual routes
     target: '',
     description: 'A black hole simulation',
