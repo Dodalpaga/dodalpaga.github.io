@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -79,19 +79,50 @@ const creations: Creation[] = [
   },
 ];
 
+// Hook pour détecter les dimensions du conteneur
+const useContainerSize = (ref: React.RefObject<HTMLDivElement>) => {
+  const [size, setSize] = useState({ width: 600, height: 400 });
+
+  useEffect(() => {
+    if (!ref.current) return;
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        const { width } = entry.contentRect;
+        // Maintenir un ratio 3:2 (600:400)
+        const height = Math.round(width * (2 / 3));
+        setSize({ width: Math.round(width), height });
+      }
+    });
+
+    resizeObserver.observe(ref.current);
+
+    // Définir la taille initiale
+    const initialWidth = ref.current.offsetWidth;
+    const initialHeight = Math.round(initialWidth * (2 / 3));
+    setSize({ width: initialWidth, height: initialHeight });
+
+    return () => resizeObserver.disconnect();
+  }, [ref]);
+
+  return size;
+};
+
 // Composant pour afficher un modèle 3D
 const Model3D: React.FC<{
   creation: Creation;
-  width: number;
-  height: number;
-}> = ({ creation, width, height }) => {
+}> = ({ creation }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const canvasContainerRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<THREE.Scene | null>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
   const controlsRef = useRef<TrackballControls | null>(null);
+  const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
+
+  const { width, height } = useContainerSize(containerRef);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!canvasContainerRef.current) return;
 
     // Configuration de la scène
     const scene = new THREE.Scene();
@@ -106,6 +137,7 @@ const Model3D: React.FC<{
       creation.cameraY ?? 0,
       creation.cameraZ ?? 5
     );
+    cameraRef.current = camera;
 
     // Configuration du renderer
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -114,7 +146,7 @@ const Model3D: React.FC<{
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     rendererRef.current = renderer;
 
-    containerRef.current.appendChild(renderer.domElement);
+    canvasContainerRef.current.appendChild(renderer.domElement);
 
     // Éclairage avec intensités spécifiques à la création
     const ambientLight = new THREE.AmbientLight(
@@ -211,13 +243,6 @@ const Model3D: React.FC<{
           plane.receiveShadow = true;
           scene.add(plane);
 
-          // Ajouter l'AxesHelper pour afficher les axes X, Y, Z
-          // const axesHelper = new THREE.AxesHelper(
-          //   Math.max(size.x, size.y, size.z) * 0.5
-          // );
-          // axesHelper.position.set(0, 0, 0); // Axes à l'origine pour référence
-          // scene.add(axesHelper);
-
           // Ajuste la cible des contrôles
           controls.target.set(0, 0, 0);
           controls.update();
@@ -273,13 +298,6 @@ const Model3D: React.FC<{
           plane.receiveShadow = true;
           scene.add(plane);
 
-          // Ajouter l'AxesHelper pour afficher les axes X, Y, Z
-          // const axesHelper = new THREE.AxesHelper(
-          //   Math.max(size.x, size.y, size.z) * 0.5
-          // );
-          // axesHelper.position.set(0, 0, 0); // Axes à l'origine pour référence
-          // scene.add(axesHelper);
-
           // Ajuste la cible des contrôles
           controls.target.set(0, 0, 0);
           controls.update();
@@ -314,24 +332,41 @@ const Model3D: React.FC<{
         controlsRef.current.removeEventListener('start', () => {});
         controlsRef.current.removeEventListener('end', () => {});
       }
-      if (containerRef.current && renderer.domElement) {
-        containerRef.current.removeChild(renderer.domElement);
+      if (canvasContainerRef.current && renderer.domElement) {
+        canvasContainerRef.current.removeChild(renderer.domElement);
       }
       renderer.dispose();
     };
   }, [creation, width, height]);
 
+  // Effet pour mettre à jour la taille du renderer et de la caméra quand les dimensions changent
+  useEffect(() => {
+    if (rendererRef.current && cameraRef.current) {
+      rendererRef.current.setSize(width, height);
+      cameraRef.current.aspect = width / height;
+      cameraRef.current.updateProjectionMatrix();
+    }
+  }, [width, height]);
+
   return (
     <div
       ref={containerRef}
       style={{
-        width: `${width}px`,
-        height: `${height}px`,
-        borderRadius: '8px',
-        overflow: 'hidden',
-        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+        width: '100%',
+        maxWidth: '600px', // Taille maximale sur grands écrans
       }}
-    />
+    >
+      <div
+        ref={canvasContainerRef}
+        style={{
+          width: '100%',
+          height: `${height}px`,
+          borderRadius: '8px',
+          overflow: 'hidden',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+        }}
+      />
+    </div>
   );
 };
 
@@ -340,9 +375,6 @@ const CreationRow: React.FC<{ creation: Creation; isReversed: boolean }> = ({
   creation,
   isReversed,
 }) => {
-  const modelWidth = 600;
-  const modelHeight = 400;
-
   return (
     <Box
       sx={{
@@ -359,8 +391,15 @@ const CreationRow: React.FC<{ creation: Creation; isReversed: boolean }> = ({
       }}
     >
       {/* Modèle 3D */}
-      <Box sx={{ flexShrink: 0 }}>
-        <Model3D creation={creation} width={modelWidth} height={modelHeight} />
+      <Box
+        sx={{
+          flexShrink: 0,
+          width: { xs: '100%', md: '600px' }, // 100% sur mobile, 600px sur desktop
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
+        <Model3D creation={creation} />
       </Box>
 
       {/* Contenu textuel */}
@@ -412,7 +451,7 @@ export default function Content() {
       }}
     >
       {/* En-tête */}
-      <Box sx={{ textAlign: 'center', mb: 2 }}>
+      <Box sx={{ textAlign: 'center', mb: 2, width: '100%' }}>
         <Typography
           variant="h3"
           gutterBottom
@@ -436,7 +475,7 @@ export default function Content() {
       </Box>
 
       {/* Grille des créations */}
-      <Box>
+      <Box sx={{ width: '100%' }}>
         {creations.map((creation, index) => (
           <CreationRow
             key={creation.id}
