@@ -23,6 +23,12 @@ interface Creation {
   xOffset?: number; // Décalage en X (défaut: 0)
   yOffset?: number; // Décalage en Y (défaut: 0)
   zOffset?: number; // Décalage en Z (défaut: 0)
+  rotationX?: number; // Rotation en X (défaut: 0)
+  rotationY?: number; // Rotation en Y (défaut: 0)
+  rotationZ?: number; // Rotation en Z (défaut: 0)
+  cameraX?: number; // Position initiale caméra X (défaut: 0)
+  cameraY?: number; // Position initiale caméra Y (défaut: 0)
+  cameraZ?: number; // Position initiale caméra Z (défaut: 5)
 }
 
 // Données d'exemple - remplacez par vos vraies créations
@@ -39,9 +45,15 @@ const creations: Creation[] = [
     mainDirectionalLightIntensity: 2.0,
     fillLightIntensity: 1.0,
     pointLightIntensity: 0.4,
-    xOffset: 0, // Décalage par défaut
-    yOffset: 0.5, // Décalage par défaut
-    zOffset: 0, // Décalage par défaut
+    xOffset: 0,
+    yOffset: 0.5,
+    zOffset: 0,
+    rotationX: -Math.PI / 2, // Rotation par défaut
+    rotationY: 0,
+    rotationZ: 0,
+    cameraX: 5, // Position caméra par défaut
+    cameraY: 5,
+    cameraZ: 5,
   },
   {
     id: 2,
@@ -55,9 +67,15 @@ const creations: Creation[] = [
     mainDirectionalLightIntensity: 2.0,
     fillLightIntensity: 1.0,
     pointLightIntensity: 0.4,
-    xOffset: 0, // Décalage par défaut
-    yOffset: 0, // Décalage par défaut
-    zOffset: 0, // Décalage par défaut
+    xOffset: 0,
+    yOffset: 0,
+    zOffset: 0,
+    rotationX: -Math.PI / 2, // Rotation par défaut
+    rotationY: 0,
+    rotationZ: 0,
+    cameraX: -5, // Position caméra par défaut
+    cameraY: 1,
+    cameraZ: 0.7,
   },
 ];
 
@@ -82,7 +100,12 @@ const Model3D: React.FC<{
 
     // Configuration de la caméra
     const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-    camera.position.z = 5;
+    // Utiliser les positions de caméra depuis la configuration
+    camera.position.set(
+      creation.cameraX ?? 0,
+      creation.cameraY ?? 0,
+      creation.cameraZ ?? 5
+    );
 
     // Configuration du renderer
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -123,7 +146,6 @@ const Model3D: React.FC<{
       100
     );
     pointLight.position.set(0, 5, 3);
-    // pointLight.castShadow = true;
     scene.add(pointLight);
 
     // Configuration des contrôles TrackballControls
@@ -150,7 +172,11 @@ const Model3D: React.FC<{
         creation.modelPath,
         (fbx: THREE.Group) => {
           fbx.scale.setScalar(0.01);
-          fbx.rotation.x = -Math.PI / 2;
+
+          // Appliquer les rotations depuis la configuration
+          fbx.rotation.x = creation.rotationX ?? 0;
+          fbx.rotation.y = creation.rotationY ?? 0;
+          fbx.rotation.z = creation.rotationZ ?? 0;
 
           fbx.traverse((child: THREE.Object3D) => {
             if (child instanceof THREE.Mesh) {
@@ -166,9 +192,6 @@ const Model3D: React.FC<{
           const center = box.getCenter(new THREE.Vector3());
           const size = box.getSize(new THREE.Vector3());
           fbx.position.sub(center);
-
-          // Ajuste la position Y pour que le bas du modèle touche le plan
-          const minY = box.min.y;
 
           // Appliquer les décalages X, Y, Z depuis la configuration
           fbx.position.x += creation.xOffset ?? 0;
@@ -188,14 +211,6 @@ const Model3D: React.FC<{
           plane.receiveShadow = true;
           scene.add(plane);
 
-          const planeGeometry2 = new THREE.PlaneGeometry(20, 20);
-          const planeMaterial2 = new THREE.ShadowMaterial({ opacity: 0.3 });
-          const plane2 = new THREE.Mesh(planeGeometry2, planeMaterial2);
-          plane2.rotation.x = -Math.PI / 2;
-          plane2.position.y = actualBottomY;
-          plane2.receiveShadow = true;
-          scene.add(plane2);
-
           // Ajouter l'AxesHelper pour afficher les axes X, Y, Z
           // const axesHelper = new THREE.AxesHelper(
           //   Math.max(size.x, size.y, size.z) * 0.5
@@ -203,13 +218,7 @@ const Model3D: React.FC<{
           // axesHelper.position.set(0, 0, 0); // Axes à l'origine pour référence
           // scene.add(axesHelper);
 
-          // Ajuste la position initiale de la caméra
-          const maxDim = Math.max(size.x, size.y, size.z);
-          const fov = camera.fov * (Math.PI / 180);
-          let cameraZ = Math.abs(maxDim / Math.sin(fov / 2)) * 1.2;
-          camera.position.set(0, 0, cameraZ);
-          camera.lookAt(0, 0, 0);
-
+          // Ajuste la cible des contrôles
           controls.target.set(0, 0, 0);
           controls.update();
         },
@@ -225,7 +234,11 @@ const Model3D: React.FC<{
         (gltf) => {
           const model = gltf.scene;
           model.scale.setScalar(10);
-          model.rotation.x = -Math.PI / 2;
+
+          // Appliquer les rotations depuis la configuration
+          model.rotation.x = creation.rotationX ?? 0;
+          model.rotation.y = creation.rotationY ?? 0;
+          model.rotation.z = creation.rotationZ ?? 0;
 
           model.traverse((child: THREE.Object3D) => {
             if (child instanceof THREE.Mesh) {
@@ -241,9 +254,6 @@ const Model3D: React.FC<{
           const center = box.getCenter(new THREE.Vector3());
           const size = box.getSize(new THREE.Vector3());
           model.position.sub(center);
-
-          // Ajuste la position Y pour que le bas du modèle touche le plan
-          const minY = box.min.y;
 
           // Appliquer les décalages X, Y, Z depuis la configuration
           model.position.x += creation.xOffset ?? 0;
@@ -263,14 +273,6 @@ const Model3D: React.FC<{
           plane.receiveShadow = true;
           scene.add(plane);
 
-          const planeGeometry2 = new THREE.PlaneGeometry(20, 20);
-          const planeMaterial2 = new THREE.ShadowMaterial({ opacity: 0.3 });
-          const plane2 = new THREE.Mesh(planeGeometry2, planeMaterial2);
-          plane2.rotation.x = -Math.PI / 2;
-          plane2.position.y = actualBottomY;
-          plane2.receiveShadow = true;
-          scene.add(plane2);
-
           // Ajouter l'AxesHelper pour afficher les axes X, Y, Z
           // const axesHelper = new THREE.AxesHelper(
           //   Math.max(size.x, size.y, size.z) * 0.5
@@ -278,13 +280,7 @@ const Model3D: React.FC<{
           // axesHelper.position.set(0, 0, 0); // Axes à l'origine pour référence
           // scene.add(axesHelper);
 
-          // Ajuste la position initiale de la caméra
-          const maxDim = Math.max(size.x, size.y, size.z);
-          const fov = camera.fov * (Math.PI / 180);
-          let cameraZ = Math.abs(maxDim / Math.sin(fov / 2)) * 1.2;
-          camera.position.set(0, 0, cameraZ);
-          camera.lookAt(0, 0, 0);
-
+          // Ajuste la cible des contrôles
           controls.target.set(0, 0, 0);
           controls.update();
         },
