@@ -4,7 +4,6 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import * as THREE from 'three';
-
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js';
 const loader: FBXLoader = new FBXLoader();
@@ -202,7 +201,7 @@ const Model3D: React.FC<{
         controls.update();
       },
       undefined,
-      (error: ErrorEvent) => {
+      (error: unknown) => {
         console.error('Erreur de chargement du modèle:', error);
       }
     );

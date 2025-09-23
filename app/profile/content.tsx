@@ -56,6 +56,16 @@ import {
 } from 'react-icons/si';
 import { VscGraphScatter } from 'react-icons/vsc';
 import { GiHistogram } from 'react-icons/gi';
+import type { IconType } from 'react-icons';
+
+// Helper component to safely render icons
+const SafeIcon: React.FC<{ Icon: IconType; [key: string]: any }> = ({
+  Icon,
+  ...props
+}) => {
+  const IconComponent = Icon as React.ComponentType<any>;
+  return <IconComponent {...props} />;
+};
 
 // Helper function to compute the years spent
 const getYearsSpent = (startDateString: string) => {
@@ -408,17 +418,26 @@ export default function Content() {
                 }}
               >
                 <Typography variant="h6">Scientific Development</Typography>
-                <CustomChip label="Pandas" icons={[<SiPandas key="skill" />]} />
-                <CustomChip label="Numpy" icons={[<SiNumpy key="skill" />]} />
+                <CustomChip
+                  label="Pandas"
+                  icons={[<SafeIcon Icon={SiPandas} key="skill" />]}
+                />
+                <CustomChip
+                  label="Numpy"
+                  icons={[<SafeIcon Icon={SiNumpy} key="skill" />]}
+                />
                 <CustomChip
                   label="Pytorch"
-                  icons={[<SiPytorch key="skill" />]}
+                  icons={[<SafeIcon Icon={SiPytorch} key="skill" />]}
                 />
                 <CustomChip
                   label="Streamlit"
-                  icons={[<SiStreamlit key="skill" />]}
+                  icons={[<SafeIcon Icon={SiStreamlit} key="skill" />]}
                 />
-                <CustomChip label="Folium" icons={[<SiFolium key="skill" />]} />
+                <CustomChip
+                  label="Folium"
+                  icons={[<SafeIcon Icon={SiFolium} key="skill" />]}
+                />
               </Box>
               <Box
                 style={{
@@ -433,24 +452,30 @@ export default function Content() {
                 <Typography variant="h6">Software Development</Typography>
                 <CustomChip
                   label="Django / FastAPI"
-                  icons={[<SiFastapi key="skill" />, <SiDjango key="skill" />]}
+                  icons={[
+                    <SafeIcon Icon={SiFastapi} key="skill1" />,
+                    <SafeIcon Icon={SiDjango} key="skill2" />,
+                  ]}
                 />
-                <CustomChip label="Docker" icons={[<SiDocker key="skill" />]} />
+                <CustomChip
+                  label="Docker"
+                  icons={[<SafeIcon Icon={SiDocker} key="skill" />]}
+                />
                 <CustomChip
                   label="SQL"
-                  icons={[<SiPostgresql key="skill" />]}
+                  icons={[<SafeIcon Icon={SiPostgresql} key="skill" />]}
                 />
                 <CustomChip
                   label="Prometheus"
-                  icons={[<SiPrometheus key="skill" />]}
+                  icons={[<SafeIcon Icon={SiPrometheus} key="skill" />]}
                 />
                 <CustomChip
                   label="Postman"
-                  icons={[<SiPostman key="skill" />]}
+                  icons={[<SafeIcon Icon={SiPostman} key="skill" />]}
                 />
                 <CustomChip
                   label="Jenkins"
-                  icons={[<SiJenkins key="skill" />]}
+                  icons={[<SafeIcon Icon={SiJenkins} key="skill" />]}
                 />
               </Box>
               <Box
@@ -466,15 +491,15 @@ export default function Content() {
                 <Typography variant="h6">Artificial Intelligence</Typography>
                 <CustomChip
                   label="Scikit Learn"
-                  icons={[<SiScikitlearn key="skill" />]}
+                  icons={[<SafeIcon Icon={SiScikitlearn} key="skill" />]}
                 />
                 <CustomChip
                   label="Tensorflow"
-                  icons={[<SiTensorflow key="skill" />]}
+                  icons={[<SafeIcon Icon={SiTensorflow} key="skill" />]}
                 />
                 <CustomChip
                   label="LangChain"
-                  icons={[<SiLangchain key="skill" />]}
+                  icons={[<SafeIcon Icon={SiLangchain} key="skill" />]}
                 />
               </Box>
               <Box
@@ -490,12 +515,15 @@ export default function Content() {
                 <Typography variant="h6">Frontend</Typography>
                 <CustomChip
                   label="Next.js"
-                  icons={[<SiNextdotjs key="skill" />]}
+                  icons={[<SafeIcon Icon={SiNextdotjs} key="skill" />]}
                 />
-                <CustomChip label="React" icons={[<SiReact key="skill" />]} />
+                <CustomChip
+                  label="React"
+                  icons={[<SafeIcon Icon={SiReact} key="skill" />]}
+                />
                 <CustomChip
                   label="Grafana"
-                  icons={[<SiGrafana key="skill" />]}
+                  icons={[<SafeIcon Icon={SiGrafana} key="skill" />]}
                 />
               </Box>
               <Box
@@ -511,12 +539,15 @@ export default function Content() {
                 <Typography variant="h6">Data Management</Typography>
                 <CustomChip
                   label="ElasticSearch"
-                  icons={[<SiElasticsearch key="skill" />]}
+                  icons={[<SafeIcon Icon={SiElasticsearch} key="skill" />]}
                 />
-                <CustomChip label="Kibana" icons={[<SiKibana key="skill" />]} />
+                <CustomChip
+                  label="Kibana"
+                  icons={[<SafeIcon Icon={SiKibana} key="skill" />]}
+                />
                 <CustomChip
                   label="Logstash"
-                  icons={[<SiLogstash key="skill" />]}
+                  icons={[<SafeIcon Icon={SiLogstash} key="skill" />]}
                 />
               </Box>
               <Box
@@ -532,13 +563,16 @@ export default function Content() {
                 <Typography variant="h6">Projects Management & CICD</Typography>
                 <CustomChip
                   label="GitLab (& CI)"
-                  icons={[<SiGitlab key="skill" />]}
+                  icons={[<SafeIcon Icon={SiGitlab} key="skill" />]}
                 />
                 <CustomChip
                   label="Confluence"
-                  icons={[<SiConfluence key="skill" />]}
+                  icons={[<SafeIcon Icon={SiConfluence} key="skill" />]}
                 />
-                <CustomChip label="JIRA" icons={[<SiJira key="skill" />]} />
+                <CustomChip
+                  label="JIRA"
+                  icons={[<SafeIcon Icon={SiJira} key="skill" />]}
+                />
               </Box>
             </Stack>
           </div>
@@ -675,11 +709,11 @@ export default function Content() {
                 <Typography variant="h6">Embedded Systems</Typography>
                 <CustomChip
                   label="Raspberry Pi"
-                  icons={[<SiRaspberrypi key="skill" />]}
+                  icons={[<SafeIcon Icon={SiRaspberrypi} key="skill" />]}
                 />
                 <CustomChip
                   label="Jetson Nano"
-                  icons={[<SiNvidia key="skill" />]}
+                  icons={[<SafeIcon Icon={SiNvidia} key="skill" />]}
                 />
               </Box>
               <Box
@@ -693,14 +727,17 @@ export default function Content() {
                 }}
               >
                 <Typography variant="h6">Machine Learning</Typography>
-                <CustomChip label="OpenCV" icons={[<SiOpencv key="skill" />]} />
+                <CustomChip
+                  label="OpenCV"
+                  icons={[<SafeIcon Icon={SiOpencv} key="skill" />]}
+                />
                 <CustomChip
                   label="Data Analysis"
-                  icons={[<VscGraphScatter key="skill" />]}
+                  icons={[<SafeIcon Icon={VscGraphScatter} key="skill" />]}
                 />
                 <CustomChip
                   label="Predictive Models"
-                  icons={[<GiHistogram key="skill" />]}
+                  icons={[<SafeIcon Icon={GiHistogram} key="skill" />]}
                 />
               </Box>
               <Box
@@ -716,11 +753,11 @@ export default function Content() {
                 <Typography variant="h6">Data Visualization</Typography>
                 <CustomChip
                   label="Dash Plotly"
-                  icons={[<SiPlotly key="skill" />]}
+                  icons={[<SafeIcon Icon={SiPlotly} key="skill" />]}
                 />
                 <CustomChip
                   label="Grafana"
-                  icons={[<SiGrafana key="skill" />]}
+                  icons={[<SafeIcon Icon={SiGrafana} key="skill" />]}
                 />
               </Box>
             </Stack>
