@@ -38,7 +38,7 @@ const creations: Creation[] = [
     title: 'Bass Pedalboard',
     description:
       "Un pedalboard personnalisé conçu spécifiquement pour les bassistes. Cette création combine fonctionnalité et esthétisme avec un design épuré permettant une organisation optimale des pédales d'effets. Chaque détail a été pensé pour faciliter les changements d'effets en live tout en maintenant une stabilité parfaite. Le châssis robuste garantit une durabilité à toute épreuve lors des concerts et répétitions. Fait à partir de découpes de bois et d'impression 3D plastique.",
-    modelPath: '/models/Pedalboard.fbx',
+    modelPath: '/models/Bass Pedalboard.fbx',
     minDistance: 3,
     maxDistance: 4,
     ambientLightIntensity: 1.0,
