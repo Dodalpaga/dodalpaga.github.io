@@ -46,7 +46,7 @@ const creations: Creation[] = [
     fillLightIntensity: 1.0,
     pointLightIntensity: 0.4,
     xOffset: 0,
-    yOffset: 0.5,
+    yOffset: -0.3,
     zOffset: 0,
     rotationX: -Math.PI / 2, // Rotation par défaut
     rotationY: 0,
