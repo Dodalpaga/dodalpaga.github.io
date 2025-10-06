@@ -1,4 +1,3 @@
-// content.tsx
 'use client';
 import * as React from 'react';
 import Container from '@mui/material/Container';
@@ -19,7 +18,7 @@ import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import CodeIcon from '@mui/icons-material/Code';
-import '../globals.css'; // Ensure global styles are correctly imported
+import '../globals.css';
 import './styles.css';
 import { useThemeContext } from '@/context/ThemeContext';
 import InfoCard from '@/components/infocard';
@@ -102,7 +101,7 @@ export default function Content() {
   const totalExperience = getYearsSpent('2021-09-01');
 
   // Define foreground colors based on the theme
-  const foreground = theme === 'dark' ? 'ffffff' : '000000'; // Adjust colors as necessary
+  const foreground = theme === 'dark' ? 'ffffff' : '000000';
 
   return (
     <Container maxWidth={false} className="content-container">
@@ -121,9 +120,9 @@ export default function Content() {
                 image={`/images/pp.jpeg`}
                 alt={'Profile Picture'}
                 sx={{
-                  height: '100%', // Adjust height as needed
-                  objectFit: 'contain', // Maintain aspect ratio and fit within the card
-                  objectPosition: 'center', // Center image horizontally and vertically
+                  height: '100%',
+                  objectFit: 'contain',
+                  objectPosition: 'center',
                 }}
               />
             </Card>
@@ -138,7 +137,6 @@ export default function Content() {
         </div>
 
         <div className="left-container">
-          {' '}
           <Typography className="title" variant="h5" gutterBottom>
             Get in touch
           </Typography>
@@ -163,7 +161,6 @@ export default function Content() {
               <Chip
                 icon={<AlternateEmailIcon />}
                 label="dorian.voydie@gmail.com"
-                // Onclick send mail to the email
                 onClick={() => window.open('mailto:dorian.voydie@gmail.com')}
               />
               <Chip
@@ -218,6 +215,18 @@ export default function Content() {
               <Chip label="Next.js" variant="outlined" />
               <Chip label="Typescript" variant="outlined" />
             </Stack>
+            <Image
+              src="/images/capsule/Capsule.png"
+              alt="Capsule"
+              width={0}
+              height={0}
+              style={{
+                width: '60%',
+                height: 'auto',
+                display: 'block',
+                margin: '1rem auto',
+              }}
+            />
           </div>
           <Typography className="title" variant="h5" gutterBottom>
             Coding Stats
@@ -228,18 +237,12 @@ export default function Content() {
             useFlexGap
             sx={{ flexWrap: 'wrap' }}
           >
-            <Image
-              src={`https://github-readme-stats.vercel.app/api?username=Dodalpaga&title_color=${encodeURIComponent(foreground)}&text_color=${encodeURIComponent(foreground)}&hide_rank=true&include_all_commits=true&show_icons=true&theme=transparent&count_private=true&hide=contribs,issues`}
-              alt="GitHub Stats"
-              width={500}
-              height={200}
-            />
-            <Image
-              src={`https://github-readme-stats.vercel.app/api/top-langs/?username=Dodalpaga&title_color=${encodeURIComponent(foreground)}&text_color=${encodeURIComponent(foreground)}&layout=compact&theme=transparent&count_private=true&hide=c,java,c%2B%2B,css,procfile`}
+            {/* <Image
+              src={`https://github-readme-stats.vercel.app/api/top-langs/?username=Dodalpaga&title_color=${encodeURIComponent(foreground)}&text_color=${encodeURIComponent(foreground)}&layout=compact&theme=transparent&count_private=true&hide=java,css,procfile,html,jupyter%20notebook`}
               alt="Top Languages"
               width={500}
               height={200}
-            />
+            /> */}
             <Image
               src={`https://github-readme-streak-stats.herokuapp.com?user=Dodalpaga&theme=transparent&currStreakLabel=${encodeURIComponent(foreground)}&currStreakNum=EB5454&fire=EB5454&ring=${encodeURIComponent(foreground)}&sideNums=${encodeURIComponent(foreground)}&sideLabels=${encodeURIComponent(foreground)}`}
               alt="GitHub Streak"
@@ -254,8 +257,8 @@ export default function Content() {
       <div className="right-scrollable">
         {/* Experience Section */}
         <section id="profile-section">
-          <Typography variant="h4">Experience</Typography>
-          <Typography variant="body1" gutterBottom sx={titleStyle}>
+          <Typography variant="h3">Experience</Typography>
+          <Typography variant="body1" sx={titleStyle}>
             ({totalExperience}+ years)
           </Typography>
 
@@ -266,11 +269,15 @@ export default function Content() {
               yearsSpent={yearsSpent}
               companyName="Thales Services Numériques"
               location="Toulouse Area, France"
-              imageSrc="/images/thales.png"
+              imageSrc={
+                theme === 'dark'
+                  ? '/images/thales-inverted.png'
+                  : '/images/thales.png'
+              }
             />
             {/* Description */}
             <Typography variant="body1">
-              Participated in various{' '}
+              Participated in multiple{' '}
               <Typography component="span" sx={{ fontWeight: 'bold' }}>
                 international projects
               </Typography>
@@ -278,21 +285,20 @@ export default function Content() {
               <Typography component="span" sx={{ fontWeight: 'bold' }}>
                 Galileo
               </Typography>{' '}
-              system software, and then as a Python Developer on the ground
-              segment of the{' '}
+              navigation system software, then as a Data Scientist on the{' '}
               <Typography component="span" sx={{ fontWeight: 'bold' }}>
                 Euclid
               </Typography>{' '}
-              satellite. I contributed to numerous proposal writings and studies
-              for{' '}
+              satellite ground segment for{' '}
               <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                CNES
+                CNES - Centre National d’Etudes Spatiales
               </Typography>{' '}
-              and achieved a strong{' '}
+              (Toulouse, France). Developed strong expertise in{' '}
               <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                mastery of Python
+                Data Science, Python, LLM, and AI
               </Typography>
-              .
+              , including participation in competitive coding challenges (ranked
+              4/200 in corporate competitions).
             </Typography>
 
             {/* Detailed responsibilities */}
@@ -301,101 +307,126 @@ export default function Content() {
                 display: 'flex',
                 flexDirection: 'column',
                 width: 'calc(100% - 40px)',
-                marginLeft: 'auto' /* Pushes the List to the right */,
+                marginLeft: 'auto',
               }}
             >
               <ListItem sx={descriptionItemStyle}>
                 <Typography variant="body1">
-                  -{' '}
+                  - Applied{' '}
                   <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                    Applied AI
+                    AI and data science techniques
                   </Typography>{' '}
-                  and{' '}
+                  to satellite image analysis, delivering insights for Earth
+                  Observation applications.
+                </Typography>
+              </ListItem>
+              <ListItem sx={descriptionItemStyle}>
+                <Typography variant="body1">
+                  - Designed and implemented{' '}
                   <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                    data science
+                    machine learning pipelines
                   </Typography>{' '}
-                  expertise in the fields of{' '}
+                  for large-scale data processing.
+                </Typography>
+              </ListItem>
+              <ListItem sx={descriptionItemStyle}>
+                <Typography variant="body1">
+                  - Created full-stack{' '}
                   <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                    satellite image analysis
+                    containerized applications
+                  </Typography>{' '}
+                  (via{' '}
+                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                    Docker
                   </Typography>
-                  ,{' '}
+                  ) including APIs, monitoring solutions, and user interfaces.
+                </Typography>
+              </ListItem>
+              <ListItem sx={descriptionItemStyle}>
+                <Typography variant="body1">
+                  - Managed projects end-to-end, coordinating{' '}
                   <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                    generative AI
-                  </Typography>{' '}
-                  and{' '}
-                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                    signal processing
+                    stakeholders, timelines, and deliverables
                   </Typography>
                   .
                 </Typography>
               </ListItem>
               <ListItem sx={descriptionItemStyle}>
                 <Typography variant="body1">
-                  - Developed and{' '}
+                  - Contributed to numerous{' '}
                   <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                    deployed pipelines
+                    tenders and technical studies
                   </Typography>{' '}
-                  to automate data processing workflows,
-                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                    {' '}
-                    reducing processing time by 50%
-                  </Typography>{' '}
-                  in some cases.
+                  for CNES.
                 </Typography>
               </ListItem>
               <ListItem sx={descriptionItemStyle}>
                 <Typography variant="body1">
-                  - Created{' '}
+                  - Developed{' '}
                   <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                    AI-based
+                    conversational agents
                   </Typography>{' '}
-                  conversational agents to improve user interactions.
-                </Typography>
-              </ListItem>
-              <ListItem sx={descriptionItemStyle}>
-                <Typography variant="body1">
-                  - Built full-stack{' '}
-                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                    containerized
-                  </Typography>{' '}
-                  applications using{' '}
-                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                    Docker
-                  </Typography>
-                  , deploying{' '}
-                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                    APIs
-                  </Typography>{' '}
-                  and monitoring solutions, leading to real-time data analysis
-                  capabilities.
-                </Typography>
-              </ListItem>
-              <ListItem sx={descriptionItemStyle}>
-                <Typography variant="body1">
-                  - Collaborated with cross-functional teams to{' '}
-                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                    respond to CFTs
-                  </Typography>{' '}
-                  (Call for Tenders) and deliver studies for the CNES.
+                  using advanced AI and LLM technologies.
                 </Typography>
               </ListItem>
             </List>
 
-            <Typography variant="body1" sx={{ padding: 1 }}>
-              Projects developed :{' '}
-              <Typography
-                variant="body2"
-                component="span"
-                sx={{ fontWeight: 'bold' }}
-              >
-                <CountUp
-                  end={4}
-                  duration={5}
-                  enableScrollSpy={true} // set this to true
-                  scrollSpyOnce={true} // set this to true
-                />
-              </Typography>
+            <Typography variant="h5">
+              Total projects developed :{' '}
+              <CountUp
+                end={6}
+                duration={5}
+                enableScrollSpy={true}
+                scrollSpyOnce={true}
+              />
             </Typography>
+
+            {/* Selected Project Experience */}
+            <Typography variant="h6" sx={{ marginTop: '20px' }}>
+              Selected Project Experience
+            </Typography>
+            <List
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                width: 'calc(100% - 40px)',
+                marginLeft: 'auto',
+              }}
+            >
+              <ListItem sx={descriptionItemStyle}>
+                <Typography variant="body1">
+                  -{' '}
+                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                    Technical Lead
+                  </Typography>{' '}
+                  for a 3–4 person cross-functional team (PM, Data Scientist,
+                  DevOps, Security) on a €1.5M, 2-year{' '}
+                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                    Generative AI project
+                  </Typography>{' '}
+                  for{' '}
+                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                    ESRIN – ESA Centre for Earth Observation
+                  </Typography>{' '}
+                  (Frascati, Italy).
+                </Typography>
+              </ListItem>
+              <ListItem sx={descriptionItemStyle}>
+                <Typography variant="body1">
+                  - Designed and delivered a{' '}
+                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                    specialized scalable conversational assistant
+                  </Typography>{' '}
+                  using cutting-edge{' '}
+                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                    AI Agents and LLM
+                  </Typography>{' '}
+                  to help users navigate over 200+ Earth Observation collections
+                  (tens of millions of data products), providing intelligent
+                  recommendations, visualizations, access guidance, and more.
+                </Typography>
+              </ListItem>
+            </List>
 
             <Stack
               spacing={{ xs: 1, sm: 2 }}
@@ -410,6 +441,7 @@ export default function Content() {
               <Box
                 style={{
                   textAlign: 'center',
+                  height: 'fit-content',
                 }}
                 sx={{
                   p: '0 5px',
@@ -442,6 +474,7 @@ export default function Content() {
               <Box
                 style={{
                   textAlign: 'center',
+                  height: 'fit-content',
                 }}
                 sx={{
                   p: '0 5px',
@@ -481,6 +514,7 @@ export default function Content() {
               <Box
                 style={{
                   textAlign: 'center',
+                  height: 'fit-content',
                 }}
                 sx={{
                   p: '0 5px',
@@ -505,6 +539,7 @@ export default function Content() {
               <Box
                 style={{
                   textAlign: 'center',
+                  height: 'fit-content',
                 }}
                 sx={{
                   p: '0 5px',
@@ -529,6 +564,7 @@ export default function Content() {
               <Box
                 style={{
                   textAlign: 'center',
+                  height: 'fit-content',
                 }}
                 sx={{
                   p: '0 5px',
@@ -553,6 +589,7 @@ export default function Content() {
               <Box
                 style={{
                   textAlign: 'center',
+                  height: 'fit-content',
                 }}
                 sx={{
                   p: '0 5px',
@@ -589,7 +626,6 @@ export default function Content() {
               location="Toulouse Area, France"
               imageSrc="/images/atos.png"
             />
-            {/* Description */}
             <Typography variant="body1">
               In parallel with my{' '}
               <Typography component="span" sx={{ fontWeight: 'bold' }}>
@@ -610,8 +646,6 @@ export default function Content() {
               </Typography>{' '}
               on aircraft fuselages.
             </Typography>
-
-            {/* Detailed responsibilities */}
             <List
               style={{
                 display: 'flex',
@@ -684,8 +718,6 @@ export default function Content() {
               </Typography>
               .
             </Typography>
-
-            {/* Skills Stack */}
             <Stack
               spacing={{ xs: 1, sm: 2 }}
               direction="row"
@@ -699,6 +731,7 @@ export default function Content() {
               <Box
                 style={{
                   textAlign: 'center',
+                  height: 'fit-content',
                 }}
                 sx={{
                   p: '0 5px',
@@ -719,6 +752,7 @@ export default function Content() {
               <Box
                 style={{
                   textAlign: 'center',
+                  height: 'fit-content',
                 }}
                 sx={{
                   p: '0 5px',
@@ -743,6 +777,7 @@ export default function Content() {
               <Box
                 style={{
                   textAlign: 'center',
+                  height: 'fit-content',
                 }}
                 sx={{
                   p: '0 5px',
@@ -766,7 +801,7 @@ export default function Content() {
 
         {/* Education Section */}
         <section id="profile-section">
-          <Typography variant="h4" gutterBottom sx={titleStyle}>
+          <Typography variant="h3" sx={titleStyle}>
             Education
           </Typography>
           <Grid container spacing={2}>

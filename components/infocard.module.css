@@ -3,15 +3,25 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+  gap: 20px; /* Espacement entre texte et image */
 }
 
 .textContainer {
   text-align: left;
-  flex: 1; /* Allow this container to take up remaining space */
+  flex: 1;
+}
+
+.imageContainer {
+  position: relative;
+  height: 40px; /* Hauteur maximale contrainte */
+  width: 150px;
 }
 
 .image {
-  width: 100%; /* Adjust as needed */
-  height: auto; /* Maintain aspect ratio */
-  max-width: 200px; /* Limit the size of the image */
+  transition: opacity 0.3s ease-in-out;
+}
+
+.image[src$='thales-inverted.png'],
+.image[src$='thales.png'] {
+  opacity: 1;
 }

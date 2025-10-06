@@ -1,11 +1,11 @@
 import React from 'react';
-import { Typography } from '@mui/material'; // Adjust based on your styling library
+import { Typography } from '@mui/material';
 import Image from 'next/image';
-import styles from './infocard.module.css'; // Create this CSS file for styling
+import styles from './infocard.module.css';
 
 interface InfoCardProps {
   startDate: string;
-  endDate?: string; // Optional end date
+  endDate?: string;
   yearsSpent: number;
   companyName: string;
   location: string;
@@ -30,13 +30,16 @@ const InfoCard: React.FC<InfoCardProps> = ({
         <Typography variant="body2">{location}</Typography>
         <Typography variant="h5">{companyName}</Typography>
       </div>
-      <Image
-        src={imageSrc}
-        alt={companyName}
-        className={styles.image}
-        width={200}
-        height={150}
-      />
+      <div className={styles.imageContainer}>
+        <Image
+          src={imageSrc}
+          alt={companyName}
+          className={styles.image}
+          fill
+          sizes="200px"
+          style={{ objectFit: 'contain' }}
+        />
+      </div>
     </div>
   );
 };

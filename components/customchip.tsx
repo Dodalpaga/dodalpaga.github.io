@@ -34,7 +34,7 @@ const CustomChip: React.FC<CustomChipProps> = ({ label, icons }) => (
           sx={{
             display: 'flex',
             alignItems: 'center',
-            backgroundColor: 'var(--bg-color-4)',
+            backgroundColor: 'var(--bg-color-1)',
             color: 'var(--foreground)',
             padding: '0 12px',
             borderTopLeftRadius: '16px',

@@ -94,7 +94,6 @@ export default function Content({ blogPosts }: { blogPosts: BlogPost[] }) {
                   sx={{
                     height: '80%',
                     width: '100%',
-                    objectFit: 'contain',
                     objectPosition: 'center',
                   }}
                 />

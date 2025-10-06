@@ -1,7 +1,7 @@
 ---
 title: 'Work in progress'
 description: 'This markdown file is a template for upcoming articles'
-image: 'https://via.placeholder.com/600x300'
+image: '/images/work_in_progress.jpg'
 date: '2024-10-19'
 ---
 

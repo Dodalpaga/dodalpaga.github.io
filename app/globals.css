@@ -5,14 +5,14 @@
 :root[data-theme='light'] {
   --background: rgb(235, 235, 235);
   --background-2: rgb(190, 190, 190);
-  --bg-color-1: rgb(243, 204, 168);
-  --bg-color-2: rgb(253, 195, 195);
-  --bg-color-3: rgb(177, 245, 186);
-  --bg-color-4: rgb(225, 215, 252);
-  --text-color-1: rgb(88, 62, 36);
-  --text-color-2: rgb(58, 20, 20);
-  --text-color-3: rgb(17, 73, 24);
-  --text-color-4: rgb(39, 29, 63);
+  --bg-color-1: rgb(218, 178, 140);
+  --bg-color-2: rgb(216, 153, 153);
+  --bg-color-3: rgb(152, 216, 161);
+  --bg-color-4: rgb(161, 142, 211);
+  --text-color-1: rgb(122, 79, 35);
+  --text-color-2: rgb(94, 25, 25);
+  --text-color-3: rgb(22, 107, 33);
+  --text-color-4: rgb(30, 37, 100);
   --blue: rgb(48, 48, 214);
   --foreground: rgb(15, 15, 15);
   --foreground-2: rgb(50, 50, 50);
@@ -25,10 +25,10 @@
 :root[data-theme='dark'] {
   --background: rgb(32, 32, 32);
   --background-2: rgb(65, 65, 65);
-  --bg-color-1: rgb(88, 62, 36);
-  --bg-color-2: rgb(58, 20, 20);
-  --bg-color-3: rgb(17, 73, 24);
-  --bg-color-4: rgb(39, 29, 63);
+  --bg-color-1: rgb(122, 79, 35);
+  --bg-color-2: rgb(94, 25, 25);
+  --bg-color-3: rgb(22, 107, 33);
+  --bg-color-4: rgb(30, 37, 100);
   --text-color-1: rgb(243, 204, 168);
   --text-color-2: rgb(253, 195, 195);
   --text-color-3: rgb(177, 245, 186);
@@ -131,10 +131,6 @@ html::-webkit-scrollbar {
   aspect-ratio: 1 / 1;
   display: flex;
   flex-direction: column;
-}
-
-#skill-set-container img {
-  width: 100%;
 }
 
 .right-scrollable {

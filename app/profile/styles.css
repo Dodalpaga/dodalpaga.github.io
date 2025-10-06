@@ -44,7 +44,12 @@
   }
 
   #skill-set-container img {
-    max-height: 200px;
+    /* max-height: 400px !important;
+    max-width: 80% !important;
+    height: auto !important;
+    max-height: none;
+    object-fit: contain; */
+    display: none !important;
   }
 
   .skill-stack {
