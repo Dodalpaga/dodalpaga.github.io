@@ -1,13 +1,11 @@
 <p align="center">
   <a href="https://nextjs-fastapi-starter.vercel.app/">
-    <img src="https://assets.vercel.com/image/upload/v1588805858/repositories/vercel/logo.png" height="96">
-    <h3 align="center">Dodalpaga's Next.js Website</h3>
+    <img src="logo.jpg" height="150" style="width:300px; height:300px; border-radius:50%;">
+    <h3 align="center">Dodalpaga's Next.js Porfolio with FastAPI Backend</h3>
   </a>
 </p>
 
-<p align="center">Simple Next.js boilerplate that uses <a href="https://fastapi.tiangolo.com/">FastAPI</a> as the API backend.</p>
-
-Forked from `https://github.com/digitros/nextjs-fastapi`
+<p align="center">A custom Porfolio that uses <a href="https://fastapi.tiangolo.com/">FastAPI</a> as the API backend.</p>
 
 # Install dependencies
 
