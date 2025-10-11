@@ -77,6 +77,28 @@ const creations: Creation[] = [
     cameraY: 1,
     cameraZ: 0.7,
   },
+  {
+    id: 3,
+    title: 'Coupe Branches',
+    description:
+      'Ce projet de conception mécanique consiste en la modélisation, l’étude et la réalisation virtuelle d’un outil de coupe de branches à fonctionnement manuel, intégrant une analyse complète de la cinématique et de la dynamique des forces.',
+    modelPath: '/models/Coupe Branches.fbx',
+    minDistance: 1,
+    maxDistance: 2,
+    ambientLightIntensity: 1.0,
+    mainDirectionalLightIntensity: 2.0,
+    fillLightIntensity: 1.0,
+    pointLightIntensity: 0.4,
+    xOffset: 0,
+    yOffset: 0,
+    zOffset: 0,
+    rotationX: 0, // Rotation par défaut
+    rotationY: 0,
+    rotationZ: 0,
+    cameraX: 0.2, // Position caméra par défaut
+    cameraY: 0.2,
+    cameraZ: 2,
+  },
 ];
 
 // Hook pour détecter les dimensions du conteneur
