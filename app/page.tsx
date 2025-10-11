@@ -29,7 +29,10 @@ export default function Home() {
           </Tilt>
         </div>
 
-        <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-3 lg:text-left  items-center justify-center">
+        <div
+          className="mb-32 grid text-center lg:mb-0 lg:grid-cols-3 lg:text-left  items-center justify-center"
+          style={{ margin: '0 3%' }}
+        >
           <a
             href={'/profile'}
             className="group rounded-lg border border-transparent px-5 py-4 transition-colors"
@@ -63,18 +66,19 @@ export default function Home() {
           </a>
 
           <a
-            href={'/template'}
+            href={'https://fr.fiverr.com/s/VY139mV'}
+            target="blank"
             className="group rounded-lg border border-transparent px-5 py-4 transition-colors"
             rel="noopener noreferrer"
           >
             <h2 className={`mb-3 text-2xl font-semibold`}>
-              Templates{' '}
+              Services{' '}
               <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
                 -&gt;
               </span>
             </h2>
             <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-              Nothing to see here, just a template for my projects.
+              Check out my services here, feel free to reach out !
             </p>
           </a>
         </div>
