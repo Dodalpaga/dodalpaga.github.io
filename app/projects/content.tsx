@@ -12,6 +12,22 @@ import '../globals.css'; // Ensure global styles are correctly imported
 
 const apps = [
   {
+    title: 'Chat Bot',
+    image: `/images/chatbot.png`, // Update with your actual image path
+    link: '/projects/chatbot', // Update with your actual routes
+    target: '',
+    description:
+      'A chatbot you can interact with. It has been fine-tuned on my resume, previous projects, and other relevant information about me.',
+  },
+  {
+    title: 'Image Detection',
+    image: `/images/detection.jpeg`, // Update with your actual image path
+    link: '/projects/image_detection', // Update with your actual routes
+    target: '',
+    description:
+      'Utilizing the power of YOLO (You Only Look Once), this application enables real-time object detection within images.',
+  },
+  {
     title: "What's Halfway ?",
     image: `/images/whats_halfway.png`, // Update with your actual image path
     link: '/projects/whats_halfway', // Update with your actual routes
@@ -41,13 +57,6 @@ const apps = [
     target: '',
     description:
       'Explore and interact with sketches created using the p5.js framework. This app gathers and showcases various creative and interactive visual projects, providing an engaging experience for users interested in generative art and creative coding.',
-  },
-  {
-    title: 'Black Hole Simulator',
-    image: `/images/black_hole.png`, // Update with your actual image path
-    link: '/projects/black_hole', // Update with your actual routes
-    target: '',
-    description: 'A black hole simulation',
   },
   {
     title: 'Clustering',
@@ -98,6 +107,13 @@ const apps = [
       'Learn how snowflakes are formed, depending on conditions such as temperature and humidity levels.',
   },
   {
+    title: 'Black Hole Simulator',
+    image: `/images/black_hole.png`, // Update with your actual image path
+    link: '/projects/black_hole', // Update with your actual routes
+    target: '',
+    description: 'A black hole simulation',
+  },
+  {
     title: 'Regex Matcher',
     image: `/images/regex.png`, // Update with your actual image path
     link: '/projects/regex', // Update with your actual routes
@@ -129,22 +145,6 @@ const apps = [
     description:
       'Select a tile from the Earth map, and this app will provide a segmented version of that tile, \
       highlighting different features and regions. Ideal for analyzing satellite images and extracting valuable insights.',
-  },
-  {
-    title: 'Chat Bot',
-    image: `/images/chatbot.png`, // Update with your actual image path
-    link: '/projects/chatbot', // Update with your actual routes
-    target: '',
-    description:
-      'A chatbot you can interact with. It has been fine-tuned on my resume, previous projects, and other relevant information about me.',
-  },
-  {
-    title: 'Image Detection',
-    image: `/images/detection.jpeg`, // Update with your actual image path
-    link: '/projects/image_detection', // Update with your actual routes
-    target: '',
-    description:
-      'Utilizing the power of YOLO (You Only Look Once), this application enables real-time object detection within images.',
   },
   {
     title: 'Guess What',
