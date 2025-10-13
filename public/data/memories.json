@@ -21,6 +21,19 @@
     "images": ["/data/photos/Espagne/Barcelone/sagrada-familia.jpg"]
   },
   {
+    "city": "Baleares",
+    "country": "Spain",
+    "latitude": 39.5696005,
+    "longitude": 2.6501603,
+    "images": [
+      "/data/photos/Espagne/Baleares/cocktails.jpg",
+      "/data/photos/Espagne/Baleares/plongee.png",
+      "/data/photos/Espagne/Baleares/sea.jpg",
+      "/data/photos/Espagne/Baleares/sunset.jpg",
+      "/data/photos/Espagne/Baleares/van.jpg"
+    ]
+  },
+  {
     "city": "Annecy",
     "country": "France",
     "latitude": 45.8992348,
