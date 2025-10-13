@@ -36,11 +36,21 @@ export default function Content() {
           headers: { 'Content-Type': 'application/json' },
         }
       );
+
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+
       const data = await response.json();
+      const generatedText = data.response || '';
+
+      // Validate that generatedText is a string
+      if (typeof generatedText !== 'string') {
+        throw new Error('Invalid response format');
+      }
 
       // Start streaming effect
       let index = 0;
-      const generatedText = data.response;
       setMessages((prevMessages) => [
         ...prevMessages,
         { text: '', type: 'bot', isStreaming: true },
