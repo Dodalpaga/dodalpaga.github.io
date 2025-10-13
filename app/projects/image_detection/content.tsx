@@ -1,27 +1,64 @@
 import * as React from 'react';
-import Stack from '@mui/material/Stack';
-import Container from '@mui/material/Container';
-import Button from '@mui/material/Button';
-import CircularProgress from '@mui/material/CircularProgress'; // Import CircularProgress for loading symbol
-import Image from 'next/image';
 import {
+  Container,
+  Stack,
+  Button,
+  CircularProgress,
   Select,
   MenuItem,
   InputLabel,
   FormControl,
   Typography,
+  Paper,
+  Box,
 } from '@mui/material';
-import './styles.css'; // Import regular CSS
 
-export default function Content() {
-  const [uploadedImage, setUploadedImage] = React.useState<string | null>(null); // State for uploaded image
+export default function ImageSegmentation() {
+  const [uploadedImage, setUploadedImage] = React.useState<string | null>(null);
   const [processedImage, setProcessedImage] = React.useState<string | null>(
     null
-  ); // State for processed image
-  const [loading, setLoading] = React.useState<boolean>(false); // State for loading
-  const [modelName, setModelName] = React.useState<string>(
-    'facebook/mask2former-swin-large-coco-panoptic'
-  ); // State for selected model
+  );
+  const [detections, setDetections] = React.useState<any[]>([]);
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const [modelName, setModelName] = React.useState<string>('');
+  const [availableModels, setAvailableModels] = React.useState<any[]>([]);
+  const [modelsLoading, setModelsLoading] = React.useState<boolean>(true);
+  const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
+
+  const colors = [
+    '#e8a6a6',
+    '#b3d9b3',
+    '#d4af37',
+    '#87ceeb',
+    '#dda0dd',
+    '#98fb98',
+  ];
+
+  React.useEffect(() => {
+    fetchAvailableModels();
+  }, []);
+
+  const fetchAvailableModels = async () => {
+    try {
+      setModelsLoading(true);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL_IMG_DETECTION}/models`
+      );
+      if (!response.ok) {
+        throw new Error('Failed to fetch models');
+      }
+      const data = await response.json();
+      setAvailableModels(data.models || []);
+      if (data.models && data.models.length > 0) {
+        setModelName(data.models[0].value);
+      }
+    } catch (error) {
+      console.error('Error fetching models:', error);
+      setErrorMessage('Failed to load available models');
+    } finally {
+      setModelsLoading(false);
+    }
+  };
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -29,34 +66,37 @@ export default function Content() {
       const reader = new FileReader();
       reader.onloadend = () => {
         setUploadedImage(reader.result as string);
+        setProcessedImage(null);
+        setDetections([]);
+        setErrorMessage(null);
       };
-      reader.readAsDataURL(file); // Convert the image to base64
+      reader.readAsDataURL(file);
     }
   };
 
-  const [errorMessage, setErrorMessage] = React.useState<string | null>(
-    'No processed image'
-  ); // State for error message
-
   const handleProcessImage = () => {
     if (!uploadedImage) {
-      console.warn('No image uploaded.');
+      setErrorMessage('No image uploaded.');
+      return;
+    }
+
+    if (!modelName) {
+      setErrorMessage('No model selected.');
       return;
     }
 
     setLoading(true);
-    setErrorMessage(null); // Clear previous errors
-    setProcessedImage(null); // Clear previous processed image
+    setErrorMessage(null);
+    setProcessedImage(null);
+    setDetections([]);
 
     fetch(
-      `${process.env.NEXT_PUBLIC_API_URL_IMG_DETECTION}?model_name=${modelName}`,
+      `${process.env.NEXT_PUBLIC_API_URL_IMG_DETECTION}/detect_image?model_name=${modelName}`,
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
         },
-        mode: 'cors',
         body: JSON.stringify({ base64_image: uploadedImage }),
       }
     )
@@ -69,10 +109,11 @@ export default function Content() {
       })
       .then((data) => {
         setProcessedImage(data.base64_image);
+        setDetections(data.detections || []);
       })
       .catch((error) => {
         console.error('Error:', error);
-        setErrorMessage(error.message); // Set error message for UI
+        setErrorMessage(error.message);
       })
       .finally(() => {
         setLoading(false);
@@ -86,21 +127,35 @@ export default function Content() {
         display: 'flex',
         alignItems: 'center',
         flexDirection: 'column',
-        justifyContent: 'center',
-        height: '100%',
+        justifyContent: 'flex-start',
+        maxHeight: '100%',
+        overflowY: 'auto',
       }}
     >
+      {/* Header */}
+      <Box sx={{ textAlign: 'center', marginBottom: 4 }}>
+        <Typography variant="h4" sx={{ fontWeight: 'bold', marginBottom: 1 }}>
+          Image Segmentation
+        </Typography>
+        <Typography variant="body2" color="var(--foreground)">
+          Upload an image to detect and segment objects
+        </Typography>
+      </Box>
+
+      {/* Controls */}
       <Stack
         spacing={2}
-        id="buttons-stack" // Use the ID for CSS targeting
         direction="row"
+        sx={{
+          marginBottom: 4,
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+        }}
       >
-        {/* Model selection dropdown */}
         <FormControl
           variant="outlined"
           sx={{
-            minWidth: 120,
-            height: '100%',
+            minWidth: 280,
             '& .MuiOutlinedInput-root': {
               color: 'var(--foreground)',
               '& fieldset': {
@@ -114,47 +169,38 @@ export default function Content() {
               },
             },
           }}
+          disabled={modelsLoading}
         >
           <InputLabel
-            sx={{
-              color: 'var(--foreground)',
-            }}
+            sx={{ color: 'var(--foreground)' }}
             id="model-select-label"
           >
-            Model from HuggingFace
+            {modelsLoading ? 'Loading models...' : 'Model from HuggingFace'}
           </InputLabel>
           <Select
             labelId="model-select-label"
             value={modelName}
             onChange={(event) => setModelName(event.target.value)}
-            label="Model from HuggingFace"
+            label={
+              modelsLoading ? 'Loading models...' : 'Model from HuggingFace'
+            }
             sx={{
-              minWidth: 120,
-              height: '100%',
+              minWidth: 280,
               color: 'var(--foreground)',
               '& .MuiSelect-icon': {
                 color: 'var(--foreground)',
               },
             }}
           >
-            <MenuItem value="openmmlab/upernet-convnext-small">
-              UperNet (ADE20k)
-            </MenuItem>
-            <MenuItem value="facebook/mask2former-swin-large-coco-panoptic">
-              Mask2Former (COCO panoptic segmentation)
-            </MenuItem>
+            {availableModels.map((model) => (
+              <MenuItem key={model.value} value={model.value}>
+                {model.label}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
 
-        {/* Upload image button */}
-        <Button
-          variant="contained"
-          component="label"
-          style={{
-            minWidth: 120,
-            height: '100%',
-          }}
-        >
+        <Button variant="contained" component="label" sx={{ minWidth: 120 }}>
           Upload
           <input
             type="file"
@@ -164,92 +210,162 @@ export default function Content() {
           />
         </Button>
 
-        {/* Process image button */}
         <Button
           variant="contained"
           onClick={handleProcessImage}
-          disabled={loading || !uploadedImage} // Disable the button when loading is true or no image is uploaded
-          sx={{
-            minWidth: 120,
-            height: '100%',
-          }}
+          disabled={loading || !uploadedImage || !modelName || modelsLoading}
+          sx={{ minWidth: 120 }}
         >
-          Process
+          {loading ? <CircularProgress size={24} color="inherit" /> : 'Process'}
         </Button>
       </Stack>
 
+      {/* Main Content */}
       <Stack
-        spacing={4}
-        id="images-stack" // Use the ID for CSS targeting
+        spacing={0}
         direction="row"
+        sx={{ width: '100%', height: 'calc(100vh - 300px)', gap: 2 }}
       >
-        {/* Left side: uploaded image */}
-        <div className="image-container">
-          {uploadedImage ? (
-            <Image
-              src={uploadedImage}
-              alt="Uploaded Image"
-              width={0}
-              height={0}
-              sizes="100%"
-              style={{
-                height: 'auto',
-                width: 'auto',
-                maxHeight: '100%',
-                maxWidth: '100%',
-              }}
-            />
-          ) : (
-            <div
-              style={{
-                display: 'flex',
-                textAlign: 'center',
-              }}
-            >
-              No image uploaded
-            </div>
-          )}
-        </div>
+        {/* Left Panel - Uploaded Image (2/5) */}
+        <Box sx={{ flex: '2', display: 'flex', flexDirection: 'column' }}>
+          <Paper
+            sx={{
+              padding: 3,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '100%',
+              backgroundColor: 'var(--background)',
+              border: '1px solid var(--foreground)',
+              borderOpacity: 0.1,
+            }}
+          >
+            {uploadedImage ? (
+              <img
+                src={uploadedImage}
+                alt="Uploaded Image"
+                style={{
+                  maxWidth: '100%',
+                  maxHeight: '100%',
+                  objectFit: 'contain',
+                }}
+              />
+            ) : (
+              <Typography color="var(--foreground)">
+                No image uploaded
+              </Typography>
+            )}
+          </Paper>
+        </Box>
 
-        {/* Right side: processed image or loading */}
-        <div className="image-container">
-          {loading ? (
-            <CircularProgress /> // Show loading symbol while waiting for the image processing
-          ) : processedImage ? (
-            <Image
-              src={processedImage}
-              alt="Processed Image"
-              width={0}
-              height={0}
-              sizes="100%"
-              style={{
-                height: 'auto',
-                width: 'auto',
-                maxHeight: '100%',
-                maxWidth: '100%',
-              }}
-            />
-          ) : (
-            <div
-              style={{
-                display: 'flex',
-                textAlign: 'center',
-              }}
-            >
-              {errorMessage && (
-                <div
-                  style={{
-                    color: 'red',
-                    marginTop: '10px',
-                    textAlign: 'center',
+        {/* Center Panel - Results (2/5) */}
+        <Box sx={{ flex: '2', display: 'flex', flexDirection: 'column' }}>
+          {/* Segmented Image */}
+          <Paper
+            sx={{
+              padding: 3,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '100%',
+              backgroundColor: 'var(--background)',
+              border: '1px solid var(--foreground)',
+              borderOpacity: 0.1,
+            }}
+          >
+            {loading ? (
+              <CircularProgress />
+            ) : processedImage ? (
+              <img
+                src={processedImage}
+                alt="Processed Image"
+                style={{
+                  maxWidth: '100%',
+                  maxHeight: '100%',
+                  objectFit: 'contain',
+                }}
+              />
+            ) : errorMessage ? (
+              <Typography color="error" sx={{ textAlign: 'center' }}>
+                {errorMessage}
+              </Typography>
+            ) : (
+              <Typography color="var(--foreground)">
+                Results will appear here
+              </Typography>
+            )}
+          </Paper>
+        </Box>
+
+        {/* Right Panel - Detections List (1/5) */}
+        {detections.length > 0 && (
+          <Box
+            sx={{
+              flex: '1',
+              display: 'flex',
+              flexDirection: 'column',
+              height: '100%',
+              overflowY: 'auto',
+              paddingRight: 1,
+              '&::-webkit-scrollbar': {
+                width: '8px',
+              },
+              '&::-webkit-scrollbar-track': {
+                backgroundColor: 'var(--background)',
+              },
+              '&::-webkit-scrollbar-thumb': {
+                backgroundColor: 'var(--foreground)',
+                borderRadius: '4px',
+                opacity: 0.3,
+              },
+            }}
+          >
+            {detections.map((detection, idx) => (
+              <Box
+                key={idx}
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  paddingY: 1.5,
+                  paddingX: 1,
+                  borderBottom: '1px solid var(--foreground)',
+                  borderOpacity: 0.1,
+                  '&:last-child': { borderBottom: 'none' },
+                }}
+              >
+                <Box
+                  sx={{
+                    height: '4px',
+                    width: '100%',
+                    backgroundColor: colors[idx % colors.length],
+                    marginBottom: 1,
+                    borderRadius: '2px',
+                  }}
+                />
+                <Typography
+                  sx={{
+                    fontWeight: 500,
+                    textTransform: 'capitalize',
+                    fontSize: '0.9rem',
+                    marginBottom: 0.5,
                   }}
                 >
-                  {errorMessage}
-                </div>
-              )}
-            </div>
-          )}
-        </div>
+                  {detection.label}
+                </Typography>
+                <Typography
+                  sx={{
+                    fontWeight: 600,
+                    fontSize: '0.8rem',
+                    color: 'var(--foreground)',
+                    opacity: 0.7,
+                  }}
+                >
+                  {(detection.score * 100).toFixed(1)}
+                </Typography>
+              </Box>
+            ))}
+          </Box>
+        )}
       </Stack>
     </Container>
   );
