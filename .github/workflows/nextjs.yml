@@ -68,6 +68,7 @@ jobs:
           echo "NEXT_PUBLIC_API_URL_IMG_DETECTION: ${{ secrets.NEXT_PUBLIC_API_URL_IMG_DETECTION }}"
           echo "NEXT_PUBLIC_API_URL_LLM: ${{ secrets.NEXT_PUBLIC_API_URL_LLM }}"
           echo "NEXT_PUBLIC_MAPTILER_API_KEY: ${{ secrets.NEXT_PUBLIC_MAPTILER_API_KEY }}"
+          echo "NEXT_PUBLIC_API_URL_ANALYTICS: ${{ secrets.NEXT_PUBLIC_API_URL_ANALYTICS }}"
 
       - name: Build with Next.js
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
@@ -77,6 +78,7 @@ jobs:
           NEXT_PUBLIC_API_URL_IMG_DETECTION: ${{ secrets.NEXT_PUBLIC_API_URL_IMG_DETECTION }}
           NEXT_PUBLIC_API_URL_LLM: ${{ secrets.NEXT_PUBLIC_API_URL_LLM }}
           NEXT_PUBLIC_MAPTILER_API_KEY: ${{ secrets.NEXT_PUBLIC_MAPTILER_API_KEY }}
+          NEXT_PUBLIC_API_URL_ANALYTICS: ${{ secrets.NEXT_PUBLIC_API_URL_ANALYTICS }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
