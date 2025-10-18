@@ -20,6 +20,13 @@ const apps = [
       'A chatbot you can interact with. It has been fine-tuned on my resume, previous projects, and other relevant information about me.',
   },
   {
+    title: 'Analytics',
+    image: `/images/analytics.jpg`, // Update with your actual image path
+    link: '/projects/analytics', // Update with your actual routes
+    target: '',
+    description: 'Analytics of the website',
+  },
+  {
     title: 'Image Detection',
     image: `/images/detection.jpeg`, // Update with your actual image path
     link: '/projects/image_detection', // Update with your actual routes

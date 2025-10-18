@@ -1,0 +1,22 @@
+name: Keep Render Backend Alive
+
+on:
+  schedule:
+    - cron: '*/5 * * * *' # Toutes les 5 minutes
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Render Backend
+        run: |
+          curl -X GET "${{ secrets.NEXT_PUBLIC_API_URL_DOCS }}/analytics/health-analytics" \
+            -H "Content-Type: application/json" \
+            -w "\nStatus: %{http_code}\n"
+        continue-on-error: true
+        env:
+          BACKEND_URL: ${{ secrets.NEXT_PUBLIC_API_URL_DOCS }}
