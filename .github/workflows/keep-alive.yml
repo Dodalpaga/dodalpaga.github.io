@@ -14,7 +14,7 @@ jobs:
     steps:
       - name: Ping Render Backend
         run: |
-          curl -X GET "${{ secrets.NEXT_PUBLIC_API_URL_DOCS }}/analytics/health-analytics" \
+          curl -X GET "${{ secrets.NEXT_PUBLIC_API_URL_DOCS }}" \
             -H "Content-Type: application/json" \
             -w "\nStatus: %{http_code}\n"
         continue-on-error: true
