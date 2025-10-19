@@ -2,9 +2,19 @@
 import Link from 'next/link';
 import NavBar from '@/components/navbar';
 import { Tilt } from 'react-next-tilt';
+import { useCookieConsent } from '@/hooks/useCookieConsent';
+import Button from '@mui/material/Button';
+import { useEffect, useState } from 'react';
 import './styles.css';
 
 export default function Home() {
+  const { hasConsent, withdrawConsent } = useCookieConsent();
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-4">
       <div
@@ -84,16 +94,58 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="z-10 w-full max-w-3xl items-center justify-between font-mono text-sm">
-        <p className="api-banner flex w-full justify-center border-b border-gray-300 from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:from-inherit lg:static lg:w-auto lg:rounded-xl">
-          You can check the backend API&nbsp;
-          <Link
-            href={`${process.env.NEXT_PUBLIC_API_URL_DOCS}`}
-            target="_blank"
+      <div
+        className="z-10 w-full max-w-3xl items-center justify-between font-mono text-sm"
+        style={{ boxShadow: '20px 20px 50px rgb(0 0 255 / 0.5)' }}
+      >
+        <div className="api-banner flex w-full justify-center border-b border-gray-300 from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:from-inherit lg:static lg:w-auto lg:rounded-xl">
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              textAlign: 'center',
+            }}
           >
-            <code className="font-mono font-bold">here</code>
-          </Link>
-        </p>
+            <div>
+              You can check the backend API&nbsp;
+              <Link
+                href={`${process.env.NEXT_PUBLIC_API_URL_DOCS}`}
+                target="_blank"
+              >
+                <code className="font-mono font-bold">here</code>
+              </Link>
+            </div>
+            {isMounted && hasConsent && (
+              <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
+                <Link href="/privacy">
+                  <Button
+                    size="small"
+                    title="Read our privacy policy"
+                    sx={{
+                      textTransform: 'none',
+                      fontSize: '0.875rem',
+                      padding: '6px 12px',
+                    }}
+                  >
+                    📋 Privacy Policy
+                  </Button>
+                </Link>
+                <Button
+                  size="small"
+                  onClick={withdrawConsent}
+                  title="Clear analytics consent and prompt again"
+                  sx={{
+                    textTransform: 'none',
+                    fontSize: '0.875rem',
+                    padding: '6px 12px',
+                  }}
+                >
+                  🍪 Withdraw Consent
+                </Button>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </main>
   );

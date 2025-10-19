@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { AlertCircle, CheckCircle, XCircle } from 'lucide-react';
+import { AlertCircle, CheckCircle, XCircle, Link } from 'lucide-react';
 import './backend_status_checker.css';
 import ScrollingTitle from '@/components/scrolling_title';
 
@@ -59,6 +59,7 @@ export default function BackendStatus() {
       onMouseLeave={() => setHover(false)}
     >
       <div className="backend-status-content">
+        <Link className="status-icon" size={32} />
         {status === 'success' && (
           <CheckCircle className="status-icon success" size={32} />
         )}

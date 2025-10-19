@@ -1,15 +1,22 @@
+// hooks/useAnalytics.ts
 import { useEffect } from 'react';
+import { useCookieConsent } from './useCookieConsent';
 
 export function useAnalytics() {
+  const { hasConsent } = useCookieConsent();
+
   useEffect(() => {
-    // Générer ou récupérer un ID visiteur unique
+    // Ne track QUE si l'utilisateur a accepté
+    if (hasConsent !== true) {
+      return;
+    }
+
     let visitorId = localStorage.getItem('visitor_id');
     if (!visitorId) {
       visitorId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
       localStorage.setItem('visitor_id', visitorId);
     }
 
-    // Tracker la page actuelle
     const trackPage = () => {
       fetch(`${process.env.NEXT_PUBLIC_API_URL_ANALYTICS}/track`, {
         method: 'POST',
@@ -24,9 +31,8 @@ export function useAnalytics() {
 
     trackPage();
 
-    // Tracker les changements de page (pour les SPA)
     const handleRouteChange = () => trackPage();
     window.addEventListener('popstate', handleRouteChange);
     return () => window.removeEventListener('popstate', handleRouteChange);
-  }, []);
+  }, [hasConsent]);
 }

@@ -1,6 +1,6 @@
-.backend-status-container {
+.cookie-status-container {
   position: fixed;
-  bottom: 16px;
+  bottom: 76px;
   left: 16px;
   min-width: 100px;
   max-width: 50px;
@@ -21,7 +21,7 @@
     padding 0.3s ease; /* Anime aussi le padding */
 }
 
-.backend-status-content {
+.cookie-status-content {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -48,7 +48,7 @@
   margin-left: 8px;
 }
 
-.backend-status-container:hover {
+.cookie-status-container:hover {
   max-width: 300px;
   /* Le padding reste cohérent */
   padding-left: 12px;

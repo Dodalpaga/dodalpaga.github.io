@@ -1,0 +1,154 @@
+/* Cookie Consent Banner */
+.cookie-consent-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #333;
+  color: white;
+  z-index: 1000;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.3);
+  max-width: 60%;
+  animation: slideUp 0.5s ease-out;
+  border-radius: 5px 5px 0 0;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.cookie-consent-text {
+  flex: 1;
+  margin-right: 16px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.cookie-consent-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.cookie-consent-btn {
+  padding: 10px 16px;
+  font-size: 0.875rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.cookie-consent-btn-deny {
+  background-color: transparent;
+  color: white;
+  border: 1px solid white;
+}
+
+.cookie-consent-btn-deny:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.cookie-consent-btn-allow {
+  background-color: #1976d2;
+  color: white;
+}
+
+.cookie-consent-btn-allow:hover {
+  transform: scale(1.05);
+  background-color: #1565c0;
+}
+
+/* Tablet styles (600px - 767px) */
+@media (min-width: 600px) and (max-width: 767px) {
+  .cookie-consent-banner {
+    max-width: 80%;
+    padding: 14px;
+  }
+
+  .cookie-consent-text {
+    font-size: 0.85rem;
+    margin-right: 12px;
+  }
+
+  .cookie-consent-btn {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+  }
+}
+
+/* Mobile styles (max 599px) */
+@media (max-width: 599px) {
+  .cookie-consent-banner {
+    max-width: 100%;
+    width: calc(100% - 32px);
+    left: 16px;
+    right: 16px;
+    padding: 12px;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .cookie-consent-text {
+    margin-right: 0;
+    margin-bottom: 0;
+    font-size: 0.8rem;
+    line-height: 1.4;
+  }
+
+  .cookie-consent-buttons {
+    width: 100%;
+    gap: 8px;
+  }
+
+  .cookie-consent-btn {
+    flex: 1;
+    padding: 8px 12px;
+    font-size: 0.75rem;
+  }
+}
+
+/* Very small phones (<380px) */
+@media (max-width: 380px) {
+  .cookie-consent-buttons {
+    flex-direction: column;
+  }
+
+  .cookie-consent-btn {
+    width: 100%;
+  }
+}
+
+/* Landscape mode */
+@media (max-height: 500px) and (orientation: landscape) {
+  .cookie-consent-banner {
+    padding: 8px 12px;
+  }
+
+  .cookie-consent-text {
+    font-size: 0.75rem;
+  }
+}
+
+/* Accessibility: Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .cookie-consent-banner {
+    animation: none;
+  }
+
+  .cookie-consent-btn {
+    transition: none;
+  }
+}
