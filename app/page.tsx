@@ -115,21 +115,29 @@ export default function Home() {
                 <code className="font-mono font-bold">here</code>
               </Link>
             </div>
-            {isMounted && hasConsent && (
-              <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
-                <Link href="/privacy">
-                  <Button
-                    size="small"
-                    title="Read our privacy policy"
-                    sx={{
-                      textTransform: 'none',
-                      fontSize: '0.875rem',
-                      padding: '6px 12px',
-                    }}
-                  >
-                    📋 Privacy Policy
-                  </Button>
-                </Link>
+
+            <div
+              style={{
+                display: 'flex',
+                gap: '8px',
+                marginTop: '12px',
+                justifyContent: 'center',
+              }}
+            >
+              <Link href="/privacy">
+                <Button
+                  size="small"
+                  title="Read our privacy policy"
+                  sx={{
+                    textTransform: 'none',
+                    fontSize: '0.875rem',
+                    padding: '6px 12px',
+                  }}
+                >
+                  📋 Privacy Policy
+                </Button>
+              </Link>
+              {isMounted && hasConsent && (
                 <Button
                   size="small"
                   onClick={withdrawConsent}
@@ -142,8 +150,8 @@ export default function Home() {
                 >
                   🍪 Withdraw Consent
                 </Button>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </div>
