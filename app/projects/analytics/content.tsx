@@ -33,7 +33,6 @@ import {
   Legend,
   ScatterChart,
   Scatter,
-  ComposedChart,
 } from 'recharts';
 
 const COLORS = [
@@ -45,6 +44,8 @@ const COLORS = [
   '#ec4899',
   '#14b8a6',
   '#f97316',
+  '#06b6d4',
+  '#6366f1',
 ];
 
 interface AnalyticsStats {
@@ -85,11 +86,13 @@ const StatCard = ({
   value,
   subtitle,
   color = '#3b82f6',
+  change,
 }: {
   title: string;
   value: string | number;
   subtitle?: string;
   color?: string;
+  change?: string;
 }) => (
   <Card
     sx={{
@@ -115,9 +118,16 @@ const StatCard = ({
       >
         {title}
       </Typography>
-      <Typography sx={{ fontSize: '2.5rem', fontWeight: 700, color, my: 1 }}>
-        {value}
-      </Typography>
+      <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1, my: 1 }}>
+        <Typography sx={{ fontSize: '2.5rem', fontWeight: 700, color }}>
+          {value}
+        </Typography>
+        {change && (
+          <Typography sx={{ fontSize: '0.875rem', color: '#10b981' }}>
+            {change}
+          </Typography>
+        )}
+      </Box>
       {subtitle && (
         <Typography sx={{ fontSize: '0.875rem', color: 'text.secondary' }}>
           {subtitle}
@@ -190,7 +200,6 @@ export default function Analytics() {
           value: count,
         }))
         .sort((a, b) => b.value - a.value)
-        .slice(0, 8)
     : [];
 
   const pagesData = stats?.pages
@@ -200,7 +209,6 @@ export default function Analytics() {
           value: count,
         }))
         .sort((a, b) => b.value - a.value)
-        .slice(0, 8)
     : [];
 
   const referrersData = stats?.top_referrers
@@ -210,6 +218,15 @@ export default function Analytics() {
             referrer === 'direct'
               ? 'Direct'
               : new URL(referrer).hostname || referrer,
+          value: count,
+        }))
+        .sort((a, b) => b.value - a.value)
+    : [];
+
+  const citiesData = stats?.cities
+    ? Object.entries(stats.cities)
+        .map(([city, count]: [string, number]) => ({
+          name: city,
           value: count,
         }))
         .sort((a, b) => b.value - a.value)
@@ -241,11 +258,29 @@ export default function Analytics() {
     : '0';
 
   const topVisitors = visitors?.visitors.slice(0, 10) || [];
-
   const countryDistribution = countriesData.reduce(
     (sum, c) => sum + c.value,
     0
   );
+  const returnVisitorsRate =
+    stats && visitors
+      ? (
+          (visitors.visitors.filter((v) => v.page_views > 1).length /
+            Math.max(stats.unique_ips, 1)) *
+          100
+        ).toFixed(1)
+      : '0';
+
+  const avgPagesPerSession =
+    visitors && visitors.total_unique_ips > 0
+      ? (
+          visitors.visitors.reduce((sum, v) => sum + v.page_views, 0) /
+          visitors.total_unique_ips
+        ).toFixed(2)
+      : '0';
+
+  const topCountries = countriesData.slice(0, 5);
+  const topCities = citiesData.slice(0, 8);
 
   return (
     <Container
@@ -255,6 +290,7 @@ export default function Analytics() {
         justifyContent: 'flex-start',
         height: '100%',
         py: 4,
+        maxWidth: '1600px',
       }}
     >
       {/* Header */}
@@ -273,7 +309,8 @@ export default function Analytics() {
           Analytics Dashboard
         </Typography>
         <Typography sx={{ color: '#94a3b8', fontSize: '1.125rem' }}>
-          Real-time insights into my website performance
+          Real-time insights into my website performance over the last {days}{' '}
+          days
         </Typography>
       </Box>
 
@@ -344,74 +381,87 @@ export default function Analytics() {
       {stats && activeTab === 'overview' && (
         <Grid container spacing={3}>
           {/* KPI Row 1 */}
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid item xs={12} sm={6} md={4} lg={2.4}>
             <StatCard
               title="Total Views"
               value={stats.total_page_views}
               color="#3b82f6"
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid item xs={12} sm={6} md={4} lg={2.4}>
             <StatCard
               title="Unique Visitors"
               value={stats.unique_visitors}
               color="#10b981"
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid item xs={12} sm={6} md={4} lg={2.4}>
             <StatCard
               title="Unique IPs"
               value={stats.unique_ips}
               color="#f59e0b"
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid item xs={12} sm={6} md={4} lg={2.4}>
             <StatCard
               title="Avg Views/Visitor"
               value={avgViewsPerVisitor}
               color="#8b5cf6"
             />
           </Grid>
+          <Grid item xs={12} sm={6} md={4} lg={2.4}>
+            <StatCard
+              title="Return Visitors"
+              value={`${returnVisitorsRate}%`}
+              color="#06b6d4"
+            />
+          </Grid>
 
           {/* KPI Row 2 */}
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid item xs={12} sm={6} md={4} lg={2.4}>
             <StatCard
               title="Bounce Rate"
               value={`${bounceRate}%`}
               color="#ef4444"
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid item xs={12} sm={6} md={4} lg={2.4}>
             <StatCard
               title="Avg Session (min)"
               value={avgSessionLength}
               color="#ec4899"
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid item xs={12} sm={6} md={4} lg={2.4}>
+            <StatCard
+              title="Pages/Session"
+              value={avgPagesPerSession}
+              color="#14b8a6"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={4} lg={2.4}>
             <StatCard
               title="Countries"
               value={countriesData.length}
               subtitle="with visitors"
-              color="#14b8a6"
+              color="#f97316"
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid item xs={12} sm={6} md={4} lg={2.4}>
             <StatCard
               title="Top Pages"
               value={Object.keys(stats.pages).length}
               subtitle="tracked"
-              color="#f97316"
+              color="#6366f1"
             />
           </Grid>
 
-          {/* Charts Row 1 */}
-          <Grid item xs={12} lg={7}>
+          {/* Traffic Chart - Full Width */}
+          <Grid item xs={12}>
             <Card
               sx={{
                 background: '#1e293b',
                 border: '1px solid #334155',
-                height: '100%',
               }}
             >
               <CardContent>
@@ -425,7 +475,7 @@ export default function Analytics() {
                 >
                   Traffic Over Time
                 </Typography>
-                <ResponsiveContainer width="100%" height={350}>
+                <ResponsiveContainer width="100%" height={400}>
                   <AreaChart data={hourlyData}>
                     <defs>
                       <linearGradient
@@ -471,13 +521,12 @@ export default function Analytics() {
             </Card>
           </Grid>
 
-          {/* Charts Row 1 - Right */}
-          <Grid item xs={12} lg={5}>
+          {/* Charts Row - Top Pages & Traffic Sources */}
+          <Grid item xs={12} lg={6}>
             <Card
               sx={{
                 background: '#1e293b',
                 border: '1px solid #334155',
-                height: '100%',
               }}
             >
               <CardContent>
@@ -491,14 +540,14 @@ export default function Analytics() {
                 >
                   Top Pages
                 </Typography>
-                <ResponsiveContainer width="100%" height={350}>
-                  <BarChart data={pagesData} layout="vertical">
+                <ResponsiveContainer width="100%" height={400}>
+                  <BarChart data={pagesData.slice(0, 8)} layout="vertical">
                     <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
                     <XAxis type="number" stroke="#64748b" />
                     <YAxis
                       dataKey="name"
                       type="category"
-                      width={150}
+                      width={120}
                       stroke="#64748b"
                       tick={{ fontSize: 12 }}
                     />
@@ -516,64 +565,11 @@ export default function Analytics() {
             </Card>
           </Grid>
 
-          {/* Charts Row 2 */}
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} lg={6}>
             <Card
               sx={{
                 background: '#1e293b',
                 border: '1px solid #334155',
-                height: '100%',
-              }}
-            >
-              <CardContent>
-                <Typography
-                  sx={{
-                    fontSize: '1.25rem',
-                    fontWeight: 700,
-                    mb: 2,
-                    color: '#f1f5f9',
-                  }}
-                >
-                  Top Countries
-                </Typography>
-                <ResponsiveContainer width="100%" height={350}>
-                  <PieChart>
-                    <Pie
-                      data={countriesData}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={false}
-                      label={({ name, value }) => `${name}: ${value}`}
-                      outerRadius={100}
-                      fill="#3b82f6"
-                      dataKey="value"
-                    >
-                      {countriesData.map((_, index) => (
-                        <Cell
-                          key={`cell-${index}`}
-                          fill={COLORS[index % COLORS.length]}
-                        />
-                      ))}
-                    </Pie>
-                    <Tooltip
-                      contentStyle={{
-                        background: '#0f172a',
-                        border: '1px solid #334155',
-                        borderRadius: '8px',
-                      }}
-                    />
-                  </PieChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          <Grid item xs={12} md={6}>
-            <Card
-              sx={{
-                background: '#1e293b',
-                border: '1px solid #334155',
-                height: '100%',
               }}
             >
               <CardContent>
@@ -587,8 +583,8 @@ export default function Analytics() {
                 >
                   Traffic Sources
                 </Typography>
-                <ResponsiveContainer width="100%" height={350}>
-                  <BarChart data={referrersData}>
+                <ResponsiveContainer width="100%" height={400}>
+                  <BarChart data={referrersData.slice(0, 8)}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
                     <XAxis
                       dataKey="name"
@@ -612,12 +608,108 @@ export default function Analytics() {
               </CardContent>
             </Card>
           </Grid>
+
+          {/* Charts Row - Geographic Distribution */}
+          <Grid item xs={12} lg={6}>
+            <Card
+              sx={{
+                background: '#1e293b',
+                border: '1px solid #334155',
+              }}
+            >
+              <CardContent>
+                <Typography
+                  sx={{
+                    fontSize: '1.25rem',
+                    fontWeight: 700,
+                    mb: 2,
+                    color: '#f1f5f9',
+                  }}
+                >
+                  Top Countries
+                </Typography>
+                <ResponsiveContainer width="100%" height={400}>
+                  <PieChart>
+                    <Pie
+                      data={topCountries}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={({ name, value }) => `${name}: ${value}`}
+                      outerRadius={120}
+                      fill="#3b82f6"
+                      dataKey="value"
+                    >
+                      {topCountries.map((_, index) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={COLORS[index % COLORS.length]}
+                        />
+                      ))}
+                    </Pie>
+                    <Tooltip
+                      contentStyle={{
+                        background: '#0f172a',
+                        border: '1px solid #334155',
+                        borderRadius: '8px',
+                      }}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+          </Grid>
+
+          {/* Top Cities */}
+          <Grid item xs={12} lg={6}>
+            <Card
+              sx={{
+                background: '#1e293b',
+                border: '1px solid #334155',
+              }}
+            >
+              <CardContent>
+                <Typography
+                  sx={{
+                    fontSize: '1.25rem',
+                    fontWeight: 700,
+                    mb: 2,
+                    color: '#f1f5f9',
+                  }}
+                >
+                  Top Cities
+                </Typography>
+                <ResponsiveContainer width="100%" height={400}>
+                  <BarChart data={topCities}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                    <XAxis
+                      dataKey="name"
+                      stroke="#64748b"
+                      angle={-45}
+                      textAnchor="end"
+                      height={80}
+                      tick={{ fontSize: 12 }}
+                    />
+                    <YAxis stroke="#64748b" />
+                    <Tooltip
+                      contentStyle={{
+                        background: '#0f172a',
+                        border: '1px solid #334155',
+                        borderRadius: '8px',
+                      }}
+                    />
+                    <Bar dataKey="value" fill="#f59e0b" radius={[8, 8, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+          </Grid>
         </Grid>
       )}
 
       {stats && activeTab === 'geography' && (
         <Grid container spacing={3}>
-          <Grid item xs={12}>
+          <Grid item xs={12} lg={8}>
             <Card sx={{ background: '#1e293b', border: '1px solid #334155' }}>
               <CardContent>
                 <Typography
@@ -628,7 +720,7 @@ export default function Analytics() {
                     color: '#f1f5f9',
                   }}
                 >
-                  Geographic Distribution
+                  Country Distribution
                 </Typography>
                 <TableContainer>
                   <Table size="small">
@@ -678,12 +770,62 @@ export default function Analytics() {
               </CardContent>
             </Card>
           </Grid>
+
+          <Grid item xs={12} lg={4}>
+            <Card sx={{ background: '#1e293b', border: '1px solid #334155' }}>
+              <CardContent>
+                <Typography
+                  sx={{
+                    fontSize: '1.25rem',
+                    fontWeight: 700,
+                    mb: 3,
+                    color: '#f1f5f9',
+                  }}
+                >
+                  Geographic Summary
+                </Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  <Box>
+                    <Typography sx={{ fontSize: '0.875rem', color: '#94a3b8' }}>
+                      Total Countries
+                    </Typography>
+                    <Typography
+                      sx={{
+                        fontSize: '2rem',
+                        fontWeight: 700,
+                        color: '#3b82f6',
+                      }}
+                    >
+                      {countriesData.length}
+                    </Typography>
+                  </Box>
+                  <Box>
+                    <Typography sx={{ fontSize: '0.875rem', color: '#94a3b8' }}>
+                      Top Country
+                    </Typography>
+                    <Typography
+                      sx={{
+                        fontSize: '1.5rem',
+                        fontWeight: 700,
+                        color: '#10b981',
+                      }}
+                    >
+                      {countriesData[0]?.name || 'N/A'}
+                    </Typography>
+                    <Typography sx={{ fontSize: '0.875rem', color: '#64748b' }}>
+                      {countriesData[0]?.value || 0} visits
+                    </Typography>
+                  </Box>
+                </Box>
+              </CardContent>
+            </Card>
+          </Grid>
         </Grid>
       )}
 
       {stats && activeTab === 'behavior' && (
         <Grid container spacing={3}>
-          <Grid item xs={12}>
+          <Grid item xs={12} lg={8}>
             <Card sx={{ background: '#1e293b', border: '1px solid #334155' }}>
               <CardContent>
                 <Typography
@@ -748,6 +890,67 @@ export default function Analytics() {
               </CardContent>
             </Card>
           </Grid>
+
+          <Grid item xs={12} lg={4}>
+            <Card sx={{ background: '#1e293b', border: '1px solid #334155' }}>
+              <CardContent>
+                <Typography
+                  sx={{
+                    fontSize: '1.25rem',
+                    fontWeight: 700,
+                    mb: 3,
+                    color: '#f1f5f9',
+                  }}
+                >
+                  Behavior Metrics
+                </Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  <Box>
+                    <Typography sx={{ fontSize: '0.875rem', color: '#94a3b8' }}>
+                      Bounce Rate
+                    </Typography>
+                    <Typography
+                      sx={{
+                        fontSize: '2rem',
+                        fontWeight: 700,
+                        color: '#ef4444',
+                      }}
+                    >
+                      {bounceRate}%
+                    </Typography>
+                  </Box>
+                  <Box>
+                    <Typography sx={{ fontSize: '0.875rem', color: '#94a3b8' }}>
+                      Return Visitors
+                    </Typography>
+                    <Typography
+                      sx={{
+                        fontSize: '2rem',
+                        fontWeight: 700,
+                        color: '#10b981',
+                      }}
+                    >
+                      {returnVisitorsRate}%
+                    </Typography>
+                  </Box>
+                  <Box>
+                    <Typography sx={{ fontSize: '0.875rem', color: '#94a3b8' }}>
+                      Avg Pages/Session
+                    </Typography>
+                    <Typography
+                      sx={{
+                        fontSize: '2rem',
+                        fontWeight: 700,
+                        color: '#3b82f6',
+                      }}
+                    >
+                      {avgPagesPerSession}
+                    </Typography>
+                  </Box>
+                </Box>
+              </CardContent>
+            </Card>
+          </Grid>
         </Grid>
       )}
 
@@ -772,6 +975,9 @@ export default function Analytics() {
                       <TableRow sx={{ backgroundColor: '#0f172a' }}>
                         <TableCell sx={{ color: '#cbd5e1', fontWeight: 700 }}>
                           Country
+                        </TableCell>
+                        <TableCell sx={{ color: '#cbd5e1', fontWeight: 700 }}>
+                          City
                         </TableCell>
                         <TableCell sx={{ color: '#cbd5e1', fontWeight: 700 }}>
                           ISP
@@ -822,6 +1028,9 @@ export default function Analytics() {
                                 )}
                                 {visitor.country}
                               </Box>
+                            </TableCell>
+                            <TableCell sx={{ color: '#e2e8f0' }}>
+                              {visitor.city}
                             </TableCell>
                             <TableCell
                               sx={{ color: '#94a3b8', fontSize: '0.875rem' }}
