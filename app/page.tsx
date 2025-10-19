@@ -95,8 +95,12 @@ export default function Home() {
       </div>
 
       <div
+        style={{
+          boxShadow: '20px 20px 50px rgb(0 0 255 / 0.5)',
+          borderRadius: '24px',
+          overflow: 'hidden',
+        }}
         className="z-10 w-full max-w-3xl items-center justify-between font-mono text-sm"
-        style={{ boxShadow: '20px 20px 50px rgb(0 0 255 / 0.5)' }}
       >
         <div className="api-banner flex w-full justify-center border-b border-gray-300 from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:from-inherit lg:static lg:w-auto lg:rounded-xl">
           <div
