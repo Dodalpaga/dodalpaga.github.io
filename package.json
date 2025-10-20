@@ -74,6 +74,7 @@
     "react-next-tilt": "^0.4.3",
     "react-resizable-panels": "^2.1.2",
     "react-toastify": "^11.0.5",
+    "react-window": "^2.2.1",
     "recharts": "^3.3.0",
     "rehype-format": "^5.0.1",
     "rehype-highlight": "^7.0.1",
