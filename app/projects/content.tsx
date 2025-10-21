@@ -36,7 +36,7 @@ const apps = [
   },
   {
     title: 'Image Generation',
-    image: `/images/detection.jpeg`, // Update with your actual image path
+    image: `/images/image_gen.jpg`, // Update with your actual image path
     link: '/projects/image_generation', // Update with your actual routes
     target: '',
     description: 'Image Generation using Stable Diffusion',
