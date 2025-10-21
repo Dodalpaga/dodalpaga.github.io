@@ -42,7 +42,7 @@ export default function ImageSegmentation() {
     try {
       setModelsLoading(true);
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL_IMG_DETECTION}/models`
+        `${process.env.NEXT_PUBLIC_API_URL}/detection/models`
       );
       if (!response.ok) {
         throw new Error('Failed to fetch models');
@@ -91,7 +91,7 @@ export default function ImageSegmentation() {
     setDetections([]);
 
     fetch(
-      `${process.env.NEXT_PUBLIC_API_URL_IMG_DETECTION}/detect_image?model_name=${modelName}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/detection/detect_image?model_name=${modelName}`,
       {
         method: 'POST',
         headers: {

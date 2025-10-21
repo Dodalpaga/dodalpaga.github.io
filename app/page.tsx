@@ -113,7 +113,7 @@ export default function Home() {
             <div>
               You can check the backend API&nbsp;
               <Link
-                href={`${process.env.NEXT_PUBLIC_API_URL_DOCS}`}
+                href={`${process.env.NEXT_PUBLIC_API_URL}/docs`}
                 target="_blank"
               >
                 <code className="font-mono font-bold">here</code>

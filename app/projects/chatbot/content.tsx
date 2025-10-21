@@ -44,7 +44,7 @@ export default function Content() {
     const fetchModels = async () => {
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL_LLM}/models`,
+          `${process.env.NEXT_PUBLIC_API_URL}/llm/models`,
           {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
@@ -74,7 +74,7 @@ export default function Content() {
   const handleModelChange = async (newModel: string) => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL_LLM}/set-model?model_name=${encodeURIComponent(newModel)}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/llm/set-model?model_name=${encodeURIComponent(newModel)}`,
         {
           method: 'POST',
           headers: {
@@ -104,8 +104,7 @@ export default function Content() {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL_LLM}` +
-          `/generate?input=${encodeURIComponent(input)}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/llm/generate?input=${encodeURIComponent(input)}`,
         {
           method: 'POST',
           headers: {

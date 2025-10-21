@@ -152,10 +152,10 @@ export default function Analytics() {
     try {
       const [statsRes, visitorsRes] = await Promise.all([
         fetch(
-          `${process.env.NEXT_PUBLIC_API_URL_ANALYTICS}/stats?days=${days}`
+          `${process.env.NEXT_PUBLIC_API_URL}/analytics/stats?days=${days}`
         ),
         fetch(
-          `${process.env.NEXT_PUBLIC_API_URL_ANALYTICS}/visitors?days=${days}`
+          `${process.env.NEXT_PUBLIC_API_URL}/analytics/visitors?days=${days}`
         ),
       ]);
 

@@ -63,14 +63,12 @@ name: Deploy Next.js site to Pages
 
          - name: Debug Secrets
            run: |
-             echo "NEXT_PUBLIC_API_URL_DOCS: ${{ secrets.NEXT_PUBLIC_API_URL_DOCS }}"
-             echo "NEXT_PUBLIC_MAPTILER_API_KEY: ${{ secrets.NEXT_PUBLIC_MAPTILER_API_KEY }}"
+             echo "NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}"
 
          - name: Build with Next.js
            run: ${{ steps.detect-package-manager.outputs.runner }} next build
            env:
-             NEXT_PUBLIC_API_URL_DOCS: ${{ secrets.NEXT_PUBLIC_API_URL_DOCS }}
-             NEXT_PUBLIC_MAPTILER_API_KEY: ${{ secrets.NEXT_PUBLIC_MAPTILER_API_KEY }}
+             NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
 
          - name: Upload artifact
            uses: actions/upload-pages-artifact@v3

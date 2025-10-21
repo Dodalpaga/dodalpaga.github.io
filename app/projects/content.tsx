@@ -35,6 +35,13 @@ const apps = [
       'Utilizing the power of YOLO (You Only Look Once), this application enables real-time object detection within images.',
   },
   {
+    title: 'Image Generation',
+    image: `/images/detection.jpeg`, // Update with your actual image path
+    link: '/projects/image_generation', // Update with your actual routes
+    target: '',
+    description: 'Image Generation using Stable Diffusion',
+  },
+  {
     title: "What's Halfway ?",
     image: `/images/whats_halfway.png`, // Update with your actual image path
     link: '/projects/whats_halfway', // Update with your actual routes

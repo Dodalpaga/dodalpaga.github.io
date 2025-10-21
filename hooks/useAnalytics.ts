@@ -18,7 +18,7 @@ export function useAnalytics() {
     }
 
     const trackPage = () => {
-      fetch(`${process.env.NEXT_PUBLIC_API_URL_ANALYTICS}/track`, {
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/analytics/track`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

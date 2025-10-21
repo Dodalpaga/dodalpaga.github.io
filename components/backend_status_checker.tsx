@@ -5,7 +5,7 @@ import { AlertCircle, CheckCircle, XCircle, Link } from 'lucide-react';
 import './backend_status_checker.css';
 import ScrollingTitle from '@/components/scrolling_title';
 
-const CHECK_URL = `${process.env.NEXT_PUBLIC_API_URL_DOCS}`; // Change to your backend URL
+const CHECK_URL = `${process.env.NEXT_PUBLIC_API_URL}/docs`;
 const TIMEOUT = 5000; // 5 seconds timeout
 const CHECK_INTERVAL = 10000; // 10 seconds interval
 

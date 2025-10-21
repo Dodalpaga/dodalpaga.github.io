@@ -41,8 +41,8 @@ export default function Content() {
 
       // Send a POST request to the FastAPI endpoint with the base64 image
       fetch(
-        `${process.env.NEXT_PUBLIC_API_URL_IMG_SEGMENTATION}` +
-          `?model_name=${modelName}`, // Use selected model name
+        `${process.env.NEXT_PUBLIC_API_URL}` +
+          `/segmentation?model_name=${modelName}`, // Use selected model name
         {
           method: 'POST',
           headers: {
