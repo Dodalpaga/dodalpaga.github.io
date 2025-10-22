@@ -1,19 +1,24 @@
 import * as React from 'react';
-import Container from '@mui/material/Container';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
-import Box from '@mui/material/Box';
-import CircularProgress from '@mui/material/CircularProgress';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
-import Chip from '@mui/material/Chip';
 import DownloadIcon from '@mui/icons-material/Download';
-import Tooltip from '@mui/material/Tooltip';
-import Alert from '@mui/material/Alert';
+import { Info } from 'lucide-react';
+import {
+  Container,
+  Grid,
+  CircularProgress,
+  Chip,
+  Alert,
+  Typography,
+  Paper,
+  Box,
+  TextField,
+  Tooltip,
+  IconButton,
+  Button,
+} from '@mui/material';
 
 export default function Content() {
   const [prompt, setPrompt] = React.useState('');
+  const [hfToken, setHfToken] = React.useState('');
   const [loading, setLoading] = React.useState(false);
   const [imageUrl, setImageUrl] = React.useState<string | null>(null);
   const [error, setError] = React.useState<string | null>(null);
@@ -32,13 +37,17 @@ export default function Content() {
       setError('Please enter a prompt');
       return;
     }
+    if (!hfToken.trim()) {
+      setError('Please enter a HuggingFace API token');
+      return;
+    }
 
     setLoading(true);
     setError(null);
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/image_gen/generate`,
+        `${process.env.NEXT_PUBLIC_API_URL}/image_gen/generate?hf_token=${encodeURIComponent(hfToken)}`,
         {
           method: 'POST',
           headers: {
@@ -79,25 +88,48 @@ export default function Content() {
     }
   };
 
-  const handleExampleClick = (example: string) => {
+  const handleExampleClick = (example: React.SetStateAction<string>) => {
     setPrompt(example);
     setError(null); // Clear error when selecting an example
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: {
+    key: string;
+    ctrlKey: any;
+    metaKey: any;
+    preventDefault: () => void;
+  }) => {
     if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
       e.preventDefault();
       handleGenerate();
     }
   };
 
-  const handlePromptChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePromptChange = (e: {
+    target: { value: React.SetStateAction<string> };
+  }) => {
     setPrompt(e.target.value);
+    setError(null); // Clear error when user starts typing
+  };
+
+  const handleTokenChange = (e: {
+    target: { value: React.SetStateAction<string> };
+  }) => {
+    setHfToken(e.target.value);
     setError(null); // Clear error when user starts typing
   };
 
   const handleCloseError = () => {
     setError(null); // Clear error when closing the alert
+  };
+
+  const inputStyles = {
+    '& .MuiOutlinedInput-root': {
+      color: 'var(--foreground)',
+      '& fieldset': { borderColor: 'var(--foreground)' },
+      '&:hover fieldset': { borderColor: 'var(--foreground)' },
+      '&.Mui-focused fieldset': { borderColor: 'var(--foreground)' },
+    },
   };
 
   return (
@@ -174,7 +206,7 @@ export default function Content() {
               multiline
               rows={6}
               value={prompt}
-              onChange={handlePromptChange} // Updated to use new handler
+              onChange={handlePromptChange}
               onKeyDown={handleKeyDown}
               variant="outlined"
               placeholder="Describe the image you want to create in detail..."
@@ -200,12 +232,126 @@ export default function Content() {
               autoFocus
             />
 
+            <Typography
+              variant="h6"
+              sx={{ mb: 2, fontWeight: 600, color: 'var(--foreground)' }}
+            >
+              HuggingFace API Token
+            </Typography>
+
+            <Box
+              sx={{
+                mb: 2,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                textAlign: 'center',
+              }}
+            >
+              <TextField
+                fullWidth
+                value={hfToken}
+                onChange={handleTokenChange}
+                variant="outlined"
+                placeholder="Enter your HuggingFace API token..."
+                disabled={loading}
+                type="password"
+                autoComplete="off"
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    color: 'var(--foreground-2)',
+                    backgroundColor: 'var(--background-2)',
+                    borderRadius: 2,
+                    '& fieldset': {
+                      borderColor: 'rgba(255, 255, 255, 0.1)',
+                    },
+                    '&:hover fieldset': {
+                      borderColor: 'rgba(255, 255, 255, 0.2)',
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderColor: '#667eea',
+                    },
+                  },
+                }}
+              />
+              <Tooltip
+                title={
+                  <Box sx={{ p: 1 }}>
+                    <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
+                      🔒 Confidentialité du Token
+                    </Typography>
+                    <Typography
+                      variant="caption"
+                      sx={{ display: 'block', mb: 0.5 }}
+                    >
+                      • Your token is never stored either in a database nor in a
+                      persistent variable
+                    </Typography>
+                    <Typography
+                      variant="caption"
+                      sx={{ display: 'block', mb: 0.5 }}
+                    >
+                      • It is use only for this API request
+                    </Typography>
+                    <Typography
+                      variant="caption"
+                      sx={{ display: 'block', mb: 0.5 }}
+                    >
+                      • The token is not stored on my server either
+                    </Typography>
+                    <Typography
+                      variant="caption"
+                      sx={{
+                        display: 'block',
+                        fontStyle: 'italic',
+                        mt: 1,
+                        mb: 1,
+                      }}
+                    >
+                      The safety of your data is my priority
+                    </Typography>
+                    <Typography
+                      variant="caption"
+                      sx={{
+                        display: 'block',
+                        mt: 1.5,
+                        pt: 1,
+                        borderTop: '1px solid rgba(255,255,255,0.2)',
+                      }}
+                    >
+                      No token ?{' '}
+                      <a
+                        href="https://huggingface.co/settings/tokens"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          color: '#87ceeb',
+                          textDecoration: 'underline',
+                        }}
+                      >
+                        Create one here
+                      </a>
+                    </Typography>
+                  </Box>
+                }
+                arrow
+                placement="bottom"
+              >
+                <IconButton
+                  size="small"
+                  sx={{ color: 'var(--foreground)', opacity: 0.6 }}
+                >
+                  <Info size={20} />
+                </IconButton>
+              </Tooltip>
+            </Box>
+
             <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
               <Button
                 fullWidth
                 variant="contained"
                 onClick={handleGenerate}
-                disabled={loading || !prompt.trim()}
+                disabled={loading || !prompt.trim() || !hfToken.trim()}
                 sx={{
                   py: 1.5,
                   fontSize: '16px',

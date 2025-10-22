@@ -11,17 +11,32 @@ import {
   Typography,
   Paper,
   Box,
+  TextField,
+  Tooltip,
+  IconButton,
 } from '@mui/material';
+import { Info } from 'lucide-react';
+
+interface Model {
+  value: string;
+  label: string;
+}
+
+interface Detection {
+  label: string;
+  score: number;
+}
 
 export default function ImageSegmentation() {
   const [uploadedImage, setUploadedImage] = React.useState<string | null>(null);
   const [processedImage, setProcessedImage] = React.useState<string | null>(
     null
   );
-  const [detections, setDetections] = React.useState<any[]>([]);
+  const [detections, setDetections] = React.useState<Detection[]>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [modelName, setModelName] = React.useState<string>('');
-  const [availableModels, setAvailableModels] = React.useState<any[]>([]);
+  const [hfToken, setHfToken] = React.useState<string>('');
+  const [availableModels, setAvailableModels] = React.useState<Model[]>([]);
   const [modelsLoading, setModelsLoading] = React.useState<boolean>(true);
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
 
@@ -44,12 +59,10 @@ export default function ImageSegmentation() {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/detection/models`
       );
-      if (!response.ok) {
-        throw new Error('Failed to fetch models');
-      }
+      if (!response.ok) throw new Error('Failed to fetch models');
       const data = await response.json();
       setAvailableModels(data.models || []);
-      if (data.models && data.models.length > 0) {
+      if (data.models?.length > 0) {
         setModelName(data.models[0].value);
       }
     } catch (error) {
@@ -74,14 +87,17 @@ export default function ImageSegmentation() {
     }
   };
 
-  const handleProcessImage = () => {
+  const handleProcessImage = async () => {
     if (!uploadedImage) {
       setErrorMessage('No image uploaded.');
       return;
     }
-
     if (!modelName) {
       setErrorMessage('No model selected.');
+      return;
+    }
+    if (!hfToken.trim()) {
+      setErrorMessage('Please enter a HuggingFace API token.');
       return;
     }
 
@@ -90,34 +106,41 @@ export default function ImageSegmentation() {
     setProcessedImage(null);
     setDetections([]);
 
-    fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/detection/detect_image?model_name=${modelName}`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ base64_image: uploadedImage }),
-      }
-    )
-      .then(async (response) => {
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.detail || 'Unknown error occurred');
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/detection/detect_image?model_name=${encodeURIComponent(modelName)}&hf_token=${encodeURIComponent(hfToken)}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ base64_image: uploadedImage }),
         }
-        return response.json();
-      })
-      .then((data) => {
-        setProcessedImage(data.base64_image);
-        setDetections(data.detections || []);
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-        setErrorMessage(error.message);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Unknown error occurred');
+      }
+
+      const data = await response.json();
+      setProcessedImage(data.base64_image);
+      setDetections(data.detections || []);
+    } catch (error) {
+      console.error('Error:', error);
+      setErrorMessage(
+        error instanceof Error ? error.message : 'An error occurred'
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const inputStyles = {
+    '& .MuiOutlinedInput-root': {
+      color: 'var(--foreground)',
+      '& fieldset': { borderColor: 'var(--foreground)' },
+      '&:hover fieldset': { borderColor: 'var(--foreground)' },
+      '&.Mui-focused fieldset': { borderColor: 'var(--foreground)' },
+    },
   };
 
   return (
@@ -146,29 +169,11 @@ export default function ImageSegmentation() {
       <Stack
         spacing={2}
         direction="row"
-        sx={{
-          marginBottom: 4,
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-        }}
+        sx={{ marginBottom: 4, flexWrap: 'wrap', justifyContent: 'center' }}
       >
         <FormControl
           variant="outlined"
-          sx={{
-            minWidth: 280,
-            '& .MuiOutlinedInput-root': {
-              color: 'var(--foreground)',
-              '& fieldset': {
-                borderColor: 'var(--foreground)',
-              },
-              '&:hover fieldset': {
-                borderColor: 'var(--foreground)',
-              },
-              '&.Mui-focused fieldset': {
-                borderColor: 'var(--foreground)',
-              },
-            },
-          }}
+          sx={{ minWidth: 280, ...inputStyles }}
           disabled={modelsLoading}
         >
           <InputLabel
@@ -180,16 +185,14 @@ export default function ImageSegmentation() {
           <Select
             labelId="model-select-label"
             value={modelName}
-            onChange={(event) => setModelName(event.target.value)}
+            onChange={(e) => setModelName(e.target.value)}
             label={
               modelsLoading ? 'Loading models...' : 'Model from HuggingFace'
             }
             sx={{
               minWidth: 280,
               color: 'var(--foreground)',
-              '& .MuiSelect-icon': {
-                color: 'var(--foreground)',
-              },
+              '& .MuiSelect-icon': { color: 'var(--foreground)' },
             }}
           >
             {availableModels.map((model) => (
@@ -199,6 +202,83 @@ export default function ImageSegmentation() {
             ))}
           </Select>
         </FormControl>
+
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+          <TextField
+            variant="outlined"
+            value={hfToken}
+            onChange={(e) => {
+              setHfToken(e.target.value);
+              setErrorMessage(null);
+            }}
+            placeholder="Enter HuggingFace API token..."
+            disabled={loading || modelsLoading}
+            type="password"
+            sx={{ minWidth: 280, ...inputStyles }}
+          />
+          <Tooltip
+            title={
+              <Box sx={{ p: 1 }}>
+                <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
+                  🔒 Confidentialité du Token
+                </Typography>
+                <Typography
+                  variant="caption"
+                  sx={{ display: 'block', mb: 0.5 }}
+                >
+                  • Your token is never stored either in a database nor in a
+                  persistent variable
+                </Typography>
+                <Typography
+                  variant="caption"
+                  sx={{ display: 'block', mb: 0.5 }}
+                >
+                  • It is use only for this API request
+                </Typography>
+                <Typography
+                  variant="caption"
+                  sx={{ display: 'block', mb: 0.5 }}
+                >
+                  • The token is not stored on my server either
+                </Typography>
+                <Typography
+                  variant="caption"
+                  sx={{ display: 'block', fontStyle: 'italic', mt: 1, mb: 1 }}
+                >
+                  The safety of your data is my priority
+                </Typography>
+                <Typography
+                  variant="caption"
+                  sx={{
+                    display: 'block',
+                    mt: 1.5,
+                    pt: 1,
+                    borderTop: '1px solid rgba(255,255,255,0.2)',
+                  }}
+                >
+                  No token ?{' '}
+                  <a
+                    href="https://huggingface.co/settings/tokens"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ color: '#87ceeb', textDecoration: 'underline' }}
+                  >
+                    Create one here
+                  </a>
+                </Typography>
+              </Box>
+            }
+            arrow
+            placement="bottom"
+          >
+            <IconButton
+              size="small"
+              sx={{ color: 'var(--foreground)', opacity: 0.6 }}
+            >
+              <Info size={20} />
+            </IconButton>
+          </Tooltip>
+        </Box>
 
         <Button variant="contained" component="label" sx={{ minWidth: 120 }}>
           Upload
@@ -213,7 +293,13 @@ export default function ImageSegmentation() {
         <Button
           variant="contained"
           onClick={handleProcessImage}
-          disabled={loading || !uploadedImage || !modelName || modelsLoading}
+          disabled={
+            loading ||
+            !uploadedImage ||
+            !modelName ||
+            !hfToken.trim() ||
+            modelsLoading
+          }
           sx={{ minWidth: 120 }}
         >
           {loading ? <CircularProgress size={24} color="inherit" /> : 'Process'}
@@ -226,7 +312,7 @@ export default function ImageSegmentation() {
         direction="row"
         sx={{ width: '100%', height: 'calc(100vh - 300px)', gap: 2 }}
       >
-        {/* Left Panel - Uploaded Image (2/5) */}
+        {/* Left Panel - Uploaded Image */}
         <Box sx={{ flex: '2', display: 'flex', flexDirection: 'column' }}>
           <Paper
             sx={{
@@ -243,7 +329,7 @@ export default function ImageSegmentation() {
             {uploadedImage ? (
               <img
                 src={uploadedImage}
-                alt="Uploaded Image"
+                alt="Uploaded"
                 style={{
                   maxWidth: '100%',
                   maxHeight: '100%',
@@ -258,9 +344,8 @@ export default function ImageSegmentation() {
           </Paper>
         </Box>
 
-        {/* Center Panel - Results (2/5) */}
+        {/* Center Panel - Results */}
         <Box sx={{ flex: '2', display: 'flex', flexDirection: 'column' }}>
-          {/* Segmented Image */}
           <Paper
             sx={{
               padding: 3,
@@ -278,7 +363,7 @@ export default function ImageSegmentation() {
             ) : processedImage ? (
               <img
                 src={processedImage}
-                alt="Processed Image"
+                alt="Processed"
                 style={{
                   maxWidth: '100%',
                   maxHeight: '100%',
@@ -297,7 +382,7 @@ export default function ImageSegmentation() {
           </Paper>
         </Box>
 
-        {/* Right Panel - Detections List (1/5) */}
+        {/* Right Panel - Detections List */}
         {detections.length > 0 && (
           <Box
             sx={{
@@ -307,9 +392,7 @@ export default function ImageSegmentation() {
               height: '100%',
               overflowY: 'auto',
               paddingRight: 1,
-              '&::-webkit-scrollbar': {
-                width: '8px',
-              },
+              '&::-webkit-scrollbar': { width: '8px' },
               '&::-webkit-scrollbar-track': {
                 backgroundColor: 'var(--background)',
               },
@@ -360,7 +443,7 @@ export default function ImageSegmentation() {
                     opacity: 0.7,
                   }}
                 >
-                  {(detection.score * 100).toFixed(1)}
+                  {(detection.score * 100).toFixed(1)}%
                 </Typography>
               </Box>
             ))}
