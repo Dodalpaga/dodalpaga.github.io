@@ -96,66 +96,51 @@ export default function Home() {
 
       <div
         style={{
-          boxShadow: '20px 20px 50px rgb(0 0 255 / 0.5)',
+          boxShadow: '10px 10px 15px var(--foreground-2)',
           borderRadius: '24px',
-          overflow: 'hidden',
         }}
-        className="z-10 w-full max-w-3xl items-center justify-between font-mono text-sm"
+        className="z-10 w-full max-w-3xl font-mono text-sm"
       >
-        <div className="api-banner flex w-full justify-center border-b border-gray-300 from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:from-inherit lg:static lg:w-auto lg:rounded-xl">
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              textAlign: 'center',
-            }}
-          >
-            <div>
-              You can check the backend API&nbsp;
-              <Link
-                href={`${process.env.NEXT_PUBLIC_API_URL}/docs`}
-                target="_blank"
-              >
-                <code className="font-mono font-bold">here</code>
-              </Link>
-            </div>
-
-            <div
-              style={{
-                display: 'flex',
-                gap: '8px',
-                marginTop: '12px',
-                justifyContent: 'center',
-              }}
+        <div className="api-banner flex flex-col items-center justify-center w-full pb-6 pt-8 from-zinc-200 backdrop-blur-2xl dark:from-inherit lg:static lg:w-auto lg:rounded-xl text-center">
+          <div>
+            You can check the backend API&nbsp;
+            <Link
+              href={`${process.env.NEXT_PUBLIC_API_URL}/docs`}
+              target="_blank"
             >
-              <Link href="/privacy">
-                <Button
-                  size="small"
-                  title="Read our privacy policy"
-                  sx={{
-                    textTransform: 'none',
-                    fontSize: '0.875rem',
-                    padding: '6px 12px',
-                  }}
-                >
-                  📋 Privacy Policy
-                </Button>
-              </Link>
-              {isMounted && hasConsent && (
-                <Button
-                  size="small"
-                  onClick={withdrawConsent}
-                  title="Clear analytics consent and prompt again"
-                  sx={{
-                    textTransform: 'none',
-                    fontSize: '0.875rem',
-                    padding: '6px 12px',
-                  }}
-                >
-                  🍪 Withdraw Consent
-                </Button>
-              )}
-            </div>
+              <code className="font-mono font-bold">here</code>
+            </Link>
+          </div>
+
+          <div className="flex gap-2 mt-3 justify-center">
+            <Link href="/privacy">
+              <Button
+                size="small"
+                title="Read our privacy policy"
+                sx={{
+                  textTransform: 'none',
+                  fontSize: '0.875rem',
+                  padding: '6px 12px',
+                }}
+              >
+                📋 Privacy Policy
+              </Button>
+            </Link>
+
+            {isMounted && hasConsent && (
+              <Button
+                size="small"
+                onClick={withdrawConsent}
+                title="Clear analytics consent and prompt again"
+                sx={{
+                  textTransform: 'none',
+                  fontSize: '0.875rem',
+                  padding: '6px 12px',
+                }}
+              >
+                🍪 Withdraw Consent
+              </Button>
+            )}
           </div>
         </div>
       </div>
