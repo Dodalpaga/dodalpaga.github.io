@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Container } from '@mui/material';
+import InfoIcon from '@mui/icons-material/Info';
 import {
   BarChart,
   Bar,
@@ -66,7 +67,6 @@ interface ChangeData {
   positive: boolean;
 }
 
-// Nouvelle fonction : compare période actuelle vs période précédente
 const calculatePeriodChange = (
   current: number,
   previous: number
@@ -107,16 +107,24 @@ const StatCard: React.FC<StatCardProps> = ({
   >
     {explanation ? (
       <div className="group relative">
-        <div className="text-xs font-medium uppercase tracking-wider text-gray-600 mb-2 cursor-help">
+        <div
+          className="text-xs font-medium uppercase tracking-wider mb-2 cursor-help"
+          style={{ color: 'var(--foreground)' }}
+        >
           {title}
-          <span className="ml-1 text-gray-400">i</span>
+          <span className="ml-1 opacity-60">
+            <InfoIcon />
+          </span>
         </div>
         <div className="absolute left-0 top-full mt-2 w-48 bg-gray-900 text-white text-xs rounded-lg p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10 shadow-lg">
           {explanation}
         </div>
       </div>
     ) : (
-      <div className="text-xs font-medium uppercase tracking-wider text-gray-600 mb-2">
+      <div
+        className="text-xs font-medium uppercase tracking-wider mb-2"
+        style={{ color: 'var(--foreground)' }}
+      >
         {title}
       </div>
     )}
@@ -136,7 +144,11 @@ const StatCard: React.FC<StatCardProps> = ({
         </div>
       )}
     </div>
-    {subtitle && <div className="text-sm text-gray-600">{subtitle}</div>}
+    {subtitle && (
+      <div className="text-sm" style={{ color: 'var(--foreground)' }}>
+        {subtitle}
+      </div>
+    )}
   </div>
 );
 
@@ -146,8 +158,21 @@ interface ChartCardProps {
 }
 
 const ChartCard: React.FC<ChartCardProps> = ({ title, children }) => (
-  <div className="bg-white rounded-xl p-6 shadow-lg hover:-translate-y-1 transition-transform duration-200">
-    <h3 className="text-xl font-bold mb-4 text-gray-800">{title}</h3>
+  <div
+    className="rounded-xl p-6 shadow-lg hover:-translate-y-1 transition-transform duration-200"
+    style={{
+      background: 'var(--background-transparent)',
+      backdropFilter: 'blur(12px)',
+      WebkitBackdropFilter: 'blur(12px)',
+      border: '1px solid rgba(255, 255, 255, 0.1)',
+    }}
+  >
+    <h3
+      className="text-xl font-bold mb-4"
+      style={{ color: 'var(--foreground)' }}
+    >
+      {title}
+    </h3>
     {children}
   </div>
 );
@@ -171,8 +196,20 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
 }) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-gray-900 text-white p-3 rounded-lg shadow-xl">
-        <div className="font-semibold mb-2">{label}</div>
+      <div
+        className="p-3 rounded-lg shadow-xl border"
+        style={{
+          background: 'var(--background-transparent)',
+          backdropFilter: 'blur(8px)',
+          borderColor: 'rgba(255, 255, 255, 0.2)',
+        }}
+      >
+        <div
+          className="font-semibold mb-2"
+          style={{ color: 'var(--foreground)' }}
+        >
+          {label}
+        </div>
         {payload.map((entry, index) => (
           <div key={index} className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-2">
@@ -182,9 +219,16 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
                   backgroundColor: entry.color || COLORS[index % COLORS.length],
                 }}
               />
-              <span className="text-sm">{entry.name || 'Views'}</span>
+              <span className="text-sm" style={{ color: 'var(--foreground)' }}>
+                {entry.name || 'Views'}
+              </span>
             </div>
-            <span className="font-semibold">{entry.value}</span>
+            <span
+              className="font-semibold"
+              style={{ color: 'var(--foreground)' }}
+            >
+              {entry.value}
+            </span>
           </div>
         ))}
       </div>
@@ -216,7 +260,7 @@ export default function Analytics() {
         ),
         fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/analytics/stats?days=${days}&previous=true`
-        ), // API doit supporter ?previous=true
+        ),
       ]);
 
       if (!statsRes.ok || !visitorsRes.ok || !prevStatsRes.ok) {
@@ -245,7 +289,6 @@ export default function Analytics() {
     fetchData();
   }, [fetchData]);
 
-  // Générer les données horaires
   const generateHourlyData = () => {
     if (!stats) return [];
     const data = [];
@@ -338,7 +381,6 @@ export default function Analytics() {
   const topCountries = countriesData.slice(0, 5);
   const topCities = citiesData.slice(0, 8);
 
-  // Calcul des changements par rapport à la période précédente
   const totalViewsChange =
     stats && prevStats
       ? calculatePeriodChange(
@@ -366,6 +408,8 @@ export default function Analytics() {
         flexDirection: 'column',
         justifyContent: 'center',
         height: '100%',
+        minHeight: '100vh',
+        py: 4,
       }}
     >
       {/* Header */}
@@ -373,7 +417,7 @@ export default function Analytics() {
         <h1 className="text-5xl font-extrabold mb-2 bg-gradient-to-r from-blue-600 to-green-500 bg-clip-text text-transparent">
           Analytics Dashboard
         </h1>
-        <p className="text-gray-600 text-lg">
+        <p className="text-lg" style={{ color: 'var(--foreground)' }}>
           Real-time insights over the last {days} days vs previous {days} days
         </p>
       </div>
@@ -422,13 +466,15 @@ export default function Analytics() {
       )}
 
       {error && (
-        <div className="bg-red-50 border-2 border-red-500 rounded-lg p-4 mb-6">
-          <p className="text-red-700">Error: {error}</p>
+        <div className="bg-red-50 border-2 border-red-500 rounded-lg p-4 mb-6 w-full max-w-2xl">
+          <p className="text-red-700" style={{ color: 'var(--foreground)' }}>
+            Error: {error}
+          </p>
         </div>
       )}
 
       {stats && activeTab === 'overview' && (
-        <div className="space-y-6">
+        <div className="w-full max-w-7xl space-y-6">
           {/* KPI Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
             <StatCard
@@ -508,13 +554,19 @@ export default function Analytics() {
                     <stop offset="95%" stopColor="#f59e0b" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="rgba(255,255,255,0.1)"
+                />
                 <XAxis
                   dataKey="name"
-                  stroke="#6b7280"
-                  tick={{ fontSize: 12 }}
+                  stroke="var(--foreground)"
+                  tick={{ fill: 'var(--foreground)', fontSize: 12 }}
                 />
-                <YAxis stroke="#6b7280" />
+                <YAxis
+                  stroke="var(--foreground)"
+                  tick={{ fill: 'var(--foreground)' }}
+                />
                 <RechartsTooltip content={<CustomTooltip />} />
                 <Area
                   type="monotone"
@@ -531,14 +583,21 @@ export default function Analytics() {
           <ChartCard title="Top Pages">
             <ResponsiveContainer width="100%" height={400}>
               <BarChart data={pagesData.slice(0, 8)} layout="vertical">
-                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                <XAxis type="number" stroke="#6b7280" />
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="rgba(255,255,255,0.1)"
+                />
+                <XAxis
+                  type="number"
+                  stroke="var(--foreground)"
+                  tick={{ fill: 'var(--foreground)' }}
+                />
                 <YAxis
                   dataKey="name"
                   type="category"
                   width={120}
-                  stroke="#6b7280"
-                  tick={{ fontSize: 12 }}
+                  stroke="var(--foreground)"
+                  tick={{ fill: 'var(--foreground)', fontSize: 12 }}
                 />
                 <RechartsTooltip content={<CustomTooltip />} />
                 <Bar dataKey="value" fill="#f59e0b" radius={[0, 8, 8, 0]} />
@@ -576,16 +635,22 @@ export default function Analytics() {
             <ChartCard title="Top Cities">
               <ResponsiveContainer width="100%" height={400}>
                 <BarChart data={topCities}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke="rgba(255,255,255,0.1)"
+                  />
                   <XAxis
                     dataKey="name"
-                    stroke="#6b7280"
+                    stroke="var(--foreground)"
                     angle={-45}
                     textAnchor="end"
                     height={80}
-                    tick={{ fontSize: 12 }}
+                    tick={{ fill: 'var(--foreground)', fontSize: 12 }}
                   />
-                  <YAxis stroke="#6b7280" />
+                  <YAxis
+                    stroke="var(--foreground)"
+                    tick={{ fill: 'var(--foreground)' }}
+                  />
                   <RechartsTooltip content={<CustomTooltip />} />
                   <Bar dataKey="value" fill="#f59e0b" radius={[8, 8, 0, 0]} />
                 </BarChart>
@@ -595,70 +660,100 @@ export default function Analytics() {
         </div>
       )}
 
-      {/* Autres onglets inchangés (geography, behavior, visitors) */}
       {stats && activeTab === 'geography' && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 bg-white rounded-xl shadow-lg overflow-hidden">
-            <div className="p-6">
-              <h3 className="text-xl font-bold mb-4 text-gray-800">
-                Country Distribution
-              </h3>
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="bg-gray-100">
-                      <th className="px-4 py-3 text-left font-semibold text-gray-700">
-                        Country
-                      </th>
-                      <th className="px-4 py-3 text-right font-semibold text-gray-700">
-                        Visits
-                      </th>
-                      <th className="px-4 py-3 text-right font-semibold text-gray-700">
-                        % of Total
-                      </th>
+        <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 bg-white/80 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden p-6">
+            <h3
+              className="text-xl font-bold mb-4"
+              style={{ color: 'var(--foreground)' }}
+            >
+              Country Distribution
+            </h3>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="bg-gray-100">
+                    <th
+                      className="px-4 py-3 text-left font-semibold"
+                      style={{ color: 'var(--foreground)' }}
+                    >
+                      Country
+                    </th>
+                    <th
+                      className="px-4 py-3 text-right font-semibold"
+                      style={{ color: 'var(--foreground)' }}
+                    >
+                      Visits
+                    </th>
+                    <th
+                      className="px-4 py-3 text-right font-semibold"
+                      style={{ color: 'var(--foreground)' }}
+                    >
+                      % of Total
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {countriesData.map((country, idx) => (
+                    <tr key={idx} className="border-b hover:bg-gray-50">
+                      <td
+                        className="px-4 py-3"
+                        style={{ color: 'var(--foreground)' }}
+                      >
+                        {country.name}
+                      </td>
+                      <td
+                        className="px-4 py-3 text-right"
+                        style={{ color: 'var(--foreground)' }}
+                      >
+                        {country.value}
+                      </td>
+                      <td
+                        className="px-4 py-3 text-right"
+                        style={{ color: 'var(--foreground)' }}
+                      >
+                        {((country.value / countryDistribution) * 100).toFixed(
+                          1
+                        )}
+                        %
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    {countriesData.map((country, idx) => (
-                      <tr key={idx} className="border-b hover:bg-gray-50">
-                        <td className="px-4 py-3 text-gray-800">
-                          {country.name}
-                        </td>
-                        <td className="px-4 py-3 text-right text-gray-800">
-                          {country.value}
-                        </td>
-                        <td className="px-4 py-3 text-right text-gray-800">
-                          {(
-                            (country.value / countryDistribution) *
-                            100
-                          ).toFixed(1)}
-                          %
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <h3 className="text-xl font-bold mb-4 text-gray-800">
+          <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-6">
+            <h3
+              className="text-xl font-bold mb-4"
+              style={{ color: 'var(--foreground)' }}
+            >
               Geographic Summary
             </h3>
             <div className="space-y-6">
               <div>
-                <p className="text-sm text-gray-600 mb-1">Total Countries</p>
+                <p
+                  className="text-sm mb-1"
+                  style={{ color: 'var(--foreground)' }}
+                >
+                  Total Countries
+                </p>
                 <p className="text-4xl font-bold text-blue-600">
                   {countriesData.length}
                 </p>
               </div>
               <div>
-                <p className="text-sm text-gray-600 mb-1">Top Country</p>
+                <p
+                  className="text-sm mb-1"
+                  style={{ color: 'var(--foreground)' }}
+                >
+                  Top Country
+                </p>
                 <p className="text-2xl font-bold text-green-600">
                   {countriesData[0]?.name || 'N/A'}
                 </p>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm" style={{ color: 'var(--foreground)' }}>
                   {countriesData[0]?.value || 0} visits
                 </p>
               </div>
@@ -668,70 +763,103 @@ export default function Analytics() {
       )}
 
       {stats && activeTab === 'behavior' && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 bg-white rounded-xl shadow-lg overflow-hidden">
-            <div className="p-6">
-              <h3 className="text-xl font-bold mb-4 text-gray-800">
-                Page Performance
-              </h3>
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="bg-gray-100">
-                      <th className="px-4 py-3 text-left font-semibold text-gray-700">
-                        Page
-                      </th>
-                      <th className="px-4 py-3 text-right font-semibold text-gray-700">
-                        Views
-                      </th>
-                      <th className="px-4 py-3 text-right font-semibold text-gray-700">
-                        % of Total
-                      </th>
+        <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 bg-white/80 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden p-6">
+            <h3
+              className="text-xl font-bold mb-4"
+              style={{ color: 'var(--foreground)' }}
+            >
+              Page Performance
+            </h3>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="bg-gray-100">
+                    <th
+                      className="px-4 py-3 text-left font-semibold"
+                      style={{ color: 'var(--foreground)' }}
+                    >
+                      Page
+                    </th>
+                    <th
+                      className="px-4 py-3 text-right font-semibold"
+                      style={{ color: 'var(--foreground)' }}
+                    >
+                      Views
+                    </th>
+                    <th
+                      className="px-4 py-3 text-right font-semibold"
+                      style={{ color: 'var(--foreground)' }}
+                    >
+                      % of Total
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {pagesData.map((page, idx) => (
+                    <tr key={idx} className="border-b hover:bg-gray-50">
+                      <td className="px-4 py-3">
+                        <span className="inline-block bg-gray-200 text-gray-800 px-3 py-1 rounded-full text-sm">
+                          {page.name}
+                        </span>
+                      </td>
+                      <td
+                        className="px-4 py-3 text-right"
+                        style={{ color: 'var(--foreground)' }}
+                      >
+                        {page.value}
+                      </td>
+                      <td
+                        className="px-4 py-3 text-right"
+                        style={{ color: 'var(--foreground)' }}
+                      >
+                        {((page.value / stats.total_page_views) * 100).toFixed(
+                          1
+                        )}
+                        %
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    {pagesData.map((page, idx) => (
-                      <tr key={idx} className="border-b hover:bg-gray-50">
-                        <td className="px-4 py-3">
-                          <span className="inline-block bg-gray-200 text-gray-800 px-3 py-1 rounded-full text-sm">
-                            {page.name}
-                          </span>
-                        </td>
-                        <td className="px-4 py-3 text-right text-gray-800">
-                          {page.value}
-                        </td>
-                        <td className="px-4 py-3 text-right text-gray-800">
-                          {(
-                            (page.value / stats.total_page_views) *
-                            100
-                          ).toFixed(1)}
-                          %
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <h3 className="text-xl font-bold mb-4 text-gray-800">
+          <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-6">
+            <h3
+              className="text-xl font-bold mb-4"
+              style={{ color: 'var(--foreground)' }}
+            >
               Behavior Metrics
             </h3>
             <div className="space-y-6">
               <div>
-                <p className="text-sm text-gray-600 mb-1">Bounce Rate</p>
+                <p
+                  className="text-sm mb-1"
+                  style={{ color: 'var(--foreground)' }}
+                >
+                  Bounce Rate
+                </p>
                 <p className="text-4xl font-bold text-red-500">{bounceRate}%</p>
               </div>
               <div>
-                <p className="text-sm text-gray-600 mb-1">Return Visitors</p>
+                <p
+                  className="text-sm mb-1"
+                  style={{ color: 'var(--foreground)' }}
+                >
+                  Return Visitors
+                </p>
                 <p className="text-4xl font-bold text-green-500">
                   {returnVisitorsRate}%
                 </p>
               </div>
               <div>
-                <p className="text-sm text-gray-600 mb-1">Avg Pages/Session</p>
+                <p
+                  className="text-sm mb-1"
+                  style={{ color: 'var(--foreground)' }}
+                >
+                  Avg Pages/Session
+                </p>
                 <p className="text-4xl font-bold text-blue-600">
                   {avgPagesPerSession}
                 </p>
@@ -742,85 +870,113 @@ export default function Analytics() {
       )}
 
       {visitors && activeTab === 'visitors' && (
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-          <div className="p-6">
-            <h3 className="text-xl font-bold mb-4 text-gray-800">
-              Top Visitors ({visitors.total_unique_ips} total)
-            </h3>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="bg-gray-100">
-                    <th className="px-4 py-3 text-left font-semibold text-gray-700">
-                      Country
-                    </th>
-                    <th className="px-4 py-3 text-left font-semibold text-gray-700">
-                      City
-                    </th>
-                    <th className="px-4 py-3 text-left font-semibold text-gray-700">
-                      ISP
-                    </th>
-                    <th className="px-4 py-3 text-center font-semibold text-gray-700">
-                      Views
-                    </th>
-                    <th className="px-4 py-3 text-left font-semibold text-gray-700">
-                      Duration
-                    </th>
-                    <th className="px-4 py-3 text-left font-semibold text-gray-700">
-                      Last Seen
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {topVisitors.map((visitor: Visitor) => {
-                    const duration = Math.round(
-                      (new Date(visitor.last_visit).getTime() -
-                        new Date(visitor.first_visit).getTime()) /
-                        60000
-                    );
-                    return (
-                      <tr
-                        key={visitor.ip}
-                        className="border-b hover:bg-gray-50"
-                      >
-                        <td className="px-4 py-3">
-                          <div className="flex items-center gap-2">
-                            {visitor.country_code && (
-                              <span>
-                                {String.fromCodePoint(
-                                  ...visitor.country_code
-                                    .toUpperCase()
-                                    .split('')
-                                    .map((c) => c.charCodeAt(0) + 127397)
-                                )}
-                              </span>
-                            )}
-                            <span className="text-gray-800">
-                              {visitor.country}
+        <div className="w-full max-w-7xl bg-white/80 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden p-6">
+          <h3
+            className="text-xl font-bold mb-4"
+            style={{ color: 'var(--foreground)' }}
+          >
+            Top Visitors ({visitors.total_unique_ips} total)
+          </h3>
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="bg-gray-100">
+                  <th
+                    className="px-4 py-3 text-left font-semibold"
+                    style={{ color: 'var(--foreground)' }}
+                  >
+                    Country
+                  </th>
+                  <th
+                    className="px-4 py-3 text-left font-semibold"
+                    style={{ color: 'var(--foreground)' }}
+                  >
+                    City
+                  </th>
+                  <th
+                    className="px-4 py-3 text-left font-semibold"
+                    style={{ color: 'var(--foreground)' }}
+                  >
+                    ISP
+                  </th>
+                  <th
+                    className="px-4 py-3 text-center font-semibold"
+                    style={{ color: 'var(--foreground)' }}
+                  >
+                    Views
+                  </th>
+                  <th
+                    className="px-4 py-3 text-left font-semibold"
+                    style={{ color: 'var(--foreground)' }}
+                  >
+                    Duration
+                  </th>
+                  <th
+                    className="px-4 py-3 text-left font-semibold"
+                    style={{ color: 'var(--foreground)' }}
+                  >
+                    Last Seen
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {topVisitors.map((visitor: Visitor) => {
+                  const duration = Math.round(
+                    (new Date(visitor.last_visit).getTime() -
+                      new Date(visitor.first_visit).getTime()) /
+                      60000
+                  );
+                  return (
+                    <tr key={visitor.ip} className="border-b hover:bg-gray-50">
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-2">
+                          {visitor.country_code && (
+                            <span>
+                              {String.fromCodePoint(
+                                ...visitor.country_code
+                                  .toUpperCase()
+                                  .split('')
+                                  .map((c) => c.charCodeAt(0) + 127397)
+                              )}
                             </span>
-                          </div>
-                        </td>
-                        <td className="px-4 py-3 text-gray-800">
-                          {visitor.city}
-                        </td>
-                        <td className="px-4 py-3 text-gray-600 text-sm">
-                          {visitor.isp}
-                        </td>
-                        <td className="px-4 py-3 text-center font-bold text-blue-600">
-                          {visitor.page_views}
-                        </td>
-                        <td className="px-4 py-3 text-gray-800">
-                          {duration} min
-                        </td>
-                        <td className="px-4 py-3 text-gray-800">
-                          {new Date(visitor.last_visit).toLocaleString()}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+                          )}
+                          <span style={{ color: 'var(--foreground)' }}>
+                            {visitor.country}
+                          </span>
+                        </div>
+                      </td>
+                      <td
+                        className="px-4 py-3"
+                        style={{ color: 'var(--foreground)' }}
+                      >
+                        {visitor.city}
+                      </td>
+                      <td
+                        className="px-4 py-3 text-sm opacity-75"
+                        style={{ color: 'var(--foreground)' }}
+                      >
+                        {visitor.isp}
+                      </td>
+                      <td className="px-4 py-3 text-center font-bold text-blue-600">
+                        {visitor.page_views}
+                      </td>
+                      <td
+                        className="px-4 py-3"
+                        style={{ color: 'var(--foreground)' }}
+                      >
+                        {duration} min
+                      </td>
+                      <td
+                        className="px-4 py-3"
+                        style={{ color: 'var(--foreground)' }}
+                      >
+                        {new Date(visitor.last_visit).toLocaleString()}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
         </div>
       )}
