@@ -401,15 +401,13 @@ export default function Analytics() {
 
   return (
     <Container
-      maxWidth={false}
+      maxWidth={false} // Pass boolean false, not a string
       sx={{
         display: 'flex',
         alignItems: 'center',
         flexDirection: 'column',
         justifyContent: 'center',
         height: '100%',
-        minHeight: '100vh',
-        py: 4,
       }}
     >
       {/* Header */}
