@@ -66,35 +66,19 @@ interface ChangeData {
   positive: boolean;
 }
 
-// Fonction pour calculer le changement entre premier et dernier jour
-const calculateChange = (
-  hourlyStats: Record<string, number>
+// Nouvelle fonction : compare période actuelle vs période précédente
+const calculatePeriodChange = (
+  current: number,
+  previous: number
 ): ChangeData | null => {
-  if (!hourlyStats || Object.keys(hourlyStats).length === 0) return null;
-
-  // Grouper par jour
-  const dailySums: Record<string, number> = {};
-  Object.entries(hourlyStats).forEach(([key, count]) => {
-    const day = key.split(' ')[0];
-    dailySums[day] = (dailySums[day] || 0) + count;
-  });
-
-  const sortedDays = Object.keys(dailySums).sort();
-  if (sortedDays.length < 2) return null;
-
-  const firstDay = sortedDays[0];
-  const lastDay = sortedDays[sortedDays.length - 1];
-
-  const firstValue = dailySums[firstDay] || 0;
-  const lastValue = dailySums[lastDay] || 0;
-
-  if (firstValue === 0) return null;
-
-  const change = lastValue - firstValue;
-  const percent = Math.abs((change / firstValue) * 100).toFixed(1);
-  const positive = change >= 0;
-
-  return { percent, positive };
+  if (previous === 0) {
+    return current > 0 ? { percent: '∞', positive: true } : null;
+  }
+  const change = ((current - previous) / previous) * 100;
+  return {
+    percent: Math.abs(change).toFixed(1),
+    positive: change >= 0,
+  };
 };
 
 interface StatCardProps {
@@ -125,7 +109,7 @@ const StatCard: React.FC<StatCardProps> = ({
       <div className="group relative">
         <div className="text-xs font-medium uppercase tracking-wider text-gray-600 mb-2 cursor-help">
           {title}
-          <span className="ml-1 text-gray-400">ⓘ</span>
+          <span className="ml-1 text-gray-400">i</span>
         </div>
         <div className="absolute left-0 top-full mt-2 w-48 bg-gray-900 text-white text-xs rounded-lg p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10 shadow-lg">
           {explanation}
@@ -148,7 +132,7 @@ const StatCard: React.FC<StatCardProps> = ({
           }}
         >
           <span>{change.positive ? '↑' : '↓'}</span>
-          <span>{change.percent}%</span>
+          <span>{change.percent === '∞' ? 'New' : `${change.percent}%`}</span>
         </div>
       )}
     </div>
@@ -211,6 +195,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
 
 export default function Analytics() {
   const [stats, setStats] = useState<AnalyticsStats | null>(null);
+  const [prevStats, setPrevStats] = useState<AnalyticsStats | null>(null);
   const [visitors, setVisitors] = useState<VisitorsResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -222,27 +207,34 @@ export default function Analytics() {
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const [statsRes, visitorsRes] = await Promise.all([
+      const [statsRes, visitorsRes, prevStatsRes] = await Promise.all([
         fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/analytics/stats?days=${days}`
         ),
         fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/analytics/visitors?days=${days}`
         ),
+        fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/analytics/stats?days=${days}&previous=true`
+        ), // API doit supporter ?previous=true
       ]);
 
-      if (!statsRes.ok || !visitorsRes.ok)
+      if (!statsRes.ok || !visitorsRes.ok || !prevStatsRes.ok) {
         throw new Error('Failed to fetch data');
+      }
 
       const statsData: AnalyticsStats = await statsRes.json();
       const visitorsData: VisitorsResponse = await visitorsRes.json();
+      const prevData: AnalyticsStats = await prevStatsRes.json();
 
       setStats(statsData);
+      setPrevStats(prevData);
       setVisitors(visitorsData);
       setError(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error occurred');
       setStats(null);
+      setPrevStats(null);
       setVisitors(null);
     } finally {
       setLoading(false);
@@ -253,6 +245,7 @@ export default function Analytics() {
     fetchData();
   }, [fetchData]);
 
+  // Générer les données horaires
   const generateHourlyData = () => {
     if (!stats) return [];
     const data = [];
@@ -345,16 +338,28 @@ export default function Analytics() {
   const topCountries = countriesData.slice(0, 5);
   const topCities = citiesData.slice(0, 8);
 
-  // Calculer les changements pour les métriques principales
-  const totalViewsChange = stats ? calculateChange(stats.hourly_stats) : null;
-  const uniqueVisitorsChange = stats
-    ? calculateChange(stats.hourly_stats)
-    : null;
-  const uniqueIpsChange = stats ? calculateChange(stats.hourly_stats) : null;
+  // Calcul des changements par rapport à la période précédente
+  const totalViewsChange =
+    stats && prevStats
+      ? calculatePeriodChange(
+          stats.total_page_views,
+          prevStats.total_page_views
+        )
+      : null;
+
+  const uniqueVisitorsChange =
+    stats && prevStats
+      ? calculatePeriodChange(stats.unique_visitors, prevStats.unique_visitors)
+      : null;
+
+  const uniqueIpsChange =
+    stats && prevStats
+      ? calculatePeriodChange(stats.unique_ips, prevStats.unique_ips)
+      : null;
 
   return (
     <Container
-      maxWidth={false} // Pass boolean false, not a string
+      maxWidth={false}
       sx={{
         display: 'flex',
         alignItems: 'center',
@@ -364,17 +369,17 @@ export default function Analytics() {
       }}
     >
       {/* Header */}
-      <div className="mb-8">
+      <div className="mb-8 text-center">
         <h1 className="text-5xl font-extrabold mb-2 bg-gradient-to-r from-blue-600 to-green-500 bg-clip-text text-transparent">
           Analytics Dashboard
         </h1>
         <p className="text-gray-600 text-lg">
-          Real-time insights into website performance over the last {days} days
+          Real-time insights over the last {days} days vs previous {days} days
         </p>
       </div>
 
       {/* Controls */}
-      <div className="mb-6 flex flex-wrap gap-3">
+      <div className="mb-6 flex flex-wrap gap-3 justify-center">
         <div className="flex gap-2">
           {[7, 30, 90].map((d) => (
             <button
@@ -590,6 +595,7 @@ export default function Analytics() {
         </div>
       )}
 
+      {/* Autres onglets inchangés (geography, behavior, visitors) */}
       {stats && activeTab === 'geography' && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 bg-white rounded-xl shadow-lg overflow-hidden">
