@@ -660,33 +660,19 @@ export default function Analytics() {
 
       {stats && activeTab === 'geography' && (
         <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 bg-white/80 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden p-6">
-            <h3
-              className="text-xl font-bold mb-4"
-              style={{ color: 'var(--foreground)' }}
-            >
-              Country Distribution
-            </h3>
+          <div className="lg:col-span-2 rounded-xl shadow-lg overflow-hidden p-6">
+            <h3 className="text-xl font-bold mb-4">Country Distribution</h3>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="bg-gray-100">
-                    <th
-                      className="px-4 py-3 text-left font-semibold"
-                      style={{ color: 'var(--foreground)' }}
-                    >
+                  <tr>
+                    <th className="px-4 py-3 text-left font-semibold">
                       Country
                     </th>
-                    <th
-                      className="px-4 py-3 text-right font-semibold"
-                      style={{ color: 'var(--foreground)' }}
-                    >
+                    <th className="px-4 py-3 text-right font-semibold">
                       Visits
                     </th>
-                    <th
-                      className="px-4 py-3 text-right font-semibold"
-                      style={{ color: 'var(--foreground)' }}
-                    >
+                    <th className="px-4 py-3 text-right font-semibold">
                       % of Total
                     </th>
                   </tr>
@@ -694,22 +680,9 @@ export default function Analytics() {
                 <tbody>
                   {countriesData.map((country, idx) => (
                     <tr key={idx} className="border-b hover:bg-gray-50">
-                      <td
-                        className="px-4 py-3"
-                        style={{ color: 'var(--foreground)' }}
-                      >
-                        {country.name}
-                      </td>
-                      <td
-                        className="px-4 py-3 text-right"
-                        style={{ color: 'var(--foreground)' }}
-                      >
-                        {country.value}
-                      </td>
-                      <td
-                        className="px-4 py-3 text-right"
-                        style={{ color: 'var(--foreground)' }}
-                      >
+                      <td className="px-4 py-3">{country.name}</td>
+                      <td className="px-4 py-3 text-right">{country.value}</td>
+                      <td className="px-4 py-3 text-right">
                         {((country.value / countryDistribution) * 100).toFixed(
                           1
                         )}
@@ -722,38 +695,21 @@ export default function Analytics() {
             </div>
           </div>
 
-          <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-6">
-            <h3
-              className="text-xl font-bold mb-4"
-              style={{ color: 'var(--foreground)' }}
-            >
-              Geographic Summary
-            </h3>
+          <div className="rounded-xl shadow-lg p-6">
+            <h3 className="text-xl font-bold mb-4">Geographic Summary</h3>
             <div className="space-y-6">
               <div>
-                <p
-                  className="text-sm mb-1"
-                  style={{ color: 'var(--foreground)' }}
-                >
-                  Total Countries
-                </p>
-                <p className="text-4xl font-bold text-blue-600">
+                <p className="text-sm mb-1">Total Countries</p>
+                <p className="text-4xl font-bold text-blue-500">
                   {countriesData.length}
                 </p>
               </div>
               <div>
-                <p
-                  className="text-sm mb-1"
-                  style={{ color: 'var(--foreground)' }}
-                >
-                  Top Country
-                </p>
+                <p className="text-sm mb-1">Top Country</p>
                 <p className="text-2xl font-bold text-green-600">
                   {countriesData[0]?.name || 'N/A'}
                 </p>
-                <p className="text-sm" style={{ color: 'var(--foreground)' }}>
-                  {countriesData[0]?.value || 0} visits
-                </p>
+                <p className="text-sm">{countriesData[0]?.value || 0} visits</p>
               </div>
             </div>
           </div>
@@ -762,33 +718,17 @@ export default function Analytics() {
 
       {stats && activeTab === 'behavior' && (
         <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 bg-white/80 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden p-6">
-            <h3
-              className="text-xl font-bold mb-4"
-              style={{ color: 'var(--foreground)' }}
-            >
-              Page Performance
-            </h3>
+          <div className="lg:col-span-2 rounded-xl shadow-lg overflow-hidden p-6">
+            <h3 className="text-xl font-bold mb-4">Page Performance</h3>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="bg-gray-100">
-                    <th
-                      className="px-4 py-3 text-left font-semibold"
-                      style={{ color: 'var(--foreground)' }}
-                    >
-                      Page
-                    </th>
-                    <th
-                      className="px-4 py-3 text-right font-semibold"
-                      style={{ color: 'var(--foreground)' }}
-                    >
+                  <tr>
+                    <th className="px-4 py-3 text-left font-semibold">Page</th>
+                    <th className="px-4 py-3 text-right font-semibold">
                       Views
                     </th>
-                    <th
-                      className="px-4 py-3 text-right font-semibold"
-                      style={{ color: 'var(--foreground)' }}
-                    >
+                    <th className="px-4 py-3 text-right font-semibold">
                       % of Total
                     </th>
                   </tr>
@@ -797,20 +737,12 @@ export default function Analytics() {
                   {pagesData.map((page, idx) => (
                     <tr key={idx} className="border-b hover:bg-gray-50">
                       <td className="px-4 py-3">
-                        <span className="inline-block bg-gray-200 text-gray-800 px-3 py-1 rounded-full text-sm">
+                        <span className="inline-block px-3 py-1 rounded-full text-sm">
                           {page.name}
                         </span>
                       </td>
-                      <td
-                        className="px-4 py-3 text-right"
-                        style={{ color: 'var(--foreground)' }}
-                      >
-                        {page.value}
-                      </td>
-                      <td
-                        className="px-4 py-3 text-right"
-                        style={{ color: 'var(--foreground)' }}
-                      >
+                      <td className="px-4 py-3 text-right">{page.value}</td>
+                      <td className="px-4 py-3 text-right">
                         {((page.value / stats.total_page_views) * 100).toFixed(
                           1
                         )}
@@ -823,42 +755,22 @@ export default function Analytics() {
             </div>
           </div>
 
-          <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-6">
-            <h3
-              className="text-xl font-bold mb-4"
-              style={{ color: 'var(--foreground)' }}
-            >
-              Behavior Metrics
-            </h3>
+          <div className="rounded-xl shadow-lg p-6">
+            <h3 className="text-xl font-bold mb-4">Behavior Metrics</h3>
             <div className="space-y-6">
               <div>
-                <p
-                  className="text-sm mb-1"
-                  style={{ color: 'var(--foreground)' }}
-                >
-                  Bounce Rate
-                </p>
+                <p className="text-sm mb-1">Bounce Rate</p>
                 <p className="text-4xl font-bold text-red-500">{bounceRate}%</p>
               </div>
               <div>
-                <p
-                  className="text-sm mb-1"
-                  style={{ color: 'var(--foreground)' }}
-                >
-                  Return Visitors
-                </p>
+                <p className="text-sm mb-1">Return Visitors</p>
                 <p className="text-4xl font-bold text-green-500">
                   {returnVisitorsRate}%
                 </p>
               </div>
               <div>
-                <p
-                  className="text-sm mb-1"
-                  style={{ color: 'var(--foreground)' }}
-                >
-                  Avg Pages/Session
-                </p>
-                <p className="text-4xl font-bold text-blue-600">
+                <p className="text-sm mb-1">Avg Pages/Session</p>
+                <p className="text-4xl font-bold text-blue-500">
                   {avgPagesPerSession}
                 </p>
               </div>
@@ -868,51 +780,22 @@ export default function Analytics() {
       )}
 
       {visitors && activeTab === 'visitors' && (
-        <div className="w-full max-w-7xl bg-white/80 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden p-6">
-          <h3
-            className="text-xl font-bold mb-4"
-            style={{ color: 'var(--foreground)' }}
-          >
+        <div className="w-full max-w-7xl rounded-xl shadow-lg overflow-hidden p-6">
+          <h3 className="text-xl font-bold mb-4">
             Top Visitors ({visitors.total_unique_ips} total)
           </h3>
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="bg-gray-100">
-                  <th
-                    className="px-4 py-3 text-left font-semibold"
-                    style={{ color: 'var(--foreground)' }}
-                  >
-                    Country
-                  </th>
-                  <th
-                    className="px-4 py-3 text-left font-semibold"
-                    style={{ color: 'var(--foreground)' }}
-                  >
-                    City
-                  </th>
-                  <th
-                    className="px-4 py-3 text-left font-semibold"
-                    style={{ color: 'var(--foreground)' }}
-                  >
-                    ISP
-                  </th>
-                  <th
-                    className="px-4 py-3 text-center font-semibold"
-                    style={{ color: 'var(--foreground)' }}
-                  >
-                    Views
-                  </th>
-                  <th
-                    className="px-4 py-3 text-left font-semibold"
-                    style={{ color: 'var(--foreground)' }}
-                  >
+                <tr>
+                  <th className="px-4 py-3 text-left font-semibold">Country</th>
+                  <th className="px-4 py-3 text-left font-semibold">City</th>
+                  <th className="px-4 py-3 text-left font-semibold">ISP</th>
+                  <th className="px-4 py-3 text-center font-semibold">Views</th>
+                  <th className="px-4 py-3 text-left font-semibold">
                     Duration
                   </th>
-                  <th
-                    className="px-4 py-3 text-left font-semibold"
-                    style={{ color: 'var(--foreground)' }}
-                  >
+                  <th className="px-4 py-3 text-left font-semibold">
                     Last Seen
                   </th>
                 </tr>
@@ -938,36 +821,18 @@ export default function Analytics() {
                               )}
                             </span>
                           )}
-                          <span style={{ color: 'var(--foreground)' }}>
-                            {visitor.country}
-                          </span>
+                          <span>{visitor.country}</span>
                         </div>
                       </td>
-                      <td
-                        className="px-4 py-3"
-                        style={{ color: 'var(--foreground)' }}
-                      >
-                        {visitor.city}
-                      </td>
-                      <td
-                        className="px-4 py-3 text-sm opacity-75"
-                        style={{ color: 'var(--foreground)' }}
-                      >
+                      <td className="px-4 py-3">{visitor.city}</td>
+                      <td className="px-4 py-3 text-sm opacity-75">
                         {visitor.isp}
                       </td>
-                      <td className="px-4 py-3 text-center font-bold text-blue-600">
+                      <td className="px-4 py-3 text-center font-bold text-blue-500">
                         {visitor.page_views}
                       </td>
-                      <td
-                        className="px-4 py-3"
-                        style={{ color: 'var(--foreground)' }}
-                      >
-                        {duration} min
-                      </td>
-                      <td
-                        className="px-4 py-3"
-                        style={{ color: 'var(--foreground)' }}
-                      >
+                      <td className="px-4 py-3">{duration} min</td>
+                      <td className="px-4 py-3">
                         {new Date(visitor.last_visit).toLocaleString()}
                       </td>
                     </tr>
