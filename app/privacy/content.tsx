@@ -1,3 +1,5 @@
+// app/privacy/content.tsx
+
 'use client';
 import { useEffect, useState } from 'react';
 import Container from '@mui/material/Container';

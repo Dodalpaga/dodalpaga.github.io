@@ -1,3 +1,4 @@
+// app/profile/content.tsx
 'use client';
 import * as React from 'react';
 import Container from '@mui/material/Container';
@@ -73,7 +74,7 @@ const getYearsSpent = (startDateString: string) => {
 
   const yearsSpent = currentDate.getFullYear() - startDate.getFullYear();
   const monthDifference = Math.abs(
-    currentDate.getMonth() - startDate.getMonth()
+    currentDate.getMonth() - startDate.getMonth(),
   );
 
   // If you spend more than 6 months on the project, consider it a full year

@@ -1,13 +1,8 @@
-.profile-picture-container {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: calc(100% - 100px);
-  align-items: center;
-  justify-content: center;
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
+/* app/profile/styles.css */
+
+/* ============================================================
+   PROFILE PAGE LAYOUT
+   ============================================================ */
 
 .content-container {
   padding: 0 !important;
@@ -17,12 +12,216 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  text-align: center;
+  text-align: left;
   position: relative;
-  padding: 10px;
+  padding: 24px 24px 24px 40px;
 }
 
-/* Responsive on max width 1150px */
+#profile-section + #profile-section {
+  margin-top: 8px;
+}
+
+#profile-section > .MuiTypography-h3 {
+  font-family: 'Syne', sans-serif !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.03em !important;
+  position: relative;
+  display: inline-block;
+  margin-bottom: 4px !important;
+}
+
+/* Section number accent */
+#profile-section > .MuiTypography-h3::before {
+  content: attr(data-index);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+  display: block;
+  margin-bottom: 4px;
+  opacity: 0.7;
+}
+
+/* ============================================================
+   PROFILE PICTURE
+   ============================================================ */
+
+.profile-picture-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  margin: 16px 0;
+}
+
+.profile-picture-container .card {
+  border-radius: 50% !important;
+  overflow: hidden;
+  aspect-ratio: 1/1;
+  max-width: 160px;
+  border: 3px solid var(--card-border) !important;
+  box-shadow:
+    0 0 0 6px var(--background-elevated),
+    0 0 0 7px var(--card-border),
+    var(--card-shadow) !important;
+  transition:
+    box-shadow 0.3s ease,
+    transform 0.3s ease !important;
+}
+
+.profile-picture-container .card:hover {
+  transform: scale(1.04) !important;
+  box-shadow:
+    0 0 0 6px var(--background-elevated),
+    0 0 0 7px var(--accent-muted),
+    var(--card-shadow-hover) !important;
+}
+
+/* ============================================================
+   LEFT SIDEBAR INTRO
+   ============================================================ */
+
+.left-fixed .introduction {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--divider);
+  margin-bottom: 16px;
+}
+
+.left-fixed .left-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 12px;
+}
+
+/* ============================================================
+   CONTACT & SKILL CHIPS
+   ============================================================ */
+
+#contact-container .MuiChip-root {
+  border-radius: 8px !important;
+  border: 1px solid var(--card-border) !important;
+  background: var(--background-elevated) !important;
+  color: var(--foreground-2) !important;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-size: 0.78rem !important;
+  transition: all 0.2s ease !important;
+}
+
+#contact-container .MuiChip-root:hover {
+  background: var(--accent-muted) !important;
+  border-color: var(--accent) !important;
+  color: var(--accent) !important;
+  transform: translateY(-2px) !important;
+}
+
+#skill-set-container .MuiChip-root {
+  border-radius: 8px !important;
+  border: 1px solid var(--card-border) !important;
+  background: var(--background-elevated) !important;
+  color: var(--foreground-2) !important;
+  font-family: 'DM Mono', monospace !important;
+  font-size: 0.72rem !important;
+  letter-spacing: 0.04em !important;
+  transition: all 0.2s ease !important;
+}
+
+#skill-set-container .MuiChip-root:hover {
+  border-color: var(--accent) !important;
+  color: var(--accent) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* ============================================================
+   EXPERIENCE SECTION
+   ============================================================ */
+
+.experience {
+  text-align: left;
+  position: relative;
+  padding-left: 16px;
+}
+
+.experience::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--accent), transparent);
+  border-radius: 2px;
+  opacity: 0.4;
+}
+
+/* Company Box overrides */
+.experience .MuiBox-root {
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.experience .MuiBox-root:hover {
+  border-color: rgba(100, 140, 255, 0.3) !important;
+  background: var(--accent-muted) !important;
+}
+
+/* ============================================================
+   STATS / COUNTUP
+   ============================================================ */
+
+.stat-line {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+}
+
+.stat-line .stat-number {
+  font-size: 2.8rem;
+  color: var(--accent);
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.stat-line .stat-label {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.95rem;
+  color: var(--foreground-muted);
+  font-weight: 400;
+}
+
+/* ============================================================
+   EDUCATION CARDS
+   ============================================================ */
+
+.education-card {
+  border-radius: 14px !important;
+  background: var(--background-elevated) !important;
+  border: 1px solid var(--card-border) !important;
+  box-shadow: var(--card-shadow) !important;
+  transition:
+    transform 0.3s cubic-bezier(0.34, 1.2, 0.64, 1),
+    box-shadow 0.3s ease !important;
+  overflow: hidden;
+}
+
+.education-card:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: var(--card-shadow-hover) !important;
+}
+
+/* ============================================================
+   RESPONSIVE BREAKPOINTS
+   ============================================================ */
+
 @media (max-width: 1150px) {
   .left-profile {
     flex-direction: column;
@@ -31,7 +230,22 @@
   .introduction {
     display: flex;
     flex-direction: row;
-    text-align: center;
+    text-align: left;
+    align-items: center;
+    gap: 16px;
+    padding-bottom: 0;
+    border-bottom: none;
+    margin-bottom: 0;
+  }
+
+  .profile-picture-container {
+    min-width: 80px;
+    max-width: 80px;
+    margin: 0;
+  }
+
+  .profile-picture-container .card {
+    max-width: 80px !important;
   }
 
   #skill-set-container {
@@ -40,29 +254,61 @@
     flex-wrap: wrap;
     justify-content: center;
     width: 100%;
-    gap: 10px; /* Adds spacing between images */
+    gap: 8px;
   }
 
   #skill-set-container img {
-    /* max-height: 400px !important;
-    max-width: 80% !important;
-    height: auto !important;
-    max-height: none;
-    object-fit: contain; */
     display: none !important;
   }
 
-  .skill-stack {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-  }
-
+  .skill-stack,
   .contact-stack {
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    flex-wrap: wrap;
   }
+
+  #profile-section {
+    padding: 16px;
+  }
+
+  .experience::before {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  #profile-section {
+    padding: 12px;
+  }
+
+  .stat-line .stat-number {
+    font-size: 2rem;
+  }
+}
+
+/* ============================================================
+   CODING STATS IMAGE
+   ============================================================ */
+
+.stats-image-wrapper {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--card-border);
+  width: 100%;
+}
+
+/* ============================================================
+   SIDEBAR TITLE
+   ============================================================ */
+
+.left-fixed .title {
+  font-family: 'Syne', sans-serif !important;
+  font-weight: 700 !important;
+  font-size: 1rem !important;
+  letter-spacing: -0.01em !important;
+  color: var(--foreground) !important;
+  margin-bottom: 8px !important;
 }

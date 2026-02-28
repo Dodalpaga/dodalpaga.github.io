@@ -1,15 +1,25 @@
+/* app/styles.css */
+
+/* ============================================================
+   PARALLAX HERO CONTAINER
+   ============================================================ */
+
 #container {
-  height: calc(100vh - 300px); /* Set your desired height */
-  aspect-ratio: 1024 / 1536; /* Maintains square proportions since images have same dimensions */
+  height: calc(100vh - 260px);
+  max-height: 700px;
+  min-height: 400px;
+  aspect-ratio: 1024 / 1536;
   background-image: url('/images/parallax/Background.png');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
   display: grid;
   place-items: center;
-  animation: rotate 5s ease-in-out infinite;
+  animation: gentleFloat 8s ease-in-out infinite;
   transform-style: preserve-3d;
   perspective: 1000px;
+  filter: drop-shadow(0 40px 80px rgba(0, 0, 0, 0.18));
+  will-change: transform;
 }
 
 #child1 {
@@ -21,6 +31,7 @@
   background-position: center;
   grid-area: 1/1/1/1;
   translate: 0 0 20px;
+  will-change: transform;
 }
 
 #child2 {
@@ -32,4 +43,211 @@
   background-position: center;
   grid-area: 1/1/1/1;
   translate: 0 0 15px;
+  will-change: transform;
+}
+
+@keyframes gentleFloat {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+/* ============================================================
+   HOME PAGE HERO LAYOUT
+   ============================================================ */
+
+.home-hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+  justify-items: center;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 24px;
+}
+
+.home-nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.home-nav-link {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 20px 24px;
+  border-radius: 14px;
+  border: 1px solid var(--card-border);
+  background-color: var(--card);
+  transition:
+    transform 0.25s cubic-bezier(0.34, 1.2, 0.64, 1),
+    box-shadow 0.25s ease,
+    border-color 0.25s ease,
+    background-color 0.25s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.home-nav-link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--accent-muted), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.home-nav-link:hover {
+  transform: translateX(6px);
+  box-shadow: var(--card-shadow-hover);
+  border-color: var(--accent-muted);
+  opacity: 1;
+}
+
+.home-nav-link:hover::after {
+  opacity: 1;
+}
+
+.home-nav-link .link-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  opacity: 0.8;
+}
+
+.home-nav-link h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--foreground);
+  margin: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.home-nav-link p {
+  font-size: 0.875rem;
+  color: var(--foreground-muted);
+  margin: 0;
+  line-height: 1.5;
+  position: relative;
+  z-index: 1;
+}
+
+.home-nav-link .arrow {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.2rem;
+  color: var(--accent);
+  opacity: 0.5;
+  transition:
+    transform 0.25s ease,
+    opacity 0.25s ease;
+  z-index: 1;
+}
+
+.home-nav-link:hover .arrow {
+  transform: translateY(-50%) translateX(4px);
+  opacity: 1;
+}
+
+/* ============================================================
+   API SECTION
+   ============================================================ */
+
+.api-section-container {
+  width: 100%;
+  max-width: 680px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--card-border);
+  background: var(--background-elevated);
+  box-shadow: var(--card-shadow);
+}
+
+.api-section-header {
+  padding: 6px 16px;
+  background: var(--background-2);
+  border-bottom: 1px solid var(--card-border);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.api-section-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.api-section-body {
+  padding: 16px 20px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.82rem;
+  color: var(--foreground-2);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+/* ============================================================
+   PAGE ENTRANCE ANIMATIONS
+   ============================================================ */
+
+.hero-enter {
+  animation: heroEnter 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes heroEnter {
+  from {
+    opacity: 0;
+    transform: translateY(32px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 1024px) {
+  .home-hero {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  #container {
+    height: min(50vw, 480px);
+  }
+}
+
+@media (max-width: 600px) {
+  .home-nav-link {
+    padding: 16px 18px;
+  }
+
+  .home-nav-link h2 {
+    font-size: 1.2rem;
+  }
+
+  #container {
+    height: 60vw;
+  }
 }

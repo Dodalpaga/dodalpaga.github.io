@@ -6,13 +6,34 @@ import BackendStatus from '@/components/backend_status_checker';
 import CookieStatusChecker from '@/components/cookie_status_checker';
 import MediaPlayer from '@/components/media_player';
 import Toast from '@/components/toast';
-import { Inter } from 'next/font/google';
+import { Syne, DM_Mono, Plus_Jakarta_Sans } from 'next/font/google';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { CookieConsent } from '@/components/cookie_consent';
 import { Suspense } from 'react';
 import { AnalyticsTracker } from '@/components/analytics_tracker';
 
-const inter = Inter({ subsets: ['latin'] });
+// ── Fonts ──────────────────────────────────────────────────────────────────
+const syne = Syne({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800'],
+  variable: '--font-syne',
+  display: 'swap',
+});
+
+const dmMono = DM_Mono({
+  subsets: ['latin'],
+  weight: ['300', '400', '500'],
+  style: ['normal', 'italic'],
+  variable: '--font-dm-mono',
+  display: 'swap',
+});
+
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-plus-jakarta',
+  display: 'swap',
+});
 
 export default function RootLayout({
   children,
@@ -20,8 +41,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={inter.className} suppressHydrationWarning>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${syne.variable} ${dmMono.variable} ${plusJakarta.variable}`}
+    >
+      <body className={plusJakarta.className} suppressHydrationWarning>
         <ThemeProvider>
           <AppRouterCacheProvider>
             <Suspense fallback={null}>

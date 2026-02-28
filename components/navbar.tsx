@@ -87,6 +87,10 @@ const NavBar = () => {
                 key={text}
                 href={`/${text.toLowerCase().replace(' ', '')}`}
                 passHref
+                style={{
+                  textDecoration: 'none',
+                  color: 'var(--foreground-2)',
+                }}
               >
                 <NavLink
                   sx={{
@@ -106,6 +110,10 @@ const NavBar = () => {
                 key={text}
                 href={`/${text.toLowerCase().replace(' ', '')}`}
                 passHref
+                style={{
+                  textDecoration: 'none',
+                  color: 'var(--foreground-2)',
+                }}
               >
                 <NavLink
                   sx={{
@@ -125,6 +133,10 @@ const NavBar = () => {
                 key={text}
                 href={`/${text.toLowerCase().replace(' ', '')}`}
                 passHref
+                style={{
+                  textDecoration: 'none',
+                  color: 'var(--foreground-2)',
+                }}
               >
                 <NavLink
                   sx={{

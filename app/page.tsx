@@ -1,3 +1,4 @@
+// app/page.tsx
 'use client';
 import Link from 'next/link';
 import NavBar from '@/components/navbar';
@@ -7,16 +8,42 @@ import Button from '@mui/material/Button';
 import { useEffect, useState } from 'react';
 import './styles.css';
 
+const navLinks = [
+  {
+    href: '/profile',
+    label: '01 — About',
+    title: 'Profile',
+    description: 'Data Scientist. Builder. Explorer of ideas.',
+  },
+  {
+    href: '/projects',
+    label: '02 — Work',
+    title: 'Projects',
+    description:
+      'Interactive demos, tools, and experiments — all in one place.',
+  },
+  {
+    href: '/blog',
+    label: '03 — Writing',
+    title: 'Blog',
+    description: 'Thoughts on AI, data, and building things.',
+  },
+];
+
 export default function Home() {
   const { hasConsent, withdrawConsent } = useCookieConsent();
   const [isMounted, setIsMounted] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
+    const t = requestAnimationFrame(() => setLoaded(true));
+    return () => cancelAnimationFrame(t);
   }, []);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-4">
+      {/* Navbar */}
       <div
         className="flex flex-col items-center justify-between p-4"
         style={{ height: '84px', width: '100%' }}
@@ -24,12 +51,23 @@ export default function Home() {
         <NavBar />
       </div>
 
-      <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-2 items-center justify-center">
-        <div className="flex items-center justify-center">
+      {/* Hero grid */}
+      <div
+        className="home-hero"
+        style={{
+          opacity: loaded ? 1 : 0,
+          transition: 'opacity 0.4s ease',
+        }}
+      >
+        {/* Parallax visual */}
+        <div
+          className="flex items-center justify-center w-full animate-scale-in"
+          style={{ animationDelay: '0.1s' }}
+        >
           <Tilt
             borderRadius="7%"
-            scale={1.07}
-            perspective="750px"
+            scale={1.05}
+            perspective="900px"
             tiltReverse={true}
           >
             <div id="container">
@@ -39,91 +77,159 @@ export default function Home() {
           </Tilt>
         </div>
 
-        <div
-          className="mb-32 grid text-center lg:mb-0 lg:grid-cols-3 lg:text-left  items-center justify-center"
-          style={{ margin: '0 3%' }}
-        >
-          <a
-            href={'/profile'}
-            className="group rounded-lg border border-transparent px-5 py-4 transition-colors"
-            rel="noopener noreferrer"
+        {/* Nav links */}
+        <div className="home-nav-links">
+          {/* Eyebrow */}
+          <div
+            className="animate-fade-up"
+            style={{ animationDelay: '0.2s', marginBottom: '8px' }}
           >
-            <h2 className={`mb-3 text-2xl font-semibold`}>
-              Profile{' '}
-              <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-                -&gt;
-              </span>
-            </h2>
-            <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-              Learn about me !
+            <span className="section-label">Dorian Voydie</span>
+            <h1
+              style={{
+                fontFamily: "'Syne', sans-serif",
+                fontSize: 'clamp(2rem, 4vw, 3rem)',
+                fontWeight: 800,
+                letterSpacing: '-0.03em',
+                lineHeight: 1.1,
+                margin: '0 0 4px',
+              }}
+            >
+              Data Scientist
+              <br />
+              &amp; Builder.
+            </h1>
+            <p
+              style={{
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                color: 'var(--foreground-muted)',
+                fontSize: '0.95rem',
+                lineHeight: 1.6,
+                marginTop: '10px',
+              }}
+            >
+              I build intelligent systems, beautiful interfaces, and everything
+              in between.
             </p>
-          </a>
+          </div>
 
-          <a
-            href={'/projects'}
-            className="group rounded-lg border border-transparent px-5 py-4 transition-colors"
-            rel="noopener noreferrer"
-          >
-            <h2 className={`mb-3 text-2xl font-semibold`}>
-              Projects{' '}
-              <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-                -&gt;
-              </span>
-            </h2>
-            <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-              Learn about my projects in a one and only place !
-            </p>
-          </a>
+          {navLinks.map((link, i) => (
+            <Link
+              href={link.href}
+              key={link.href}
+              className="home-nav-link animate-fade-up"
+              style={{ animationDelay: `${0.3 + i * 0.1}s` }}
+            >
+              <span className="link-label">{link.label}</span>
+              <h2>{link.title}</h2>
+              <p>{link.description}</p>
+              <span className="arrow">→</span>
+            </Link>
+          ))}
         </div>
       </div>
 
+      {/* API & links banner */}
       <div
+        className="animate-fade-up"
         style={{
-          boxShadow: '10px 10px 15px var(--foreground-2)',
-          borderRadius: '24px',
+          animationDelay: '0.7s',
+          width: '100%',
+          maxWidth: '680px',
+          marginTop: '16px',
         }}
-        className="z-10 w-full max-w-3xl font-mono text-sm"
       >
-        <div className="api-banner flex flex-col items-center justify-center w-full pb-6 pt-8 from-zinc-200 backdrop-blur-2xl dark:from-inherit lg:static lg:w-auto lg:rounded-xl text-center">
-          <div>
-            You can check the backend API&nbsp;
-            <Link
-              href={`${process.env.NEXT_PUBLIC_API_URL}/docs`}
-              target="_blank"
+        <div className="api-section-container">
+          <div className="api-section-header">
+            <div
+              className="api-section-dot"
+              style={{ background: '#ff5f56' }}
+            />
+            <div
+              className="api-section-dot"
+              style={{ background: '#febc2e' }}
+            />
+            <div
+              className="api-section-dot"
+              style={{ background: '#27c840' }}
+            />
+            <span
+              style={{
+                fontFamily: "'DM Mono', monospace",
+                fontSize: '0.7rem',
+                color: 'var(--foreground-muted)',
+                marginLeft: '8px',
+              }}
             >
-              <code className="font-mono font-bold">here</code>
-            </Link>
+              REST API
+            </span>
           </div>
 
-          <div className="flex gap-2 mt-3 justify-center">
-            <Link href="/privacy">
-              <Button
-                size="small"
-                title="Read our privacy policy"
-                sx={{
-                  textTransform: 'none',
-                  fontSize: '0.875rem',
-                  padding: '6px 12px',
-                }}
+          <div className="api-section-body">
+            <span>
+              Backend API available at&nbsp;
+              <Link
+                href={`${process.env.NEXT_PUBLIC_API_URL}/docs`}
+                target="_blank"
+                style={{ color: 'var(--accent)', opacity: 1 }}
               >
-                📋 Privacy Policy
-              </Button>
-            </Link>
+                /docs
+              </Link>
+            </span>
 
-            {isMounted && hasConsent && (
-              <Button
-                size="small"
-                onClick={withdrawConsent}
-                title="Clear analytics consent and prompt again"
-                sx={{
-                  textTransform: 'none',
-                  fontSize: '0.875rem',
-                  padding: '6px 12px',
-                }}
-              >
-                🍪 Withdraw Consent
-              </Button>
-            )}
+            <div
+              style={{
+                display: 'flex',
+                gap: '8px',
+                flexWrap: 'wrap',
+                justifyContent: 'center',
+              }}
+            >
+              <Link href="/privacy">
+                <Button
+                  size="small"
+                  sx={{
+                    textTransform: 'none',
+                    fontFamily: "'DM Mono', monospace",
+                    fontSize: '0.75rem',
+                    padding: '5px 14px',
+                    borderRadius: '8px',
+                    border: '1px solid var(--card-border)',
+                    color: 'var(--foreground-muted)',
+                    '&:hover': {
+                      backgroundColor: 'var(--accent-muted)',
+                      borderColor: 'var(--accent)',
+                      color: 'var(--accent)',
+                    },
+                  }}
+                >
+                  📋 Privacy Policy
+                </Button>
+              </Link>
+
+              {isMounted && hasConsent && (
+                <Button
+                  size="small"
+                  onClick={withdrawConsent}
+                  sx={{
+                    textTransform: 'none',
+                    fontFamily: "'DM Mono', monospace",
+                    fontSize: '0.75rem',
+                    padding: '5px 14px',
+                    borderRadius: '8px',
+                    border: '1px solid var(--card-border)',
+                    color: 'var(--foreground-muted)',
+                    '&:hover': {
+                      backgroundColor: 'var(--bg-color-2)',
+                      borderColor: 'var(--text-color-2)',
+                      color: 'var(--text-color-2)',
+                    },
+                  }}
+                >
+                  🍪 Withdraw Consent
+                </Button>
+              )}
+            </div>
           </div>
         </div>
       </div>

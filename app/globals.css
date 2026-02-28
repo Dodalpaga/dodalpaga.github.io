@@ -1,10 +1,23 @@
+/* app/globals.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+
 :root[data-theme='light'] {
-  --background: rgb(235, 235, 235);
-  --background-2: rgb(190, 190, 190);
+  /* Core surfaces */
+  --background: rgb(242, 241, 238);
+  --background-2: rgb(220, 218, 212);
+  --background-elevated: rgb(255, 255, 255);
+  --background-sunken: rgb(228, 226, 220);
+
+  /* Accent palette */
   --bg-color-1: rgb(218, 178, 140);
   --bg-color-2: rgb(216, 153, 153);
   --bg-color-3: rgb(152, 216, 161);
@@ -13,18 +26,46 @@
   --text-color-2: rgb(94, 25, 25);
   --text-color-3: rgb(22, 107, 33);
   --text-color-4: rgb(30, 37, 100);
+
+  /* Primary accent */
+  --accent: rgb(48, 90, 214);
+  --accent-muted: rgba(48, 90, 214, 0.12);
+  --accent-hover: rgb(30, 65, 180);
   --blue: rgb(48, 48, 214);
-  --foreground: rgb(15, 15, 15);
-  --foreground-2: rgb(50, 50, 50);
-  --background-transparent: rgba(255, 255, 255, 0.8);
-  --background-start-rgb: rgb(214, 219, 220);
-  --background-end-rgb: rgb(255, 255, 255);
+
+  /* Typography */
+  --foreground: rgb(18, 18, 18);
+  --foreground-2: rgb(68, 68, 68);
+  --foreground-muted: rgb(120, 118, 112);
+
+  /* Glass & transparency */
+  --background-transparent: rgba(248, 247, 244, 0.85);
   --card: rgb(255, 255, 255);
+  --card-border: rgba(0, 0, 0, 0.07);
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 8px 24px rgba(0, 0, 0, 0.08);
+  --card-shadow-hover:
+    0 4px 12px rgba(0, 0, 0, 0.08), 0 20px 48px rgba(0, 0, 0, 0.14);
+
+  /* Gradients */
+  --background-start-rgb: rgb(238, 237, 234);
+  --background-end-rgb: rgb(248, 247, 244);
+
+  /* Dividers */
+  --divider: rgba(0, 0, 0, 0.08);
+
+  /* Noise overlay opacity */
+  --noise-opacity: 0.025;
+  --grid-color: rgba(0, 0, 0, 0.04);
 }
 
 :root[data-theme='dark'] {
-  --background: rgb(32, 32, 32);
-  --background-2: rgb(65, 65, 65);
+  /* Core surfaces */
+  --background: rgb(14, 14, 16);
+  --background-2: rgb(28, 28, 32);
+  --background-elevated: rgb(22, 22, 26);
+  --background-sunken: rgb(10, 10, 12);
+
+  /* Accent palette */
   --bg-color-1: rgb(122, 79, 35);
   --bg-color-2: rgb(94, 25, 25);
   --bg-color-3: rgb(22, 107, 33);
@@ -33,39 +74,210 @@
   --text-color-2: rgb(253, 195, 195);
   --text-color-3: rgb(177, 245, 186);
   --text-color-4: rgb(225, 215, 252);
+
+  /* Primary accent */
+  --accent: rgb(100, 140, 255);
+  --accent-muted: rgba(100, 140, 255, 0.12);
+  --accent-hover: rgb(120, 160, 255);
   --blue: rgb(159, 159, 226);
-  --foreground: rgb(255, 255, 255);
-  --foreground-2: rgb(200, 200, 200);
-  --background-transparent: rgba(29, 29, 29, 0.8);
-  --background-start-rgb: rgb(51, 51, 51);
-  --background-end-rgb: rgb(24, 24, 24);
-  --card: rgb(61, 61, 61);
+
+  /* Typography */
+  --foreground: rgb(238, 238, 240);
+  --foreground-2: rgb(180, 180, 188);
+  --foreground-muted: rgb(110, 110, 120);
+
+  /* Glass & transparency */
+  --background-transparent: rgba(14, 14, 16, 0.88);
+  --card: rgb(22, 22, 28);
+  --card-border: rgba(255, 255, 255, 0.06);
+  --card-shadow:
+    0 1px 0px rgba(255, 255, 255, 0.04), 0 8px 32px rgba(0, 0, 0, 0.4);
+  --card-shadow-hover:
+    0 4px 16px rgba(0, 0, 0, 0.5), 0 24px 56px rgba(0, 0, 0, 0.6);
+
+  /* Gradients */
+  --background-start-rgb: rgb(14, 14, 16);
+  --background-end-rgb: rgb(10, 10, 14);
+
+  /* Dividers */
+  --divider: rgba(255, 255, 255, 0.07);
+
+  /* Noise overlay opacity */
+  --noise-opacity: 0.04;
+  --grid-color: rgba(255, 255, 255, 0.025);
 }
 
-body {
-  color: var(--foreground);
-  background: linear-gradient(to bottom, transparent, var(--background-end-rgb))
-    var(--background-start-rgb);
-  background-attachment: fixed;
-  background-size: cover;
-  background-position: center;
-  transition:
-    background 0.1s ease,
-    border 0.1s ease,
-    background-color 0.1s,
-    color 0.1s ease,
-    transform 0.1s ease;
+/* ============================================================
+   BASE RESETS & TYPOGRAPHY
+   ============================================================ */
+
+* {
+  box-sizing: border-box;
 }
 
 html {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: thin;
+  scrollbar-color: var(--foreground-muted) transparent;
+  scroll-behavior: smooth;
 }
 
-/* Hide scrollbar for Chrome, Safari and Opera */
 html::-webkit-scrollbar {
+  width: 6px;
+}
+html::-webkit-scrollbar-track {
+  background: transparent;
+}
+html::-webkit-scrollbar-thumb {
+  background-color: var(--foreground-muted);
+  border-radius: 3px;
+  opacity: 0.5;
+}
+
+body {
+  font-family:
+    'Plus Jakarta Sans',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+  color: var(--foreground);
+  background-color: var(--background-end-rgb);
+  background-image:
+    /* Dot grid */
+    radial-gradient(circle, var(--grid-color) 1px, transparent 1px),
+    /* Gradient overlay */
+      linear-gradient(
+        160deg,
+        var(--background-start-rgb) 0%,
+        var(--background-end-rgb) 100%
+      );
+  background-size:
+    28px 28px,
+    100% 100%;
+  background-attachment: fixed;
+  background-position:
+    0 0,
+    0 0;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+
+/* Noise texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  opacity: var(--noise-opacity);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Ensure content is above noise */
+body > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Typography scale */
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--foreground);
+}
+
+h1 {
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+}
+h2 {
+  font-size: clamp(1.6rem, 3.5vw, 2.8rem);
+}
+h3 {
+  font-size: clamp(1.3rem, 2.5vw, 2rem);
+}
+h4 {
+  font-size: clamp(1.1rem, 2vw, 1.5rem);
+}
+h5 {
+  font-size: clamp(0.95rem, 1.5vw, 1.2rem);
+}
+
+.mono {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.85em;
+  letter-spacing: 0.02em;
+}
+
+span {
+  color: inherit;
+}
+
+/* ============================================================
+   LAYOUT PRIMITIVES
+   ============================================================ */
+
+.left-fixed {
+  position: fixed;
+  background-color: var(--background-elevated);
+  border: 1px solid var(--card-border);
+  top: 84px;
+  left: 0;
+  padding: 16px;
+  margin: 12px;
+  width: calc(340px - 24px);
+  height: calc(100vh - 108px);
+  border-radius: 16px;
+  box-shadow: var(--card-shadow);
+  z-index: 99;
+  overflow-y: auto;
+  scrollbar-width: none;
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.left-fixed::-webkit-scrollbar {
   display: none;
 }
+
+.left-fixed .card {
+  position: relative;
+  cursor: pointer;
+  background-color: var(--background) !important;
+  border-radius: 50% !important;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  overflow: hidden;
+  max-height: 200px;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--card-shadow) !important;
+}
+
+.left-fixed .card:hover {
+  transform: scale(1.04);
+}
+
+.right-scrollable {
+  margin-left: 350px;
+  width: calc(100% - 350px);
+  padding-bottom: 40px;
+}
+
+/* ============================================================
+   CARD COMPONENT
+   ============================================================ */
 
 .card {
   display: flex;
@@ -73,110 +285,377 @@ html::-webkit-scrollbar {
   background-color: var(--card) !important;
   color: var(--foreground) !important;
   position: relative !important;
-  backdrop-filter: blur(10px) !important;
-  border-radius: 10px !important; /* Border radius 2 in MUI translates to 8px */
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
-  transition: transform 0.3s ease !important;
+  border-radius: 14px !important;
+  border: 1px solid var(--card-border) !important;
+  box-shadow: var(--card-shadow) !important;
+  transition:
+    transform 0.3s cubic-bezier(0.34, 1.2, 0.64, 1),
+    box-shadow 0.3s ease,
+    border-color 0.3s ease !important;
   overflow: hidden !important;
-  width: 100%; /* Set width to 100% of the grid item */
-  aspect-ratio: 3 / 2; /* Maintain a 1:1 aspect ratio */
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
 }
 
-/* globals.css */
+.card:hover {
+  transform: translateY(-4px) scale(1.005) !important;
+  box-shadow: var(--card-shadow-hover) !important;
+  border-color: var(--accent-muted) !important;
+}
+
+/* Card overlay on hover */
 .card-overlay {
   display: flex;
   flex-direction: column;
   position: absolute;
-  width: 100%;
-  height: 100%;
-  background-color: var(--background-transparent);
+  inset: 0;
+  background: var(--background-transparent);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
   color: var(--foreground);
   justify-content: center;
+  align-items: center;
   text-align: center;
   opacity: 0;
-  transition: opacity 0.3s ease;
-  padding: 16px;
-  border-radius: 8px; /* To match the card's border radius */
+  transition: opacity 0.25s ease;
+  padding: 20px;
+  border-radius: 13px;
   z-index: 1;
-  pointer-events: none; /* Prevent overlay from blocking clicks */
+  pointer-events: none;
+  gap: 8px;
 }
 
 .card:hover .card-overlay {
   opacity: 1;
 }
 
-.left-fixed {
-  position: fixed;
-  background-color: var(--background);
-  top: 84px;
-  left: 0;
-  padding: 10px;
-  margin: 10px;
-  width: calc(350px - 20px);
-  height: calc(100vh - 104px);
-  border-radius: 10px;
-  box-shadow: 0 14px 16px rgba(0, 0, 0, 0.2);
-  z-index: 99;
-  overflow-y: auto;
+/* ============================================================
+   NAVIGATION BAR ENHANCEMENTS
+   ============================================================ */
+
+.navbar-glass {
+  background: var(--background-transparent);
+  backdrop-filter: blur(20px) saturate(1.6);
+  -webkit-backdrop-filter: blur(20px) saturate(1.6);
+  border-bottom: 1px solid var(--card-border);
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease;
 }
 
-.left-fixed .card {
-  position: relative;
-  cursor: pointer;
-  background-color: var(--background) !important;
-  border-radius: 50% !important; /* Ensures the card is a perfect circle */
-  transition: transform 0.3s ease;
-  overflow: hidden;
-  max-height: 200px;
-  aspect-ratio: 1 / 1;
-  display: flex;
-  flex-direction: column;
+/* ============================================================
+   SECTION LABELS (mono accent)
+   ============================================================ */
+
+.section-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  opacity: 0.8;
+  display: block;
+  margin-bottom: 8px;
 }
 
-.right-scrollable {
-  margin-left: 350px;
-  width: calc(100% - 350px);
-}
-
-.experience {
-  text-align: left;
-}
-
-span {
-  color: var(--foreground);
-}
+/* ============================================================
+   FOOTER
+   ============================================================ */
 
 .footer {
-  background-color: var(--background);
-  color: var(--foreground);
+  background-color: var(--background-elevated);
+  border-top: 1px solid var(--divider);
+  color: var(--foreground-muted);
   width: 100%;
-  box-shadow: var(
-    --background
-  ); /* Adjust according to your theme's shadow variable */
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 50px; /* Adjust height as needed */
+  height: 56px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
   z-index: 10;
 }
 
+/* ============================================================
+   API BANNER
+   ============================================================ */
+
 .api-banner {
   color: var(--foreground);
-  background-color: var(--background);
+  background-color: var(--background-elevated);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  font-family: 'DM Mono', monospace;
 }
 
-/* Responsive on max width 1150px */
+/* ============================================================
+   EXPERIENCE SECTION
+   ============================================================ */
+
+.experience {
+  text-align: left;
+  position: relative;
+}
+
+.experience::before {
+  content: '';
+  position: absolute;
+  left: -20px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--accent), transparent);
+  opacity: 0.3;
+  border-radius: 2px;
+}
+
+/* ============================================================
+   SKILL CHIP OVERRIDES
+   ============================================================ */
+
+.skill-chip-box {
+  text-align: center;
+  height: fit-content;
+  padding: 6px 10px;
+  border: 1px solid var(--divider);
+  border-radius: 12px;
+  background-color: var(--background-elevated);
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.skill-chip-box:hover {
+  border-color: var(--accent-muted);
+  background-color: var(--accent-muted);
+}
+
+/* ============================================================
+   SCROLL REVEAL ANIMATIONS
+   ============================================================ */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.animate-fade-up {
+  animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Staggered delay helpers */
+.delay-1 {
+  animation-delay: 0.1s;
+}
+.delay-2 {
+  animation-delay: 0.2s;
+}
+.delay-3 {
+  animation-delay: 0.3s;
+}
+.delay-4 {
+  animation-delay: 0.4s;
+}
+.delay-5 {
+  animation-delay: 0.5s;
+}
+.delay-6 {
+  animation-delay: 0.6s;
+}
+
+/* Start hidden, then animate in */
+.animate-fade-up,
+.animate-fade-in,
+.animate-scale-in {
+  opacity: 0;
+}
+
+/* ============================================================
+   HIGHLIGHT / GRADIENT TEXT
+   ============================================================ */
+
+.gradient-text {
+  background: linear-gradient(135deg, var(--accent), var(--text-color-4));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.shimmer-text {
+  background: linear-gradient(
+    90deg,
+    var(--foreground) 0%,
+    var(--accent) 50%,
+    var(--foreground) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s linear infinite;
+}
+
+/* ============================================================
+   COUNTER / STAT DISPLAY
+   ============================================================ */
+
+.stat-number {
+  font-family: 'Syne', sans-serif;
+  font-size: 3rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--accent);
+  line-height: 1;
+}
+
+/* ============================================================
+   CUSTOM SCROLLBAR (sidebar/panels)
+   ============================================================ */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--foreground-muted);
+  border-radius: 3px;
+  opacity: 0.4;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--foreground-2);
+}
+
+/* ============================================================
+   MUI OVERRIDES
+   ============================================================ */
+
+.MuiChip-root {
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  transition: all 0.2s ease !important;
+}
+
+.MuiChip-root:hover {
+  transform: translateY(-1px) !important;
+}
+
+.MuiTypography-root {
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+}
+
+.MuiTypography-h1,
+.MuiTypography-h2,
+.MuiTypography-h3,
+.MuiTypography-h4,
+.MuiTypography-h5,
+.MuiTypography-h6 {
+  font-family: 'Syne', sans-serif !important;
+  letter-spacing: -0.02em !important;
+}
+
+/* ============================================================
+   TAG / BADGE
+   ============================================================ */
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  border: 1px solid var(--divider);
+  color: var(--foreground-muted);
+  background: var(--background-elevated);
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.tag:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ============================================================
+   RESPONSIVE BREAKPOINTS
+   ============================================================ */
+
 @media (max-width: 1150px) {
   .left-fixed {
     position: relative;
     display: flex;
     top: 0;
-    padding: 10px;
-    margin: 10px;
+    padding: 16px;
+    margin: 12px;
     width: auto;
     height: 100%;
-    border-radius: 10px;
-    box-shadow: 0 14px 16px rgba(0, 0, 0, 0.2);
+    border-radius: 16px;
   }
 
   .left-profile {
@@ -187,9 +666,9 @@ span {
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 100%; /* Ensure the card takes up full available height */
-    flex-grow: 1; /* Allow the card to take up remaining space */
-    flex-shrink: 1; /* Allow the card to shrink if necessary */
+    height: 100%;
+    flex-grow: 1;
+    flex-shrink: 1;
   }
 
   .left-fixed .title {
@@ -208,9 +687,9 @@ span {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 10px;
-    box-sizing: border-box; /* Prevent content from overflowing */
+    padding: 12px;
     margin-bottom: 84px;
+    box-sizing: border-box;
   }
 
   .left-fixed .left-container {
@@ -221,32 +700,61 @@ span {
 
   .left-fixed .card {
     width: min(200px, 80%);
-    flex-grow: 1; /* Allow the card to take up remaining space */
-    flex-shrink: 1; /* Allow the card to shrink if necessary */
-    height: 100%; /* Ensure the card takes up full available height */
+    flex-grow: 1;
+    flex-shrink: 1;
+    height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Ensure the content inside the card is centered */
+    justify-content: center;
     align-items: center;
   }
 }
 
-/* custom scrollbar */
-::-webkit-scrollbar {
-  width: 20px;
+/* ============================================================
+   FOCUS STATES (accessibility)
+   ============================================================ */
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
-::-webkit-scrollbar-track {
-  background-color: transparent;
+/* ============================================================
+   SELECTION COLOR
+   ============================================================ */
+
+::selection {
+  background-color: var(--accent-muted);
+  color: var(--foreground);
 }
 
-::-webkit-scrollbar-thumb {
-  background-color: #d6dee1;
-  border-radius: 20px;
-  border: 6px solid transparent;
-  background-clip: content-box;
+/* ============================================================
+   LINK STYLES
+   ============================================================ */
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background-color: #a8bbbf;
+a:hover {
+  opacity: 0.75;
+}
+
+/* ============================================================
+   DIVIDER ENHANCEMENT
+   ============================================================ */
+
+.section-divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--divider),
+    transparent
+  );
+  margin: 32px 0;
 }
