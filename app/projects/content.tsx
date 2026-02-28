@@ -20,6 +20,13 @@ const apps = [
       'A chatbot you can interact with. It has been fine-tuned on my resume, previous projects, and other relevant information about me.',
   },
   {
+    title: 'Board Game Card Printer',
+    image: `/images/cardprinter.jpg`, // Update with your actual image path
+    link: 'https://dodalpaga.github.io/Board-Game-Card-Printer/', // Update with your actual routes
+    target: '_blank',
+    description: 'A small website to print your cards for board games',
+  },
+  {
     title: 'Analytics',
     image: `/images/analytics.jpg`, // Update with your actual image path
     link: '/projects/analytics', // Update with your actual routes
