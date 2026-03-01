@@ -31,6 +31,13 @@ const NavBar = () => {
     setIsClient(true);
   }, []);
 
+  // logo-dark.png on light background, logo-light.png on dark background
+  const logoSrc = isClient
+    ? theme === 'light'
+      ? '/images/logo/logo-dark.png'
+      : '/images/logo/logo-light.png'
+    : '/images/logo/logo-dark.png'; // SSR default
+
   return (
     <AppBar className="navbar">
       <Toolbar>
@@ -48,7 +55,7 @@ const NavBar = () => {
             }}
           >
             <Image
-              src={`/images/D2_satellite_vect.png`}
+              src={logoSrc}
               alt="Logo"
               width={60}
               height={60}

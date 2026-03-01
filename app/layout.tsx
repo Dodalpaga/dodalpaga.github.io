@@ -1,4 +1,3 @@
-// app/layout.tsx  ← SERVER COMPONENT (no 'use client')
 import './globals.css';
 import { Syne, DM_Mono, Plus_Jakarta_Sans } from 'next/font/google';
 import Providers from '@/components/providers';
@@ -40,12 +39,34 @@ export default function RootLayout({
       className={`${syne.variable} ${dmMono.variable} ${plusJakarta.variable}`}
     >
       <head>
-        {/*
-          ⚡ Placed in <head> so it executes before <body> renders.
-          suppressHydrationWarning on <html> covers the data-theme
-          attribute difference between SSR ('dark' fallback) and client.
-        */}
+        {/* ⚡ Theme init — before body renders, prevents flash */}
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+
+        {/*
+          Adaptive favicon — browser picks based on OS color scheme.
+          logo-dark.ico  → used when OS is in light mode (dark icon on light bg)
+          logo-light.ico → used when OS is in dark mode  (light icon on dark bg)
+        */}
+        <link
+          rel="icon"
+          href="/images/logo/logo-dark.ico"
+          media="(prefers-color-scheme: light)"
+        />
+        <link
+          rel="icon"
+          href="/images/logo/logo-light.ico"
+          media="(prefers-color-scheme: dark)"
+        />
+
+        {/*
+          SVG favicon — best modern format, handles its own dark/light
+          via an internal @media query (see /images/logo/favicon.svg).
+          Listed last so supporting browsers prefer it over .ico.
+        */}
+        <link rel="icon" type="image/svg+xml" href="/images/logo/favicon.svg" />
+
+        {/* Apple touch icon */}
+        <link rel="apple-touch-icon" href="/images/logo/logo-dark.png" />
       </head>
       <body suppressHydrationWarning>
         <Providers>{children}</Providers>

@@ -1,80 +1,144 @@
 /* app/styles.css */
 
 /* ============================================================
-   PARALLAX HERO CONTAINER
+   BLUEPRINT PHOTO — CSS CUSTOM PROPERTIES (theme-aware)
+   These inherit from your existing :root / [data-theme="dark"]
+   or whatever mechanism you use for light/dark mode.
    ============================================================ */
 
-#container {
-  height: calc(100vh - 260px);
-  max-height: 700px;
-  min-height: 400px;
-  aspect-ratio: 1024 / 1536;
-  background-image: url('/images/parallax/Background.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  display: grid;
-  place-items: center;
-  animation: gentleFloat 8s ease-in-out infinite;
-  transform-style: preserve-3d;
-  perspective: 1000px;
-  filter: drop-shadow(0 40px 80px rgba(0, 0, 0, 0.18));
-  will-change: transform;
+:root {
+  /* Light mode defaults */
+  --blueprint-accent: rgba(37, 99, 180, 0.75);
+  --blueprint-line: rgba(37, 99, 180, 0.28);
+  --blueprint-line-faint: rgba(37, 99, 180, 0.12);
+  --blueprint-bar-bg: rgba(230, 238, 250, 0.92);
+  --blueprint-chip-bg: rgba(225, 236, 252, 0.95);
+  --blueprint-chip-border: rgba(37, 99, 180, 0.28);
+  --blueprint-chip-color: rgba(37, 99, 180, 0.9);
 }
 
-#child1 {
+/* Dark mode — adjust selector to match your existing theme toggle */
+.dark,
+[data-theme='dark'],
+[class*='dark'] {
+  --blueprint-accent: rgba(99, 179, 237, 0.85);
+  --blueprint-line: rgba(99, 179, 237, 0.38);
+  --blueprint-line-faint: rgba(99, 179, 237, 0.14);
+  --blueprint-bar-bg: rgba(10, 18, 30, 0.88);
+  --blueprint-chip-bg: rgba(10, 18, 30, 0.92);
+  --blueprint-chip-border: rgba(99, 179, 237, 0.3);
+  --blueprint-chip-color: rgba(99, 179, 237, 0.88);
+}
+
+/* ============================================================
+   BLUEPRINT PHOTO COMPONENT
+   ============================================================ */
+
+.blueprint-photo {
+  position: relative;
+  flex-shrink: 0;
+  cursor: crosshair;
+}
+
+/* SVG layers */
+.blueprint-svg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.blueprint-svg--back {
+  z-index: 0;
+}
+.blueprint-svg--front {
+  z-index: 3;
+}
+
+/* Photo wrapper */
+.blueprint-photo__img-wrap {
+  position: absolute;
+  top: 28px;
+  left: 28px;
+  right: 28px;
+  bottom: 54px;
+  border-radius: 3px;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px var(--blueprint-line),
+    0 24px 64px rgba(0, 0, 0, 0.55);
+  z-index: 2;
+}
+
+.blueprint-photo__img {
   width: 100%;
   height: 100%;
-  background-image: url('/images/parallax/Mid2.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  grid-area: 1/1/1/1;
-  translate: 0 0 20px;
-  will-change: transform;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+  filter: contrast(1.04) brightness(0.97) saturate(0.94);
+  transition: transform 0.4s ease-out;
 }
 
-#child2 {
-  width: 100%;
-  height: 100%;
-  background-image: url('/images/parallax/Top.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  grid-area: 1/1/1/1;
-  translate: 0 0 15px;
-  will-change: transform;
+/* Gradient fade overlays — use var(--background) so they match the page bg */
+.blueprint-photo__fade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
 }
 
-@keyframes gentleFloat {
+.blueprint-photo__fade--bottom,
+.blueprint-photo__fade--sides,
+.blueprint-photo__fade--top {
+  display: none;
+}
+
+/* Floating tech chips */
+.blueprint-chip {
+  position: absolute;
+  background: var(--blueprint-chip-bg);
+  border: 1px solid var(--blueprint-chip-border);
+  border-radius: 4px;
+  padding: 4px 9px;
+  font-size: 0.58rem;
+  font-family: 'DM Mono', 'Courier New', monospace;
+  color: var(--blueprint-chip-color);
+  letter-spacing: 0.08em;
+  z-index: 4;
+  white-space: nowrap;
+  animation: floatChip 3s ease-in-out infinite;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+@keyframes floatChip {
   0%,
   100% {
     transform: translateY(0px);
   }
   50% {
-    transform: translateY(-12px);
+    transform: translateY(-5px);
   }
 }
 
 /* ============================================================
-   HOME PAGE HERO LAYOUT
+   HOME PAGE HERO LAYOUT  — bigger, better proportioned
    ============================================================ */
 
 .home-hero {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 48px;
+  gap: 56px;
   align-items: center;
   justify-items: center;
   width: 100%;
-  max-width: 1200px;
-  padding: 0 24px;
+  max-width: 1280px;
+  padding: 0 32px;
 }
 
 .home-nav-links {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
   width: 100%;
 }
 
@@ -109,7 +173,6 @@
   transform: translateX(6px);
   box-shadow: var(--card-shadow-hover);
   border-color: var(--accent-muted);
-  opacity: 1;
 }
 
 .home-nav-link:hover::after {
@@ -230,11 +293,8 @@
 @media (max-width: 1024px) {
   .home-hero {
     grid-template-columns: 1fr;
-    gap: 32px;
-  }
-
-  #container {
-    height: min(50vw, 480px);
+    gap: 36px;
+    padding: 0 20px;
   }
 }
 
@@ -247,7 +307,7 @@
     font-size: 1.2rem;
   }
 
-  #container {
-    height: 60vw;
+  .blueprint-chip {
+    display: none; /* hide side chips on mobile, they'd overflow */
   }
 }
