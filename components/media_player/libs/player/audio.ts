@@ -1,3 +1,5 @@
+// components/media_player/libs/player/audio.ts
+
 import { createPubSub } from '../pubsub';
 import { AudioState } from './types';
 
@@ -22,7 +24,7 @@ export const createAudio = () => {
     if (!element) return; // Prevent SSR issues
 
     element.addEventListener('durationchange', () =>
-      setState({ duration: element.duration })
+      setState({ duration: element.duration }),
     );
     element.addEventListener('playing', () => setState({ playing: true }));
     element.addEventListener('pause', () => setState({ playing: false }));
@@ -34,7 +36,7 @@ export const createAudio = () => {
       }
     });
     element.addEventListener('volumechange', () =>
-      setState({ volume: element.volume })
+      setState({ volume: element.volume }),
     );
     setState({ volume: element.volume });
   };

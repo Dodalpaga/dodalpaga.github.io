@@ -12,7 +12,6 @@ import { CookieConsent } from '@/components/cookie_consent';
 import { Suspense } from 'react';
 import { AnalyticsTracker } from '@/components/analytics_tracker';
 
-// ── Fonts ──────────────────────────────────────────────────────────────────
 const syne = Syne({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700', '800'],
@@ -54,10 +53,18 @@ export default function RootLayout({
             </Suspense>
             {children}
           </AppRouterCacheProvider>
+
           <MediaPlayer />
-          <BackendStatus />
-          <CookieStatusChecker />
+
+          {/* Status hub — two stacked pills, bottom-right */}
+          <div className="status-hub">
+            <CookieStatusChecker />
+            <BackendStatus />
+          </div>
+
+          {/* Cookie consent slide-up toast */}
           <CookieConsent />
+
           <Toast />
         </ThemeProvider>
       </body>

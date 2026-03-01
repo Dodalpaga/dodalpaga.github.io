@@ -1,3 +1,5 @@
+// components/media_player/libs/player/player.ts
+
 import { createPubSub } from '../pubsub';
 import { createAudio } from './audio';
 import { State, Track } from './types';

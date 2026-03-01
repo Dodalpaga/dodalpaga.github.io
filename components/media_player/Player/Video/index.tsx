@@ -1,3 +1,5 @@
+// components/media_player/Player/Video/index.tsx
+
 import React, { useRef, useEffect, FC } from 'react';
 import player from '../../libs/player';
 import { useStyles } from './styles';

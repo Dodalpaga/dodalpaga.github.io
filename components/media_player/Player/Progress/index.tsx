@@ -1,3 +1,5 @@
+// components/media_player/Player/Progress/index.tsx
+
 import React from 'react';
 import { Box, Slider, Typography } from '@mui/material';
 

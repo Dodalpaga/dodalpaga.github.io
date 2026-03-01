@@ -1,0 +1,512 @@
+/* app/projects/media_player/player.css */
+
+/* ── Layout ─────────────────────────────────────────────────────────────── */
+.full-player {
+  display: flex;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ── Atmospheric blurred background ─────────────────────────────────────── */
+.fp-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+.fp-bg-img {
+  position: absolute;
+  inset: -40px;
+  background-size: cover;
+  background-position: center;
+  filter: blur(60px) saturate(1.2);
+  opacity: 0.18;
+  transition: background-image 0.8s ease;
+}
+.fp-bg-video-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(var(--accent-rgb, 99, 102, 241), 0.04) 0%,
+    transparent 60%
+  );
+}
+
+/* ── Left panel: artwork + controls ─────────────────────────────────────── */
+.fp-left {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 clamp(280px, 42%, 480px);
+  padding: clamp(20px, 3.5vw, 44px);
+  gap: 24px;
+}
+
+/* ── Video panel ─────────────────────────────────────────────────────────── */
+.fp-video-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 380px;
+  aspect-ratio: 16 / 9;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #000;
+  box-shadow:
+    0 32px 80px rgba(0, 0, 0, 0.5),
+    0 8px 24px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+}
+.fp-video-wrap:hover {
+  transform: scale(1.01);
+}
+
+.fp-video-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+}
+
+/* Fullscreen button overlay on video */
+.fp-video-fullscreen-btn {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(8px);
+  color: rgba(255, 255, 255, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transition:
+    opacity 0.15s ease,
+    background 0.15s ease;
+  z-index: 2;
+}
+.fp-video-wrap:hover .fp-video-fullscreen-btn {
+  opacity: 1;
+}
+.fp-video-fullscreen-btn:hover {
+  background: rgba(0, 0, 0, 0.8);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Paused state overlay on video */
+.fp-video-paused-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.35);
+  color: rgba(255, 255, 255, 0.5);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Album art */
+.fp-cover-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 320px;
+  aspect-ratio: 1;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow:
+    0 32px 80px rgba(0, 0, 0, 0.35),
+    0 8px 24px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+}
+.fp-cover-wrap:hover {
+  transform: scale(1.02);
+}
+.fp-cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.fp-cover-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, var(--background-2), var(--card));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--foreground-muted);
+}
+
+/* Track identity */
+.fp-identity {
+  text-align: center;
+  width: 100%;
+  max-width: 380px;
+}
+.fp-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.fp-track-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(1.05rem, 2vw, 1.45rem);
+  letter-spacing: -0.03em;
+  color: var(--foreground);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+/* Video/media type badge */
+.fp-media-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.58rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: var(--accent-muted);
+  border: 1px solid var(--accent);
+  padding: 2px 7px;
+  border-radius: 100px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Progress */
+.fp-progress {
+  width: 100%;
+  max-width: 380px;
+}
+.fp-time-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.fp-time {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--foreground-muted);
+}
+.fp-slider-track {
+  width: 100%;
+  height: 4px;
+  background: var(--card-border);
+  border-radius: 4px;
+  position: relative;
+  cursor: pointer;
+}
+.fp-slider-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 4px;
+  position: relative;
+  transition: width 0.4s linear;
+}
+.fp-slider-fill::after {
+  content: '';
+  position: absolute;
+  right: -6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-muted);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+.fp-slider-track:hover .fp-slider-fill::after {
+  opacity: 1;
+}
+
+/* Controls */
+.fp-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.fp-ctrl-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--card-border);
+  background: transparent;
+  color: var(--foreground-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.fp-ctrl-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+.fp-ctrl-btn:not(:disabled):hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-muted);
+}
+.fp-ctrl-btn.primary {
+  width: 52px;
+  height: 52px;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  box-shadow: 0 4px 16px var(--accent-muted);
+}
+.fp-ctrl-btn.primary:hover {
+  transform: scale(1.06);
+  box-shadow: 0 6px 24px var(--accent-muted);
+}
+
+/* Volume */
+.fp-volume {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 380px;
+  color: var(--foreground-muted);
+}
+.fp-vol-track {
+  flex: 1;
+  height: 3px;
+  background: var(--card-border);
+  border-radius: 3px;
+  cursor: pointer;
+  position: relative;
+}
+.fp-vol-fill {
+  height: 100%;
+  background: var(--foreground-muted);
+  border-radius: 3px;
+  transition: width 0.1s ease;
+}
+
+/* ── Right panel: playlist ───────────────────────────────────────────────── */
+.fp-right {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(20px, 3vw, 40px);
+  padding-left: 0;
+  overflow: hidden;
+}
+
+.fp-playlist-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--card-border);
+  margin-bottom: 8px;
+  flex-shrink: 0;
+}
+.fp-playlist-title {
+  font-family: 'DM Mono', monospace;
+  padding-left: 1rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--foreground-muted);
+}
+.fp-playlist-count {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--foreground-muted);
+  background: var(--background-2);
+  border: 1px solid var(--card-border);
+  padding: 2px 8px;
+  border-radius: 100px;
+}
+
+.fp-track-list {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-right: 4px;
+}
+
+/* Track row */
+.fp-track-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  border: 1px solid transparent;
+}
+.fp-track-row:hover {
+  background: var(--background-elevated, var(--background-2));
+}
+.fp-track-row.active {
+  background: var(--accent-muted);
+  border-color: var(--accent);
+}
+
+.fp-track-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--foreground-muted);
+  width: 20px;
+  text-align: right;
+  flex-shrink: 0;
+}
+.fp-track-row.active .fp-track-num {
+  color: var(--accent);
+}
+
+.fp-track-cover {
+  width: 38px;
+  height: 38px;
+  border-radius: 6px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--background-2);
+  border: 1px solid var(--card-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--foreground-muted);
+}
+.fp-track-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Video track cover — distinct look */
+.fp-track-cover-video {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--accent-muted), var(--background-2));
+  color: var(--accent);
+}
+
+.fp-track-meta {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.fp-track-name {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--foreground);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+}
+.fp-track-row.active .fp-track-name {
+  color: var(--accent);
+}
+
+/* Inline video badge in playlist */
+.fp-track-type-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  opacity: 0.75;
+}
+
+.fp-track-dur {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--foreground-muted);
+  flex-shrink: 0;
+}
+
+.fp-track-play-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--foreground-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+.fp-track-row:hover .fp-track-play-btn {
+  opacity: 1;
+}
+.fp-track-row.active .fp-track-play-btn {
+  opacity: 1;
+  color: var(--accent);
+}
+
+/* Vertical divider between panels */
+.fp-divider {
+  width: 1px;
+  background: var(--card-border);
+  margin: clamp(20px, 3vw, 40px) 0;
+  flex-shrink: 0;
+  align-self: stretch;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+@media (max-width: 700px) {
+  .full-player {
+    flex-direction: column;
+  }
+  .fp-left {
+    flex: 0 0 auto;
+    padding-bottom: 16px;
+  }
+  .fp-divider {
+    width: 100%;
+    height: 1px;
+    margin: 0 clamp(20px, 3vw, 40px);
+  }
+  .fp-right {
+    padding-left: clamp(20px, 3vw, 40px);
+  }
+  .fp-video-wrap {
+    max-width: 100%;
+  }
+}

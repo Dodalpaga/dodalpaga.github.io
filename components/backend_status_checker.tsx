@@ -1,76 +1,54 @@
+// components/backend_status_checker.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
-import { AlertCircle, CheckCircle, XCircle, Link } from 'lucide-react';
+import { Server } from 'lucide-react';
 import './backend_status_checker.css';
-import ScrollingTitle from '@/components/scrolling_title';
 
 const CHECK_URL = `${process.env.NEXT_PUBLIC_API_URL}/docs`;
-const TIMEOUT = 5000; // 5 seconds timeout
-const CHECK_INTERVAL = 10000; // 10 seconds interval
+const TIMEOUT = 5000;
+const CHECK_INTERVAL = 30_000; // reduced from 10s — no need to hammer the server
+
+type Status = 'loading' | 'success' | 'timeout' | 'error';
+
+const STATUS_LABELS: Record<Status, string> = {
+  loading: 'Checking API…',
+  success: 'API online',
+  timeout: 'API timeout',
+  error: 'API unreachable',
+};
 
 export default function BackendStatus() {
-  const [status, setStatus] = useState<'success' | 'timeout' | 'error' | null>(
-    null
-  );
-  const [message, setMessage] = useState('');
-  const [hover, setHover] = useState(false);
+  const [status, setStatus] = useState<Status>('loading');
 
-  const checkBackendStatus = () => {
+  const check = () => {
+    setStatus('loading');
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), TIMEOUT);
-
-    console.log('Fetching backend status...');
+    const timer = setTimeout(() => controller.abort(), TIMEOUT);
 
     fetch(CHECK_URL, { signal: controller.signal })
       .then((res) => {
-        console.log(res);
-        if (!res.ok) throw new Error(`Error: ${res.status} ${res.statusText}`);
-        setStatus('success');
-        setMessage('Backend can be reached.');
+        setStatus(res.ok ? 'success' : 'error');
       })
       .catch((err) => {
-        console.log(err);
-        if (err.name === 'AbortError') {
-          setStatus('timeout');
-          setMessage('Backend Request timed out.');
-        } else if (err.name === 'TypeError') {
-          setStatus('error');
-          setMessage('Backend DNS resolution failed. Check the server status');
-        } else {
-          setStatus('error');
-          setMessage(err.message || 'An error occurred.');
-        }
+        setStatus(err.name === 'AbortError' ? 'timeout' : 'error');
       })
-      .finally(() => clearTimeout(timeoutId));
+      .finally(() => clearTimeout(timer));
   };
 
   useEffect(() => {
-    checkBackendStatus(); // Initial check
-    const intervalId = setInterval(checkBackendStatus, CHECK_INTERVAL);
-
-    return () => clearInterval(intervalId);
+    check();
+    const id = setInterval(check, CHECK_INTERVAL);
+    return () => clearInterval(id);
   }, []);
 
   return (
-    <div
-      className="backend-status-container"
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-    >
-      <div className="backend-status-content">
-        <Link className="status-icon" size={32} />
-        {status === 'success' && (
-          <CheckCircle className="status-icon success" size={32} />
-        )}
-        {status === 'timeout' && (
-          <AlertCircle className="status-icon timeout" size={32} />
-        )}
-        {status === 'error' && (
-          <XCircle className="status-icon error" size={32} />
-        )}
-        {hover && <ScrollingTitle title={message} />}
-      </div>
+    <div className="status-pill" title={STATUS_LABELS[status]}>
+      <span className={`status-dot ${status}`} />
+      <span className="status-icon-wrap">
+        <Server size={13} strokeWidth={1.8} />
+      </span>
+      <span className="status-label">{STATUS_LABELS[status]}</span>
     </div>
   );
 }

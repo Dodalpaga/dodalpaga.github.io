@@ -1,3 +1,5 @@
+// components/media_player/libs/pubsub.ts
+
 type Listener = (value: any) => void;
 
 type Topics = {

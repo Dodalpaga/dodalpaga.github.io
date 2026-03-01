@@ -1,3 +1,5 @@
+// components/media_player/libs/player/hooks.ts
+
 import { useState, useEffect } from 'react';
 
 import player from './player';

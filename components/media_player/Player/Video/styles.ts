@@ -1,3 +1,4 @@
+// components/media_player/Player/Video/styles.ts
 import { makeStyles } from '@mui/styles';
 
 export const useStyles = makeStyles(
@@ -8,5 +9,5 @@ export const useStyles = makeStyles(
       },
     },
   }),
-  { name: 'Video' }
+  { name: 'Video' },
 );

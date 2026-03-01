@@ -1,3 +1,5 @@
+// components/media_player/Player/Progress/utils.ts
+
 const padTime = (value: number) => {
   const str = value.toString();
 

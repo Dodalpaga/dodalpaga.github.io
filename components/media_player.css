@@ -1,179 +1,254 @@
-.media-player {
+/* components/media_player.css */
+
+/* ── Floating widget ─────────────────────────────────────────────────────── */
+.mp-widget {
   position: fixed;
-  background: var(
-    --background,
-    rgba(255, 255, 255, 0.1)
-  ); /* Default if --background isn't set */
-  backdrop-filter: blur(50px); /* Add the blur effect */
-  -webkit-backdrop-filter: blur(10px); /* For Safari support */
-  border: 1px solid var(--background-2, rgba(255, 255, 255, 0.3)); /* Subtle border */
-  border-radius: 16px; /* Rounded corners for the glass effect */
-  box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.25); /* Add depth with a soft shadow */
-  opacity: 0.8; /* Slight transparency */
-  bottom: 0;
-  right: 0;
-  margin: 10px;
-  padding: 10px;
-  z-index: 99;
-  overflow: hidden;
-  width: 60px !important;
-  height: 60px;
-  transition:
-    width 0.5s ease,
-    height 0.5s ease,
-    opacity 0.2s ease-in-out;
-}
+  bottom: 20px;
+  left: 20px;
+  z-index: 1000;
+  pointer-events: none;
 
-.fullscreen-button {
-  position: fixed;
-  display: none !important;
-  top: 5px;
-  right: 5px;
-  z-index: 9999;
-  margin: 0;
-  padding: 0;
-}
-
-.media-player .player-container,
-.media-player .playlist-container {
-  display: none;
-  flex-direction: row; /* Change to row for horizontal layout */
-  width: 100%;
-  margin: auto;
-  align-items: center;
-  padding-right: 20px;
-  padding-left: 20px;
-}
-
-.media-player .player-container {
-  height: 100px;
-}
-
-.media-player .player-container .cover {
-  display: flex;
-  min-width: 80px;
-  min-height: 80px;
-  aspect-ratio: 1/1;
-  width: 20%;
-  padding-right: 10px;
-}
-
-.media-player .player-container .player-controls {
-  display: flex;
-  width: 80%;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.media-player .music-icon {
-  display: block;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none; /* Prevents interference with hover events */
-}
-
-/* When hovering in non-fullscreen mode, use a column flex layout */
-.media-player:not(.fullscreen):hover {
-  display: flex;
-  flex-direction: column;
-  width: 500px !important;
-  height: 300px;
-}
-
-/* Fix the height of the player container */
-.media-player:not(.fullscreen):hover .player-container {
-  display: flex; /* ensure it's still flex */
-  flex: 0 0 100px; /* fixed height of 100px */
-}
-
-/* Allow the playlist container to take up remaining space and scroll if needed */
-.media-player:not(.fullscreen):hover .playlist-container {
-  display: flex; /* ensure it's visible */
-  flex: 1 1 auto; /* take up the remaining vertical space */
-  overflow-y: auto; /* add vertical scrolling when content overflows */
-}
-
-/* Optionally, ensure the fullscreen button is visible */
-.media-player:not(.fullscreen):hover .fullscreen-button {
-  display: flex !important;
-  position: fixed;
-  max-width: fit-content;
-}
-
-/* Hide the music icon when hovered or in fullscreen mode */
-.media-player:not(.fullscreen):hover .music-icon,
-.media-player.fullscreen .music-icon {
-  display: none;
-}
-
-/* Hide media player for devices with a width below 465px */
-@media (max-width: 465px) {
-  .media-player {
+  /* hide on very small screens */
+  @media (max-width: 465px) {
     display: none;
   }
 }
 
-.fullscreen {
-  opacity: 1;
-  width: calc(100vw - 20px) !important; /* Full screen width */
-  height: calc(100vh - 10px - 84px) !important; /* Full screen height */
-  max-height: none !important;
-  max-width: none !important;
-  padding: 24px !important;
-  display: flex !important; /* Ensure flexbox is applied */
-  flex-direction: row !important; /* Explicitly row for side-by-side layout */
-  align-items: stretch; /* Stretch children to full height */
-  justify-content: space-between; /* Distribute space between containers */
-  box-sizing: border-box; /* Ensure padding doesn't affect size */
-}
-
-.fullscreen .fullscreen-button {
-  display: flex !important;
-  position: fixed;
-  top: 5px;
-  right: 5px;
-  z-index: 1000; /* Ensure button is above other elements */
-}
-
-.fullscreen .player-container {
-  display: flex !important; /* Force flex display */
-  flex-direction: column; /* Stack cover and controls vertically */
-  width: 60% !important; /* Player takes 60% width */
-  height: 100% !important; /* Full height of parent */
-  padding: 10px;
-  box-sizing: border-box;
-  flex-shrink: 0; /* Prevent shrinking */
-}
-
-.fullscreen .playlist-container {
-  display: flex !important; /* Force flex display */
-  flex-direction: column; /* Stack playlist items vertically */
-  width: 40% !important; /* Playlist takes 40% width */
-  height: 100% !important; /* Full height of parent */
-  overflow-y: auto; /* Enable scrolling for playlist */
-  padding: 10px;
-  box-sizing: border-box;
-  flex-shrink: 0; /* Prevent shrinking */
-}
-
-.fullscreen .player-container .cover {
+/* Collapsed pill — 44×44 */
+.mp-pill {
+  pointer-events: all;
   display: flex;
-  width: 100%;
-  padding: 10px;
   align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
+  gap: 8px;
+  width: 50px;
+  height: 50px;
+  padding: 0 12px;
+  border-radius: 100px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.12),
+    0 1px 4px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  cursor: pointer;
+  overflow: hidden;
+  white-space: nowrap;
+  transition:
+    width 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+  user-select: none;
 }
 
-.fullscreen .player-container .player-controls {
+.mp-pill.open {
+  width: 300px;
+  border-color: var(--accent);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+}
+
+/* Equalizer bars icon */
+.mp-bars {
   display: flex;
-  width: 100%;
+  align-items: flex-end;
+  gap: 2px;
+  height: 16px;
+  flex-shrink: 0;
+}
+.mp-bars span {
+  display: block;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--accent);
+  transform-origin: bottom;
+  transition: height 0.15s ease;
+}
+.mp-bars span:nth-child(1) {
+  height: 6px;
+}
+.mp-bars span:nth-child(2) {
+  height: 12px;
+}
+.mp-bars span:nth-child(3) {
+  height: 8px;
+}
+.mp-bars span:nth-child(4) {
+  height: 14px;
+}
+.mp-bars span:nth-child(5) {
+  height: 5px;
+}
+
+/* Animate bars when playing */
+.mp-pill.playing .mp-bars span:nth-child(1) {
+  animation: bar1 0.9s ease-in-out infinite;
+}
+.mp-pill.playing .mp-bars span:nth-child(2) {
+  animation: bar2 0.7s ease-in-out infinite;
+}
+.mp-pill.playing .mp-bars span:nth-child(3) {
+  animation: bar3 1.1s ease-in-out infinite;
+}
+.mp-pill.playing .mp-bars span:nth-child(4) {
+  animation: bar4 0.8s ease-in-out infinite;
+}
+.mp-pill.playing .mp-bars span:nth-child(5) {
+  animation: bar5 1s ease-in-out infinite;
+}
+
+@keyframes bar1 {
+  0%,
+  100% {
+    height: 6px;
+  }
+  50% {
+    height: 14px;
+  }
+}
+@keyframes bar2 {
+  0%,
+  100% {
+    height: 12px;
+  }
+  50% {
+    height: 5px;
+  }
+}
+@keyframes bar3 {
+  0%,
+  100% {
+    height: 8px;
+  }
+  50% {
+    height: 16px;
+  }
+}
+@keyframes bar4 {
+  0%,
+  100% {
+    height: 14px;
+  }
+  50% {
+    height: 6px;
+  }
+}
+@keyframes bar5 {
+  0%,
+  100% {
+    height: 5px;
+  }
+  50% {
+    height: 12px;
+  }
+}
+
+/* Inline track info */
+.mp-pill-info {
+  display: flex;
   flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  opacity: 0;
+  transform: translateX(-6px);
+  transition:
+    opacity 0.2s ease 0.08s,
+    transform 0.2s ease 0.08s;
+}
+.mp-pill.open .mp-pill-info {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.mp-pill-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.78rem;
+  color: var(--foreground);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mp-pill-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.64rem;
+  color: var(--foreground-muted);
+}
+
+/* Link button — redirect to full player page */
+.mp-pill-link-btn {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid var(--card-border);
+  background: var(--background-2);
+  display: flex;
   align-items: center;
   justify-content: center;
-  flex: 1; /* Take remaining vertical space */
-  box-sizing: border-box;
+  color: var(--foreground-muted);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+.mp-pill.open .mp-pill-link-btn {
+  opacity: 1;
+  pointer-events: all;
+}
+.mp-pill-link-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-muted);
+}
+
+/* Play/pause button inside pill */
+.mp-pill-btn {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid var(--card-border);
+  background: var(--background-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--foreground-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+.mp-pill.open .mp-pill-btn {
+  opacity: 1;
+  pointer-events: all;
+}
+.mp-pill-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-muted);
+}
+
+/* Progress bar under pill */
+.mp-progress-bar {
+  height: 2px;
+  background: var(--card-border);
+  border-radius: 2px;
+  margin-top: 6px;
+  overflow: hidden;
+  opacity: 0;
+  transition:
+    opacity 0.2s ease 0.1s,
+    width 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: all;
+}
+.mp-widget.open .mp-progress-bar {
+  opacity: 1;
+}
+.mp-progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width 0.5s linear;
 }

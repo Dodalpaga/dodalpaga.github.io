@@ -1,3 +1,5 @@
+// acomponents/media_player/consts.ts
+
 import { Track } from './libs/player';
 
 export const tracks: Track[] = [

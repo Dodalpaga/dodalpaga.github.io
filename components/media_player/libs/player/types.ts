@@ -1,3 +1,5 @@
+// components/media_player/libs/player/types.ts
+
 export type AudioState = {
   duration: number;
   playing: boolean;

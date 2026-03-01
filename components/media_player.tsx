@@ -1,75 +1,96 @@
+// components/media_player.tsx
 'use client';
+
 import './media_player.css';
-import Playlist from './media_player/Playlist/playlist';
-import Image from 'next/image';
-import Player from './media_player/Player';
-import Container from '@mui/material/Container';
-import { useThemeContext } from '@/context/ThemeContext';
-import { useState, useEffect } from 'react';
-import { IconButton } from '@mui/material';
-import { Fullscreen, FullscreenExit } from '@mui/icons-material';
+import { useEffect, useState } from 'react';
+import { Pause, Play, ExternalLink } from 'lucide-react';
+import Link from 'next/link';
+import player, {
+  usePlayerState,
+  useCurrentTime,
+} from './media_player/libs/player';
+import { tracks } from './media_player/consts';
 
 const MediaPlayer = () => {
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const [isPageLoaded, setIsPageLoaded] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const state = usePlayerState();
+  const currentTime = useCurrentTime();
 
   useEffect(() => {
-    const handleLoad = () => setIsPageLoaded(true);
-
-    if (document.readyState === 'complete') {
-      setIsPageLoaded(true);
-    } else {
-      window.addEventListener('load', handleLoad);
-      return () => window.removeEventListener('load', handleLoad);
-    }
+    setMounted(true);
+  }, []);
+  useEffect(() => {
+    player.setQueue(tracks);
   }, []);
 
-  const toggleFullscreen = () => {
-    setIsFullscreen((prev) => !prev);
+  if (!mounted) return null;
+
+  const { currentTrack, playing, duration } = state;
+  const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
+  const isVideo = currentTrack?.url?.match(/\.(mp4|webm|mov|avi)$/i);
+
+  const handlePlayPause = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    playing ? player.pause() : player.play();
   };
 
-  const { theme } = useThemeContext();
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
   return (
-    <Container
-      className={`media-player ${isFullscreen ? 'fullscreen' : ''}`}
-      style={{
-        opacity: isPageLoaded ? 1 : 0,
-      }}
-    >
-      {/* Music icon that shows when folded */}
+    <div className={`mp-widget ${open ? 'open' : ''}`}>
+      <div
+        className={`mp-pill ${open ? 'open' : ''} ${playing ? 'playing' : ''}`}
+        onClick={() => setOpen((v) => !v)}
+        title={open ? 'Collapse player' : 'Open player'}
+      >
+        {/* Equalizer bars */}
+        <div className="mp-bars">
+          <span />
+          <span />
+          <span />
+          <span />
+          <span />
+        </div>
 
-      <div className="music-icon">
-        <Image
-          src="/images/music-logo.png"
-          width={200}
-          height={150}
-          style={{
-            filter: isClient
-              ? theme === 'dark'
-                ? 'invert(1)'
-                : 'invert(0)'
-              : 'none',
-          }}
-          alt="Music Player"
-        />
+        {/* Track info */}
+        <div className="mp-pill-info">
+          <span className="mp-pill-title">
+            {currentTrack?.title ?? 'No track'}
+          </span>
+          <span className="mp-pill-sub">
+            {isVideo ? '▶ Video' : playing ? 'Now playing' : 'Paused'}
+          </span>
+        </div>
+
+        {/* Open in full player link */}
+        <Link
+          href="/projects/media_player"
+          className="mp-pill-link-btn"
+          onClick={(e) => e.stopPropagation()}
+          title="Open full player"
+          aria-label="Open full player"
+        >
+          <ExternalLink size={11} strokeWidth={2.5} />
+        </Link>
+
+        {/* Play/pause */}
+        <button
+          className="mp-pill-btn"
+          onClick={handlePlayPause}
+          aria-label="Play/pause"
+        >
+          {playing ? (
+            <Pause size={12} strokeWidth={2.5} />
+          ) : (
+            <Play size={12} strokeWidth={2.5} />
+          )}
+        </button>
       </div>
 
-      <IconButton
-        color="primary"
-        onClick={toggleFullscreen}
-        className="fullscreen-button"
-      >
-        {isFullscreen ? <FullscreenExit /> : <Fullscreen />}
-      </IconButton>
-      <Player />
-      <Playlist />
-    </Container>
+      {/* Thin progress bar */}
+      <div className="mp-progress-bar" style={{ width: open ? 300 : 44 }}>
+        <div className="mp-progress-fill" style={{ width: `${progress}%` }} />
+      </div>
+    </div>
   );
 };
 

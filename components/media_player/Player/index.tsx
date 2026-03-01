@@ -1,3 +1,5 @@
+// components/media_player/Player/index.tsx
+
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { PlayArrow, Pause, VolumeUp } from '@mui/icons-material';
