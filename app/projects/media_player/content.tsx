@@ -3,6 +3,7 @@
 
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import Container from '@mui/material/Container';
+import Image from 'next/image';
 import {
   Play,
   Pause,
@@ -188,10 +189,14 @@ export default function Content() {
   };
 
   const prevTrack = () => {
-    if (currentTrackIndex > 0) player.playTrack(currentTrackIndex - 1);
+    if (currentTrackIndex !== null && currentTrackIndex > 0)
+      player.playTrack(currentTrackIndex - 1);
   };
   const nextTrack = () => {
-    if (currentTrackIndex < queueTracks.length - 1)
+    if (
+      currentTrackIndex !== null &&
+      currentTrackIndex < queueTracks.length - 1
+    )
       player.playTrack(currentTrackIndex + 1);
   };
 
@@ -236,10 +241,13 @@ export default function Content() {
           ) : (
             <div className="fp-cover-wrap">
               {currentTrack?.coverUrl ? (
-                <img
+                <Image
                   className="fp-cover-img"
                   src={currentTrack.coverUrl}
                   alt={currentTrack.title}
+                  fill
+                  sizes="320px"
+                  style={{ objectFit: 'cover' }}
                 />
               ) : (
                 <div className="fp-cover-placeholder">
@@ -278,7 +286,7 @@ export default function Content() {
             <button
               className="fp-ctrl-btn"
               onClick={prevTrack}
-              disabled={currentTrackIndex === 0}
+              disabled={currentTrackIndex === null || currentTrackIndex === 0}
               aria-label="Previous"
             >
               <SkipBack size={17} strokeWidth={2} />
@@ -299,7 +307,10 @@ export default function Content() {
             <button
               className="fp-ctrl-btn"
               onClick={nextTrack}
-              disabled={currentTrackIndex >= queueTracks.length - 1}
+              disabled={
+                currentTrackIndex === null ||
+                currentTrackIndex >= queueTracks.length - 1
+              }
               aria-label="Next"
             >
               <SkipForward size={17} strokeWidth={2} />
@@ -394,7 +405,17 @@ export default function Content() {
                         <Film size={14} strokeWidth={1.5} />
                       </div>
                     ) : track.coverUrl ? (
-                      <img src={track.coverUrl} alt={track.title} />
+                      <Image
+                        src={track.coverUrl}
+                        alt={track.title}
+                        width={38}
+                        height={38}
+                        style={{
+                          objectFit: 'cover',
+                          width: '100%',
+                          height: '100%',
+                        }}
+                      />
                     ) : (
                       <Music size={16} strokeWidth={1.5} />
                     )}
