@@ -24,6 +24,11 @@ const plusJakarta = Plus_Jakarta_Sans({
   display: 'swap',
 });
 
+export const metadata = {
+  title: 'Dorian Voydie - Portfolio',
+  description: 'AI Engineer & Builder.',
+};
+
 // Minified — runs synchronously before first paint, prevents theme flash.
 const themeInitScript = `(function(){try{var s=localStorage.getItem('theme');var p=s?s:(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',p);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();`;
 

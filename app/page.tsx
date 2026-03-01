@@ -453,7 +453,7 @@ function BlueprintPhoto() {
         }}
       >
         <img
-          src="/images/photos/2-cropped.png"
+          src="/images/photos/1-cropped-downsized-blurred.png"
           alt="Dorian Voydie"
           className="blueprint-photo__img"
           style={{
