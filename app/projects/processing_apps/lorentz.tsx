@@ -1,3 +1,4 @@
+// app/projects/simulations/lorentz.tsx
 import React, { useRef, useEffect, useState } from 'react';
 
 const LorentzCanvas: React.FC = () => {
@@ -5,211 +6,153 @@ const LorentzCanvas: React.FC = () => {
   const p5InstanceRef = useRef<any | null>(null);
   const [isBrowser, setIsBrowser] = useState(false);
 
-  const loadP5 = async () => {
-    const p5 = (await import('p5')).default;
-    return p5;
-  };
-
   useEffect(() => {
     setIsBrowser(typeof window !== 'undefined');
+  }, []);
 
-    if (isBrowser && canvasRef.current) {
-      loadP5().then((p5) => {
-        p5InstanceRef.current = new p5(sketch, canvasRef.current!);
+  useEffect(() => {
+    if (!isBrowser || !canvasRef.current) return;
 
-        const resizeObserver = new ResizeObserver(() => {
-          p5InstanceRef.current?.resizeCanvas(
-            canvasRef.current?.offsetWidth || 0,
-            canvasRef.current?.offsetHeight || 0
-          );
-        });
+    let cleanup: (() => void) | undefined;
 
-        if (canvasRef.current) {
-          resizeObserver.observe(canvasRef.current);
-        }
+    import('p5').then(({ default: p5 }) => {
+      const sketch = (p: any) => {
+        let x = 0.01,
+          y = 0,
+          z = 0;
+        const a = 10,
+          b = 28,
+          c = 8 / 3;
+        const points: any[] = [];
 
-        return () => {
-          if (p5InstanceRef.current) {
-            p5InstanceRef.current.remove();
-            p5InstanceRef.current = null;
-          }
-          resizeObserver.disconnect();
+        let camAngleX = 0;
+        let camAngleY = 0;
+        let lastMouseX = 0;
+        let lastMouseY = 0;
+        let isRotating = false;
+        let dezoomFactor = 1;
+        let maxDistance = 5.6;
+
+        const resizeToParent = () => {
+          const parent = p.canvas?.parentElement;
+          if (!parent) return;
+          const w = parent.offsetWidth;
+          const h = parent.offsetHeight;
+          p.resizeCanvas(w, h);
+          dezoomFactor = w / 600;
         };
+
+        p.setup = () => {
+          const canvas = p.createCanvas(300, 220, p.WEBGL);
+          canvas.style('display', 'block');
+          resizeToParent();
+          p.colorMode(p.HSB);
+        };
+
+        p.draw = () => {
+          p.clear();
+          const dt = 0.01;
+          x += a * (y - x) * dt;
+          y += (x * (b - z) - y) * dt;
+          z += (x * y - c * z) * dt;
+
+          const pt = p.createVector(x, y, z);
+          if (points.length > 0) {
+            const prev = points[points.length - 1];
+            const dist = p.dist(prev.x, prev.y, prev.z, pt.x, pt.y, pt.z);
+            if (dist > maxDistance) maxDistance = dist;
+            pt.hue = p.map(dist, 0, maxDistance, 240, 0);
+          } else {
+            pt.hue = 240;
+          }
+          points.push(pt);
+          if (points.length > 1500) points.shift();
+
+          const radius = 600;
+          const eyeX = radius * Math.cos(camAngleX) * Math.sin(camAngleY);
+          const eyeY = radius * Math.sin(camAngleX);
+          const eyeZ = radius * Math.cos(camAngleX) * Math.cos(camAngleY);
+          p.camera(eyeX, eyeY, eyeZ, 0, 0, 0, 0, 1, 0);
+
+          p.translate(0, 0, -150);
+          p.scale(5 * dezoomFactor);
+          p.noFill();
+          p.beginShape();
+          for (const v of points) {
+            p.stroke(v.hue, 255, 255);
+            p.vertex(v.x, v.y, v.z);
+          }
+          p.endShape();
+        };
+
+        p.mousePressed = () => {
+          // p.mouseX/Y in WEBGL mode are relative to the canvas (0 → width)
+          if (
+            p.mouseX >= 0 &&
+            p.mouseX <= p.width &&
+            p.mouseY >= 0 &&
+            p.mouseY <= p.height &&
+            p.mouseButton === p.LEFT
+          ) {
+            lastMouseX = p.mouseX;
+            lastMouseY = p.mouseY;
+            isRotating = true;
+          }
+        };
+
+        p.mouseReleased = () => {
+          isRotating = false;
+        };
+
+        p.mouseDragged = () => {
+          if (!isRotating) return;
+          const sensitivity = 0.01;
+          const maxX = p.HALF_PI - 0.01;
+          camAngleX = p.constrain(
+            camAngleX - (p.mouseY - lastMouseY) * sensitivity,
+            -maxX,
+            maxX,
+          );
+          camAngleY =
+            (camAngleY - (p.mouseX - lastMouseX) * sensitivity) % p.TWO_PI;
+          lastMouseX = p.mouseX;
+          lastMouseY = p.mouseY;
+        };
+
+        p.windowResized = resizeToParent;
+      };
+
+      p5InstanceRef.current = new p5(sketch, canvasRef.current!);
+
+      const ro = new ResizeObserver(() => {
+        const parent = canvasRef.current;
+        if (parent) {
+          p5InstanceRef.current?.resizeCanvas(
+            parent.offsetWidth,
+            parent.offsetHeight,
+          );
+        }
       });
-    }
+      if (canvasRef.current) ro.observe(canvasRef.current);
+
+      cleanup = () => {
+        p5InstanceRef.current?.remove();
+        p5InstanceRef.current = null;
+        ro.disconnect();
+      };
+    });
+
+    return () => cleanup?.();
   }, [isBrowser]);
 
-  const sketch = (p: any) => {
-    let x = 0.01;
-    let y = 0;
-    let z = 0;
-
-    const a = 10;
-    const b = 28;
-    const c = 8.0 / 3.0;
-
-    const canva_offset_height = 180;
-    const canva_offset_width = 40;
-
-    const points: any[] = [];
-
-    let camAngleX = 0;
-    let camAngleY = 0;
-    let lastMouseX = 0;
-    let lastMouseY = 0;
-    let isRotating = false;
-    let dezoomFactor = 1;
-
-    let canvasParent: HTMLElement | null = null;
-
-    const resizeCanvasToParent = () => {
-      if (canvasParent) {
-        const parentWidth = canvasParent.offsetWidth;
-        const parentHeight = canvasParent.offsetHeight;
-
-        p.resizeCanvas(parentWidth, parentHeight);
-
-        dezoomFactor = parentWidth / 600;
-      }
-    };
-
-    p.setup = () => {
-      const canvas = p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
-      canvasParent = canvas.elt.parentElement;
-
-      resizeCanvasToParent();
-
-      p.colorMode(p.HSB);
-    };
-    let maxDistance = 5.6;
-
-    p.draw = () => {
-      p.clear();
-      const dt = 0.01;
-      const dx = a * (y - x) * dt;
-      const dy = (x * (b - z) - y) * dt;
-      const dz = (x * y - c * z) * dt;
-      x += dx;
-      y += dy;
-      z += dz;
-      const newPoint = p.createVector(x, y, z);
-      if (points.length > 0) {
-        const prevPoint = points[points.length - 1];
-        const distance = p.dist(
-          prevPoint.x,
-          prevPoint.y,
-          prevPoint.z,
-          newPoint.x,
-          newPoint.y,
-          newPoint.z
-        );
-
-        if (distance > maxDistance) {
-          maxDistance = distance;
-        }
-
-        newPoint.hue = p.map(distance, 0, maxDistance, 240, 0); // 240 (blue) to 0 (red)
-      } else {
-        newPoint.hue = 240; // Default to blue for the first point
-      }
-
-      points.push(newPoint);
-
-      if (points.length > 1500) {
-        points.shift();
-      }
-
-      const radius = 600;
-      const eyeX = radius * Math.cos(camAngleX) * Math.sin(camAngleY);
-      const eyeY = radius * Math.sin(camAngleX);
-      const eyeZ = radius * Math.cos(camAngleX) * Math.cos(camAngleY);
-
-      p.camera(eyeX, eyeY, eyeZ, 0, 0, 0, 0, 1, 0);
-
-      p.translate(0, 0, -150);
-      p.scale(5 * dezoomFactor);
-      p.noFill();
-
-      p.beginShape();
-      for (const v of points) {
-        p.stroke(v.hue, 255, 255);
-        p.vertex(v.x, v.y, v.z);
-      }
-      p.endShape();
-    };
-
-    p.mousePressed = () => {
-      const rect = canvasParent?.getBoundingClientRect();
-      if (
-        rect &&
-        p.mouseX >= rect.left - canva_offset_width &&
-        p.mouseX <= rect.right - canva_offset_width &&
-        p.mouseY >= rect.top - canva_offset_height &&
-        p.mouseY <= rect.bottom - canva_offset_height
-      ) {
-        lastMouseX = p.mouseX;
-        lastMouseY = p.mouseY;
-
-        if (p.mouseButton === p.LEFT) {
-          isRotating = true;
-        }
-      }
-    };
-
-    p.mouseReleased = () => {
-      isRotating = false;
-    };
-
-    p.mouseDragged = () => {
-      if (isRotating) {
-        const sensitivity = 0.01;
-        const maxCamAngleX = p.HALF_PI - 0.01; // Slightly less than 90 degrees to avoid flipping
-
-        camAngleX -= (p.mouseY - lastMouseY) * sensitivity;
-        camAngleX = p.constrain(camAngleX, -maxCamAngleX, maxCamAngleX); // Clamp camAngleX within bounds
-
-        camAngleY -= (p.mouseX - lastMouseX) * sensitivity;
-        camAngleY = camAngleY % p.TWO_PI; // Keep camAngleY within a complete circle
-        lastMouseX = p.mouseX;
-        lastMouseY = p.mouseY;
-      }
-    };
-
-    p.windowResized = () => {
-      resizeCanvasToParent();
-    };
-  };
-
-  if (!isBrowser) {
-    return null;
-  }
+  if (!isBrowser) return null;
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-        cursor: 'grab',
-      }}
-    >
+    <div style={{ width: '100%', height: '100%', cursor: 'grab' }}>
       <div
         ref={canvasRef}
-        style={{
-          width: '100%',
-          height: '100%',
-          overflow: 'hidden',
-        }}
-      ></div>
-
-      <div
-        style={{
-          padding: '1rem',
-          textAlign: 'center',
-        }}
-      >
-        <p>Lorentz Attractor</p>
-      </div>
+        style={{ width: '100%', height: '100%', overflow: 'hidden' }}
+      />
     </div>
   );
 };

@@ -1,228 +1,305 @@
+// app/projects/regex/content.tsx
+'use client';
+
 import * as React from 'react';
 import Container from '@mui/material/Container';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { useTheme } from '@mui/material/styles';
-import { red } from '@mui/material/colors';
+import Chip from '@mui/material/Chip';
+import { useThemeContext } from '@/context/ThemeContext';
+import { projectInputSx } from '@/constants/ui';
 
-interface HighlightSegment {
+interface Segment {
   text: string;
   highlight: boolean;
 }
 
+const EXAMPLE_PATTERNS = [
+  {
+    label: 'Email',
+    pattern: '[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}',
+  },
+  { label: 'URL', pattern: 'https?:\\/\\/[^\\s]+' },
+  { label: '5-letter words', pattern: '\\b\\w{5}\\b' },
+  { label: 'Numbers', pattern: '\\d+' },
+  { label: 'Capitalized', pattern: '\\b[A-Z][a-z]+' },
+];
+
+const SAMPLE_TEXT =
+  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Contact us at info@example.com or visit https://example.com. In 2024, over 500 developers attended the conference.';
+
 export default function RegexHighlighter() {
-  const theme = useTheme();
-  const [paragraph, setParagraph] = React.useState(
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.'
-  );
+  const { theme } = useThemeContext();
+  const [paragraph, setParagraph] = React.useState(SAMPLE_TEXT);
   const [regexInput, setRegexInput] = React.useState('\\b\\w{5}\\b');
-  const [segments, setSegments] = React.useState<HighlightSegment[]>([]);
+  const [segments, setSegments] = React.useState<Segment[]>([]);
   const [error, setError] = React.useState<string | null>(null);
+  const [matchCount, setMatchCount] = React.useState(0);
+  const contentRef = React.useRef<HTMLDivElement>(null);
 
-  const contentEditableRef = React.useRef<HTMLDivElement>(null);
-
-  // Highlight color based on theme mode
-  const highlightColor = theme.palette.mode === 'light' ? red[500] : red[900];
-
-  // Function to split text into segments based on regex
-  const highlightText = (text: string, regex: RegExp): HighlightSegment[] => {
-    const segs: HighlightSegment[] = [];
-    let lastIndex = 0;
-    let match;
-
+  const highlightText = (text: string, regex: RegExp): Segment[] => {
+    const segs: Segment[] = [];
+    let lastIndex = 0,
+      match: RegExpExecArray | null;
     while ((match = regex.exec(text)) !== null) {
-      if (match.index > lastIndex) {
+      if (match.index > lastIndex)
         segs.push({
           text: text.slice(lastIndex, match.index),
           highlight: false,
         });
-      }
-      segs.push({
-        text: match[0],
-        highlight: true,
-      });
+      segs.push({ text: match[0], highlight: true });
       lastIndex = match.index + match[0].length;
-
-      if (match.index === regex.lastIndex) {
-        regex.lastIndex++;
-      }
+      if (match.index === regex.lastIndex) regex.lastIndex++;
     }
-
-    if (lastIndex < text.length) {
-      segs.push({
-        text: text.slice(lastIndex),
-        highlight: false,
-      });
-    }
+    if (lastIndex < text.length)
+      segs.push({ text: text.slice(lastIndex), highlight: false });
     return segs;
   };
 
-  // Update segments when paragraph or regex changes
   React.useEffect(() => {
     try {
       const regex = new RegExp(regexInput, 'g');
-      regex.lastIndex = 0;
-      const newSegments = highlightText(paragraph, regex);
-      setSegments(newSegments);
+      const segs = highlightText(paragraph, regex);
+      setSegments(segs);
+      setMatchCount(segs.filter((s) => s.highlight).length);
       setError(null);
     } catch (e: any) {
       setError(e.message);
       setSegments([{ text: paragraph, highlight: false }]);
+      setMatchCount(0);
     }
   }, [paragraph, regexInput]);
 
-  // Handle input in contentEditable div
-  const handleInput = (e: React.SyntheticEvent<HTMLDivElement>) => {
-    const div = e.currentTarget;
-    const text = div.textContent || '';
-    setParagraph(text);
-
-    // Restore cursor position after update
-    restoreCaretPosition(div);
-  };
-
-  // Save and restore caret position to prevent jumping
-  const saveCaretPosition = (element: HTMLElement) => {
-    const selection = window.getSelection();
-    if (selection && selection.rangeCount > 0) {
-      const range = selection.getRangeAt(0);
-      return {
-        startContainer: range.startContainer,
-        startOffset: range.startOffset,
-      };
-    }
-    return null;
-  };
-
-  const restoreCaretPosition = (element: HTMLElement) => {
-    const selection = window.getSelection();
-    if (!selection) return;
-
-    // Focus the element
-    element.focus();
-
-    // Create a new range
-    const range = document.createRange();
-    let textNode: Node | null = null;
-    let offset = 0;
-
-    // Find the first text node in the contentEditable div
-    const walker = document.createTreeWalker(
-      element,
-      NodeFilter.SHOW_TEXT,
-      null
-    );
-    while (walker.nextNode()) {
-      textNode = walker.currentNode;
-      break;
-    }
-
-    if (textNode) {
-      range.setStart(
-        textNode,
-        Math.min(offset, textNode.textContent?.length || 0)
-      );
-      range.setEnd(
-        textNode,
-        Math.min(offset, textNode.textContent?.length || 0)
-      );
-      selection.removeAllRanges();
-      selection.addRange(range);
-    }
-  };
-
-  // Handle paste to prevent formatting
-  const handlePaste = (e: React.ClipboardEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    const text = e.clipboardData.getData('text/plain');
-    document.execCommand('insertText', false, text);
-  };
-
-  // Initialize contentEditable with focus or content
-  React.useEffect(() => {
-    if (contentEditableRef.current) {
-      contentEditableRef.current.focus();
-    }
-  }, []);
+  const hlColor =
+    theme === 'dark' ? 'rgba(107, 142, 255, 0.35)' : 'rgba(48, 90, 214, 0.18)';
+  const hlBorder =
+    theme === 'dark' ? 'rgba(107, 142, 255, 0.6)' : 'rgba(48, 90, 214, 0.5)';
 
   return (
     <Container
-      maxWidth="md"
+      maxWidth="lg"
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
-        py: 4,
-        minHeight: '100vh',
+        height: '100%',
+        py: 3,
+        px: { xs: 2, sm: 3 },
       }}
     >
-      <Typography variant="h4" gutterBottom>
-        Regex Highlighter
-      </Typography>
-
-      <Box sx={{ width: '100%', mb: 2 }}>
-        <TextField
-          fullWidth
-          label="Regular Expression"
-          variant="outlined"
-          value={regexInput}
-          autoComplete="off"
-          onChange={(e) => setRegexInput(e.target.value)}
-          helperText={
-            error ? `Invalid regex: ${error}` : 'Enter your regex pattern'
-          }
+      {/* Header */}
+      <Box sx={{ mb: 3 }}>
+        <span className="section-label">Dev Tool · Utility</span>
+        <Typography
+          variant="h4"
           sx={{
-            color: 'var(--foreground-2)',
-            '& .MuiOutlinedInput-root': {
-              color: 'var(--foreground-2)',
-            },
-            '& .MuiOutlinedInput-notchedOutline': {
-              borderColor: 'var(--foreground-2)',
-            },
-            '& .MuiFormHelperText-root': {
-              color: 'var(--foreground-2)',
-            },
-            '& .MuiFormLabel-root': {
-              color: 'var(--foreground-2)',
-            },
-          }}
-          autoFocus
-          error={Boolean(error)}
-        />
-      </Box>
-
-      <Box sx={{ width: '100%', mb: 2 }}>
-        <div
-          ref={contentEditableRef}
-          contentEditable
-          onInput={handleInput}
-          onPaste={handlePaste}
-          suppressContentEditableWarning
-          style={{
-            width: '100%',
-            height: '200px',
-            padding: '8px',
-            fontFamily: theme.typography.fontFamily,
-            fontSize: theme.typography.body1.fontSize,
-            lineHeight: theme.typography.body1.lineHeight,
-            border: `1px solid var(--foreground-2)`,
-            overflow: 'auto',
-            whiteSpace: 'pre-wrap',
-            outline: 'none',
+            fontFamily: "'Syne', sans-serif",
+            fontWeight: 800,
+            letterSpacing: '-0.03em',
           }}
         >
-          {segments.map((seg, index) => (
-            <span
-              key={index}
-              style={{
-                backgroundColor: seg.highlight ? highlightColor : 'transparent',
+          Regex Matcher
+        </Typography>
+        <Typography
+          variant="body2"
+          sx={{
+            color: 'var(--foreground-muted)',
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
+          }}
+        >
+          Write a pattern and see matches highlighted in real time
+        </Typography>
+      </Box>
+
+      {/* Pattern input */}
+      <Box sx={{ mb: 2 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+          <Typography
+            sx={{
+              fontFamily: "'DM Mono', monospace",
+              fontSize: '0.72rem',
+              color: 'var(--foreground-muted)',
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+            }}
+          >
+            Pattern
+          </Typography>
+          {!error && matchCount > 0 && (
+            <Box
+              sx={{
+                fontFamily: "'DM Mono', monospace",
+                fontSize: '0.68rem',
+                px: 1,
+                py: 0.2,
+                borderRadius: '100px',
+                backgroundColor: 'var(--accent-muted)',
+                color: 'var(--accent)',
+                border: '1px solid var(--accent)',
               }}
             >
-              {seg.text}
-            </span>
-          ))}
-        </div>
+              {matchCount} match{matchCount !== 1 ? 'es' : ''}
+            </Box>
+          )}
+        </Box>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Box
+            sx={{
+              fontFamily: "'DM Mono', monospace",
+              fontSize: '1.1rem',
+              color: 'var(--foreground-muted)',
+              px: 1,
+              userSelect: 'none',
+              flexShrink: 0,
+            }}
+          >
+            /
+          </Box>
+          <TextField
+            fullWidth
+            value={regexInput}
+            onChange={(e) => setRegexInput(e.target.value)}
+            error={!!error}
+            helperText={error ? `Invalid regex: ${error}` : undefined}
+            autoFocus
+            autoComplete="off"
+            sx={projectInputSx}
+            inputProps={{
+              style: {
+                fontFamily: "'DM Mono', monospace",
+                fontSize: '0.95rem',
+                letterSpacing: '0.02em',
+              },
+            }}
+          />
+          <Box
+            sx={{
+              fontFamily: "'DM Mono', monospace",
+              fontSize: '1.1rem',
+              color: 'var(--foreground-muted)',
+              px: 1,
+              flexShrink: 0,
+            }}
+          >
+            /g
+          </Box>
+        </Box>
+      </Box>
+
+      {/* Quick patterns */}
+      <Box sx={{ display: 'flex', gap: 0.75, mb: 2, flexWrap: 'wrap' }}>
+        {EXAMPLE_PATTERNS.map((p) => (
+          <Chip
+            key={p.label}
+            label={p.label}
+            size="small"
+            onClick={() => setRegexInput(p.pattern)}
+            sx={{
+              fontFamily: "'DM Mono', monospace",
+              fontSize: '0.7rem',
+              backgroundColor:
+                regexInput === p.pattern
+                  ? 'var(--accent-muted)'
+                  : 'var(--background-elevated)',
+              border: `1px solid ${regexInput === p.pattern ? 'var(--accent)' : 'var(--card-border)'}`,
+              color:
+                regexInput === p.pattern
+                  ? 'var(--accent)'
+                  : 'var(--foreground-muted)',
+              cursor: 'pointer',
+              transition: 'all 0.15s ease',
+            }}
+          />
+        ))}
+      </Box>
+
+      {/* Text editor */}
+      <Box sx={{ mb: 1 }}>
+        <Typography
+          sx={{
+            fontFamily: "'DM Mono', monospace",
+            fontSize: '0.72rem',
+            color: 'var(--foreground-muted)',
+            letterSpacing: '0.1em',
+            textTransform: 'uppercase',
+            mb: 1,
+          }}
+        >
+          Input text (editable)
+        </Typography>
+      </Box>
+
+      <Box
+        sx={{
+          position: 'relative',
+          flex: 1,
+          minHeight: 200,
+          backgroundColor: 'var(--card)',
+          border: `1px solid ${error ? 'rgba(255,100,100,0.4)' : 'var(--card-border)'}`,
+          borderRadius: '14px',
+          overflow: 'hidden',
+          transition: 'border-color 0.2s',
+        }}
+      >
+        {/* Hidden textarea for editing */}
+        <textarea
+          value={paragraph}
+          onChange={(e) => setParagraph(e.target.value)}
+          style={{
+            position: 'absolute',
+            inset: 0,
+            width: '100%',
+            height: '100%',
+            resize: 'none',
+            border: 'none',
+            outline: 'none',
+            padding: '16px',
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
+            fontSize: '0.95rem',
+            lineHeight: '1.7',
+            backgroundColor: 'transparent',
+            color: 'transparent',
+            caretColor: 'var(--foreground)',
+            zIndex: 2,
+          }}
+        />
+        {/* Rendered highlight overlay */}
+        <Box
+          aria-hidden
+          sx={{
+            position: 'absolute',
+            inset: 0,
+            p: 2,
+            overflow: 'auto',
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
+            fontSize: '0.95rem',
+            lineHeight: '1.7',
+            color: 'var(--foreground)',
+            pointerEvents: 'none',
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+            zIndex: 1,
+          }}
+        >
+          {segments.map((seg, i) =>
+            seg.highlight ? (
+              <mark
+                key={i}
+                style={{
+                  backgroundColor: hlColor,
+                  borderBottom: `2px solid ${hlBorder}`,
+                  color: 'inherit',
+                  borderRadius: '3px',
+                  padding: '0 1px',
+                }}
+              >
+                {seg.text}
+              </mark>
+            ) : (
+              <span key={i}>{seg.text}</span>
+            ),
+          )}
+        </Box>
       </Box>
     </Container>
   );

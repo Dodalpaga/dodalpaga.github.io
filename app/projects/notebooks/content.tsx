@@ -1,28 +1,21 @@
+// app/projects/notebooks/content.tsx
 'use client';
+
 import * as React from 'react';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'; // Icon for the accordion
-import { useState, useRef } from 'react';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Loading from '@/components/loading';
-import '../../globals.css'; // Ensure global styles are correctly imported
-import './styles.css';
+import '../../globals.css';
 import { useThemeContext } from '@/context/ThemeContext';
 
-// General style for left panel links
-const linkStyle = {
-  cursor: 'pointer',
-  margin: '5px',
-};
-
-// Notebook structure
-const notebooks = {
+const notebooks: Record<string, { name: string; path: string }[]> = {
   CVRP: [
-    { name: 'README.md', path: 'CVRP/README.html' },
+    { name: 'README', path: 'CVRP/README.html' },
     { name: 'Cluster First', path: 'CVRP/Cluster first.html' },
     { name: 'Route First', path: 'CVRP/Route first.html' },
   ],
@@ -41,7 +34,7 @@ const notebooks = {
   ],
   Kaggle: [
     { name: 'Covid 19 Vaccines', path: 'kaggle/covid-19.html' },
-    { name: 'Fish recognition', path: 'kaggle/fish.html' },
+    { name: 'Fish Recognition', path: 'kaggle/fish.html' },
     { name: 'Heart Attacks', path: 'kaggle/heart-1.html' },
     { name: 'Heart Attacks 2', path: 'kaggle/heart-2.html' },
     { name: 'Holiday Packages', path: 'kaggle/holiday.html' },
@@ -53,171 +46,251 @@ const notebooks = {
   ],
 };
 
+const FOLDER_COLORS: Record<string, string> = {
+  CVRP: 'var(--text-color-4)',
+  MeteoNet: 'var(--text-color-3)',
+  Random: 'var(--text-color-1)',
+  Kaggle: 'var(--text-color-2)',
+};
+
 export default function Content() {
-  const { theme } = useThemeContext(); // Access the current theme from context
-  const [selectedContent, setSelectedContent] = useState<string>('');
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [expandedAccordion, setExpandedAccordion] = useState<string | false>(
-    false
-  );
-  const [isIframeReady, setIsIframeReady] = useState<boolean>(false);
-  const iframeRef = useRef<HTMLIFrameElement | null>(null);
+  const { theme } = useThemeContext();
+  const [selected, setSelected] = React.useState('');
+  const [loading, setLoading] = React.useState(false);
+  const [expanded, setExpanded] = React.useState<string | false>(false);
+  const [iframeReady, setIframeReady] = React.useState(false);
+  const iframeRef = React.useRef<HTMLIFrameElement>(null);
 
   const resizeIframe = (iframe: HTMLIFrameElement) => {
-    if (iframe && iframe.contentWindow) {
-      const doc = iframe.contentWindow.document.documentElement;
-      if (doc) {
-        iframe.style.height = doc.scrollHeight + 'px';
-        setIsIframeReady(true); // Mark iframe as ready
-      }
+    const doc = iframe.contentWindow?.document.documentElement;
+    if (doc) {
+      iframe.style.height = doc.scrollHeight + 'px';
+      setIframeReady(true);
     }
   };
 
-  const handleAccordionChange = (folder: string) => {
-    setExpandedAccordion(expandedAccordion === folder ? false : folder);
-  };
-
-  const handleContentSelection = (path: string) => {
-    setIsLoading(true);
-    setIsIframeReady(false); // Reset iframe ready state
-    setSelectedContent('/notebooks/' + path);
-    setExpandedAccordion(false); // Close the accordion
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 500);
-  };
-
-  // Inject styles into the iframe's document
-  const injectStyles = (iframe: HTMLIFrameElement, theme: 'light' | 'dark') => {
+  const injectStyles = (iframe: HTMLIFrameElement, t: 'light' | 'dark') => {
     const style = document.createElement('style');
-
-    // Set the styles based on the theme
-    if (theme === 'dark') {
-      style.textContent = `
-        thead,
-        caption,
-        div.text_cell_render,
-        p,
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        h6,
-        li {
-          color: white !important; /* Override color for dark theme */
-        }
-        .jp-OutputArea-output pre {
-          color: white !important; /* Override color for dark theme */
-        }
-      `;
-    } else {
-      style.textContent = `
-        thead,
-        caption,
-        div.text_cell_render,
-        p,
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        h6,
-        li {
-          color: black !important; /* Override color for light theme */
-        }
-        .jp-OutputArea-output pre {
-          color: black !important; /* Override color for light theme */
-        }
-      `;
-    }
-
-    // Append the style element to the iframe's head
+    const color = t === 'dark' ? 'white' : 'black';
+    style.textContent = `
+      thead, caption, div.text_cell_render, p, h1, h2, h3, h4, h5, h6, li { color: ${color} !important; }
+      .jp-OutputArea-output pre { color: ${color} !important; }
+      body { background: transparent !important; }
+    `;
     iframe.contentDocument?.head.appendChild(style);
   };
 
   React.useEffect(() => {
-    // Check if iframe is available
-    if (iframeRef.current) {
-      // Inject styles based on the current theme
-      injectStyles(iframeRef.current, theme);
-    }
-  }, [theme]); // Dependency on theme
+    if (iframeRef.current) injectStyles(iframeRef.current, theme);
+  }, [theme]);
+
+  const handleSelect = (path: string) => {
+    setLoading(true);
+    setIframeReady(false);
+    setSelected('/notebooks/' + path);
+    setExpanded(false);
+    setTimeout(() => setLoading(false), 300);
+  };
 
   return (
-    <Container maxWidth={false} className="content-container">
-      <div className="left-fixed left-notebook">
-        <Grid className="accordion-grid" container spacing={2}>
-          {Object.entries(notebooks).map(([folder, files]) => (
-            <Grid
-              className="accordion-grid-item"
-              item
-              xs={12}
-              sm={6}
-              md={3}
-              key={folder}
-            >
-              <Accordion
-                style={{ marginBottom: '16px' }}
-                key={folder}
-                expanded={expandedAccordion === folder}
-                onChange={() => handleAccordionChange(folder)}
-              >
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography variant="h5">{folder}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <div className="left-container left-notebook-container">
-                    {files.map((file) => (
-                      <Typography
-                        key={file.path}
-                        variant="h6"
-                        onClick={() => handleContentSelection(file.path)}
-                        style={linkStyle}
-                      >
-                        {file.name}
-                      </Typography>
-                    ))}
-                  </div>
-                </AccordionDetails>
-              </Accordion>
-            </Grid>
-          ))}
-        </Grid>
-      </div>
+    <Container
+      maxWidth={false}
+      sx={{
+        padding: '0 !important',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      {/* Notebook browser */}
+      <Box
+        sx={{
+          position: 'sticky',
+          top: 0,
+          zIndex: 10,
+          backgroundColor: 'var(--background-transparent)',
+          backdropFilter: 'blur(16px)',
+          borderBottom: '1px solid var(--card-border)',
+          p: { xs: 1.5, sm: 2 },
+        }}
+      >
+        <Box sx={{ mb: 1.5 }}>
+          <span className="section-label">AI · Notebooks</span>
+          <Typography
+            variant="h5"
+            sx={{
+              fontFamily: "'Syne', sans-serif",
+              fontWeight: 700,
+              letterSpacing: '-0.02em',
+            }}
+          >
+            Jupyter Notebooks
+          </Typography>
+        </Box>
 
-      <div className="right-scrollable">
-        <section id="notebook-section">
-          {selectedContent ? (
-            <div style={{ height: 'auto', overflowY: 'hidden' }}>
-              {isLoading ? (
-                <Loading />
-              ) : (
-                <iframe
-                  ref={iframeRef}
-                  src={selectedContent}
-                  onLoad={(event) => {
-                    const iframe = event.target as HTMLIFrameElement;
-                    resizeIframe(iframe);
-                    injectStyles(iframe, theme); // Inject styles after resizing
-                  }}
-                  title="Notebook Content"
-                  style={{
-                    width: '100%',
-                    border: 'none',
-                    backgroundColor: 'transparent',
-                    visibility: isIframeReady ? 'visible' : 'hidden', // Hide the iframe until it's resized
-                    opacity: isIframeReady ? 1 : 0, // Smooth transition
-                    transition: 'opacity 0.3s ease-in-out', // Fade in for a better UX
-                  }}
-                />
-              )}
-            </div>
+        <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+          {Object.entries(notebooks).map(([folder, files]) => (
+            <Accordion
+              key={folder}
+              expanded={expanded === folder}
+              onChange={() => setExpanded(expanded === folder ? false : folder)}
+              disableGutters
+              sx={{
+                backgroundColor: 'var(--card)',
+                border: '1px solid var(--card-border)',
+                borderRadius: '10px !important',
+                boxShadow: 'none',
+                '&:before': { display: 'none' },
+                minWidth: 140,
+                '& .MuiAccordionSummary-root': {
+                  borderRadius: '10px',
+                  minHeight: 36,
+                  px: 1.5,
+                  py: 0,
+                },
+              }}
+            >
+              <AccordionSummary
+                expandIcon={
+                  <ExpandMoreIcon
+                    sx={{ fontSize: '1rem', color: 'var(--foreground-muted)' }}
+                  />
+                }
+              >
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Box
+                    sx={{
+                      width: 8,
+                      height: 8,
+                      borderRadius: '50%',
+                      backgroundColor: FOLDER_COLORS[folder] || 'var(--accent)',
+                      flexShrink: 0,
+                    }}
+                  />
+                  <Typography
+                    sx={{
+                      fontFamily: "'DM Mono', monospace",
+                      fontSize: '0.8rem',
+                      fontWeight: 500,
+                      color: 'var(--foreground)',
+                    }}
+                  >
+                    {folder}
+                  </Typography>
+                  <Box
+                    sx={{
+                      fontFamily: "'DM Mono', monospace",
+                      fontSize: '0.65rem',
+                      px: 0.75,
+                      py: 0.1,
+                      borderRadius: '100px',
+                      backgroundColor: 'var(--background-2)',
+                      color: 'var(--foreground-muted)',
+                    }}
+                  >
+                    {files.length}
+                  </Box>
+                </Box>
+              </AccordionSummary>
+              <AccordionDetails sx={{ p: 1, pt: 0 }}>
+                <Box
+                  sx={{ display: 'flex', flexDirection: 'column', gap: 0.25 }}
+                >
+                  {files.map((f) => (
+                    <Box
+                      key={f.path}
+                      onClick={() => handleSelect(f.path)}
+                      sx={{
+                        px: 1.5,
+                        py: 0.75,
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                        fontFamily: "'Plus Jakarta Sans', sans-serif",
+                        fontSize: '0.82rem',
+                        color: selected.endsWith(f.path)
+                          ? 'var(--accent)'
+                          : 'var(--foreground-muted)',
+                        backgroundColor: selected.endsWith(f.path)
+                          ? 'var(--accent-muted)'
+                          : 'transparent',
+                        transition: 'all 0.15s ease',
+                        '&:hover': {
+                          backgroundColor: 'var(--background-2)',
+                          color: 'var(--foreground)',
+                        },
+                      }}
+                    >
+                      {f.name}
+                    </Box>
+                  ))}
+                </Box>
+              </AccordionDetails>
+            </Accordion>
+          ))}
+        </Box>
+      </Box>
+
+      {/* Content area */}
+      <Box sx={{ flex: 1, overflow: 'auto', p: { xs: 1.5, sm: 2 } }}>
+        {selected ? (
+          loading ? (
+            <Loading />
           ) : (
-            <Typography variant="h4">Select a notebook to display</Typography>
-          )}
-        </section>
-      </div>
+            <Box
+              sx={{
+                backgroundColor: 'var(--card)',
+                border: '1px solid var(--card-border)',
+                borderRadius: '14px',
+                overflow: 'hidden',
+                boxShadow: 'var(--card-shadow)',
+              }}
+            >
+              <iframe
+                ref={iframeRef}
+                src={selected}
+                onLoad={(e) => {
+                  const iframe = e.target as HTMLIFrameElement;
+                  resizeIframe(iframe);
+                  injectStyles(iframe, theme);
+                }}
+                title="Notebook"
+                style={{
+                  width: '100%',
+                  border: 'none',
+                  backgroundColor: 'transparent',
+                  visibility: iframeReady ? 'visible' : 'hidden',
+                  opacity: iframeReady ? 1 : 0,
+                  transition: 'opacity 0.3s ease',
+                }}
+              />
+            </Box>
+          )
+        ) : (
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '60vh',
+              gap: 2,
+              color: 'var(--foreground-muted)',
+              textAlign: 'center',
+            }}
+          >
+            <Typography sx={{ fontSize: '2.5rem' }}>📓</Typography>
+            <Typography
+              sx={{
+                fontFamily: "'DM Mono', monospace",
+                fontSize: '0.85rem',
+                opacity: 0.6,
+              }}
+            >
+              Select a notebook to display
+            </Typography>
+          </Box>
+        )}
+      </Box>
     </Container>
   );
 }

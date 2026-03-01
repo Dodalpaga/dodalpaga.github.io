@@ -1,20 +1,31 @@
+// app/projects/image_generation/content.tsx
+'use client';
+
 import * as React from 'react';
 import DownloadIcon from '@mui/icons-material/Download';
-import { Info } from 'lucide-react';
+import { Info, Sparkles, Image as ImageIcon } from 'lucide-react';
 import {
   Container,
   Grid,
   CircularProgress,
   Chip,
-  Alert,
   Typography,
-  Paper,
   Box,
   TextField,
   Tooltip,
   IconButton,
   Button,
+  Alert,
 } from '@mui/material';
+import { projectInputSx } from '@/constants/ui';
+
+const EXAMPLE_PROMPTS = [
+  'Astronaut riding a horse on Mars',
+  'Cyberpunk city at sunset with neon lights',
+  'Magical forest with glowing mushrooms',
+  'Futuristic robot playing piano',
+  'Ancient temple floating in clouds',
+];
 
 export default function Content() {
   const [prompt, setPrompt] = React.useState('');
@@ -24,544 +35,459 @@ export default function Content() {
   const [error, setError] = React.useState<string | null>(null);
   const [history, setHistory] = React.useState<string[]>([]);
 
-  const examplePrompts = [
-    'Astronaut riding a horse on Mars',
-    'Cyberpunk city at sunset with neon lights',
-    'Magical forest with glowing mushrooms',
-    'Futuristic robot playing piano',
-    'Ancient temple in the clouds',
-  ];
-
   const handleGenerate = async () => {
-    if (!prompt.trim()) {
-      setError('Please enter a prompt');
+    if (!prompt.trim() || !hfToken.trim()) {
+      setError('Enter a prompt and HuggingFace token.');
       return;
     }
-    if (!hfToken.trim()) {
-      setError('Please enter a HuggingFace API token');
-      return;
-    }
-
     setLoading(true);
     setError(null);
-
     try {
-      const response = await fetch(
+      const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/image_gen/generate?hf_token=${encodeURIComponent(hfToken)}`,
         {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            prompt: prompt,
+            prompt,
             model: 'stabilityai/stable-diffusion-xl-base-1.0',
           }),
-        }
+        },
       );
-
-      if (!response.ok) {
-        throw new Error('Failed to generate image');
-      }
-
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-      setImageUrl(url);
-
-      // Add to history
-      if (!history.includes(prompt)) {
-        setHistory([prompt, ...history.slice(0, 4)]);
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      if (!res.ok) throw new Error('Failed to generate image');
+      const blob = await res.blob();
+      setImageUrl(URL.createObjectURL(blob));
+      if (!history.includes(prompt))
+        setHistory((h) => [prompt, ...h.slice(0, 4)]);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'An error occurred');
     } finally {
       setLoading(false);
     }
   };
 
   const handleDownload = () => {
-    if (imageUrl) {
-      const link = document.createElement('a');
-      link.href = imageUrl;
-      link.download = `generated-image-${Date.now()}.png`;
-      link.click();
-    }
+    if (!imageUrl) return;
+    const a = document.createElement('a');
+    a.href = imageUrl;
+    a.download = `generated-${Date.now()}.png`;
+    a.click();
   };
 
-  const handleExampleClick = (example: React.SetStateAction<string>) => {
-    setPrompt(example);
-    setError(null); // Clear error when selecting an example
-  };
-
-  const handleKeyDown = (e: {
-    key: string;
-    ctrlKey: any;
-    metaKey: any;
-    preventDefault: () => void;
-  }) => {
-    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
-      e.preventDefault();
-      handleGenerate();
-    }
-  };
-
-  const handlePromptChange = (e: {
-    target: { value: React.SetStateAction<string> };
-  }) => {
-    setPrompt(e.target.value);
-    setError(null); // Clear error when user starts typing
-  };
-
-  const handleTokenChange = (e: {
-    target: { value: React.SetStateAction<string> };
-  }) => {
-    setHfToken(e.target.value);
-    setError(null); // Clear error when user starts typing
-  };
-
-  const handleCloseError = () => {
-    setError(null); // Clear error when closing the alert
-  };
-
-  const inputStyles = {
-    '& .MuiOutlinedInput-root': {
-      color: 'var(--foreground)',
-      '& fieldset': { borderColor: 'var(--foreground)' },
-      '&:hover fieldset': { borderColor: 'var(--foreground)' },
-      '&.Mui-focused fieldset': { borderColor: 'var(--foreground)' },
-    },
-  };
+  const tokenTooltip = (
+    <Box sx={{ p: 1 }}>
+      <Typography
+        variant="body2"
+        sx={{ fontWeight: 700, mb: 1, fontFamily: "'Syne', sans-serif" }}
+      >
+        🔒 Token Privacy
+      </Typography>
+      {[
+        'Never stored in a database',
+        'Used only for this request',
+        'Not stored on the server',
+      ].map((t, i) => (
+        <Typography key={i} variant="caption" display="block" sx={{ mb: 0.5 }}>
+          • {t}
+        </Typography>
+      ))}
+      <Typography
+        variant="caption"
+        display="block"
+        sx={{ mt: 1.5, pt: 1, borderTop: '1px solid rgba(255,255,255,0.15)' }}
+      >
+        No token?{' '}
+        <a
+          href="https://huggingface.co/settings/tokens"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ color: 'var(--accent)', textDecoration: 'underline' }}
+        >
+          Create one here ↗
+        </a>
+      </Typography>
+    </Box>
+  );
 
   return (
     <Container
       maxWidth="xl"
-      sx={{
-        height: '100%',
-        py: 4,
-        px: { xs: 2, sm: 3, md: 4 },
-      }}
+      sx={{ height: '100%', py: 3, px: { xs: 2, sm: 3 } }}
     >
-      <Typography
-        variant="h3"
-        gutterBottom
-        sx={{
-          mb: 1,
-          fontWeight: 700,
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          textAlign: 'center',
-        }}
-      >
-        AI Image Generator
-      </Typography>
-      <Typography
-        variant="body1"
-        sx={{
-          mb: 4,
-          textAlign: 'center',
-          color: 'var(--foreground-2)',
-          opacity: 0.8,
-        }}
-      >
-        Transform your ideas into stunning visuals with AI-powered image
-        generation
-      </Typography>
+      {/* Header */}
+      <Box sx={{ mb: 3, textAlign: 'center' }}>
+        <span className="section-label">AI · Generative</span>
+        <Typography
+          variant="h3"
+          sx={{
+            fontFamily: "'Syne', sans-serif",
+            fontWeight: 800,
+            letterSpacing: '-0.03em',
+            mb: 0.5,
+          }}
+        >
+          Image Generator
+        </Typography>
+        <Typography
+          sx={{
+            color: 'var(--foreground-muted)',
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
+          }}
+        >
+          Transform ideas into visuals with Stable Diffusion XL
+        </Typography>
+      </Box>
 
-      <Grid container spacing={3} sx={{ height: 'calc(100% - 120px)' }}>
-        {/* Left Column - Input Section */}
+      <Grid container spacing={3} sx={{ height: 'calc(100% - 100px)' }}>
+        {/* Left: Input panel */}
         <Grid item xs={12} md={5}>
-          <Paper
-            elevation={3}
+          <Box
             sx={{
-              p: 3,
               height: '100%',
               display: 'flex',
               flexDirection: 'column',
-              borderRadius: 3,
-              background: 'var(--background)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
+              gap: 2,
+              backgroundColor: 'var(--card)',
+              border: '1px solid var(--card-border)',
+              borderRadius: '14px',
+              p: 3,
+              boxShadow: 'var(--card-shadow)',
             }}
           >
-            {/* Error Alert */}
             {error && (
               <Alert
                 severity="error"
-                onClose={handleCloseError}
-                sx={{ mb: 2, borderRadius: 2 }}
+                onClose={() => setError(null)}
+                sx={{
+                  borderRadius: '10px',
+                  fontFamily: "'Plus Jakarta Sans', sans-serif",
+                  fontSize: '0.85rem',
+                }}
               >
                 {error}
               </Alert>
             )}
 
-            <Typography
-              variant="h6"
-              sx={{ mb: 2, fontWeight: 600, color: 'var(--foreground)' }}
-            >
-              Describe Your Image
-            </Typography>
-
-            <TextField
-              fullWidth
-              multiline
-              rows={6}
-              value={prompt}
-              onChange={handlePromptChange}
-              onKeyDown={handleKeyDown}
-              variant="outlined"
-              placeholder="Describe the image you want to create in detail..."
-              disabled={loading}
-              autoComplete="off"
-              sx={{
-                mb: 2,
-                '& .MuiOutlinedInput-root': {
-                  color: 'var(--foreground-2)',
-                  backgroundColor: 'var(--background-2)',
-                  borderRadius: 2,
-                  '& fieldset': {
-                    borderColor: 'rgba(255, 255, 255, 0.1)',
-                  },
-                  '&:hover fieldset': {
-                    borderColor: 'rgba(255, 255, 255, 0.2)',
-                  },
-                  '&.Mui-focused fieldset': {
-                    borderColor: '#667eea',
-                  },
-                },
-              }}
-              autoFocus
-            />
-
-            <Typography
-              variant="h6"
-              sx={{ mb: 2, fontWeight: 600, color: 'var(--foreground)' }}
-            >
-              HuggingFace API Token
-            </Typography>
-
-            <Box
-              sx={{
-                mb: 2,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                textAlign: 'center',
-              }}
-            >
+            <Box>
+              <Typography
+                sx={{
+                  fontFamily: "'DM Mono', monospace",
+                  fontSize: '0.72rem',
+                  color: 'var(--accent)',
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase',
+                  mb: 1,
+                }}
+              >
+                01 · Describe your image
+              </Typography>
               <TextField
                 fullWidth
-                value={hfToken}
-                onChange={handleTokenChange}
-                variant="outlined"
-                placeholder="Enter your HuggingFace API token..."
+                multiline
+                rows={5}
+                value={prompt}
+                onChange={(e) => {
+                  setPrompt(e.target.value);
+                  setError(null);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                    e.preventDefault();
+                    handleGenerate();
+                  }
+                }}
+                placeholder="A photorealistic portrait of..."
                 disabled={loading}
-                type="password"
                 autoComplete="off"
                 sx={{
-                  '& .MuiOutlinedInput-root': {
-                    color: 'var(--foreground-2)',
-                    backgroundColor: 'var(--background-2)',
-                    borderRadius: 2,
-                    '& fieldset': {
-                      borderColor: 'rgba(255, 255, 255, 0.1)',
-                    },
-                    '&:hover fieldset': {
-                      borderColor: 'rgba(255, 255, 255, 0.2)',
-                    },
-                    '&.Mui-focused fieldset': {
-                      borderColor: '#667eea',
-                    },
+                  ...projectInputSx,
+                  '& textarea': {
+                    fontFamily: "'Plus Jakarta Sans', sans-serif",
+                    fontSize: '0.9rem',
+                    lineHeight: 1.6,
                   },
                 }}
               />
-              <Tooltip
-                title={
-                  <Box sx={{ p: 1 }}>
-                    <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
-                      🔒 Confidentialité du Token
-                    </Typography>
-                    <Typography
-                      variant="caption"
-                      sx={{ display: 'block', mb: 0.5 }}
-                    >
-                      • Your token is never stored either in a database nor in a
-                      persistent variable
-                    </Typography>
-                    <Typography
-                      variant="caption"
-                      sx={{ display: 'block', mb: 0.5 }}
-                    >
-                      • It is use only for this API request
-                    </Typography>
-                    <Typography
-                      variant="caption"
-                      sx={{ display: 'block', mb: 0.5 }}
-                    >
-                      • The token is not stored on my server either
-                    </Typography>
-                    <Typography
-                      variant="caption"
-                      sx={{
-                        display: 'block',
-                        fontStyle: 'italic',
-                        mt: 1,
-                        mb: 1,
-                      }}
-                    >
-                      The safety of your data is my priority
-                    </Typography>
-                    <Typography
-                      variant="caption"
-                      sx={{
-                        display: 'block',
-                        mt: 1.5,
-                        pt: 1,
-                        borderTop: '1px solid rgba(255,255,255,0.2)',
-                      }}
-                    >
-                      No token ?{' '}
-                      <a
-                        href="https://huggingface.co/settings/tokens"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{
-                          color: '#87ceeb',
-                          textDecoration: 'underline',
-                        }}
-                      >
-                        Create one here
-                      </a>
-                    </Typography>
-                  </Box>
-                }
-                arrow
-                placement="bottom"
-              >
-                <IconButton
-                  size="small"
-                  sx={{ color: 'var(--foreground)', opacity: 0.6 }}
-                >
-                  <Info size={20} />
-                </IconButton>
-              </Tooltip>
             </Box>
 
-            <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
+            <Box>
+              <Typography
+                sx={{
+                  fontFamily: "'DM Mono', monospace",
+                  fontSize: '0.72rem',
+                  color: 'var(--accent)',
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase',
+                  mb: 1,
+                }}
+              >
+                02 · HuggingFace API token
+              </Typography>
+              <Box sx={{ display: 'flex', gap: 0.5 }}>
+                <TextField
+                  fullWidth
+                  value={hfToken}
+                  onChange={(e) => {
+                    setHfToken(e.target.value);
+                    setError(null);
+                  }}
+                  placeholder="hf_..."
+                  type="password"
+                  disabled={loading}
+                  autoComplete="off"
+                  sx={projectInputSx}
+                />
+                <Tooltip title={tokenTooltip} arrow placement="bottom">
+                  <IconButton
+                    size="small"
+                    sx={{
+                      flexShrink: 0,
+                      color: 'var(--foreground-muted)',
+                      '&:hover': { color: 'var(--accent)' },
+                    }}
+                  >
+                    <Info size={16} />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+            </Box>
+
+            <Box sx={{ display: 'flex', gap: 1 }}>
               <Button
                 fullWidth
                 variant="contained"
                 onClick={handleGenerate}
                 disabled={loading || !prompt.trim() || !hfToken.trim()}
+                startIcon={
+                  loading ? (
+                    <CircularProgress size={14} color="inherit" />
+                  ) : (
+                    <Sparkles size={16} />
+                  )
+                }
                 sx={{
+                  fontFamily: "'DM Mono', monospace",
+                  fontSize: '0.85rem',
+                  letterSpacing: '0.04em',
+                  textTransform: 'none',
                   py: 1.5,
-                  fontSize: '16px',
-                  fontWeight: 600,
-                  background:
-                    'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                  boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
-                  transition: 'all 0.3s ease',
+                  borderRadius: '10px',
+                  background: 'linear-gradient(135deg, var(--accent), #764ba2)',
+                  boxShadow: '0 4px 16px var(--accent-muted)',
                   '&:hover': {
                     transform: 'translateY(-2px)',
-                    boxShadow: '0 6px 20px rgba(102, 126, 234, 0.6)',
+                    boxShadow: '0 6px 24px var(--accent-muted)',
                   },
                   '&:disabled': {
-                    background: 'rgba(255, 255, 255, 0.1)',
+                    background: 'var(--background-2)',
+                    boxShadow: 'none',
                   },
+                  transition: 'all 0.25s ease',
                 }}
               >
-                {loading ? (
-                  <CircularProgress size={24} color="inherit" />
-                ) : (
-                  '✨ Generate Image'
-                )}
+                {loading ? 'Generating…' : 'Generate Image'}
               </Button>
-
               {imageUrl && (
                 <Tooltip title="Download">
                   <Button
                     variant="outlined"
                     onClick={handleDownload}
                     sx={{
-                      minWidth: 'auto',
-                      px: 2,
-                      borderColor: 'var(--background-1)',
-                      color: 'var(--foreground-2)',
+                      minWidth: 48,
+                      px: 1.5,
+                      borderRadius: '10px',
+                      borderColor: 'var(--card-border)',
+                      color: 'var(--foreground-muted)',
                       '&:hover': {
-                        borderColor: 'var(--bg-color-4)',
-                        backgroundColor: 'var(--bg-color-4)',
+                        borderColor: 'var(--accent)',
+                        color: 'var(--accent)',
+                        backgroundColor: 'var(--accent-muted)',
                       },
                     }}
                   >
-                    <DownloadIcon />
+                    <DownloadIcon fontSize="small" />
                   </Button>
                 </Tooltip>
               )}
             </Box>
 
             <Typography
-              variant="caption"
               sx={{
-                mb: 2,
-                color: 'var(--foreground-2)',
-                opacity: 0.6,
+                fontFamily: "'DM Mono', monospace",
+                fontSize: '0.65rem',
+                color: 'var(--foreground-muted)',
                 textAlign: 'center',
               }}
             >
-              Press Ctrl + Enter to generate
+              Ctrl+Enter to generate
             </Typography>
 
-            <Box sx={{ flex: 1, overflow: 'auto' }}>
+            {/* Examples */}
+            <Box>
               <Typography
-                variant="subtitle2"
                 sx={{
-                  mb: 1.5,
-                  fontWeight: 600,
-                  color: 'var(--foreground-2)',
+                  fontFamily: "'DM Mono', monospace",
+                  fontSize: '0.7rem',
+                  color: 'var(--foreground-muted)',
+                  letterSpacing: '0.08em',
+                  mb: 1,
                 }}
               >
-                Example Prompts
+                EXAMPLE PROMPTS
               </Typography>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
-                {examplePrompts.map((example, index) => (
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75 }}>
+                {EXAMPLE_PROMPTS.map((ex, i) => (
                   <Chip
-                    key={index}
-                    label={example}
-                    onClick={() => handleExampleClick(example)}
+                    key={i}
+                    label={ex}
+                    size="small"
+                    onClick={() => {
+                      setPrompt(ex);
+                      setError(null);
+                    }}
                     disabled={loading}
                     sx={{
+                      fontFamily: "'Plus Jakarta Sans', sans-serif",
+                      fontSize: '0.75rem',
+                      backgroundColor: 'var(--background-elevated)',
+                      border: '1px solid var(--card-border)',
+                      color: 'var(--foreground-muted)',
                       cursor: 'pointer',
-                      transition: 'all 0.2s ease',
                       '&:hover': {
-                        backgroundColor: 'rgba(102, 126, 234, 0.2)',
-                        transform: 'scale(1.05)',
+                        backgroundColor: 'var(--accent-muted)',
+                        borderColor: 'var(--accent)',
+                        color: 'var(--accent)',
                       },
+                      transition: 'all 0.15s ease',
                     }}
                   />
                 ))}
               </Box>
-
-              {history.length > 0 && (
-                <>
-                  <Typography
-                    variant="subtitle2"
-                    sx={{
-                      mb: 1.5,
-                      mt: 2,
-                      fontWeight: 600,
-                      color: 'var(--foreground-2)',
-                    }}
-                  >
-                    Recent Prompts
-                  </Typography>
-                  <Box
-                    sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}
-                  >
-                    {history.map((item, index) => (
-                      <Chip
-                        key={index}
-                        label={item}
-                        onClick={() => setPrompt(item)}
-                        disabled={loading}
-                        variant="outlined"
-                        sx={{
-                          justifyContent: 'flex-start',
-                          cursor: 'pointer',
-                          '&:hover': {
-                            backgroundColor: 'rgba(102, 126, 234, 0.1)',
-                          },
-                        }}
-                      />
-                    ))}
-                  </Box>
-                </>
-              )}
             </Box>
-          </Paper>
+
+            {/* Recent */}
+            {history.length > 0 && (
+              <Box>
+                <Typography
+                  sx={{
+                    fontFamily: "'DM Mono', monospace",
+                    fontSize: '0.7rem',
+                    color: 'var(--foreground-muted)',
+                    letterSpacing: '0.08em',
+                    mb: 1,
+                  }}
+                >
+                  RECENT PROMPTS
+                </Typography>
+                <Box
+                  sx={{ display: 'flex', flexDirection: 'column', gap: 0.75 }}
+                >
+                  {history.map((h, i) => (
+                    <Chip
+                      key={i}
+                      label={h}
+                      size="small"
+                      variant="outlined"
+                      onClick={() => setPrompt(h)}
+                      disabled={loading}
+                      sx={{
+                        justifyContent: 'flex-start',
+                        fontFamily: "'Plus Jakarta Sans', sans-serif",
+                        fontSize: '0.75rem',
+                        borderColor: 'var(--card-border)',
+                        color: 'var(--foreground-muted)',
+                        '&:hover': {
+                          borderColor: 'var(--accent)',
+                          color: 'var(--accent)',
+                          backgroundColor: 'var(--accent-muted)',
+                        },
+                        transition: 'all 0.15s ease',
+                      }}
+                    />
+                  ))}
+                </Box>
+              </Box>
+            )}
+          </Box>
         </Grid>
 
-        {/* Right Column - Preview Section */}
+        {/* Right: Preview panel */}
         <Grid item xs={12} md={7}>
-          <Paper
-            elevation={3}
+          <Box
             sx={{
-              p: 3,
               height: '100%',
               display: 'flex',
-              flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              borderRadius: 3,
-              background: 'var(--background)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              position: 'relative',
+              backgroundColor: 'var(--card)',
+              border: '1px solid var(--card-border)',
+              borderRadius: '14px',
               overflow: 'hidden',
+              position: 'relative',
+              boxShadow: 'var(--card-shadow)',
             }}
           >
             {!imageUrl && !loading && (
               <Box
                 sx={{
                   textAlign: 'center',
-                  color: 'var(--foreground-2)',
-                  opacity: 0.5,
+                  color: 'var(--foreground-muted)',
+                  opacity: 0.4,
                 }}
               >
-                <Typography variant="h1" sx={{ fontSize: '80px', mb: 2 }}>
-                  🎨
-                </Typography>
-                <Typography variant="h6" sx={{ mb: 1 }}>
-                  Your masterpiece will appear here
-                </Typography>
-                <Typography variant="body2">
-                  Enter a prompt and click generate to create your image
-                </Typography>
-              </Box>
-            )}
-
-            {loading && (
-              <Box sx={{ textAlign: 'center' }}>
-                <CircularProgress size={60} sx={{ mb: 2 }} />
-                <Typography variant="h6" sx={{ color: 'var(--foreground-2)' }}>
-                  Creating your image...
-                </Typography>
+                <ImageIcon size={64} strokeWidth={1} />
                 <Typography
-                  variant="body2"
-                  sx={{ color: 'var(--foreground-2)', opacity: 0.7, mt: 1 }}
+                  sx={{
+                    fontFamily: "'DM Mono', monospace",
+                    fontSize: '0.82rem',
+                    mt: 2,
+                  }}
                 >
-                  This may take a few moments
+                  Your image will appear here
                 </Typography>
               </Box>
             )}
-
-            {imageUrl && !loading && (
+            {loading && (
               <Box
                 sx={{
-                  width: '100%',
-                  height: '100%',
+                  textAlign: 'center',
                   display: 'flex',
+                  flexDirection: 'column',
                   alignItems: 'center',
-                  justifyContent: 'center',
+                  gap: 2,
                 }}
               >
-                <Box
-                  component="img"
-                  src={imageUrl}
-                  alt="Generated"
+                <CircularProgress size={48} sx={{ color: 'var(--accent)' }} />
+                <Typography
                   sx={{
-                    maxWidth: '100%',
-                    maxHeight: '100%',
-                    borderRadius: 2,
-                    boxShadow: '0 10px 40px rgba(0, 0, 0, 0.3)',
-                    objectFit: 'contain',
-                    animation: 'fadeIn 0.5s ease-in',
-                    '@keyframes fadeIn': {
-                      from: { opacity: 0, transform: 'scale(0.95)' },
-                      to: { opacity: 1, transform: 'scale(1)' },
-                    },
+                    fontFamily: "'DM Mono', monospace",
+                    fontSize: '0.82rem',
+                    color: 'var(--foreground-muted)',
                   }}
-                />
+                >
+                  Generating your image…
+                </Typography>
               </Box>
             )}
-          </Paper>
+            {imageUrl && !loading && (
+              <Box
+                component="img"
+                src={imageUrl}
+                alt="Generated"
+                sx={{
+                  maxWidth: '100%',
+                  maxHeight: '100%',
+                  objectFit: 'contain',
+                  borderRadius: '10px',
+                  animation: 'scaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+                  '@keyframes scaleIn': {
+                    from: { opacity: 0, transform: 'scale(0.94)' },
+                    to: { opacity: 1, transform: 'scale(1)' },
+                  },
+                }}
+              />
+            )}
+          </Box>
         </Grid>
       </Grid>
     </Container>

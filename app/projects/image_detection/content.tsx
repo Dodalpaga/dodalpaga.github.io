@@ -1,3 +1,6 @@
+// app/projects/image_detection/content.tsx
+'use client';
+
 import * as React from 'react';
 import {
   Container,
@@ -9,195 +12,252 @@ import {
   InputLabel,
   FormControl,
   Typography,
-  Paper,
   Box,
   TextField,
   Tooltip,
   IconButton,
 } from '@mui/material';
-import { Info } from 'lucide-react';
+import { Info, Upload, Cpu } from 'lucide-react';
+import {
+  projectInputSx,
+  projectSelectSx,
+  projectPaperSx,
+} from '@/constants/ui';
 
 interface Model {
   value: string;
   label: string;
 }
-
 interface Detection {
   label: string;
   score: number;
 }
 
+const ACCENT_COLORS = [
+  '#6B8EFF',
+  '#FF6B8E',
+  '#6BFFB8',
+  '#FFD56B',
+  '#C46BFF',
+  '#6BFFF0',
+];
+
 export default function ImageSegmentation() {
   const [uploadedImage, setUploadedImage] = React.useState<string | null>(null);
   const [processedImage, setProcessedImage] = React.useState<string | null>(
-    null
+    null,
   );
   const [detections, setDetections] = React.useState<Detection[]>([]);
-  const [loading, setLoading] = React.useState<boolean>(false);
-  const [modelName, setModelName] = React.useState<string>('');
-  const [hfToken, setHfToken] = React.useState<string>('');
+  const [loading, setLoading] = React.useState(false);
+  const [modelName, setModelName] = React.useState('');
+  const [hfToken, setHfToken] = React.useState('');
   const [availableModels, setAvailableModels] = React.useState<Model[]>([]);
-  const [modelsLoading, setModelsLoading] = React.useState<boolean>(true);
+  const [modelsLoading, setModelsLoading] = React.useState(true);
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
 
-  const colors = [
-    '#e8a6a6',
-    '#b3d9b3',
-    '#d4af37',
-    '#87ceeb',
-    '#dda0dd',
-    '#98fb98',
-  ];
-
   React.useEffect(() => {
-    fetchAvailableModels();
+    const fetch_ = async () => {
+      try {
+        setModelsLoading(true);
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/detection/models`,
+        );
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        setAvailableModels(data.models || []);
+        if (data.models?.length) setModelName(data.models[0].value);
+      } catch {
+        setErrorMessage('Failed to load models');
+      } finally {
+        setModelsLoading(false);
+      }
+    };
+    fetch_();
   }, []);
 
-  const fetchAvailableModels = async () => {
-    try {
-      setModelsLoading(true);
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/detection/models`
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setUploadedImage(reader.result as string);
+      setProcessedImage(null);
+      setDetections([]);
+      setErrorMessage(null);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleProcess = async () => {
+    if (!uploadedImage || !modelName || !hfToken.trim()) {
+      setErrorMessage(
+        'Please upload an image, select a model, and enter your HF token.',
       );
-      if (!response.ok) throw new Error('Failed to fetch models');
-      const data = await response.json();
-      setAvailableModels(data.models || []);
-      if (data.models?.length > 0) {
-        setModelName(data.models[0].value);
-      }
-    } catch (error) {
-      console.error('Error fetching models:', error);
-      setErrorMessage('Failed to load available models');
-    } finally {
-      setModelsLoading(false);
-    }
-  };
-
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setUploadedImage(reader.result as string);
-        setProcessedImage(null);
-        setDetections([]);
-        setErrorMessage(null);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleProcessImage = async () => {
-    if (!uploadedImage) {
-      setErrorMessage('No image uploaded.');
       return;
     }
-    if (!modelName) {
-      setErrorMessage('No model selected.');
-      return;
-    }
-    if (!hfToken.trim()) {
-      setErrorMessage('Please enter a HuggingFace API token.');
-      return;
-    }
-
     setLoading(true);
     setErrorMessage(null);
     setProcessedImage(null);
     setDetections([]);
-
     try {
-      const response = await fetch(
+      const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/detection/detect_image?model_name=${encodeURIComponent(modelName)}&hf_token=${encodeURIComponent(hfToken)}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ base64_image: uploadedImage }),
-        }
+        },
       );
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'Unknown error occurred');
+      if (!res.ok) {
+        const d = await res.json();
+        throw new Error(d.detail || 'Unknown error');
       }
-
-      const data = await response.json();
+      const data = await res.json();
       setProcessedImage(data.base64_image);
       setDetections(data.detections || []);
-    } catch (error) {
-      console.error('Error:', error);
-      setErrorMessage(
-        error instanceof Error ? error.message : 'An error occurred'
-      );
+    } catch (e) {
+      setErrorMessage(e instanceof Error ? e.message : 'An error occurred');
     } finally {
       setLoading(false);
     }
   };
 
-  const inputStyles = {
-    '& .MuiOutlinedInput-root': {
-      color: 'var(--foreground)',
-      '& fieldset': { borderColor: 'var(--foreground)' },
-      '&:hover fieldset': { borderColor: 'var(--foreground)' },
-      '&.Mui-focused fieldset': { borderColor: 'var(--foreground)' },
-    },
-  };
+  const tokenTooltip = (
+    <Box sx={{ p: 1 }}>
+      <Typography
+        variant="body2"
+        sx={{ fontWeight: 700, mb: 1, fontFamily: "'Syne', sans-serif" }}
+      >
+        🔒 Token Privacy
+      </Typography>
+      <Typography variant="caption" display="block" sx={{ mb: 0.5 }}>
+        • Never stored in a database or persistent variable
+      </Typography>
+      <Typography variant="caption" display="block" sx={{ mb: 0.5 }}>
+        • Used only for this single API request
+      </Typography>
+      <Typography
+        variant="caption"
+        display="block"
+        sx={{ fontStyle: 'italic', mt: 1 }}
+      >
+        Your data safety is my priority
+      </Typography>
+      <Typography
+        variant="caption"
+        display="block"
+        sx={{ mt: 1.5, pt: 1, borderTop: '1px solid rgba(255,255,255,0.15)' }}
+      >
+        No token?{' '}
+        <a
+          href="https://huggingface.co/settings/tokens"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ color: 'var(--accent)', textDecoration: 'underline' }}
+        >
+          Create one here ↗
+        </a>
+      </Typography>
+    </Box>
+  );
+
+  const EmptyState = ({
+    icon,
+    text,
+  }: {
+    icon: React.ReactNode;
+    text: string;
+  }) => (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: 1.5,
+        color: 'var(--foreground-muted)',
+        opacity: 0.5,
+      }}
+    >
+      {icon}
+      <Typography
+        sx={{ fontFamily: "'DM Mono', monospace", fontSize: '0.82rem' }}
+      >
+        {text}
+      </Typography>
+    </Box>
+  );
 
   return (
     <Container
       maxWidth={false}
       sx={{
         display: 'flex',
-        alignItems: 'center',
         flexDirection: 'column',
-        justifyContent: 'flex-start',
-        maxHeight: '100%',
-        overflowY: 'auto',
+        height: '100%',
+        padding: { xs: 2, sm: 3 },
       }}
     >
       {/* Header */}
-      <Box sx={{ textAlign: 'center', marginBottom: 4 }}>
-        <Typography variant="h4" sx={{ fontWeight: 'bold', marginBottom: 1 }}>
-          Image Segmentation
+      <Box sx={{ mb: 2, pb: 2, borderBottom: '1px solid var(--card-border)' }}>
+        <span className="section-label">AI · Computer Vision</span>
+        <Typography
+          variant="h4"
+          sx={{
+            fontFamily: "'Syne', sans-serif",
+            fontWeight: 800,
+            letterSpacing: '-0.03em',
+          }}
+        >
+          Image Detection
         </Typography>
-        <Typography variant="body2" color="var(--foreground)">
-          Upload an image to detect and segment objects
+        <Typography
+          variant="body2"
+          sx={{
+            color: 'var(--foreground-muted)',
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
+          }}
+        >
+          Upload an image · Select a YOLO model · Detect objects in real time
         </Typography>
       </Box>
 
       {/* Controls */}
-      <Stack
-        spacing={2}
-        direction="row"
-        sx={{ marginBottom: 4, flexWrap: 'wrap', justifyContent: 'center' }}
+      <Box
+        sx={{
+          display: 'flex',
+          gap: 1.5,
+          mb: 2,
+          flexWrap: 'wrap',
+          alignItems: 'flex-end',
+        }}
       >
         <FormControl
-          variant="outlined"
-          sx={{ minWidth: 280, ...inputStyles }}
+          size="small"
+          sx={{ minWidth: 240 }}
           disabled={modelsLoading}
         >
           <InputLabel
-            sx={{ color: 'var(--foreground)' }}
-            id="model-select-label"
-          >
-            {modelsLoading ? 'Loading models...' : 'Model from HuggingFace'}
-          </InputLabel>
-          <Select
-            labelId="model-select-label"
-            value={modelName}
-            onChange={(e) => setModelName(e.target.value)}
-            label={
-              modelsLoading ? 'Loading models...' : 'Model from HuggingFace'
-            }
             sx={{
-              minWidth: 280,
-              color: 'var(--foreground)',
-              '& .MuiSelect-icon': { color: 'var(--foreground)' },
+              color: 'var(--foreground-muted)',
+              fontFamily: "'DM Mono', monospace",
+              fontSize: '0.8rem',
             }}
           >
-            {availableModels.map((model) => (
-              <MenuItem key={model.value} value={model.value}>
-                {model.label}
+            {modelsLoading ? 'Loading models…' : 'HuggingFace Model'}
+          </InputLabel>
+          <Select
+            value={modelName}
+            onChange={(e) => setModelName(e.target.value)}
+            label="HuggingFace Model"
+            sx={projectSelectSx}
+          >
+            {availableModels.map((m) => (
+              <MenuItem
+                key={m.value}
+                value={m.value}
+                sx={{ fontFamily: "'DM Mono', monospace", fontSize: '0.82rem' }}
+              >
+                {m.label}
               </MenuItem>
             ))}
           </Select>
@@ -205,83 +265,49 @@ export default function ImageSegmentation() {
 
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
           <TextField
-            variant="outlined"
+            size="small"
             value={hfToken}
             onChange={(e) => {
               setHfToken(e.target.value);
               setErrorMessage(null);
             }}
-            placeholder="Enter HuggingFace API token..."
-            disabled={loading || modelsLoading}
+            placeholder="HuggingFace API token"
             type="password"
-            sx={{ minWidth: 280, ...inputStyles }}
+            disabled={loading || modelsLoading}
+            sx={{ minWidth: 240, ...projectInputSx }}
           />
-          <Tooltip
-            title={
-              <Box sx={{ p: 1 }}>
-                <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
-                  🔒 Confidentialité du Token
-                </Typography>
-                <Typography
-                  variant="caption"
-                  sx={{ display: 'block', mb: 0.5 }}
-                >
-                  • Your token is never stored either in a database nor in a
-                  persistent variable
-                </Typography>
-                <Typography
-                  variant="caption"
-                  sx={{ display: 'block', mb: 0.5 }}
-                >
-                  • It is use only for this API request
-                </Typography>
-                <Typography
-                  variant="caption"
-                  sx={{ display: 'block', mb: 0.5 }}
-                >
-                  • The token is not stored on my server either
-                </Typography>
-                <Typography
-                  variant="caption"
-                  sx={{ display: 'block', fontStyle: 'italic', mt: 1, mb: 1 }}
-                >
-                  The safety of your data is my priority
-                </Typography>
-                <Typography
-                  variant="caption"
-                  sx={{
-                    display: 'block',
-                    mt: 1.5,
-                    pt: 1,
-                    borderTop: '1px solid rgba(255,255,255,0.2)',
-                  }}
-                >
-                  No token ?{' '}
-                  <a
-                    href="https://huggingface.co/settings/tokens"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{ color: '#87ceeb', textDecoration: 'underline' }}
-                  >
-                    Create one here
-                  </a>
-                </Typography>
-              </Box>
-            }
-            arrow
-            placement="bottom"
-          >
+          <Tooltip title={tokenTooltip} arrow placement="bottom">
             <IconButton
               size="small"
-              sx={{ color: 'var(--foreground)', opacity: 0.6 }}
+              sx={{
+                color: 'var(--foreground-muted)',
+                '&:hover': { color: 'var(--accent)' },
+              }}
             >
-              <Info size={20} />
+              <Info size={16} />
             </IconButton>
           </Tooltip>
         </Box>
 
-        <Button variant="contained" component="label" sx={{ minWidth: 120 }}>
-          Upload
+        <Button
+          component="label"
+          variant="outlined"
+          startIcon={<Upload size={16} />}
+          sx={{
+            fontFamily: "'DM Mono', monospace",
+            fontSize: '0.78rem',
+            textTransform: 'none',
+            borderRadius: '10px',
+            borderColor: 'var(--card-border)',
+            color: 'var(--foreground-muted)',
+            '&:hover': {
+              borderColor: 'var(--accent)',
+              color: 'var(--accent)',
+              backgroundColor: 'var(--accent-muted)',
+            },
+          }}
+        >
+          Upload Image
           <input
             type="file"
             accept="image/*"
@@ -292,7 +318,7 @@ export default function ImageSegmentation() {
 
         <Button
           variant="contained"
-          onClick={handleProcessImage}
+          onClick={handleProcess}
           disabled={
             loading ||
             !uploadedImage ||
@@ -300,67 +326,133 @@ export default function ImageSegmentation() {
             !hfToken.trim() ||
             modelsLoading
           }
-          sx={{ minWidth: 120 }}
+          startIcon={
+            loading ? (
+              <CircularProgress size={14} color="inherit" />
+            ) : (
+              <Cpu size={16} />
+            )
+          }
+          sx={{
+            fontFamily: "'DM Mono', monospace",
+            fontSize: '0.78rem',
+            textTransform: 'none',
+            borderRadius: '10px',
+            backgroundColor: 'var(--accent)',
+            '&:hover': {
+              backgroundColor: 'var(--accent-hover)',
+              transform: 'translateY(-1px)',
+            },
+            '&:disabled': {
+              backgroundColor: 'var(--background-2)',
+              color: 'var(--foreground-muted)',
+            },
+            transition: 'all 0.2s ease',
+          }}
         >
-          {loading ? <CircularProgress size={24} color="inherit" /> : 'Process'}
+          {loading ? 'Processing…' : 'Detect Objects'}
         </Button>
-      </Stack>
+      </Box>
 
-      {/* Main Content */}
-      <Stack
-        spacing={0}
-        direction="row"
-        sx={{ width: '100%', height: 'calc(100vh - 300px)', gap: 2 }}
-      >
-        {/* Left Panel - Uploaded Image */}
-        <Box sx={{ flex: '2', display: 'flex', flexDirection: 'column' }}>
-          <Paper
+      {/* Error */}
+      {errorMessage && (
+        <Box
+          sx={{
+            mb: 2,
+            px: 2,
+            py: 1.5,
+            borderRadius: '10px',
+            backgroundColor: 'rgba(255,100,100,0.1)',
+            border: '1px solid rgba(255,100,100,0.3)',
+          }}
+        >
+          <Typography
             sx={{
-              padding: 3,
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              height: '100%',
-              backgroundColor: 'var(--background)',
-              border: '1px solid var(--foreground)',
-              borderOpacity: 0.1,
+              fontFamily: "'DM Mono', monospace",
+              fontSize: '0.8rem',
+              color: '#ff6464',
             }}
           >
-            {uploadedImage ? (
-              <img
-                src={uploadedImage}
-                alt="Uploaded"
-                style={{
-                  maxWidth: '100%',
-                  maxHeight: '100%',
-                  objectFit: 'contain',
-                }}
-              />
-            ) : (
-              <Typography color="var(--foreground)">
-                No image uploaded
-              </Typography>
-            )}
-          </Paper>
+            {errorMessage}
+          </Typography>
+        </Box>
+      )}
+
+      {/* Main panels */}
+      <Box
+        sx={{
+          display: 'flex',
+          gap: 2,
+          flex: 1,
+          minHeight: 0,
+          flexWrap: 'wrap',
+        }}
+      >
+        {/* Upload panel */}
+        <Box
+          sx={{
+            flex: 2,
+            minWidth: 220,
+            ...projectPaperSx,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            overflow: 'hidden',
+            position: 'relative',
+          }}
+        >
+          {uploadedImage ? (
+            <img
+              src={uploadedImage}
+              alt="Uploaded"
+              style={{
+                maxWidth: '100%',
+                maxHeight: '100%',
+                objectFit: 'contain',
+              }}
+            />
+          ) : (
+            <EmptyState icon={<Upload size={32} />} text="No image uploaded" />
+          )}
+          {uploadedImage && (
+            <Box sx={{ position: 'absolute', top: 10, left: 12, ...badgeSx }}>
+              Source
+            </Box>
+          )}
         </Box>
 
-        {/* Center Panel - Results */}
-        <Box sx={{ flex: '2', display: 'flex', flexDirection: 'column' }}>
-          <Paper
-            sx={{
-              padding: 3,
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              height: '100%',
-              backgroundColor: 'var(--background)',
-              border: '1px solid var(--foreground)',
-              borderOpacity: 0.1,
-            }}
-          >
-            {loading ? (
-              <CircularProgress />
-            ) : processedImage ? (
+        {/* Result panel */}
+        <Box
+          sx={{
+            flex: 2,
+            minWidth: 220,
+            ...projectPaperSx,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            overflow: 'hidden',
+            position: 'relative',
+          }}
+        >
+          {loading ? (
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 2,
+                color: 'var(--foreground-muted)',
+              }}
+            >
+              <CircularProgress size={36} sx={{ color: 'var(--accent)' }} />
+              <Typography
+                sx={{ fontFamily: "'DM Mono', monospace", fontSize: '0.8rem' }}
+              >
+                Detecting objects…
+              </Typography>
+            </Box>
+          ) : processedImage ? (
+            <>
               <img
                 src={processedImage}
                 alt="Processed"
@@ -370,86 +462,106 @@ export default function ImageSegmentation() {
                   objectFit: 'contain',
                 }}
               />
-            ) : errorMessage ? (
-              <Typography color="error" sx={{ textAlign: 'center' }}>
-                {errorMessage}
-              </Typography>
-            ) : (
-              <Typography color="var(--foreground)">
-                Results will appear here
-              </Typography>
-            )}
-          </Paper>
+              <Box sx={{ position: 'absolute', top: 10, left: 12, ...badgeSx }}>
+                Result
+              </Box>
+            </>
+          ) : (
+            <EmptyState
+              icon={<Cpu size={32} />}
+              text="Results will appear here"
+            />
+          )}
         </Box>
 
-        {/* Right Panel - Detections List */}
+        {/* Detections list */}
         {detections.length > 0 && (
           <Box
             sx={{
-              flex: '1',
+              flex: 1,
+              minWidth: 140,
+              maxWidth: 200,
+              ...projectPaperSx,
+              overflowY: 'auto',
               display: 'flex',
               flexDirection: 'column',
-              height: '100%',
-              overflowY: 'auto',
-              paddingRight: 1,
-              '&::-webkit-scrollbar': { width: '8px' },
-              '&::-webkit-scrollbar-track': {
-                backgroundColor: 'var(--background)',
-              },
-              '&::-webkit-scrollbar-thumb': {
-                backgroundColor: 'var(--foreground)',
-                borderRadius: '4px',
-                opacity: 0.3,
-              },
             }}
           >
-            {detections.map((detection, idx) => (
-              <Box
-                key={idx}
+            <Box
+              sx={{
+                px: 2,
+                py: 1.5,
+                borderBottom: '1px solid var(--card-border)',
+              }}
+            >
+              <Typography
                 sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  paddingY: 1.5,
-                  paddingX: 1,
-                  borderBottom: '1px solid var(--foreground)',
-                  borderOpacity: 0.1,
+                  fontFamily: "'DM Mono', monospace",
+                  fontSize: '0.72rem',
+                  color: 'var(--foreground-muted)',
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase',
+                }}
+              >
+                {detections.length} detection
+                {detections.length !== 1 ? 's' : ''}
+              </Typography>
+            </Box>
+            {detections.map((d, i) => (
+              <Box
+                key={i}
+                sx={{
+                  px: 2,
+                  py: 1.5,
+                  borderBottom: '1px solid var(--card-border)',
                   '&:last-child': { borderBottom: 'none' },
                 }}
               >
                 <Box
                   sx={{
-                    height: '4px',
-                    width: '100%',
-                    backgroundColor: colors[idx % colors.length],
-                    marginBottom: 1,
-                    borderRadius: '2px',
+                    height: 3,
+                    borderRadius: 2,
+                    backgroundColor: ACCENT_COLORS[i % ACCENT_COLORS.length],
+                    mb: 1,
                   }}
                 />
                 <Typography
                   sx={{
-                    fontWeight: 500,
+                    fontFamily: "'Plus Jakarta Sans', sans-serif",
+                    fontWeight: 600,
+                    fontSize: '0.85rem',
                     textTransform: 'capitalize',
-                    fontSize: '0.9rem',
-                    marginBottom: 0.5,
                   }}
                 >
-                  {detection.label}
+                  {d.label}
                 </Typography>
                 <Typography
                   sx={{
-                    fontWeight: 600,
-                    fontSize: '0.8rem',
-                    color: 'var(--foreground)',
-                    opacity: 0.7,
+                    fontFamily: "'DM Mono', monospace",
+                    fontSize: '0.75rem',
+                    color: 'var(--foreground-muted)',
                   }}
                 >
-                  {(detection.score * 100).toFixed(1)}%
+                  {(d.score * 100).toFixed(1)}%
                 </Typography>
               </Box>
             ))}
           </Box>
         )}
-      </Stack>
+      </Box>
     </Container>
   );
 }
+
+const badgeSx = {
+  fontFamily: "'DM Mono', monospace",
+  fontSize: '0.65rem',
+  letterSpacing: '0.1em',
+  textTransform: 'uppercase',
+  color: 'var(--foreground-muted)',
+  backgroundColor: 'var(--background-transparent)',
+  backdropFilter: 'blur(8px)',
+  padding: '2px 8px',
+  borderRadius: '100px',
+  border: '1px solid var(--card-border)',
+};

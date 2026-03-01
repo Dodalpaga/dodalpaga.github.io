@@ -1,3 +1,5 @@
+// app/projects/travels/content.tsx
+
 import * as React from 'react';
 import { useRef, useCallback, useState, useEffect } from 'react';
 import Container from '@mui/material/Container';
@@ -42,7 +44,7 @@ export default function Content() {
         duration: 2000,
       });
     },
-    []
+    [],
   );
 
   useEffect(() => {
@@ -112,7 +114,7 @@ export default function Content() {
     if (features && features.length > 0) {
       const countryName = features[0].properties.ADMIN;
       const countryInfo = visitedCountries.find(
-        (c) => c.country === countryName
+        (c) => c.country === countryName,
       );
 
       if (countryInfo) {

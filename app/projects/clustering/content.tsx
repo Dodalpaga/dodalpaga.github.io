@@ -1,3 +1,4 @@
+// app/projects/clustering/content.tsx
 'use client';
 
 import * as React from 'react';
@@ -5,172 +6,184 @@ import { useThemeContext } from '@/context/ThemeContext';
 import Container from '@mui/material/Container';
 import Slider from '@mui/material/Slider';
 import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
-import DrawIcon from '@mui/icons-material/Draw';
 import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
+import DrawIcon from '@mui/icons-material/Draw';
 import RotateLeftIcon from '@mui/icons-material/RotateLeft';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
-import './styles.css';
+import ScatterPlotIcon from '@mui/icons-material/ScatterPlot';
 
 interface Dot {
   x: number;
   y: number;
-  color: string; // "black" by default or the assigned cluster color
+  color: string;
 }
-
 interface Centroid {
   x: number;
   y: number;
   cluster: number;
 }
-
 interface Ellipse {
   x: number;
   y: number;
   rx: number;
   ry: number;
   cluster: number;
-  angle: number; // tilt angle in radians
+  angle: number;
 }
 
-const MAX_DOTS = 30;
-const ERASER_RADIUS = 20;
+const MAX_DOTS = 60;
+const ERASER_RADIUS = 22;
 
-// Predefined colors for clusters (up to 10)
 const CLUSTER_COLORS = [
-  '#e6194B',
-  '#3cb44b',
-  '#ffe119',
-  '#4363d8',
-  '#f58231',
-  '#911eb4',
-  '#46f0f0',
-  '#f032e6',
-  '#bcf60c',
-  '#fabebe',
+  '#6B8EFF',
+  '#FF6B8E',
+  '#6BFFB8',
+  '#FFD56B',
+  '#C46BFF',
+  '#6BFFF0',
+  '#FF9A6B',
+  '#B8FF6B',
+  '#FF6BDA',
+  '#6BB8FF',
 ];
 
 type Mode = 'pointer' | 'eraser';
 
 export default function Content() {
   const { theme } = useThemeContext();
-
   const [dots, setDots] = React.useState<Dot[]>([]);
-  const [clusters, setClusters] = React.useState<number>(2);
+  const [clusters, setClusters] = React.useState(3);
   const [centroids, setCentroids] = React.useState<Centroid[]>([]);
   const [ellipses, setEllipses] = React.useState<Ellipse[]>([]);
   const [mode, setMode] = React.useState<Mode>('pointer');
-  const [isErasing, setIsErasing] = React.useState<boolean>(false);
+  const [isErasing, setIsErasing] = React.useState(false);
   const [eraserPos, setEraserPos] = React.useState<{
     x: number;
     y: number;
   } | null>(null);
-
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
 
-  // Draw canvas contents
+  const bgColor = theme === 'dark' ? '#0e0e10' : '#f8f7f4';
+  const dotDefaultColor = theme === 'dark' ? '#e8e8ec' : '#18181b';
+  const gridColor =
+    theme === 'dark' ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)';
+
   React.useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-
     const parent = canvas.parentElement;
     if (!parent) return;
-
     const { width, height } = parent.getBoundingClientRect();
-
-    // Resize canvas drawing buffer
     if (canvas.width !== width || canvas.height !== height) {
       canvas.width = width;
       canvas.height = height;
     }
-
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Draw each ellipse (cluster outline) with tilt
-    ellipses.forEach((ellipse) => {
+    // Grid
+    ctx.strokeStyle = gridColor;
+    ctx.lineWidth = 1;
+    for (let x = 0; x < canvas.width; x += 28) {
       ctx.beginPath();
-      ctx.ellipse(
-        ellipse.x,
-        ellipse.y,
-        ellipse.rx,
-        ellipse.ry,
-        ellipse.angle,
-        0,
-        2 * Math.PI
-      );
-      ctx.strokeStyle = CLUSTER_COLORS[ellipse.cluster % CLUSTER_COLORS.length];
-      ctx.lineWidth = 2;
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, canvas.height);
       ctx.stroke();
+    }
+    for (let y = 0; y < canvas.height; y += 28) {
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(canvas.width, y);
+      ctx.stroke();
+    }
+
+    // Ellipses
+    ellipses.forEach((e) => {
+      ctx.beginPath();
+      ctx.ellipse(e.x, e.y, e.rx, e.ry, e.angle, 0, 2 * Math.PI);
+      ctx.strokeStyle =
+        CLUSTER_COLORS[e.cluster % CLUSTER_COLORS.length] + '80';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([6, 4]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      // Fill
+      ctx.globalAlpha = 0.06;
+      ctx.fillStyle = CLUSTER_COLORS[e.cluster % CLUSTER_COLORS.length];
+      ctx.fill();
+      ctx.globalAlpha = 1;
     });
 
-    // Draw each dot
+    // Dots
     dots.forEach((dot) => {
       ctx.beginPath();
-      ctx.arc(dot.x, dot.y, 5, 0, 2 * Math.PI);
+      ctx.arc(dot.x, dot.y, 5.5, 0, 2 * Math.PI);
       ctx.fillStyle = dot.color;
       ctx.fill();
-    });
-
-    // Draw an "X" for each centroid
-    centroids.forEach((centroid) => {
-      const size = 8;
       ctx.strokeStyle =
-        CLUSTER_COLORS[centroid.cluster % CLUSTER_COLORS.length];
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(centroid.x - size, centroid.y - size);
-      ctx.lineTo(centroid.x + size, centroid.y + size);
-      ctx.moveTo(centroid.x + size, centroid.y - size);
-      ctx.lineTo(centroid.x - size, centroid.y + size);
+        theme === 'dark' ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.12)';
+      ctx.lineWidth = 1;
       ctx.stroke();
     });
 
-    // If in eraser mode and hovering, draw a preview circle
+    // Centroids
+    centroids.forEach((c) => {
+      const color = CLUSTER_COLORS[c.cluster % CLUSTER_COLORS.length];
+      const s = 9;
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.moveTo(c.x - s, c.y - s);
+      ctx.lineTo(c.x + s, c.y + s);
+      ctx.moveTo(c.x + s, c.y - s);
+      ctx.lineTo(c.x - s, c.y + s);
+      ctx.stroke();
+      // Circle around centroid
+      ctx.beginPath();
+      ctx.arc(c.x, c.y, s + 5, 0, 2 * Math.PI);
+      ctx.strokeStyle = color + '60';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    });
+
+    // Eraser preview
     if (mode === 'eraser' && eraserPos) {
       ctx.beginPath();
       ctx.arc(eraserPos.x, eraserPos.y, ERASER_RADIUS, 0, 2 * Math.PI);
-      ctx.strokeStyle = 'gray';
-      ctx.lineWidth = 1;
-      ctx.setLineDash([5, 5]);
+      ctx.strokeStyle = 'var(--foreground-muted)';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([4, 4]);
       ctx.stroke();
-      ctx.setLineDash([]); // reset dash
+      ctx.setLineDash([]);
     }
-  }, [dots, centroids, ellipses, mode, eraserPos]);
+  }, [dots, centroids, ellipses, mode, eraserPos, theme, gridColor]);
 
-  // Add a new dot when clicking in pointer mode
+  const getCanvasCoords = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const rect = canvasRef.current!.getBoundingClientRect();
+    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+  };
+
   const addDot = (x: number, y: number) => {
     if (dots.length >= MAX_DOTS) return;
-    const newDot: Dot = { x, y, color: theme === 'dark' ? 'white' : 'black' };
-    setDots([...dots, newDot]);
+    setDots((prev) => [...prev, { x, y, color: dotDefaultColor }]);
   };
 
-  // Remove dots within the eraser circle
   const eraseDots = (x: number, y: number) => {
-    const filteredDots = dots.filter((dot) => {
-      const dx = dot.x - x;
-      const dy = dot.y - y;
-      return Math.sqrt(dx * dx + dy * dy) > ERASER_RADIUS;
-    });
-    setDots(filteredDots);
+    setDots((prev) =>
+      prev.filter((d) => Math.hypot(d.x - x, d.y - y) > ERASER_RADIUS),
+    );
   };
 
-  // Canvas mouse event handlers
   const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    if (mode === 'pointer') {
-      addDot(x, y);
-    } else if (mode === 'eraser') {
+    const { x, y } = getCanvasCoords(e);
+    if (mode === 'pointer') addDot(x, y);
+    else {
       setIsErasing(true);
       setEraserPos({ x, y });
       eraseDots(x, y);
@@ -178,113 +191,95 @@ export default function Content() {
   };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const { x, y } = getCanvasCoords(e);
     if (mode === 'eraser') {
       setEraserPos({ x, y });
-      if (isErasing) {
-        eraseDots(x, y);
-      }
+      if (isErasing) eraseDots(x, y);
     }
   };
 
   const handleMouseUp = () => {
-    if (mode === 'eraser') {
-      setIsErasing(false);
-    }
+    if (mode === 'eraser') setIsErasing(false);
   };
 
-  // Reset dots and cluster visualization
   const handleReset = () => {
     setDots([]);
     setCentroids([]);
     setEllipses([]);
   };
 
-  // K-means clustering with tilted ellipse calculation
   const handleGenerate = () => {
-    if (dots.length === 0) return;
-    if (dots.length < clusters) {
-      alert('Not enough dots for the selected number of clusters.');
-      return;
-    }
-    const maxIterations = 10;
-    let centroidsTemp = [...dots]
+    if (dots.length < clusters) return;
+    const iters = 20;
+    let cs = [...dots]
       .sort(() => Math.random() - 0.5)
       .slice(0, clusters)
-      .map((dot, i) => ({ x: dot.x, y: dot.y, cluster: i }));
+      .map((d, i) => ({ x: d.x, y: d.y, cluster: i }));
 
     let assignments: number[] = new Array(dots.length).fill(0);
-
-    for (let iter = 0; iter < maxIterations; iter++) {
-      assignments = dots.map((dot) => {
-        let minDist = Infinity;
-        let assignedCluster = 0;
-        centroidsTemp.forEach((centroid, i) => {
-          const dx = dot.x - centroid.x;
-          const dy = dot.y - centroid.y;
-          const dist = dx * dx + dy * dy;
-          if (dist < minDist) {
-            minDist = dist;
-            assignedCluster = i;
+    for (let iter = 0; iter < iters; iter++) {
+      assignments = dots.map((d) => {
+        let minD = Infinity,
+          best = 0;
+        cs.forEach((c, i) => {
+          const dist = (d.x - c.x) ** 2 + (d.y - c.y) ** 2;
+          if (dist < minD) {
+            minD = dist;
+            best = i;
           }
         });
-        return assignedCluster;
+        return best;
       });
-      centroidsTemp = centroidsTemp.map((centroid, i) => {
-        const clusterDots = dots.filter((_, index) => assignments[index] === i);
-        if (clusterDots.length === 0) return centroid;
-        const avgX =
-          clusterDots.reduce((sum, dot) => sum + dot.x, 0) / clusterDots.length;
-        const avgY =
-          clusterDots.reduce((sum, dot) => sum + dot.y, 0) / clusterDots.length;
-        return { x: avgX, y: avgY, cluster: i };
+      cs = cs.map((c, i) => {
+        const pts = dots.filter((_, j) => assignments[j] === i);
+        if (!pts.length) return c;
+        return {
+          x: pts.reduce((s, d) => s + d.x, 0) / pts.length,
+          y: pts.reduce((s, d) => s + d.y, 0) / pts.length,
+          cluster: i,
+        };
       });
     }
 
-    const updatedDots = dots.map((dot, index) => ({
-      ...dot,
-      color: CLUSTER_COLORS[assignments[index] % CLUSTER_COLORS.length],
-    }));
-    setDots(updatedDots);
-    setCentroids(centroidsTemp);
+    setDots(
+      dots.map((d, j) => ({
+        ...d,
+        color: CLUSTER_COLORS[assignments[j] % CLUSTER_COLORS.length],
+      })),
+    );
+    setCentroids(cs);
 
-    // Calculate ellipses with tilt using covariance
     const newEllipses: Ellipse[] = [];
     for (let i = 0; i < clusters; i++) {
-      const clusterDots = dots.filter((_, index) => assignments[index] === i);
-      if (clusterDots.length === 0) continue;
-      const cx = centroidsTemp[i].x;
-      const cy = centroidsTemp[i].y;
-      const n = clusterDots.length;
-      let sumXX = 0,
-        sumYY = 0,
-        sumXY = 0;
-      clusterDots.forEach((dot) => {
-        const dx = dot.x - cx;
-        const dy = dot.y - cy;
-        sumXX += dx * dx;
-        sumYY += dy * dy;
-        sumXY += dx * dy;
+      const pts = dots.filter((_, j) => assignments[j] === i);
+      if (!pts.length) continue;
+      const cx = cs[i].x,
+        cy = cs[i].y,
+        n = pts.length;
+      let sXX = 0,
+        sYY = 0,
+        sXY = 0;
+      pts.forEach((d) => {
+        const dx = d.x - cx,
+          dy = d.y - cy;
+        sXX += dx * dx;
+        sYY += dy * dy;
+        sXY += dx * dy;
       });
-      const covXX = sumXX / n;
-      const covYY = sumYY / n;
-      const covXY = sumXY / n;
-
-      // Eigenvalue decomposition for the covariance matrix
-      const common = Math.sqrt(
-        Math.pow((covXX - covYY) / 2, 2) + covXY * covXY
-      );
-      const lambda1 = (covXX + covYY) / 2 + common;
-      const lambda2 = (covXX + covYY) / 2 - common;
-      const rx = Math.sqrt(lambda1) + 10; // margin for visibility
-      const ry = Math.sqrt(lambda2) + 10; // margin for visibility
-      const angle = 0.5 * Math.atan2(2 * covXY, covXX - covYY);
-
-      newEllipses.push({ x: cx, y: cy, rx, ry, cluster: i, angle });
+      const cXX = sXX / n,
+        cYY = sYY / n,
+        cXY = sXY / n;
+      const common = Math.sqrt(((cXX - cYY) / 2) ** 2 + cXY ** 2);
+      const l1 = (cXX + cYY) / 2 + common;
+      const l2 = (cXX + cYY) / 2 - common;
+      newEllipses.push({
+        x: cx,
+        y: cy,
+        rx: Math.sqrt(Math.abs(l1)) + 14,
+        ry: Math.sqrt(Math.abs(l2)) + 14,
+        cluster: i,
+        angle: 0.5 * Math.atan2(2 * cXY, cXX - cYY),
+      });
     }
     setEllipses(newEllipses);
   };
@@ -295,130 +290,247 @@ export default function Content() {
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
         height: '100%',
-        width: '100%',
-        margin: 0,
-        padding: 2,
-        boxSizing: 'border-box', // include padding in the height calculation
+        padding: { xs: 1.5, sm: 2 },
       }}
     >
-      {/* Canvas area */}
+      {/* Header */}
+      <Box sx={{ mb: 1.5 }}>
+        <span className="section-label">ML · Interactive</span>
+        <Typography
+          variant="h5"
+          sx={{
+            fontFamily: "'Syne', sans-serif",
+            fontWeight: 700,
+            letterSpacing: '-0.02em',
+          }}
+        >
+          K-Means Clustering
+        </Typography>
+        <Typography
+          variant="body2"
+          sx={{
+            color: 'var(--foreground-muted)',
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
+            fontSize: '0.82rem',
+          }}
+        >
+          Click to place dots · Run clustering · Adjust k
+        </Typography>
+      </Box>
+
+      {/* Canvas + Toolbar */}
       <Box
         sx={{
           display: 'flex',
-          flexDirection: 'row',
-          flexGrow: 1, // allows it to take up remaining vertical space
-          overflow: 'hidden', // prevent overflow from children
-          width: '100%',
+          flex: 1,
+          gap: 0,
+          overflow: 'hidden',
+          borderRadius: '14px',
+          border: '1px solid var(--card-border)',
+          backgroundColor: bgColor,
         }}
       >
-        <Box
-          sx={{
-            flexGrow: 1,
-            height: '100%',
-          }}
-        >
+        {/* Canvas */}
+        <Box sx={{ flex: 1, position: 'relative' }}>
           <canvas
             ref={canvasRef}
             style={{
               width: '100%',
               height: '100%',
-              border: '1px solid #ccc',
-              cursor: mode === 'eraser' ? 'crosshair' : 'pointer',
+              cursor: mode === 'eraser' ? 'crosshair' : 'cell',
+              display: 'block',
             }}
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseUp}
           />
+          {/* Dot counter badge */}
+          <Box
+            sx={{
+              position: 'absolute',
+              top: 10,
+              left: 12,
+              fontFamily: "'DM Mono', monospace",
+              fontSize: '0.7rem',
+              color: 'var(--foreground-muted)',
+              backgroundColor: 'var(--background-transparent)',
+              backdropFilter: 'blur(8px)',
+              padding: '3px 10px',
+              borderRadius: '100px',
+              border: '1px solid var(--card-border)',
+            }}
+          >
+            {dots.length} / {MAX_DOTS} dots
+          </Box>
         </Box>
 
-        {/* Tools area */}
+        {/* Toolbar */}
         <Box
           sx={{
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'flex-start',
             alignItems: 'center',
-            padding: 1,
+            padding: '10px 6px',
             gap: 1,
-            // No fixed width – it'll shrink to fit the buttons
+            borderLeft: '1px solid var(--card-border)',
+            backgroundColor: 'var(--background-elevated)',
           }}
         >
           <Tooltip title="Draw" placement="left">
             <IconButton
-              color={mode === 'pointer' ? 'primary' : 'default'}
+              size="small"
               onClick={() => setMode('pointer')}
-              aria-label="pointer tool"
+              sx={{
+                borderRadius: '8px',
+                color:
+                  mode === 'pointer'
+                    ? 'var(--accent)'
+                    : 'var(--foreground-muted)',
+                backgroundColor:
+                  mode === 'pointer' ? 'var(--accent-muted)' : 'transparent',
+                border: `1px solid ${mode === 'pointer' ? 'var(--accent)' : 'transparent'}`,
+              }}
             >
-              <DrawIcon />
+              <DrawIcon fontSize="small" />
             </IconButton>
           </Tooltip>
-
           <Tooltip title="Erase" placement="left">
             <IconButton
-              color={mode === 'eraser' ? 'primary' : 'default'}
+              size="small"
               onClick={() => setMode('eraser')}
-              aria-label="eraser tool"
+              sx={{
+                borderRadius: '8px',
+                color:
+                  mode === 'eraser'
+                    ? 'var(--accent)'
+                    : 'var(--foreground-muted)',
+                backgroundColor:
+                  mode === 'eraser' ? 'var(--accent-muted)' : 'transparent',
+                border: `1px solid ${mode === 'eraser' ? 'var(--accent)' : 'transparent'}`,
+              }}
             >
-              <RemoveCircleOutlineIcon />
+              <RemoveCircleOutlineIcon fontSize="small" />
             </IconButton>
           </Tooltip>
-          {/* Divider with added styles */}
-          <Divider sx={{ width: '100%', marginY: 1 }} />
+          <Divider
+            sx={{ width: '100%', borderColor: 'var(--card-border)', my: 0.5 }}
+          />
           <Tooltip title="Reset" placement="left">
-            <IconButton onClick={handleReset} aria-label="reset tool">
-              <RotateLeftIcon />
+            <IconButton
+              size="small"
+              onClick={handleReset}
+              sx={{
+                borderRadius: '8px',
+                color: 'var(--foreground-muted)',
+                '&:hover': { color: 'var(--text-color-2)' },
+              }}
+            >
+              <RotateLeftIcon fontSize="small" />
             </IconButton>
           </Tooltip>
         </Box>
       </Box>
-      <Grid container spacing={4} sx={{ margin: 0 }}>
-        {/* Controls on top of canvas */}
-        <Grid
-          item
-          xs={12}
-          sm={6}
-          md={6}
+
+      {/* Controls bar */}
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 3,
+          mt: 1.5,
+          px: 2,
+          py: 1.5,
+          backgroundColor: 'var(--card)',
+          border: '1px solid var(--card-border)',
+          borderRadius: '12px',
+          flexWrap: 'wrap',
+        }}
+      >
+        <Box
           sx={{
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            justifyContent: 'center',
-            textAlign: 'center',
-            padding: '5px 20px !important',
+            minWidth: 180,
+            flex: 1,
           }}
         >
+          <Typography
+            sx={{
+              fontFamily: "'DM Mono', monospace",
+              fontSize: '0.72rem',
+              color: 'var(--foreground-muted)',
+              mb: 0.5,
+            }}
+          >
+            k = {clusters} clusters
+          </Typography>
           <Slider
             value={clusters}
-            onChange={(e, newValue) => setClusters(newValue as number)}
+            onChange={(_, v) => setClusters(v as number)}
             valueLabelDisplay="auto"
             step={1}
             marks
             min={2}
             max={10}
+            sx={{
+              color: 'var(--accent)',
+              '& .MuiSlider-mark': { backgroundColor: 'var(--card-border)' },
+              '& .MuiSlider-valueLabel': {
+                fontFamily: "'DM Mono', monospace",
+                fontSize: '0.75rem',
+                backgroundColor: 'var(--accent)',
+              },
+            }}
           />
-          <div style={{ textAlign: 'center' }}>Clusters: {clusters}</div>
-        </Grid>
-        <Grid
-          item
-          xs={12}
-          sm={6}
-          md={6}
+        </Box>
+        <Button
+          variant="contained"
+          onClick={handleGenerate}
+          disabled={dots.length < clusters}
+          startIcon={<ScatterPlotIcon />}
           sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            textAlign: 'center',
-            padding: '5px !important',
+            fontFamily: "'DM Mono', monospace",
+            fontSize: '0.8rem',
+            letterSpacing: '0.04em',
+            textTransform: 'none',
+            borderRadius: '10px',
+            padding: '8px 20px',
+            backgroundColor: 'var(--accent)',
+            '&:hover': {
+              backgroundColor: 'var(--accent-hover)',
+              transform: 'translateY(-1px)',
+              boxShadow: '0 4px 16px var(--accent-muted)',
+            },
+            '&:disabled': {
+              backgroundColor: 'var(--background-2)',
+              color: 'var(--foreground-muted)',
+            },
+            transition: 'all 0.2s ease',
           }}
         >
-          <Button variant="contained" color="primary" onClick={handleGenerate}>
-            Generate
-          </Button>
-        </Grid>
-      </Grid>
+          Cluster
+        </Button>
+        {centroids.length > 0 && (
+          <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+            {centroids.map((c, i) => (
+              <Box
+                key={i}
+                sx={{
+                  width: 10,
+                  height: 10,
+                  borderRadius: '50%',
+                  backgroundColor:
+                    CLUSTER_COLORS[c.cluster % CLUSTER_COLORS.length],
+                  flexShrink: 0,
+                }}
+              />
+            ))}
+          </Box>
+        )}
+      </Box>
     </Container>
   );
 }

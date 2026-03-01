@@ -1,3 +1,5 @@
+// app/projects/snowflakes/content.tsx
+
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Container from '@mui/material/Container';
@@ -21,7 +23,7 @@ export default function Content() {
   // Function to find the closest temperature
   const getClosestTemperature = (
     targetTemp: number,
-    availableTemps: number[]
+    availableTemps: number[],
   ): number => {
     const sortedTemps = availableTemps.sort((a, b) => a - b);
     let closest = sortedTemps[0];
@@ -41,7 +43,7 @@ export default function Content() {
   React.useEffect(() => {
     const newTemperature = getClosestTemperature(
       temperature,
-      availableTemperatures[humidity]
+      availableTemperatures[humidity],
     );
     setTemperature(newTemperature);
     const imagePath = `/snowflakes/images/snowflake_${humidity}_${newTemperature}.jpg`;
@@ -56,7 +58,7 @@ export default function Content() {
 
   const handleTemperatureChange = (
     event: Event,
-    newValue: number | number[]
+    newValue: number | number[],
   ) => {
     setTemperature(newValue as number);
   };
