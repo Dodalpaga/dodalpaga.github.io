@@ -1,16 +1,7 @@
-// app/layout.tsx
-'use client';
+// app/layout.tsx  ← SERVER COMPONENT (no 'use client')
 import './globals.css';
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
-import BackendStatus from '@/components/backend_status_checker';
-import CookieStatusChecker from '@/components/cookie_status_checker';
-import MediaPlayer from '@/components/media_player';
-import Toast from '@/components/toast';
 import { Syne, DM_Mono, Plus_Jakarta_Sans } from 'next/font/google';
-import { ThemeProvider } from '@/context/ThemeContext';
-import { CookieConsent } from '@/components/cookie_consent';
-import { Suspense } from 'react';
-import { AnalyticsTracker } from '@/components/analytics_tracker';
+import Providers from '@/components/providers';
 
 const syne = Syne({
   subsets: ['latin'],
@@ -34,6 +25,9 @@ const plusJakarta = Plus_Jakarta_Sans({
   display: 'swap',
 });
 
+// Minified — runs synchronously before first paint, prevents theme flash.
+const themeInitScript = `(function(){try{var s=localStorage.getItem('theme');var p=s?s:(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',p);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();`;
+
 export default function RootLayout({
   children,
 }: {
@@ -45,28 +39,16 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${syne.variable} ${dmMono.variable} ${plusJakarta.variable}`}
     >
-      <body className={plusJakarta.className} suppressHydrationWarning>
-        <ThemeProvider>
-          <AppRouterCacheProvider>
-            <Suspense fallback={null}>
-              <AnalyticsTracker />
-            </Suspense>
-            {children}
-          </AppRouterCacheProvider>
-
-          <MediaPlayer />
-
-          {/* Status hub — two stacked pills, bottom-right */}
-          <div className="status-hub">
-            <CookieStatusChecker />
-            <BackendStatus />
-          </div>
-
-          {/* Cookie consent slide-up toast */}
-          <CookieConsent />
-
-          <Toast />
-        </ThemeProvider>
+      <head>
+        {/*
+          ⚡ Placed in <head> so it executes before <body> renders.
+          suppressHydrationWarning on <html> covers the data-theme
+          attribute difference between SSR ('dark' fallback) and client.
+        */}
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
+      <body suppressHydrationWarning>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

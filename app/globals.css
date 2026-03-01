@@ -1,6 +1,12 @@
 /* app/globals.css */
 
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap');
+/*
+  ❌ REMOVED: @import url('https://fonts.googleapis.com/...')
+  ✅ Fonts are loaded via next/font in layout.tsx — importing them twice
+     causes a layout flash as the browser loads two separate font sources.
+     The CSS variables (--font-syne, --font-dm-mono, --font-plus-jakarta)
+     are injected by next/font and available immediately.
+*/
 
 @tailwind base;
 @tailwind components;
@@ -9,6 +15,60 @@
 /* ============================================================
    DESIGN TOKENS
    ============================================================ */
+
+/*
+  Default theme (dark) applied here so CSS variables are NEVER undefined.
+  The inline <script> in layout.tsx will set the correct theme before paint,
+  but this acts as a zero-flash fallback for the split-second before JS runs.
+*/
+:root {
+  /* Core surfaces */
+  --background: rgb(14, 14, 16);
+  --background-2: rgb(28, 28, 32);
+  --background-elevated: rgb(22, 22, 26);
+  --background-sunken: rgb(10, 10, 12);
+
+  /* Accent palette */
+  --bg-color-1: rgb(122, 79, 35);
+  --bg-color-2: rgb(94, 25, 25);
+  --bg-color-3: rgb(22, 107, 33);
+  --bg-color-4: rgb(63, 30, 100);
+  --text-color-1: rgb(243, 204, 168);
+  --text-color-2: rgb(253, 195, 195);
+  --text-color-3: rgb(177, 245, 186);
+  --text-color-4: rgb(225, 215, 252);
+
+  /* Primary accent */
+  --accent: rgb(100, 140, 255);
+  --accent-muted: rgba(100, 140, 255, 0.12);
+  --accent-hover: rgb(120, 160, 255);
+  --blue: rgb(159, 159, 226);
+
+  /* Typography */
+  --foreground: rgb(238, 238, 240);
+  --foreground-2: rgb(180, 180, 188);
+  --foreground-muted: rgb(110, 110, 120);
+
+  /* Glass & transparency */
+  --background-transparent: rgba(14, 14, 16, 0.88);
+  --card: rgb(22, 22, 28);
+  --card-border: rgba(255, 255, 255, 0.06);
+  --card-shadow:
+    0 1px 0px rgba(255, 255, 255, 0.04), 0 8px 32px rgba(0, 0, 0, 0.4);
+  --card-shadow-hover:
+    0 4px 16px rgba(0, 0, 0, 0.5), 0 24px 56px rgba(0, 0, 0, 0.6);
+
+  /* Gradients */
+  --background-start-rgb: rgb(14, 14, 16);
+  --background-end-rgb: rgb(10, 10, 14);
+
+  /* Dividers */
+  --divider: rgba(255, 255, 255, 0.07);
+
+  /* Noise overlay opacity */
+  --noise-opacity: 0.04;
+  --grid-color: rgba(255, 255, 255, 0.025);
+}
 
 :root[data-theme='light'] {
   /* Core surfaces */
@@ -136,21 +196,19 @@ html::-webkit-scrollbar-thumb {
 
 body {
   font-family:
-    'Plus Jakarta Sans',
+    var(--font-plus-jakarta),
     -apple-system,
     BlinkMacSystemFont,
     sans-serif;
   color: var(--foreground);
   background-color: var(--background-end-rgb);
   background-image:
-    /* Dot grid */
     radial-gradient(circle, var(--grid-color) 1px, transparent 1px),
-    /* Gradient overlay */
-      linear-gradient(
-        160deg,
-        var(--background-start-rgb) 0%,
-        var(--background-end-rgb) 100%
-      );
+    linear-gradient(
+      160deg,
+      var(--background-start-rgb) 0%,
+      var(--background-end-rgb) 100%
+    );
   background-size:
     28px 28px,
     100% 100%;
@@ -166,15 +224,23 @@ body {
     color 0.25s ease;
 }
 
-/* Noise texture overlay */
+/*
+  Noise texture overlay.
+  Key fix: `opacity` uses the CSS variable which defaults to a reasonable value
+  immediately (no undefined flash), and `background-color: transparent` is
+  explicit so it never flashes white/light before the theme token resolves.
+*/
 body::before {
   content: '';
   position: fixed;
   inset: 0;
+  background-color: transparent;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
   opacity: var(--noise-opacity);
   pointer-events: none;
   z-index: 0;
+  /* Prevent this pseudo-element from flashing during hydration */
+  will-change: opacity;
 }
 
 /* Ensure content is above noise */
@@ -189,7 +255,7 @@ h2,
 h3,
 h4,
 h5 {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-syne), 'Syne', sans-serif;
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.15;
@@ -213,7 +279,7 @@ h5 {
 }
 
 .mono {
-  font-family: 'DM Mono', monospace;
+  font-family: var(--font-dm-mono), 'DM Mono', monospace;
   font-size: 0.85em;
   letter-spacing: 0.02em;
 }
@@ -305,7 +371,6 @@ span {
   border-color: var(--accent-muted) !important;
 }
 
-/* Card overlay on hover */
 .card-overlay {
   display: flex;
   flex-direction: column;
@@ -350,7 +415,7 @@ span {
    ============================================================ */
 
 .section-label {
-  font-family: 'DM Mono', monospace;
+  font-family: var(--font-dm-mono), 'DM Mono', monospace;
   font-size: 0.72rem;
   font-weight: 400;
   letter-spacing: 0.14em;
@@ -374,7 +439,7 @@ span {
   justify-content: center;
   align-items: center;
   height: 56px;
-  font-family: 'DM Mono', monospace;
+  font-family: var(--font-dm-mono), 'DM Mono', monospace;
   font-size: 0.78rem;
   letter-spacing: 0.04em;
   z-index: 10;
@@ -389,7 +454,7 @@ span {
   background-color: var(--background-elevated);
   border: 1px solid var(--card-border);
   border-radius: 16px;
-  font-family: 'DM Mono', monospace;
+  font-family: var(--font-dm-mono), 'DM Mono', monospace;
 }
 
 /* ============================================================
@@ -558,7 +623,7 @@ span {
    ============================================================ */
 
 .stat-number {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-syne), 'Syne', sans-serif;
   font-size: 3rem;
   font-weight: 800;
   letter-spacing: -0.04em;
@@ -594,7 +659,8 @@ span {
    ============================================================ */
 
 .MuiChip-root {
-  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-family:
+    var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif !important;
   transition: all 0.2s ease !important;
 }
 
@@ -603,7 +669,8 @@ span {
 }
 
 .MuiTypography-root {
-  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-family:
+    var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif !important;
 }
 
 .MuiTypography-h1,
@@ -612,7 +679,7 @@ span {
 .MuiTypography-h4,
 .MuiTypography-h5,
 .MuiTypography-h6 {
-  font-family: 'Syne', sans-serif !important;
+  font-family: var(--font-syne), 'Syne', sans-serif !important;
   letter-spacing: -0.02em !important;
 }
 
@@ -626,7 +693,7 @@ span {
   gap: 4px;
   padding: 3px 10px;
   border-radius: 100px;
-  font-family: 'DM Mono', monospace;
+  font-family: var(--font-dm-mono), 'DM Mono', monospace;
   font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0.06em;

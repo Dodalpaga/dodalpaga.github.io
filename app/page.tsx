@@ -31,14 +31,11 @@ const navLinks = [
 ];
 
 export default function Home() {
-  const { hasConsent, withdrawConsent } = useCookieConsent();
-  const [isMounted, setIsMounted] = useState(false);
-  const [loaded, setLoaded] = useState(false);
+  const { hasConsent, giveConsent, withdrawConsent } = useCookieConsent();
 
+  const [mounted, setMounted] = useState(false);
   useEffect(() => {
-    setIsMounted(true);
-    const t = requestAnimationFrame(() => setLoaded(true));
-    return () => cancelAnimationFrame(t);
+    setMounted(true);
   }, []);
 
   return (
@@ -55,8 +52,10 @@ export default function Home() {
       <div
         className="home-hero"
         style={{
-          opacity: loaded ? 1 : 0,
-          transition: 'opacity 0.4s ease',
+          opacity: mounted ? 1 : 0,
+          transform: mounted ? 'none' : 'translateY(12px)',
+          transition:
+            'opacity 0.5s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
         }}
       >
         {/* Parallax visual */}
@@ -79,7 +78,6 @@ export default function Home() {
 
         {/* Nav links */}
         <div className="home-nav-links">
-          {/* Eyebrow */}
           <div
             className="animate-fade-up"
             style={{ animationDelay: '0.2s', marginBottom: '8px' }}
@@ -87,7 +85,7 @@ export default function Home() {
             <span className="section-label">Dorian Voydie</span>
             <h1
               style={{
-                fontFamily: "'Syne', sans-serif",
+                fontFamily: "var(--font-syne), 'Syne', sans-serif",
                 fontSize: 'clamp(2rem, 4vw, 3rem)',
                 fontWeight: 800,
                 letterSpacing: '-0.03em',
@@ -101,7 +99,8 @@ export default function Home() {
             </h1>
             <p
               style={{
-                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                fontFamily:
+                  "var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif",
                 color: 'var(--foreground-muted)',
                 fontSize: '0.95rem',
                 lineHeight: 1.6,
@@ -155,7 +154,7 @@ export default function Home() {
             />
             <span
               style={{
-                fontFamily: "'DM Mono', monospace",
+                fontFamily: "var(--font-dm-mono), 'DM Mono', monospace",
                 fontSize: '0.7rem',
                 color: 'var(--foreground-muted)',
                 marginLeft: '8px',
@@ -190,7 +189,7 @@ export default function Home() {
                   size="small"
                   sx={{
                     textTransform: 'none',
-                    fontFamily: "'DM Mono', monospace",
+                    fontFamily: "var(--font-dm-mono), 'DM Mono', monospace",
                     fontSize: '0.75rem',
                     padding: '5px 14px',
                     borderRadius: '8px',
@@ -207,13 +206,38 @@ export default function Home() {
                 </Button>
               </Link>
 
-              {isMounted && hasConsent && (
+              {/* Accept button — shown when user has explicitly denied */}
+              {mounted && hasConsent === false && (
+                <Button
+                  size="small"
+                  onClick={giveConsent}
+                  sx={{
+                    textTransform: 'none',
+                    fontFamily: "var(--font-dm-mono), 'DM Mono', monospace",
+                    fontSize: '0.75rem',
+                    padding: '5px 14px',
+                    borderRadius: '8px',
+                    border: '1px solid var(--card-border)',
+                    color: 'var(--foreground-muted)',
+                    '&:hover': {
+                      backgroundColor: 'var(--bg-color-3)',
+                      borderColor: 'var(--text-color-3)',
+                      color: 'var(--text-color-3)',
+                    },
+                  }}
+                >
+                  🍪 Accept Analytics
+                </Button>
+              )}
+
+              {/* Withdraw button — shown only when user has accepted */}
+              {mounted && hasConsent === true && (
                 <Button
                   size="small"
                   onClick={withdrawConsent}
                   sx={{
                     textTransform: 'none',
-                    fontFamily: "'DM Mono', monospace",
+                    fontFamily: "var(--font-dm-mono), 'DM Mono', monospace",
                     fontSize: '0.75rem',
                     padding: '5px 14px',
                     borderRadius: '8px',

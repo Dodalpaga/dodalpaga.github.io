@@ -9,12 +9,9 @@ import './cookie_consent.css';
 export function CookieConsent() {
   const { hasConsent, isLoaded, giveConsent, denyConsent } = useCookieConsent();
 
-  if (!isLoaded || hasConsent !== null) {
-    // null = not yet decided; show banner only then
-    // hasConsent = true/false = already decided, hide
-    if (hasConsent !== null) return null;
-  }
-  if (!isLoaded) return null;
+  // Only hide the banner if the user has explicitly accepted.
+  // Show it when: not yet loaded (wait), never decided (null), or previously denied (false).
+  if (!isLoaded || hasConsent === true) return null;
 
   return (
     <div
