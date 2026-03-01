@@ -6,6 +6,7 @@ import { useCookieConsent } from '@/hooks/useCookieConsent';
 import Button from '@mui/material/Button';
 import { useEffect, useState, useRef } from 'react';
 import './styles.css';
+import BackgroundAnimations from '@/components/backgroundanimations';
 
 const navLinks = [
   {
@@ -609,6 +610,7 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-4">
+      <BackgroundAnimations />
       <div
         className="flex flex-col items-center justify-between p-4"
         style={{ height: '84px', width: '100%' }}
