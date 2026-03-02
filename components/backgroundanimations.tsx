@@ -144,6 +144,7 @@ function SatellitePass() {
     }
 
     function draw(timestamp: number) {
+      if (!ctx) return;
       if (!startTime) startTime = timestamp;
       const elapsed = timestamp - startTime;
       const t = Math.min(elapsed / DURATION, 1);
