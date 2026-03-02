@@ -1,3 +1,5 @@
+// app/layout.tsx
+
 import './globals.css';
 import { Syne, DM_Mono, Plus_Jakarta_Sans } from 'next/font/google';
 import Providers from '@/components/providers';
