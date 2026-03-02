@@ -109,6 +109,29 @@ export const languageOptions: LanguageOption[] = [
   },
 ];
 
+// Add this compiler map alongside languageOptions
+export const WANDBOX_COMPILERS: Record<string, string> = {
+  python: 'cpython-3.12.7',
+  javascript: 'nodejs-20.17.0',
+  typescript: 'typescript-5.6.2',
+  rust: 'rust-1.82.0',
+  go: 'go-1.23.2',
+  java: 'openjdk-jdk-22+36',
+  c: 'gcc-13.2.0-c',
+  cpp: 'gcc-13.2.0',
+};
+// Add this filename map so Wandbox compiles the right language
+const WANDBOX_FILENAMES: Record<string, string> = {
+  python: 'prog.py',
+  javascript: 'prog.js',
+  typescript: 'prog.ts',
+  rust: 'prog.rs',
+  go: 'prog',
+  java: 'prog.java',
+  c: 'prog.c',
+  cpp: 'prog.cc',
+};
+
 export const codeSnippets: Record<string, string> = {
   python: `# Python — data science starter
 import math
@@ -144,7 +167,9 @@ console.log('Even squares:', squares);
 console.log('Total:', squares.reduce((a, b) => a + b, 0));
 `,
   typescript: `// TypeScript — generics example
-type Result<T> = { ok: true; value: T } | { ok: false; error: string };
+type Result<T> =
+  | { ok: true; value: T }
+  | { ok: false; error: string };
 
 function divide(a: number, b: number): Result<number> {
   if (b === 0) return { ok: false, error: 'Division by zero' };
@@ -155,7 +180,7 @@ const cases: [number, number][] = [[10, 2], [7, 0], [9, 3]];
 
 cases.forEach(([a, b]) => {
   const result = divide(a, b);
-  if (result.ok) {
+  if (result.ok === true) {
     console.log(\`\${a} / \${b} = \${result.value}\`);
   } else {
     console.error(\`Error: \${result.error}\`);
@@ -213,7 +238,7 @@ func main() {
 import java.util.*;
 import java.util.stream.*;
 
-public class Main {
+public class prog {
   public static void main(String[] args) {
     List<Integer> numbers = IntStream.rangeClosed(1, 20)
         .boxed().collect(Collectors.toList());
@@ -297,7 +322,7 @@ const ResizablePanelGroup = ({
   <ResizablePrimitive.PanelGroup
     className={cn(
       'flex h-full w-full data-[panel-group-direction=vertical]:flex-col',
-      className
+      className,
     )}
     {...props}
   />
@@ -317,7 +342,7 @@ const ResizableHandle = ({
       'relative flex w-px items-center justify-center transition-colors duration-200',
       'after:absolute after:inset-y-0 after:left-1/2 after:w-1 after:-translate-x-1/2',
       '[background:var(--divider)] hover:[background:var(--accent-muted)]',
-      className
+      className,
     )}
     {...props}
   >
@@ -426,7 +451,7 @@ function SelectLanguage({
                         'relative flex cursor-pointer select-none items-center gap-2.5 px-3 py-2 transition-colors',
                         active
                           ? 'bg-[color:var(--accent-muted)]'
-                          : 'hover:bg-[color:var(--background)]'
+                          : 'hover:bg-[color:var(--background)]',
                       )
                     }
                   >
@@ -1015,7 +1040,7 @@ export default function Content() {
     setToasts((prev) => [...prev, { id, message, type }]);
     setTimeout(
       () => setToasts((prev) => prev.filter((t) => t.id !== id)),
-      3000
+      3000,
     );
   }, []);
 
@@ -1055,63 +1080,55 @@ export default function Content() {
     const t0 = performance.now();
 
     try {
-      // Step 1: fetch the actual available runtimes so versions always match
-      const runtimesRes = await axios.get(
-        'https://emkc.org/api/v2/piston/runtimes'
-      );
-      const runtimes: {
-        language: string;
-        version: string;
-        aliases: string[];
-      }[] = runtimesRes.data;
-
-      // Find the best matching runtime for the selected language
-      const match = runtimes.find(
-        (r) =>
-          r.language === language.language ||
-          r.aliases?.includes(language.language)
-      );
-
-      if (!match) {
-        const available = runtimes.map((r) => r.language).join(', ');
+      const compiler = WANDBOX_COMPILERS[language.language];
+      if (!compiler) {
         setOutput([
-          `Language "${language.language}" not found on Piston.`,
-          `Available: ${available}`,
+          `No Wandbox compiler configured for "${language.language}".`,
         ]);
         setStatus('error');
-        addToast('Language not available', 'error');
+        addToast('Language not configured', 'error');
         return;
       }
 
-      // Step 2: execute with the live version
-      const res = await axios.post('https://emkc.org/api/v2/piston/execute', {
-        language: match.language,
-        version: match.version,
-        files: [{ name: `main.${language.language}`, content: sourceCode }],
+      const body: Record<string, string> = {
+        compiler,
+        code: sourceCode,
+      };
+
+      const filename = WANDBOX_FILENAMES[language.language];
+      if (filename) body.filename = filename;
+
+      const res = await axios.post<{
+        status: number;
+        program_output?: string;
+        program_error?: string;
+        compiler_output?: string;
+        compiler_error?: string;
+      }>('https://wandbox.org/api/compile.json', body, {
+        headers: { 'Content-Type': 'application/json' },
       });
 
       const elapsed = Math.round(performance.now() - t0);
-      const run = res.data.run;
+      const d = res.data;
 
-      // Combine stdout + stderr (Piston puts compile errors in compile.stderr)
-      const compile = res.data.compile;
+      // Merge all output streams: compiler messages first, then runtime output
       const rawOutput = [
-        compile?.output ?? '',
-        compile?.stderr ?? '',
-        run.output ?? '',
+        d.compiler_output ?? '',
+        d.compiler_error ?? '',
+        d.program_output ?? '',
+        d.program_error ?? '',
       ]
         .join('')
         .trimEnd();
 
       const lines =
         rawOutput.length > 0 ? rawOutput.split('\n') : ['(no output)'];
-
       setOutput(lines);
       setExecTime(elapsed);
 
-      if (run.code !== 0) {
+      if (Number(d.status) !== 0) {
         setStatus('error');
-        addToast(`Exited with code ${run.code}`, 'error');
+        addToast(`Exited with code ${d.status}`, 'error');
       } else {
         setStatus('success');
         addToast(`Executed in ${elapsed}ms`, 'success');
@@ -1120,23 +1137,18 @@ export default function Content() {
       const elapsed = Math.round(performance.now() - t0);
       setExecTime(elapsed);
 
-      // Surface the real error instead of hiding it
+      const httpStatus = err?.response?.status;
       const detail =
-        err?.response?.data?.message ??
+        err?.response?.data?.error ??
         err?.response?.data ??
         err?.message ??
         'Unknown error';
 
-      const status = err?.response?.status;
-
       setOutput([
-        `Network / API error${status ? ` (HTTP ${status})` : ''}:`,
+        `Network / API error${httpStatus ? ` (HTTP ${httpStatus})` : ''}:`,
         typeof detail === 'string' ? detail : JSON.stringify(detail, null, 2),
-        '',
-        'Check the browser console for the full response.',
       ]);
-      console.error('[Piston] Execution error:', err?.response ?? err);
-
+      console.error('[Wandbox] Execution error:', err?.response ?? err);
       setStatus('error');
       addToast('Execution failed — see output for details', 'error');
     }
