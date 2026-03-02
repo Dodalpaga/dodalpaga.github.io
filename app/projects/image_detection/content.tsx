@@ -393,6 +393,7 @@ export default function ImageSegmentation() {
           sx={{
             flex: 2,
             minWidth: 220,
+            minHeight: 0,
             ...projectPaperSx,
             display: 'flex',
             alignItems: 'center',
@@ -406,9 +407,12 @@ export default function ImageSegmentation() {
               src={uploadedImage}
               alt="Uploaded"
               style={{
-                maxWidth: '100%',
-                maxHeight: '100%',
+                width: '100%',
+                height: '100%',
                 objectFit: 'contain',
+                position: 'absolute',
+                top: 0,
+                left: 0,
               }}
             />
           ) : (
@@ -426,6 +430,7 @@ export default function ImageSegmentation() {
           sx={{
             flex: 2,
             minWidth: 220,
+            minHeight: 0,
             ...projectPaperSx,
             display: 'flex',
             alignItems: 'center',
@@ -457,9 +462,12 @@ export default function ImageSegmentation() {
                 src={processedImage}
                 alt="Processed"
                 style={{
-                  maxWidth: '100%',
-                  maxHeight: '100%',
+                  width: '100%',
+                  height: '100%',
                   objectFit: 'contain',
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
                 }}
               />
               <Box sx={{ position: 'absolute', top: 10, left: 12, ...badgeSx }}>
