@@ -110,15 +110,6 @@ const apps: App[] = [
     tags: ['ML', 'Interactive'],
   },
   {
-    title: 'ISS Tracker',
-    image: `/images/iss-artwork.png`,
-    link: '/projects/iss',
-    target: '',
-    description:
-      'Live ISS position, crew on board, docked spacecraft, and more.',
-    tags: ['Space', 'Live Data'],
-  },
-  {
     title: 'Jupyter Notebooks',
     image: `/images/jupyter.jpg`,
     link: '/projects/notebooks',
@@ -250,15 +241,6 @@ const apps: App[] = [
     description:
       'Website for the Saint-Orens Volleyball Club — competitive and recreational teams.',
     tags: ['Web', 'External'],
-  },
-  {
-    title: 'Template',
-    image: `/images/template.png`,
-    link: '/projects/template',
-    target: '',
-    description:
-      'A flexible project template to quickly kickstart various use cases.',
-    tags: ['Dev Tool'],
   },
 ];
 
