@@ -3,7 +3,7 @@
 import React from 'react';
 import NavBar from '@/components/navbar';
 import Footer from '@/components/footer';
-import Content from './content';
+import PrivacyPolicy from './content';
 import Loading from '@/components/loading';
 
 export default function Projects() {
@@ -25,7 +25,7 @@ export default function Projects() {
         <NavBar />
       </div>
       <div className="flex flex-col items-center justify-start p-4 flex-grow">
-        {isLoading ? <Loading /> : <Content />}
+        {isLoading ? <Loading /> : <PrivacyPolicy />}
       </div>
       <Footer brandName="Dorian Voydie" />
     </main>
