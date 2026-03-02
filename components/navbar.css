@@ -1,16 +1,184 @@
+/* ============================================================
+   NAVBAR — Glass morphism + fully responsive
+   ============================================================ */
+
 .navbar {
-  background-color: var(--background) !important;
-  position: fixed;
-  color: var(--foreground);
-  margin: 10px;
+  background-color: var(--background-transparent) !important;
+  backdrop-filter: blur(20px) saturate(1.6) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(1.6) !important;
+  position: fixed !important;
+  color: var(--foreground) !important;
+  top: 10px !important;
+  left: 10px !important;
+  right: 10px !important;
   width: calc(100% - 20px) !important;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s ease;
+  border-radius: 14px !important;
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.18),
+    0 1px 0 var(--card-border) !important;
+  border: 1px solid var(--card-border) !important;
+  transition:
+    box-shadow 0.3s ease,
+    background-color 0.25s ease !important;
+  z-index: 1000 !important;
 }
 
-@media (max-width: 500px) {
+.navbar .MuiToolbar-root {
+  min-height: 56px !important;
+  padding: 0 16px !important;
+}
+
+.brandName {
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+  white-space: nowrap;
+}
+
+/* Desktop nav links wrapper */
+.navbar-desktop-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Mobile hamburger — hidden by default on desktop */
+.navbar-menu-btn {
+  display: none !important;
+  color: var(--foreground) !important;
+}
+
+/* ── Mobile dropdown drawer ───────────────────────────────── */
+.navbar-mobile-drawer {
+  display: none;
+  position: fixed;
+  top: 80px;
+  left: 10px;
+  right: 10px;
+  background: var(--background-elevated);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.24);
+  z-index: 999;
+  overflow: hidden;
+  transform-origin: top center;
+  animation: drawerOpen 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.navbar-mobile-drawer.open {
+  display: block;
+}
+
+@keyframes drawerOpen {
+  from {
+    opacity: 0;
+    transform: scaleY(0.92) translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: scaleY(1) translateY(0);
+  }
+}
+
+.navbar-mobile-links {
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  gap: 2px;
+}
+
+.navbar-mobile-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  color: var(--foreground-2);
+  text-decoration: none;
+  font-family: var(--font-plus-jakarta), sans-serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.navbar-mobile-link:hover {
+  background-color: var(--accent-muted);
+  color: var(--accent);
+  opacity: 1;
+}
+
+.navbar-mobile-link-icon {
+  font-size: 1rem;
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.navbar-mobile-divider {
+  height: 1px;
+  background: var(--divider);
+  margin: 4px 8px;
+}
+
+.navbar-mobile-theme-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px 14px;
+}
+
+.navbar-mobile-theme-label {
+  font-family: var(--font-dm-mono), monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--foreground-muted);
+}
+
+/* Scrim behind mobile menu */
+.navbar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 998;
+  background: rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.15s ease both;
+}
+
+.navbar-overlay.open {
+  display: block;
+}
+
+/* ── Breakpoints ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .navbar-desktop-links {
+    display: none;
+  }
+
+  .navbar-menu-btn {
+    display: flex !important;
+  }
+
   .brandName {
-    display: none !important;
+    font-size: 0.9rem !important;
+  }
+}
+
+@media (max-width: 400px) {
+  .navbar {
+    top: 6px !important;
+    left: 6px !important;
+    right: 6px !important;
+    width: calc(100% - 12px) !important;
+    border-radius: 12px !important;
+  }
+
+  .navbar-mobile-drawer {
+    top: 72px;
+    left: 6px;
+    right: 6px;
   }
 }

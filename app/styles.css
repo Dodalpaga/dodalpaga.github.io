@@ -1,13 +1,8 @@
-/* app/styles.css */
-
 /* ============================================================
    BLUEPRINT PHOTO — CSS CUSTOM PROPERTIES (theme-aware)
-   These inherit from your existing :root / [data-theme="dark"]
-   or whatever mechanism you use for light/dark mode.
    ============================================================ */
 
 :root {
-  /* Light mode defaults */
   --blueprint-accent: rgba(37, 99, 180, 0.75);
   --blueprint-line: rgba(37, 99, 180, 0.28);
   --blueprint-line-faint: rgba(37, 99, 180, 0.12);
@@ -17,7 +12,6 @@
   --blueprint-chip-color: rgba(37, 99, 180, 0.9);
 }
 
-/* Dark mode — adjust selector to match your existing theme toggle */
 .dark,
 [data-theme='dark'],
 [class*='dark'] {
@@ -38,6 +32,10 @@
   position: relative;
   flex-shrink: 0;
   cursor: crosshair;
+  /* Responsive: width driven by CSS, height follows aspect ratio */
+  width: min(420px, 90vw);
+  height: auto;
+  aspect-ratio: 420 / 560;
 }
 
 /* SVG layers */
@@ -45,6 +43,8 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
+  width: 100%;
+  height: 100%;
 }
 .blueprint-svg--back {
   z-index: 0;
@@ -56,10 +56,11 @@
 /* Photo wrapper */
 .blueprint-photo__img-wrap {
   position: absolute;
-  top: 28px;
-  left: 28px;
-  right: 28px;
-  bottom: 54px;
+  /* These are proportional to the original 420×560 canvas */
+  top: 5%;
+  left: 6.7%;
+  right: 6.7%;
+  bottom: 9.6%;
   border-radius: 3px;
   overflow: hidden;
   box-shadow:
@@ -78,7 +79,6 @@
   transition: transform 0.4s ease-out;
 }
 
-/* Gradient fade overlays — use var(--background) so they match the page bg */
 .blueprint-photo__fade {
   position: absolute;
   inset: 0;
@@ -121,18 +121,19 @@
 }
 
 /* ============================================================
-   HOME PAGE HERO LAYOUT  — bigger, better proportioned
+   HOME PAGE HERO LAYOUT
    ============================================================ */
 
 .home-hero {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: auto 1fr;
   gap: 56px;
   align-items: center;
   justify-items: center;
   width: 100%;
   max-width: 1280px;
   padding: 0 32px;
+  box-sizing: border-box;
 }
 
 .home-nav-links {
@@ -140,6 +141,8 @@
   flex-direction: column;
   gap: 14px;
   width: 100%;
+  /* Prevent overflow */
+  min-width: 0;
 }
 
 .home-nav-link {
@@ -158,6 +161,9 @@
   cursor: pointer;
   position: relative;
   overflow: hidden;
+  /* Prevent text from overflowing card */
+  min-width: 0;
+  word-break: break-word;
 }
 
 .home-nav-link::after {
@@ -173,6 +179,7 @@
   transform: translateX(6px);
   box-shadow: var(--card-shadow-hover);
   border-color: var(--accent-muted);
+  opacity: 1;
 }
 
 .home-nav-link:hover::after {
@@ -206,6 +213,8 @@
   line-height: 1.5;
   position: relative;
   z-index: 1;
+  /* Leave room for arrow */
+  padding-right: 28px;
 }
 
 .home-nav-link .arrow {
@@ -239,6 +248,7 @@
   border: 1px solid var(--card-border);
   background: var(--background-elevated);
   box-shadow: var(--card-shadow);
+  box-sizing: border-box;
 }
 
 .api-section-header {
@@ -254,6 +264,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
+  flex-shrink: 0;
 }
 
 .api-section-body {
@@ -290,24 +301,63 @@
    RESPONSIVE
    ============================================================ */
 
-@media (max-width: 1024px) {
+/* Tablet — collapse side by side into stacked */
+@media (max-width: 900px) {
   .home-hero {
     grid-template-columns: 1fr;
-    gap: 36px;
+    gap: 32px;
     padding: 0 20px;
+    justify-items: center;
+  }
+
+  .blueprint-photo {
+    width: min(360px, 85vw);
+  }
+
+  .home-nav-links {
+    gap: 12px;
   }
 }
 
+/* Mobile */
 @media (max-width: 600px) {
+  .home-hero {
+    gap: 24px;
+    padding: 0 16px;
+  }
+
+  .blueprint-photo {
+    width: min(320px, 82vw);
+  }
+
   .home-nav-link {
     padding: 16px 18px;
   }
 
   .home-nav-link h2 {
-    font-size: 1.2rem;
+    font-size: 1.15rem;
+  }
+
+  .home-nav-link p {
+    font-size: 0.82rem;
   }
 
   .blueprint-chip {
-    display: none; /* hide side chips on mobile, they'd overflow */
+    display: none; /* side chips would overflow at small widths */
+  }
+}
+
+/* Small mobile */
+@media (max-width: 380px) {
+  .home-hero {
+    padding: 0 12px;
+  }
+
+  .blueprint-photo {
+    width: min(290px, 88vw);
+  }
+
+  .home-nav-link h2 {
+    font-size: 1.05rem;
   }
 }

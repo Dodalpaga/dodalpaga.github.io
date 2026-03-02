@@ -1,6 +1,5 @@
-// components/NavBar.tsx
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -11,173 +10,235 @@ import { List, ListItem, ListItemText, IconButton } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
+import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
 import { useThemeContext } from '@/context/ThemeContext';
 import './navbar.css';
+
+const NAV_ITEMS = [
+  { label: 'Profile', href: '/profile' },
+  { label: 'Projects', href: '/projects' },
+  { label: 'Blog', href: '/blog' },
+];
 
 const NavLink = styled(ListItem)(() => ({
   textTransform: 'capitalize',
   color: 'inherit',
   cursor: 'pointer',
+  borderRadius: '8px',
+  padding: '6px 12px',
   '&:hover': {
-    backgroundColor: '#f0f0f0',
+    backgroundColor: 'var(--accent-muted)',
+    color: 'var(--accent)',
   },
 }));
 
 const NavBar = () => {
   const { theme, toggleTheme } = useThemeContext();
   const [isClient, setIsClient] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const drawerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  // logo-dark.png on light background, logo-light.png on dark background
+  // Close menu on outside click
+  useEffect(() => {
+    if (!menuOpen) return;
+    const handler = (e: MouseEvent) => {
+      if (
+        drawerRef.current &&
+        !drawerRef.current.contains(e.target as Node) &&
+        !(e.target as Element).closest('.navbar-menu-btn')
+      ) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [menuOpen]);
+
+  // Close on route change / resize to desktop
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 768) setMenuOpen(false);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const logoSrc = isClient
     ? theme === 'light'
       ? '/images/logo/logo-dark.png'
       : '/images/logo/logo-light.png'
-    : '/images/logo/logo-dark.png'; // SSR default
+    : '/images/logo/logo-dark.png';
 
   return (
-    <AppBar className="navbar">
-      <Toolbar>
-        <Link
-          href="/"
-          passHref
-          style={{ textDecoration: 'none', width: '300px' }}
-        >
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              textDecoration: 'none',
-              color: 'inherit',
-            }}
+    <>
+      <AppBar className="navbar" elevation={0}>
+        <Toolbar>
+          {/* ── Brand ──────────────────────────────────────── */}
+          <Link
+            href="/"
+            passHref
+            style={{ textDecoration: 'none', flexShrink: 0 }}
           >
-            <Image
-              src={logoSrc}
-              alt="Logo"
-              width={60}
-              height={60}
-              style={{
-                marginRight: 8,
-                padding: '10px',
-              }}
-            />
+            <Box
+              sx={{ display: 'flex', alignItems: 'center', color: 'inherit' }}
+            >
+              <Image
+                src={logoSrc}
+                alt="Logo"
+                width={44}
+                height={44}
+                style={{ marginRight: 8, padding: '6px' }}
+              />
+              <Typography
+                variant="h6"
+                component="div"
+                className="brandName"
+                noWrap
+                sx={{ color: 'var(--foreground)' }}
+              >
+                Dorian VOYDIE
+              </Typography>
+            </Box>
+          </Link>
 
-            <Typography
-              variant="h6"
-              component="div"
-              className="brandName"
-              noWrap={true}
+          <Box sx={{ flexGrow: 1 }} />
+
+          {/* ── Desktop nav ────────────────────────────────── */}
+          <Box className="navbar-desktop-links">
+            <List sx={{ display: 'flex', p: 0, gap: '2px' }}>
+              {NAV_ITEMS.map(({ label, href }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  passHref
+                  style={{
+                    textDecoration: 'none',
+                    color: 'var(--foreground-2)',
+                  }}
+                >
+                  <NavLink
+                    sx={{
+                      '&:hover': {
+                        backgroundColor: 'var(--accent-muted)',
+                        color: 'var(--accent)',
+                      },
+                    }}
+                  >
+                    <ListItemText
+                      primary={label}
+                      primaryTypographyProps={{
+                        fontSize: '0.9rem',
+                        fontWeight: 500,
+                      }}
+                    />
+                  </NavLink>
+                </Link>
+              ))}
+            </List>
+
+            <IconButton
+              onClick={toggleTheme}
               sx={{
-                color: 'var(--foreground)',
+                ml: 0.5,
+                color: 'var(--foreground-2)',
+                borderRadius: '8px',
+                '&:hover': {
+                  backgroundColor: 'var(--accent-muted)',
+                  color: 'var(--accent)',
+                },
               }}
             >
-              Dorian VOYDIE
-            </Typography>
+              {isClient ? (
+                theme === 'light' ? (
+                  <DarkModeIcon />
+                ) : (
+                  <LightModeIcon />
+                )
+              ) : null}
+            </IconButton>
           </Box>
-        </Link>
-        <Box
-          sx={{
-            flexGrow: 1,
-            display: 'flex',
-            ml: 2,
-            justifyContent: 'right',
-            alignItems: 'center',
-            width: '100%',
-          }}
-        >
-          <List sx={{ display: 'flex' }}>
-            {['Profile'].map((text) => (
-              <Link
-                key={text}
-                href={`/${text.toLowerCase().replace(' ', '')}`}
-                passHref
-                style={{
-                  textDecoration: 'none',
-                  color: 'var(--foreground-2)',
-                }}
-              >
-                <NavLink
-                  sx={{
-                    '&:hover': {
-                      backgroundColor: 'var(--background-2)',
-                    },
-                  }}
-                >
-                  <ListItemText primary={text} />
-                </NavLink>
-              </Link>
-            ))}
-          </List>
-          <List sx={{ display: 'flex' }}>
-            {['Projects'].map((text) => (
-              <Link
-                key={text}
-                href={`/${text.toLowerCase().replace(' ', '')}`}
-                passHref
-                style={{
-                  textDecoration: 'none',
-                  color: 'var(--foreground-2)',
-                }}
-              >
-                <NavLink
-                  sx={{
-                    '&:hover': {
-                      backgroundColor: 'var(--background-2)',
-                    },
-                  }}
-                >
-                  <ListItemText primary={text} />
-                </NavLink>
-              </Link>
-            ))}
-          </List>
-          <List sx={{ display: 'flex' }}>
-            {['Blog'].map((text) => (
-              <Link
-                key={text}
-                href={`/${text.toLowerCase().replace(' ', '')}`}
-                passHref
-                style={{
-                  textDecoration: 'none',
-                  color: 'var(--foreground-2)',
-                }}
-              >
-                <NavLink
-                  sx={{
-                    '&:hover': {
-                      backgroundColor: 'var(--background-2)',
-                    },
-                  }}
-                >
-                  <ListItemText primary={text} />
-                </NavLink>
-              </Link>
-            ))}
-          </List>
+
+          {/* ── Mobile hamburger ───────────────────────────── */}
+          <IconButton
+            className="navbar-menu-btn"
+            onClick={() => setMenuOpen((v) => !v)}
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            sx={{
+              borderRadius: '8px',
+              '&:hover': { backgroundColor: 'var(--accent-muted)' },
+            }}
+          >
+            {menuOpen ? <CloseIcon /> : <MenuIcon />}
+          </IconButton>
+        </Toolbar>
+      </AppBar>
+
+      {/* ── Mobile overlay scrim ───────────────────────────── */}
+      <div
+        className={`navbar-overlay${menuOpen ? ' open' : ''}`}
+        onClick={() => setMenuOpen(false)}
+      />
+
+      {/* ── Mobile dropdown drawer ─────────────────────────── */}
+      <div
+        ref={drawerRef}
+        className={`navbar-mobile-drawer${menuOpen ? ' open' : ''}`}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Navigation menu"
+      >
+        <div className="navbar-mobile-links">
+          {NAV_ITEMS.map(({ label, href }) => (
+            <Link
+              key={href}
+              href={href}
+              className="navbar-mobile-link"
+              onClick={() => setMenuOpen(false)}
+            >
+              {label}
+            </Link>
+          ))}
+        </div>
+
+        <div className="navbar-mobile-divider" />
+
+        <div className="navbar-mobile-theme-row">
+          <span className="navbar-mobile-theme-label">
+            {isClient
+              ? theme === 'light'
+                ? 'Light mode'
+                : 'Dark mode'
+              : 'Theme'}
+          </span>
           <IconButton
             onClick={toggleTheme}
-            className="w-12 h-12 rounded-full flex items-center justify-center"
+            size="small"
             sx={{
-              '&:hover': {
-                backgroundColor: 'var(--background-2)',
-              },
               color: 'var(--foreground-2)',
+              borderRadius: '8px',
+              border: '1px solid var(--card-border)',
+              '&:hover': {
+                backgroundColor: 'var(--accent-muted)',
+                color: 'var(--accent)',
+              },
             }}
           >
             {isClient ? (
               theme === 'light' ? (
-                <DarkModeIcon />
+                <DarkModeIcon fontSize="small" />
               ) : (
-                <LightModeIcon />
+                <LightModeIcon fontSize="small" />
               )
             ) : null}
           </IconButton>
-        </Box>
-      </Toolbar>
-    </AppBar>
+        </div>
+      </div>
+    </>
   );
 };
 

@@ -53,6 +53,7 @@ function BlueprintPhoto() {
   };
   const handleMouseLeave = () => setMousePos({ x: 0.5, y: 0.5 });
 
+  // All coordinates use the original 420×560 viewBox — SVG scales automatically
   const W = 420,
     H = 560,
     CELL = 22,
@@ -75,12 +76,12 @@ function BlueprintPhoto() {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       className="blueprint-photo"
-      style={{ width: W, height: H }}
+      // No inline width/height — fully controlled by CSS
     >
-      {/* ── Grid SVG (behind photo) ─────────────────────────────── */}
+      {/* ── Grid SVG (behind photo) ─────────────────────────── */}
       <svg
-        width={W}
-        height={H}
+        viewBox={`0 0 ${W} ${H}`}
+        preserveAspectRatio="xMidYMid meet"
         className="blueprint-svg blueprint-svg--back"
         xmlns="http://www.w3.org/2000/svg"
       >
@@ -445,7 +446,7 @@ function BlueprintPhoto() {
         />
       </svg>
 
-      {/* ── Photo layer ──────────────────────────────────────────── */}
+      {/* ── Photo layer ──────────────────────────────────────── */}
       <div
         className="blueprint-photo__img-wrap"
         style={{
@@ -461,15 +462,12 @@ function BlueprintPhoto() {
             transform: `translate(${px * 0.55}px,${py * 0.55}px) scale(1.02)`,
           }}
         />
-        <div className="blueprint-photo__fade blueprint-photo__fade--bottom" />
-        <div className="blueprint-photo__fade blueprint-photo__fade--sides" />
-        <div className="blueprint-photo__fade blueprint-photo__fade--top" />
       </div>
 
-      {/* ── Frame + status bar SVG (front) ──────────────────────── */}
+      {/* ── Frame + status bar SVG (front) ───────────────────── */}
       <svg
-        width={W}
-        height={H}
+        viewBox={`0 0 ${W} ${H}`}
+        preserveAspectRatio="xMidYMid meet"
         className="blueprint-svg blueprint-svg--front"
         xmlns="http://www.w3.org/2000/svg"
       >
@@ -552,19 +550,19 @@ function BlueprintPhoto() {
           opacity="0.35"
         />
 
-        {/* Final edge fades — theme-aware, sit on very top */}
+        {/* Final edge fades */}
         <defs>
           <linearGradient id="lf2" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0px" stopColor="var(--background)" stopOpacity="1" />
-            <stop offset="20px" stopColor="var(--background)" stopOpacity="0" />
+            <stop offset="0" stopColor="var(--background)" stopOpacity="1" />
+            <stop offset="20" stopColor="var(--background)" stopOpacity="0" />
           </linearGradient>
           <linearGradient id="rf2" x1="0" y1="0" x2="1" y2="0">
             <stop offset="0%" stopColor="var(--background)" stopOpacity="0" />
             <stop offset="100%" stopColor="var(--background)" stopOpacity="1" />
           </linearGradient>
           <linearGradient id="tf2" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0px" stopColor="var(--background)" stopOpacity="1" />
-            <stop offset="20px" stopColor="var(--background)" stopOpacity="0" />
+            <stop offset="0" stopColor="var(--background)" stopOpacity="1" />
+            <stop offset="20" stopColor="var(--background)" stopOpacity="0" />
           </linearGradient>
         </defs>
         <rect x={0} y={0} width={20} height={H} fill="url(#lf2)" />
@@ -572,20 +570,20 @@ function BlueprintPhoto() {
         <rect x={0} y={0} width={W} height={20} fill="url(#tf2)" />
       </svg>
 
-      {/* ── Floating tech chips ──────────────────────────────────── */}
+      {/* ── Floating tech chips ──────────────────────────────── */}
       {[
-        { label: 'Python', side: 'left', top: 80, delay: '0s' },
-        { label: 'GenAI', side: 'left', top: 210, delay: '0.4s' },
-        { label: 'FastAPI', side: 'left', top: 340, delay: '0.8s' },
-        { label: 'React', side: 'right', top: 110, delay: '0.2s' },
-        { label: 'Docker', side: 'right', top: 245, delay: '0.6s' },
-        { label: 'ML Ops', side: 'right', top: 375, delay: '1s' },
+        { label: 'Python', side: 'left', pct: 14, delay: '0s' },
+        { label: 'GenAI', side: 'left', pct: 38, delay: '0.4s' },
+        { label: 'FastAPI', side: 'left', pct: 61, delay: '0.8s' },
+        { label: 'React', side: 'right', pct: 20, delay: '0.2s' },
+        { label: 'Docker', side: 'right', pct: 44, delay: '0.6s' },
+        { label: 'ML Ops', side: 'right', pct: 67, delay: '1s' },
       ].map((chip) => (
         <div
           key={chip.label}
           className="blueprint-chip"
           style={{
-            top: chip.top,
+            top: `${chip.pct}%`,
             left: chip.side === 'left' ? -2 : undefined,
             right: chip.side === 'right' ? -2 : undefined,
             animationDelay: chip.delay,
