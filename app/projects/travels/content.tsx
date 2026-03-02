@@ -1,19 +1,20 @@
 // app/projects/travels/content.tsx
-
 import * as React from 'react';
 import { useRef, useCallback, useState, useEffect } from 'react';
-import Container from '@mui/material/Container';
 import { Map, MapRef, Source, Layer, LayerProps } from '@vis.gl/react-maplibre';
 import { Marker, Popup } from '@vis.gl/react-maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import ControlPanel from './control-panel';
 import Carousel from '@/components/carousel';
+import { useThemeContext } from '@/context/ThemeContext';
+import './styles.css';
 
 const MAPTILER_KEY = process.env.NEXT_PUBLIC_MAPTILER_API_KEY;
-const initialViewState = {
-  latitude: 46.88430942721118,
-  longitude: 2.5873182849049954,
-  zoom: 2.5,
+
+const INITIAL_VIEW_STATE = {
+  latitude: 20,
+  longitude: 10,
+  zoom: 1.8,
   bearing: 0,
   pitch: 0,
 };
@@ -24,185 +25,210 @@ interface CountrySelectEvent {
   zoom: number;
 }
 
+// ⚠️ MapLibre paint properties only accept literal color values — CSS variables won't work here
+const VISITED_FILL = '#22c55e'; // green
+const UNVISITED_FILL = '#f97316'; // orange
+const VISITED_BORDER = '#16a34a';
+const UNVISITED_BORDER = '#ea580c';
+
 export default function Content() {
   const mapRef = useRef<MapRef | null>(null);
-  const [geojsonData, setGeojsonData] = useState(null);
+  const { theme } = useThemeContext();
+
+  const [geojsonData, setGeojsonData] = useState<any>(null);
   const [visitedCountries, setVisitedCountries] = useState<any[]>([]);
-  const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
+  const [visitedNames, setVisitedNames] = useState<string[]>([]);
   const [memories, setMemories] = useState<any[]>([]);
   const [selectedMemory, setSelectedMemory] = useState<any | null>(null);
-  const [tooltipPosition, setTooltipPosition] = useState<{
-    x: number;
-    y: number;
-  } | null>(null);
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
+  const [mapReady, setMapReady] = useState(false);
 
   const onSelectCountry = useCallback(
     ({ longitude, latitude, zoom }: CountrySelectEvent) => {
       mapRef.current?.flyTo({
         center: [longitude, latitude],
-        zoom: zoom,
+        zoom,
         duration: 2000,
+        essential: true,
       });
+      setIsPanelOpen(false);
     },
     [],
   );
 
   useEffect(() => {
-    const fetchGeoJSON = async () => {
-      try {
-        const response = await fetch('/data/countries.geojson');
-        const data = await response.json();
-        setGeojsonData(data);
-      } catch (error) {
-        console.error('Error fetching geojson countries:', error);
-      }
-    };
-
-    fetchGeoJSON();
+    fetch('/data/countries.geojson')
+      .then((r) => r.json())
+      .then(setGeojsonData)
+      .catch(console.error);
   }, []);
 
   useEffect(() => {
-    const fetchVisitedCountries = async () => {
-      try {
-        const response = await fetch('/data/countries.json');
-        const data = await response.json();
+    fetch('/data/countries.json')
+      .then((r) => r.json())
+      .then((data) => {
         setVisitedCountries(data);
-      } catch (error) {
-        console.error('Error fetching visited countries:', error);
-      }
-    };
-
-    fetchVisitedCountries();
+        // Pre-derive the name list — used in MapLibre's ['literal', [...]] expression
+        setVisitedNames(data.map((c: any) => c.country));
+      })
+      .catch(console.error);
   }, []);
 
   useEffect(() => {
-    const fetchMemories = async () => {
-      try {
-        const response = await fetch('/data/memories.json');
-        const data = await response.json();
-        setMemories(data);
-      } catch (error) {
-        console.error('Error fetching memories:', error);
-      }
-    };
-
-    fetchMemories();
+    fetch('/data/memories.json')
+      .then((r) => r.json())
+      .then(setMemories)
+      .catch(console.error);
   }, []);
 
-  const layerStyle: LayerProps = {
-    id: 'countries-layer',
+  // Rebuild layer specs only when visited list changes (visitedNames is derived together)
+  const fillLayerStyle: LayerProps = {
+    id: 'countries-fill',
     type: 'fill',
     paint: {
       'fill-color': [
         'case',
-        [
-          'in',
-          ['get', 'ADMIN'],
-          ['literal', visitedCountries.map((country) => country.country)],
-        ],
-        '#00FF00',
-        '#ff8000',
+        ['in', ['get', 'ADMIN'], ['literal', visitedNames]],
+        VISITED_FILL,
+        UNVISITED_FILL,
       ],
-      'fill-opacity': 0.5,
+      'fill-opacity': 0.45,
     },
   };
 
-  // Function to handle mouse move over the map
-  const onHover = (event: any) => {
-    const { features, point } = event;
-
-    if (features && features.length > 0) {
-      const countryName = features[0].properties.ADMIN;
-      const countryInfo = visitedCountries.find(
-        (c) => c.country === countryName,
-      );
-
-      if (countryInfo) {
-        setHoveredCountry(countryInfo.description);
-        setTooltipPosition({ x: point.x, y: point.y });
-      } else {
-        // If the country is not in the visited list, clear the tooltip
-        setHoveredCountry(null);
-        setTooltipPosition(null);
-      }
-    } else {
-      // If hovering over the sea, clear the tooltip
-      setHoveredCountry(null);
-      setTooltipPosition(null);
-    }
+  const borderLayerStyle: LayerProps = {
+    id: 'countries-border',
+    type: 'line',
+    paint: {
+      'line-color': [
+        'case',
+        ['in', ['get', 'ADMIN'], ['literal', visitedNames]],
+        VISITED_BORDER,
+        UNVISITED_BORDER,
+      ],
+      'line-width': 0.8,
+      'line-opacity': 0.6,
+    },
   };
 
+  const mapStyle =
+    theme === 'dark'
+      ? `https://api.maptiler.com/maps/dataviz-dark/style.json?key=${MAPTILER_KEY}`
+      : `https://api.maptiler.com/maps/dataviz/style.json?key=${MAPTILER_KEY}`;
+
   return (
-    <Container
-      maxWidth={false}
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        flexDirection: 'row',
-        justifyContent: 'center',
-        height: '100%',
-      }}
-    >
-      <Map
-        ref={mapRef}
-        initialViewState={initialViewState}
-        mapStyle={`https://api.maptiler.com/maps/dataviz/style.json?key=${MAPTILER_KEY}`}
-        interactiveLayerIds={['countries-layer']}
-        // onMouseMove={onHover}
-      >
-        {geojsonData && (
-          <Source id="countries-data" type="geojson" data={geojsonData}>
-            <Layer {...layerStyle} />
-          </Source>
-        )}
-        <React.Fragment>
-          {memories.map((memory) => (
-            <Marker
-              key={memory.city}
-              longitude={memory.longitude}
-              latitude={memory.latitude}
-            >
-              <div
-                style={{ cursor: 'pointer' }}
-                onClick={(event) => {
-                  event.stopPropagation();
-                  console.log('Marker clicked:', memory);
-                  setSelectedMemory(memory);
-                }}
-              >
-                📍
-              </div>
-            </Marker>
-          ))}
-        </React.Fragment>
-
-        {selectedMemory && (
-          <Popup
-            longitude={selectedMemory.longitude}
-            latitude={selectedMemory.latitude}
-            onClose={() => setSelectedMemory(null)}
-            className="popup-carousel"
-          >
-            <div className="popup-title">{selectedMemory.city}</div>
-            <Carousel images={selectedMemory.images} />
-          </Popup>
-        )}
-      </Map>
-
-      {hoveredCountry && tooltipPosition && (
-        <div
-          className="hover-description"
-          style={{
-            position: 'absolute',
-            left: `${tooltipPosition.x + 30}px`, // Align to the right of the cursor
-            top: `${tooltipPosition.y + 20}px`, // Position slightly below the mouse
-          }}
-        >
-          {hoveredCountry}
+    <div className="travels-root">
+      {/* Header */}
+      <div className="travels-header">
+        <div className="travels-header__left">
+          <span className="travels-header__label">TRAVEL MAP</span>
+          <span className="travels-header__sep">/</span>
+          <span className="travels-header__count">
+            {visitedCountries.length > 0
+              ? `${visitedCountries.length} countries visited`
+              : 'Loading…'}
+          </span>
         </div>
-      )}
 
-      <ControlPanel onSelectCountry={onSelectCountry} />
-    </Container>
+        <div className="travels-header__right">
+          {/* Legend */}
+          <span className="travels-legend">
+            <span className="travels-legend__dot travels-legend__dot--visited" />
+            Visited
+          </span>
+          <span className="travels-legend">
+            <span className="travels-legend__dot travels-legend__dot--unvisited" />
+            Not yet
+          </span>
+
+          {/* Mobile panel toggle */}
+          <button
+            className="travels-panel-toggle"
+            onClick={() => setIsPanelOpen((v) => !v)}
+            aria-label="Toggle country list"
+          >
+            <span>{isPanelOpen ? '✕' : '☰'}</span>
+            <span>{isPanelOpen ? 'Close' : 'Countries'}</span>
+          </button>
+        </div>
+      </div>
+
+      <div className="travels-body">
+        {/* Map */}
+        <div className="travels-map">
+          <Map
+            ref={mapRef}
+            initialViewState={INITIAL_VIEW_STATE}
+            mapStyle={mapStyle}
+            interactiveLayerIds={['countries-fill']}
+            onLoad={() => setMapReady(true)}
+          >
+            {geojsonData && (
+              <Source id="countries-data" type="geojson" data={geojsonData}>
+                <Layer {...fillLayerStyle} />
+                <Layer {...borderLayerStyle} />
+              </Source>
+            )}
+
+            {memories.map((memory) => (
+              <Marker
+                key={memory.city}
+                longitude={memory.longitude}
+                latitude={memory.latitude}
+              >
+                <button
+                  className="travels-pin"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedMemory(memory);
+                  }}
+                  aria-label={`Open memories from ${memory.city}`}
+                >
+                  <span className="travels-pin__dot" />
+                  <span className="travels-pin__ring" />
+                </button>
+              </Marker>
+            ))}
+
+            {selectedMemory && (
+              <Popup
+                longitude={selectedMemory.longitude}
+                latitude={selectedMemory.latitude}
+                onClose={() => setSelectedMemory(null)}
+                className="travels-popup"
+                maxWidth="340px"
+                offset={20}
+              >
+                <div className="travels-popup__title">
+                  {selectedMemory.city}
+                </div>
+                <Carousel images={selectedMemory.images} />
+              </Popup>
+            )}
+          </Map>
+
+          {mapReady && (
+            <div className="travels-map-overlay">
+              <span className="travels-map-overlay__dot" />
+              <span>Interactive · Click pins to view memories</span>
+            </div>
+          )}
+        </div>
+
+        {/* Side panel */}
+        <div
+          className={`travels-panel${isPanelOpen ? ' travels-panel--open' : ''}`}
+        >
+          <ControlPanel onSelectCountry={onSelectCountry} />
+        </div>
+
+        {isPanelOpen && (
+          <div
+            className="travels-backdrop"
+            onClick={() => setIsPanelOpen(false)}
+          />
+        )}
+      </div>
+    </div>
   );
 }

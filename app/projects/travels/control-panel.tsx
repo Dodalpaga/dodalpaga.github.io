@@ -1,57 +1,123 @@
+// app/projects/travels/control-panel.tsx
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import './styles.css';
 
-function ControlPanel(props: {
-  onSelectCountry: (arg0: {
-    country: string;
-    continent: string;
-    description: string;
-    latitude: number;
-    longitude: number;
-    zoom: number;
-  }) => void;
-}) {
-  const [countries, setCountries] = useState<any[]>([]);
+interface Country {
+  country: string;
+  continent: string;
+  description: string;
+  latitude: number;
+  longitude: number;
+  zoom: number;
+}
 
-  // Fetch the countries data from /data/countries.json dynamically
+interface ControlPanelProps {
+  onSelectCountry: (country: Country) => void;
+}
+
+function ControlPanel({ onSelectCountry }: ControlPanelProps) {
+  const [countries, setCountries] = useState<Country[]>([]);
+  const [search, setSearch] = useState('');
+  const [activeContinent, setActiveContinent] = useState<string>('All');
+
   useEffect(() => {
     const fetchCountries = async () => {
       try {
         const response = await fetch('/data/countries.json');
         const data = await response.json();
-        setCountries(data); // Set the fetched data into the state
+        setCountries(data);
       } catch (error) {
         console.error('Error fetching countries data:', error);
       }
     };
-
     fetchCountries();
   }, []);
 
-  return (
-    <div className="control-panel">
-      <h1
-        style={{
-          textAlign: 'center',
-          fontSize: '1.2rem',
-          fontWeight: 'bold',
-          marginBottom: '10px',
-        }}
-      >
-        Visited countries
-      </h1>
-      <hr />
+  // Derive unique continents
+  const continents = useMemo(() => {
+    const set = new Set(countries.map((c) => c.continent).filter(Boolean));
+    return ['All', ...Array.from(set).sort()];
+  }, [countries]);
 
-      {countries.map((content, index) => (
-        <div
-          key={`btn-${index}`}
-          className="country-item"
-          onClick={() => props.onSelectCountry(content)}
-        >
-          {content.country}
+  const filtered = useMemo(() => {
+    return countries.filter((c) => {
+      const matchSearch = c.country
+        .toLowerCase()
+        .includes(search.toLowerCase());
+      const matchContinent =
+        activeContinent === 'All' || c.continent === activeContinent;
+      return matchSearch && matchContinent;
+    });
+  }, [countries, search, activeContinent]);
+
+  return (
+    <div className="cp-root">
+      {/* Panel title */}
+      <div className="cp-header">
+        <span className="cp-header__label">VISITED COUNTRIES</span>
+        <span className="cp-header__count">{countries.length}</span>
+      </div>
+
+      {/* Search */}
+      <div className="cp-search-wrap">
+        <span className="cp-search-icon">⌕</span>
+        <input
+          className="cp-search"
+          type="text"
+          placeholder="Search…"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          aria-label="Search countries"
+        />
+        {search && (
+          <button
+            className="cp-search-clear"
+            onClick={() => setSearch('')}
+            aria-label="Clear search"
+          >
+            ✕
+          </button>
+        )}
+      </div>
+
+      {/* Continent filter chips */}
+      {continents.length > 1 && (
+        <div className="cp-chips">
+          {continents.map((c) => (
+            <button
+              key={c}
+              className={`cp-chip${activeContinent === c ? ' cp-chip--active' : ''}`}
+              onClick={() => setActiveContinent(c)}
+            >
+              {c}
+            </button>
+          ))}
         </div>
-      ))}
+      )}
+
+      <hr className="cp-divider" />
+
+      {/* Country list */}
+      <div className="cp-list">
+        {filtered.length === 0 ? (
+          <div className="cp-empty">No results</div>
+        ) : (
+          filtered.map((country, i) => (
+            <button
+              key={`${country.country}-${i}`}
+              className="cp-item"
+              onClick={() => onSelectCountry(country)}
+            >
+              <span className="cp-item__name">{country.country}</span>
+              {country.continent && (
+                <span className="cp-item__continent">{country.continent}</span>
+              )}
+              <span className="cp-item__arrow">→</span>
+            </button>
+          ))
+        )}
+      </div>
     </div>
   );
 }
