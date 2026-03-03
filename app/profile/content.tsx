@@ -21,6 +21,7 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import CodeIcon from '@mui/icons-material/Code';
 import '../globals.css';
 import './styles.css';
+import SkillsSection, { type SkillCategory } from '@/components/skills_section';
 import { useThemeContext } from '@/context/ThemeContext';
 import InfoCard from '@/components/infocard';
 import CustomChip from '@/components/customchip';
@@ -53,10 +54,87 @@ import {
   SiElasticsearch,
   SiKibana,
   SiLogstash,
+  SiTypescript,
+  SiMongodb,
+  SiKubernetes,
+  SiPython,
 } from 'react-icons/si';
 import { VscGraphScatter } from 'react-icons/vsc';
 import { GiHistogram } from 'react-icons/gi';
 import type { IconType } from 'react-icons';
+
+const thalesSkills: SkillCategory[] = [
+  {
+    title: 'Artificial Intelligence',
+    accent: '#ce93d8',
+    skills: [
+      { label: 'Scikit-Learn', Icon: SiScikitlearn },
+      { label: 'TensorFlow', Icon: SiTensorflow },
+      { label: 'PyTorch', Icon: SiPytorch },
+      { label: 'LangChain', Icon: SiLangchain },
+    ],
+  },
+  {
+    title: 'Backend Development',
+    accent: '#80cbc4',
+    skills: [
+      { label: 'Python', Icon: SiPython },
+      { label: 'FastAPI', Icon: SiFastapi },
+      { label: 'Django', Icon: SiDjango },
+      { label: 'Docker', Icon: SiDocker },
+      { label: 'Kubernetes', Icon: SiKubernetes },
+    ],
+  },
+  {
+    title: 'Frontend Development',
+    accent: '#90caf9',
+    skills: [
+      { label: 'Next.js', Icon: SiNextdotjs },
+      { label: 'React', Icon: SiReact },
+      { label: 'Typescript', Icon: SiTypescript },
+    ],
+  },
+  {
+    title: 'Data Management',
+    accent: '#ffcc80',
+    skills: [
+      { label: 'Elasticsearch', Icon: SiElasticsearch },
+      { label: 'Kibana', Icon: SiKibana },
+      { label: 'Logstash', Icon: SiLogstash },
+    ],
+  },
+];
+
+const atosSkills: SkillCategory[] = [
+  {
+    title: 'Embedded Systems',
+    accent: '#a5d6a7',
+    skills: [
+      { label: 'Python', Icon: SiPython },
+      { label: 'Raspberry Pi', Icon: SiRaspberrypi },
+      { label: 'Jetson Nano', Icon: SiNvidia },
+    ],
+  },
+  {
+    title: 'Machine Learning',
+    accent: '#ce93d8',
+    skills: [
+      { label: 'OpenCV', Icon: SiOpencv },
+      // VscGraphScatter & GiHistogram don't fit the new single-Icon interface;
+      // swap for any react-icons icon you prefer, e.g.:
+      { label: 'Data Analysis', Icon: SiPandas },
+      { label: 'Predictive Models', Icon: SiScikitlearn },
+    ],
+  },
+  {
+    title: 'Data Visualization',
+    accent: '#4fc3f7',
+    skills: [
+      { label: 'Dash Plotly', Icon: SiPlotly },
+      { label: 'Grafana', Icon: SiGrafana },
+    ],
+  },
+];
 
 // Helper component to safely render icons
 const SafeIcon: React.FC<{ Icon: IconType; [key: string]: any }> = ({
@@ -429,190 +507,7 @@ export default function Content() {
               </ListItem>
             </List>
 
-            <Stack
-              spacing={{ xs: 1, sm: 2 }}
-              direction="row"
-              useFlexGap
-              sx={{
-                flexWrap: 'wrap',
-                justifyContent: 'center',
-                marginTop: '20px',
-              }}
-            >
-              <Box
-                style={{
-                  textAlign: 'center',
-                  height: 'fit-content',
-                }}
-                sx={{
-                  p: '0 5px',
-                  border: '1px dashed grey',
-                  borderRadius: '15px',
-                }}
-              >
-                <Typography variant="h6">Scientific Development</Typography>
-                <CustomChip
-                  label="Pandas"
-                  icons={[<SafeIcon Icon={SiPandas} key="skill" />]}
-                />
-                <CustomChip
-                  label="Numpy"
-                  icons={[<SafeIcon Icon={SiNumpy} key="skill" />]}
-                />
-                <CustomChip
-                  label="Pytorch"
-                  icons={[<SafeIcon Icon={SiPytorch} key="skill" />]}
-                />
-                <CustomChip
-                  label="Streamlit"
-                  icons={[<SafeIcon Icon={SiStreamlit} key="skill" />]}
-                />
-                <CustomChip
-                  label="Folium"
-                  icons={[<SafeIcon Icon={SiFolium} key="skill" />]}
-                />
-              </Box>
-              <Box
-                style={{
-                  textAlign: 'center',
-                  height: 'fit-content',
-                }}
-                sx={{
-                  p: '0 5px',
-                  border: '1px dashed grey',
-                  borderRadius: '15px',
-                }}
-              >
-                <Typography variant="h6">Software Development</Typography>
-                <CustomChip
-                  label="Django / FastAPI"
-                  icons={[
-                    <SafeIcon Icon={SiFastapi} key="skill1" />,
-                    <SafeIcon Icon={SiDjango} key="skill2" />,
-                  ]}
-                />
-                <CustomChip
-                  label="Docker"
-                  icons={[<SafeIcon Icon={SiDocker} key="skill" />]}
-                />
-                <CustomChip
-                  label="SQL"
-                  icons={[<SafeIcon Icon={SiPostgresql} key="skill" />]}
-                />
-                <CustomChip
-                  label="Prometheus"
-                  icons={[<SafeIcon Icon={SiPrometheus} key="skill" />]}
-                />
-                <CustomChip
-                  label="Postman"
-                  icons={[<SafeIcon Icon={SiPostman} key="skill" />]}
-                />
-                <CustomChip
-                  label="Jenkins"
-                  icons={[<SafeIcon Icon={SiJenkins} key="skill" />]}
-                />
-              </Box>
-              <Box
-                style={{
-                  textAlign: 'center',
-                  height: 'fit-content',
-                }}
-                sx={{
-                  p: '0 5px',
-                  border: '1px dashed grey',
-                  borderRadius: '15px',
-                }}
-              >
-                <Typography variant="h6">Artificial Intelligence</Typography>
-                <CustomChip
-                  label="Scikit Learn"
-                  icons={[<SafeIcon Icon={SiScikitlearn} key="skill" />]}
-                />
-                <CustomChip
-                  label="Tensorflow"
-                  icons={[<SafeIcon Icon={SiTensorflow} key="skill" />]}
-                />
-                <CustomChip
-                  label="LangChain"
-                  icons={[<SafeIcon Icon={SiLangchain} key="skill" />]}
-                />
-              </Box>
-              <Box
-                style={{
-                  textAlign: 'center',
-                  height: 'fit-content',
-                }}
-                sx={{
-                  p: '0 5px',
-                  border: '1px dashed grey',
-                  borderRadius: '15px',
-                }}
-              >
-                <Typography variant="h6">Frontend</Typography>
-                <CustomChip
-                  label="Next.js"
-                  icons={[<SafeIcon Icon={SiNextdotjs} key="skill" />]}
-                />
-                <CustomChip
-                  label="React"
-                  icons={[<SafeIcon Icon={SiReact} key="skill" />]}
-                />
-                <CustomChip
-                  label="Grafana"
-                  icons={[<SafeIcon Icon={SiGrafana} key="skill" />]}
-                />
-              </Box>
-              <Box
-                style={{
-                  textAlign: 'center',
-                  height: 'fit-content',
-                }}
-                sx={{
-                  p: '0 5px',
-                  border: '1px dashed grey',
-                  borderRadius: '15px',
-                }}
-              >
-                <Typography variant="h6">Data Management</Typography>
-                <CustomChip
-                  label="ElasticSearch"
-                  icons={[<SafeIcon Icon={SiElasticsearch} key="skill" />]}
-                />
-                <CustomChip
-                  label="Kibana"
-                  icons={[<SafeIcon Icon={SiKibana} key="skill" />]}
-                />
-                <CustomChip
-                  label="Logstash"
-                  icons={[<SafeIcon Icon={SiLogstash} key="skill" />]}
-                />
-              </Box>
-              <Box
-                style={{
-                  textAlign: 'center',
-                  height: 'fit-content',
-                }}
-                sx={{
-                  p: '0 5px',
-                  border: '1px dashed grey',
-                  borderRadius: '15px',
-                }}
-              >
-                <Typography variant="h6">Projects Management & CICD</Typography>
-                <CustomChip
-                  label="GitLab (& CI)"
-                  icons={[<SafeIcon Icon={SiGitlab} key="skill" />]}
-                />
-                <CustomChip
-                  label="Confluence"
-                  icons={[<SafeIcon Icon={SiConfluence} key="skill" />]}
-                />
-                <CustomChip
-                  label="JIRA"
-                  icons={[<SafeIcon Icon={SiJira} key="skill" />]}
-                />
-              </Box>
-            </Stack>
+            <SkillsSection categories={thalesSkills} />
           </div>
 
           <Divider sx={{ m: 2 }} />
@@ -719,84 +614,7 @@ export default function Content() {
               </Typography>
               .
             </Typography>
-            <Stack
-              spacing={{ xs: 1, sm: 2 }}
-              direction="row"
-              useFlexGap
-              sx={{
-                flexWrap: 'wrap',
-                justifyContent: 'center',
-                marginTop: '20px',
-              }}
-            >
-              <Box
-                style={{
-                  textAlign: 'center',
-                  height: 'fit-content',
-                }}
-                sx={{
-                  p: '0 5px',
-                  border: '1px dashed grey',
-                  borderRadius: '15px',
-                }}
-              >
-                <Typography variant="h6">Embedded Systems</Typography>
-                <CustomChip
-                  label="Raspberry Pi"
-                  icons={[<SafeIcon Icon={SiRaspberrypi} key="skill" />]}
-                />
-                <CustomChip
-                  label="Jetson Nano"
-                  icons={[<SafeIcon Icon={SiNvidia} key="skill" />]}
-                />
-              </Box>
-              <Box
-                style={{
-                  textAlign: 'center',
-                  height: 'fit-content',
-                }}
-                sx={{
-                  p: '0 5px',
-                  border: '1px dashed grey',
-                  borderRadius: '15px',
-                }}
-              >
-                <Typography variant="h6">Machine Learning</Typography>
-                <CustomChip
-                  label="OpenCV"
-                  icons={[<SafeIcon Icon={SiOpencv} key="skill" />]}
-                />
-                <CustomChip
-                  label="Data Analysis"
-                  icons={[<SafeIcon Icon={VscGraphScatter} key="skill" />]}
-                />
-                <CustomChip
-                  label="Predictive Models"
-                  icons={[<SafeIcon Icon={GiHistogram} key="skill" />]}
-                />
-              </Box>
-              <Box
-                style={{
-                  textAlign: 'center',
-                  height: 'fit-content',
-                }}
-                sx={{
-                  p: '0 5px',
-                  border: '1px dashed grey',
-                  borderRadius: '15px',
-                }}
-              >
-                <Typography variant="h6">Data Visualization</Typography>
-                <CustomChip
-                  label="Dash Plotly"
-                  icons={[<SafeIcon Icon={SiPlotly} key="skill" />]}
-                />
-                <CustomChip
-                  label="Grafana"
-                  icons={[<SafeIcon Icon={SiGrafana} key="skill" />]}
-                />
-              </Box>
-            </Stack>
+            <SkillsSection categories={atosSkills} />
           </div>
         </section>
 
