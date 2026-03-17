@@ -1,3 +1,5 @@
+/* ─── Base Chat Layout ───────────────────────────────────────────────────── */
+
 .chat-container {
   display: flex !important;
   align-items: center;
@@ -13,64 +15,28 @@
   width: 100%;
   padding: 10px;
   overflow-y: scroll;
-  border: 1px solid #ccc;
+  border: 1px solid var(--card-border, #ccc);
   border-radius: 8px;
   display: flex;
   flex-direction: column;
 }
 
-.message-row {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-}
+.message-row   { display: flex; align-items: center; margin-bottom: 10px; }
+.user-row      { flex-direction: row-reverse; }
+.bot-row       { flex-direction: row; }
 
-.user-row {
-  flex-direction: row-reverse;
-}
-
-.bot-row {
-  flex-direction: row;
-}
-
-.message {
-  padding: 10px;
-  border-radius: 5px;
-  max-width: 80%;
-}
-
-.user-message {
-  background-color: var(--bg-color-1);
-  color: var(--foreground);
-  align-self: flex-end;
-}
-
-.bot-message {
-  background-color: var(--bg-color-3);
-  color: var(--foreground);
-  align-self: flex-start;
-}
+.message       { padding: 10px; border-radius: 5px; max-width: 80%; }
+.user-message  { background-color: var(--bg-color-1); color: var(--foreground); align-self: flex-end; }
+.bot-message   { background-color: var(--bg-color-3); color: var(--foreground); align-self: flex-start; }
 
 .user-icon,
-.bot-icon {
-  font-size: 24px;
-  margin: 0 10px;
-}
+.bot-icon      { font-size: 24px; margin: 0 10px; }
 
-.form-container {
-  display: flex;
-  flex-direction: row;
-  margin-top: 20px;
-  width: 100%;
-}
+.form-container { display: flex; flex-direction: row; margin-top: 20px; width: 100%; }
+.input-field    { flex-grow: 1; }
+button          { margin-left: 10px; }
 
-input-field {
-  flex-grow: 1;
-}
-
-button {
-  margin-left: 10px;
-}
+/* ─── Blinking cursor ────────────────────────────────────────────────────── */
 
 .blinking-cursor {
   display: inline-block;
@@ -82,13 +48,345 @@ button {
 }
 
 @keyframes blink {
-  0% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
+  0%   { opacity: 1; }
+  50%  { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* ─── Loading dots (pre-first-token) ─────────────────────────────────────── */
+
+.loading-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.loading-dots span {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: currentColor;
+  animation: dotPulse 1.2s ease-in-out infinite;
+}
+
+.loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+.loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes dotPulse {
+  0%, 80%, 100% { opacity: 0.25; transform: scale(0.85); }
+  40%            { opacity: 1;    transform: scale(1.1);  }
+}
+
+/* ─── Message action buttons (copy / edit / retry) ───────────────────────── */
+
+.msg-action-btn {
+  opacity: 0;
+  transition: opacity 0.15s, color 0.15s !important;
+  color: var(--foreground-muted) !important;
+  padding: 2px !important;
+}
+
+/* Show action buttons when hovering the parent content column */
+.MuiBox-root:hover > .MuiBox-root .msg-action-btn,
+.MuiBox-root:hover .msg-action-btn {
+  opacity: 1;
+}
+
+.msg-action-btn:hover {
+  color: var(--accent) !important;
+}
+
+/* ─── Agentic Steps ──────────────────────────────────────────────────────── */
+
+.agent-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 6px;
+  max-width: 100%;
+}
+
+.agent-step-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.74rem;
+  font-weight: 500;
+  line-height: 1.4;
+  transition: background-color 0.15s, opacity 0.15s;
+}
+
+.agent-step-header:hover { opacity: 0.85; }
+
+/* Thinking */
+.agent-thinking-wrapper {
+  border-radius: 9px;
+  border: 1px solid color-mix(in srgb, var(--accent, #8b5cf6) 30%, transparent);
+  overflow: hidden;
+}
+
+.thinking-header {
+  background-color: color-mix(in srgb, var(--accent, #8b5cf6) 8%, transparent);
+  color: var(--accent, #8b5cf6);
+}
+
+.thinking-header:hover {
+  background-color: color-mix(in srgb, var(--accent, #8b5cf6) 14%, transparent);
+  opacity: 1;
+}
+
+.agent-thinking-content {
+  padding: 10px 12px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.73rem;
+  line-height: 1.7;
+  color: var(--foreground-muted);
+  white-space: pre-wrap;
+  word-break: break-word;
+  background-color: color-mix(in srgb, var(--accent, #8b5cf6) 4%, transparent);
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+/* Tool calls */
+.agent-tool-wrapper {
+  border-radius: 9px;
+  border: 1px solid var(--card-border, rgba(255,255,255,0.1));
+  overflow: hidden;
+  background-color: var(--background-2, rgba(255,255,255,0.03));
+}
+
+.tool-header {
+  background-color: transparent;
+  color: var(--foreground-muted);
+  gap: 7px;
+}
+
+.tool-header:hover { background-color: rgba(255,255,255,0.04); opacity: 1; }
+
+.tool-name {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--foreground);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.tool-args-chip {
+  font-family: 'DM Mono', monospace !important;
+  font-size: 0.64rem !important;
+  height: 18px !important;
+  background-color: var(--background-2, rgba(255,255,255,0.06)) !important;
+  color: var(--foreground-muted) !important;
+  border: 1px solid var(--card-border, rgba(255,255,255,0.08)) !important;
+  border-radius: 4px !important;
+  opacity: 0.8;
+  max-width: 260px;
+}
+
+.tool-section         { padding: 0 10px 8px; }
+.tool-section:first-of-type { padding-top: 8px; border-top: 1px solid var(--card-border, rgba(255,255,255,0.06)); }
+
+.tool-section-label {
+  display: block;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--foreground-muted);
+  opacity: 0.55;
+  margin-bottom: 4px;
+}
+
+.tool-pre {
+  margin: 0;
+  padding: 8px 10px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  line-height: 1.6;
+  color: var(--foreground);
+  background-color: color-mix(in srgb, var(--background, #000) 60%, transparent);
+  border-radius: 6px;
+  border: 1px solid var(--card-border, rgba(255,255,255,0.07));
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+/* ─── Markdown Links ─────────────────────────────────────────────────────── */
+
+.md-link {
+  color: var(--accent, #8b5cf6);
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--accent, #8b5cf6) 40%, transparent);
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.md-link:hover {
+  border-bottom-color: var(--accent, #8b5cf6);
+}
+
+/* ─── Project Card ───────────────────────────────────────────────────────── */
+
+.project-card {
+  border-radius: 10px;
+  border: 1px solid var(--card-border, rgba(255,255,255,0.1));
+  overflow: hidden;
+  background-color: var(--background-2, rgba(255,255,255,0.03));
+  display: flex;
+  flex-direction: column;
+}
+
+.project-card-img-wrapper {
+  width: 100%;
+  max-height: 200px;
+  overflow: hidden;
+  background-color: var(--background, #000);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.project-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.project-card-img:hover {
+  transform: scale(1.02);
+}
+
+.project-card-body {
+  padding: 10px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.project-card-title {
+  font-family: 'Syne', sans-serif !important;
+  font-size: 0.95rem !important;
+  font-weight: 700 !important;
+  color: var(--foreground) !important;
+  line-height: 1.2 !important;
+}
+
+.project-card-tagline {
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-size: 0.78rem !important;
+  color: var(--foreground-muted) !important;
+  line-height: 1.4 !important;
+}
+
+.project-card-status {
+  font-family: 'DM Mono', monospace !important;
+  font-size: 0.6rem !important;
+  height: 17px !important;
+  background-color: color-mix(in srgb, var(--accent, #8b5cf6) 12%, transparent) !important;
+  color: var(--accent, #8b5cf6) !important;
+  border: 1px solid color-mix(in srgb, var(--accent, #8b5cf6) 30%, transparent) !important;
+  border-radius: 4px !important;
+}
+
+.project-card-link {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--accent, #8b5cf6);
+  text-decoration: none;
+  margin-top: 2px;
+  transition: opacity 0.15s;
+  display: inline-block;
+}
+
+.project-card-link:hover {
+  opacity: 0.75;
+}
+
+.md-content {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: inherit;
+}
+
+.md-content p,
+.md-content span {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Headings */
+.md-h  { margin: 0.6em 0 0.3em; font-family: 'Syne', sans-serif; font-weight: 700; color: inherit; }
+.md-h1 { font-size: 1.15em; }
+.md-h2 { font-size: 1.05em; }
+.md-h3 { font-size: 0.97em; }
+
+/* Lists */
+.md-ul,
+.md-ol {
+  margin: 0.4em 0 0.4em 1.2em;
+  padding: 0;
+}
+
+.md-ul li,
+.md-ol li {
+  margin-bottom: 0.2em;
+  line-height: 1.55;
+}
+
+/* Inline code */
+.md-inline-code {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.82em;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background-color: color-mix(in srgb, var(--foreground, #fff) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--foreground, #fff) 12%, transparent);
+  white-space: nowrap;
+}
+
+/* Code blocks */
+.md-code-block {
+  margin: 0.6em 0;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.78em;
+  line-height: 1.6;
+  background-color: color-mix(in srgb, var(--background, #000) 70%, transparent);
+  border: 1px solid var(--card-border, rgba(255,255,255,0.08));
+  white-space: pre;
+  overflow-x: auto;
+  color: var(--foreground);
+}
+
+/* ─── Custom scrollbars ───────────────────────────────────────────────────── */
+
+.agent-thinking-content::-webkit-scrollbar,
+.tool-pre::-webkit-scrollbar,
+.md-code-block::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.agent-thinking-content::-webkit-scrollbar-track,
+.tool-pre::-webkit-scrollbar-track,
+.md-code-block::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.agent-thinking-content::-webkit-scrollbar-thumb,
+.tool-pre::-webkit-scrollbar-thumb,
+.md-code-block::-webkit-scrollbar-thumb {
+  background-color: var(--card-border, rgba(255,255,255,0.15));
+  border-radius: 4px;
 }
