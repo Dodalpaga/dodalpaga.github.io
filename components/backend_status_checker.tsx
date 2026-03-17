@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { Server } from 'lucide-react';
 import './backend_status_checker.css';
 
-const CHECK_URL = `${process.env.NEXT_PUBLIC_API_URL}/docs`;
+const CHECK_URL = `${process.env.NEXT_PUBLIC_API_URL}/health`;
 const TIMEOUT = 5000;
 const CHECK_INTERVAL = 30_000; // reduced from 10s — no need to hammer the server
 
