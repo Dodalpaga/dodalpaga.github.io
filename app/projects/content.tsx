@@ -49,6 +49,14 @@ const apps: App[] = [
     tags: ['Data', 'Dashboard'],
   },
   {
+    title: 'Roadmap',
+    image: `/images/mind_map.jpg`,
+    link: '/projects/roadmap',
+    target: '',
+    description: 'A roadmap maker, makes it easier for me to make TODOs',
+    tags: ['Tool', 'Productivity'],
+  },
+  {
     title: 'Image Detection',
     image: `/images/detection.jpeg`,
     link: '/projects/image_detection',
