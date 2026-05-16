@@ -340,7 +340,8 @@ export default function Content() {
               initially as a Data Engineer on the European{' '}
               <strong>Galileo</strong> navigation system, then as a Data
               Scientist on the <strong>Euclid</strong> satellite ground segment
-              for <strong>CNES — Centre National d'Études Spatiales</strong>.
+              for{' '}
+              <strong>CNES — Centre National d&apos; Études Spatiales</strong>.
               Developed deep expertise in{' '}
               <strong>Data Science, Python, LLM, and AI</strong>, including
               placement 4/200 in corporate coding competitions.
@@ -563,9 +564,10 @@ export default function Content() {
                 <p className="edu-degree">MsC — VALDOM</p>
                 <h4 className="edu-school">ENSEEIHT</h4>
                 <p className="edu-desc">
-                  École Nationale Supérieure d'Électrotechnique, d'Électronique,
-                  d'Informatique, d'Hydraulique et des Télécommunications.
-                  Advanced engineering curriculum in Toulouse.
+                  École Nationale Supérieure d&apos; Électrotechnique, d&apos;
+                  Électronique, d&apos; Informatique, d&apos; Hydraulique et des
+                  Télécommunications. Advanced engineering curriculum in
+                  Toulouse.
                 </p>
               </div>
               <div className="edu-tags">
