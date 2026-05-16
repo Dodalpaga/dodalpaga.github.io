@@ -37,7 +37,7 @@ Each agent is represented as a node, with its own prompt, model, and tools. The 
 This graph-based approach offers a transparent, modular view of the workflow and enables explicit control of state transitions.
 
 <div style="display:flex; justify-content:center;">
-  <img style="border-radius: 20px; max-height:300px" src="https://blog.langchain.dev/content/images/2024/01/supervisor-diagram.png" alt="LangGraph multi-agent diagram" height="50%">
+  <img style="border-radius: 20px; max-height:300px" src="https://github.com/langchain-ai/langgraph-supervisor-py/blob/main/static/img/supervisor.png?raw=true" alt="LangGraph multi-agent diagram" height="50%">
 </div>
 
 <div style="display:flex; justify-content:center; font-style: italic">Figure 1 – Simplified representation of a LangGraph multi-agent workflow.</div>
@@ -83,7 +83,7 @@ The classic RAG process consists of two main phases:
 2. **Retrieval & Generation (online):** Given a user query, a retriever pulls the most relevant chunks, which are passed to an LLM to generate a contextually grounded answer.
 
 <div style="display:flex; justify-content:center;">
-  <img style="border-radius: 20px; max-height:200px" src="https://python.langchain.com/assets/images/rag_concepts-4499b260d1053838a3e361fb54f376ec.png" alt="RAG workflow diagram" />
+  <img style="border-radius: 20px; max-height:500px" src="https://huggingface.co/datasets/huggingface/cookbook-images/resolve/main/RAG_workflow.png" alt="RAG workflow diagram" />
 </div>
 <div style="display:flex; justify-content:center; font-style: italic">Figure 2 – Simplified RAG architecture from LangChain documentation.</div>
 
@@ -98,7 +98,7 @@ In a **multi-agent version**, these tasks are distributed across specialized age
 - **Publisher Agent:** Formats and exports the report (e.g., PDF, Markdown).
 
 <div style="display:flex; justify-content:center;">
-  <img style="border-radius: 20px; max-height:450px" src="https://blog.langchain.com/content/images/2024/05/1_ABcpKZRWsJRb9MIpkJ0htQ.webp" alt="Multi-agent workflow example" />
+  <img style="border-radius: 20px; max-height:450px" src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*yE2lfGqEp53jCmuktaDUlw.png" alt="Multi-agent workflow example" />
 </div>
 
 <div style="display:flex; justify-content:center; font-style: italic">Figure 3 – Example of a hierarchical multi-agent workflow for scientific research.</div>

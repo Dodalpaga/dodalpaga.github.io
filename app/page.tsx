@@ -714,12 +714,7 @@ export default function Home() {
                 marginLeft: '8px',
               }}
             >
-              REST API
-            </span>
-          </div>
-          <div className="api-section-body">
-            <span>
-              Backend API available at&nbsp;
+              REST API&nbsp;
               <Link
                 href={`${process.env.NEXT_PUBLIC_API_URL}/docs`}
                 target="_blank"
@@ -728,6 +723,8 @@ export default function Home() {
                 /docs
               </Link>
             </span>
+          </div>
+          <div className="api-section-body">
             <div
               style={{
                 display: 'flex',
