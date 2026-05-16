@@ -1,33 +1,16 @@
 // app/profile/content.tsx
 'use client';
 import * as React from 'react';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import { Link, List, ListItem } from '@mui/material';
-import Image from 'next/image';
 import CountUp from 'react-countup';
-import Divider from '@mui/material/Divider';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import Card from '@mui/material/Card';
-import CardMedia from '@mui/material/CardMedia';
-import CardContent from '@mui/material/CardContent';
-import CardActionArea from '@mui/material/CardActionArea';
-import Chip from '@mui/material/Chip';
-import Stack from '@mui/material/Stack';
+import Image from 'next/image';
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import CodeIcon from '@mui/icons-material/Code';
+import { useThemeContext } from '@/context/ThemeContext';
 import '../globals.css';
 import './styles.css';
-import SkillsSection, { type SkillCategory } from '@/components/skills_section';
-import { useThemeContext } from '@/context/ThemeContext';
-import InfoCard from '@/components/infocard';
-import CustomChip from '@/components/customchip';
 import {
-  SiPandas,
-  SiNumpy,
   SiPytorch,
   SiScikitlearn,
   SiTensorflow,
@@ -35,690 +18,602 @@ import {
   SiFastapi,
   SiDjango,
   SiDocker,
-  SiPostgresql,
-  SiPrometheus,
-  SiPostman,
-  SiGrafana,
-  SiStreamlit,
-  SiReact,
-  SiGitlab,
-  SiConfluence,
-  SiJira,
+  SiKubernetes,
   SiNextdotjs,
+  SiReact,
+  SiTypescript,
+  SiElasticsearch,
+  SiKibana,
+  SiLogstash,
+  SiPython,
   SiRaspberrypi,
   SiNvidia,
   SiOpencv,
   SiPlotly,
-  SiJenkins,
-  SiFolium,
-  SiElasticsearch,
-  SiKibana,
-  SiLogstash,
-  SiTypescript,
-  SiMongodb,
-  SiKubernetes,
-  SiPython,
+  SiGrafana,
 } from 'react-icons/si';
-import { VscGraphScatter } from 'react-icons/vsc';
-import { GiHistogram } from 'react-icons/gi';
 import type { IconType } from 'react-icons';
 
-const thalesSkills: SkillCategory[] = [
-  {
-    title: 'Artificial Intelligence',
-    accent: '#ce93d8',
-    skills: [
-      { label: 'Scikit-Learn', Icon: SiScikitlearn },
-      { label: 'TensorFlow', Icon: SiTensorflow },
-      { label: 'PyTorch', Icon: SiPytorch },
-      { label: 'LangChain', Icon: SiLangchain },
-    ],
-  },
-  {
-    title: 'Backend Development',
-    accent: '#80cbc4',
-    skills: [
-      { label: 'Python', Icon: SiPython },
-      { label: 'FastAPI', Icon: SiFastapi },
-      { label: 'Django', Icon: SiDjango },
-      { label: 'Docker', Icon: SiDocker },
-      { label: 'Kubernetes', Icon: SiKubernetes },
-    ],
-  },
-  {
-    title: 'Frontend Development',
-    accent: '#90caf9',
-    skills: [
-      { label: 'Next.js', Icon: SiNextdotjs },
-      { label: 'React', Icon: SiReact },
-      { label: 'Typescript', Icon: SiTypescript },
-    ],
-  },
-  {
-    title: 'Data Management',
-    accent: '#ffcc80',
-    skills: [
-      { label: 'Elasticsearch', Icon: SiElasticsearch },
-      { label: 'Kibana', Icon: SiKibana },
-      { label: 'Logstash', Icon: SiLogstash },
-    ],
-  },
-];
+/* ─────────────────────────── helpers ─────────────────────────── */
 
-const atosSkills: SkillCategory[] = [
-  {
-    title: 'Embedded Systems',
-    accent: '#a5d6a7',
-    skills: [
-      { label: 'Python', Icon: SiPython },
-      { label: 'Raspberry Pi', Icon: SiRaspberrypi },
-      { label: 'Jetson Nano', Icon: SiNvidia },
-    ],
-  },
-  {
-    title: 'Machine Learning',
-    accent: '#ce93d8',
-    skills: [
-      { label: 'OpenCV', Icon: SiOpencv },
-      // VscGraphScatter & GiHistogram don't fit the new single-Icon interface;
-      // swap for any react-icons icon you prefer, e.g.:
-      { label: 'Data Analysis', Icon: SiPandas },
-      { label: 'Predictive Models', Icon: SiScikitlearn },
-    ],
-  },
-  {
-    title: 'Data Visualization',
-    accent: '#4fc3f7',
-    skills: [
-      { label: 'Dash Plotly', Icon: SiPlotly },
-      { label: 'Grafana', Icon: SiGrafana },
-    ],
-  },
-];
-
-// Helper component to safely render icons
-const SafeIcon: React.FC<{ Icon: IconType; [key: string]: any }> = ({
-  Icon,
-  ...props
-}) => {
-  const IconComponent = Icon as React.ComponentType<any>;
-  return <IconComponent {...props} />;
-};
-
-// Helper function to compute the years spent
-const getYearsSpent = (startDateString: string) => {
+const getYearsSpent = (startDateString: string): number => {
   const startDate = new Date(startDateString);
-  const currentDate = new Date();
+  const now = new Date();
+  const years = now.getFullYear() - startDate.getFullYear();
+  const monthDiff = Math.abs(now.getMonth() - startDate.getMonth());
+  return monthDiff > 6 ? years - 1 : years;
+};
 
-  const yearsSpent = currentDate.getFullYear() - startDate.getFullYear();
-  const monthDifference = Math.abs(
-    currentDate.getMonth() - startDate.getMonth(),
+/* ─────────────────────────── sub-components ─────────────────────── */
+
+interface TechTagProps {
+  Icon: IconType;
+  label: string;
+  color: string;
+}
+const TechTag: React.FC<TechTagProps> = ({ Icon, label, color }) => {
+  const IC = Icon as React.ComponentType<{ size?: number }>;
+  return (
+    <span
+      className="tech-tag"
+      style={{ '--tag-accent': color } as React.CSSProperties}
+    >
+      <IC size={13} />
+      {label}
+    </span>
   );
-
-  // If you spend more than 6 months on the project, consider it a full year
-  if (monthDifference > 6) {
-    return yearsSpent - 1;
-  }
-
-  return yearsSpent;
 };
 
-const titleStyle = {
-  marginBottom: '20px',
-};
+const CornerBrackets: React.FC = () => (
+  <div className="corner-brackets" aria-hidden="true">
+    <span className="corner tl" />
+    <span className="corner tr" />
+    <span className="corner bl" />
+    <span className="corner br" />
+  </div>
+);
 
-const descriptionItemStyle = {
-  display: 'list-item',
-  textAlign: 'left',
-  padding: '4px',
-};
+interface ContactLinkProps {
+  Icon: React.ComponentType<{ style?: React.CSSProperties }>;
+  label: string;
+  href: string;
+}
+const ContactLink: React.FC<ContactLinkProps> = ({ Icon, label, href }) => (
+  <a
+    className="contact-link"
+    href={href}
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <Icon style={{ fontSize: 15 }} />
+    <span>{label}</span>
+  </a>
+);
+
+interface SectionHeaderProps {
+  number: string;
+  title: string;
+}
+const SectionHeader: React.FC<SectionHeaderProps> = ({ number, title }) => (
+  <div className="section-header">
+    <span className="section-number">{number}</span>
+    <h2 className="section-title">{title}</h2>
+    <div className="section-line" />
+  </div>
+);
+
+interface ObjectiveProps {
+  children: React.ReactNode;
+}
+const Objective: React.FC<ObjectiveProps> = ({ children }) => (
+  <div className="objective-item">
+    <span className="objective-arrow">→</span>
+    <span>{children}</span>
+  </div>
+);
+
+/* ─────────────────────────── data ─────────────────────────── */
+
+const thalesSkills: TechTagProps[] = [
+  { Icon: SiPython, label: 'Python', color: '#3b82f6' },
+  { Icon: SiTensorflow, label: 'TensorFlow', color: '#f97316' },
+  { Icon: SiPytorch, label: 'PyTorch', color: '#ef4444' },
+  { Icon: SiLangchain, label: 'LangChain', color: '#22c55e' },
+  { Icon: SiScikitlearn, label: 'Scikit-Learn', color: '#f59e0b' },
+  { Icon: SiFastapi, label: 'FastAPI', color: '#06b6d4' },
+  { Icon: SiDjango, label: 'Django', color: '#22c55e' },
+  { Icon: SiDocker, label: 'Docker', color: '#38bdf8' },
+  { Icon: SiKubernetes, label: 'Kubernetes', color: '#3b82f6' },
+  { Icon: SiNextdotjs, label: 'Next.js', color: 'currentColor' },
+  { Icon: SiReact, label: 'React', color: '#38bdf8' },
+  { Icon: SiTypescript, label: 'TypeScript', color: '#3b82f6' },
+  { Icon: SiElasticsearch, label: 'Elasticsearch', color: '#f59e0b' },
+  { Icon: SiKibana, label: 'Kibana', color: '#ec4899' },
+  { Icon: SiLogstash, label: 'Logstash', color: '#f97316' },
+];
+
+const atosSkills: TechTagProps[] = [
+  { Icon: SiPython, label: 'Python', color: '#3b82f6' },
+  { Icon: SiRaspberrypi, label: 'Raspberry Pi', color: '#ef4444' },
+  { Icon: SiNvidia, label: 'Jetson Nano', color: '#22c55e' },
+  { Icon: SiOpencv, label: 'OpenCV', color: '#22c55e' },
+  { Icon: SiScikitlearn, label: 'Scikit-Learn', color: '#f59e0b' },
+  { Icon: SiPlotly, label: 'Dash Plotly', color: '#3b82f6' },
+  { Icon: SiGrafana, label: 'Grafana', color: '#f97316' },
+];
+
+const coreSkills = [
+  'Machine Learning',
+  'Python',
+  'Data Science',
+  'Generative AI',
+  'React.js',
+  'Next.js',
+  'TypeScript',
+];
+
+/* ─────────────────────────── page ─────────────────────────── */
 
 export default function Content() {
   const { theme } = useThemeContext();
-  const startDate = 'Dec 2022';
   const yearsSpent = getYearsSpent('2022-12-01');
-  const totalExperience = getYearsSpent('2021-09-01');
-
-  // Define foreground colors based on the theme
+  const totalExp = getYearsSpent('2021-09-01');
   const foreground = theme === 'dark' ? 'ffffff' : '000000';
 
   return (
-    <Container maxWidth={false} className="content-container">
-      {/* Fixed Left Section */}
-      <div className="left-fixed left-profile">
-        <div className="introduction left-container">
-          <div className="profile-picture-container">
-            <Card
-              className="card"
-              sx={{
-                width: 'auto',
-              }}
-            >
-              <CardMedia
-                component="img"
-                image={`/images/pp.jpeg`}
-                alt={'Profile Picture'}
-                sx={{
-                  height: '100%',
-                  objectFit: 'contain',
-                  objectPosition: 'center',
-                }}
+    <div className="profile-container">
+      {/* ── SIDEBAR ── */}
+      <aside className="profile-sidebar">
+        <div className="sidebar-inner">
+          {/* identity */}
+          <div className="identity-block">
+            <div className="profile-img-wrapper">
+              <div className="profile-img-ring" />
+              <Image
+                src="/images/pp.jpeg"
+                alt="Dorian Voydie"
+                width={120}
+                height={120}
+                className="profile-img"
               />
-            </Card>
+              <span
+                className="profile-online-dot"
+                title="Available for opportunities"
+              />
+            </div>
+            <div className="identity-text">
+              <p className="identity-label">AI ENGINEER</p>
+              <h1 className="identity-name">
+                Dorian
+                <br />
+                Voydie
+              </h1>
+              <div className="status-badge">
+                <span className="status-dot" />
+                OPERATIONAL
+              </div>
+            </div>
           </div>
-          <Typography className="title" variant="h5" gutterBottom>
-            About
-          </Typography>
-          <Typography variant="body1" gutterBottom>
-            I&apos;m a Data Scientist, but i also like to build websites, and
-            develop apps in Python.
-          </Typography>
-        </div>
 
-        <div className="left-container">
-          <Typography className="title" variant="h5" gutterBottom>
-            Get in touch
-          </Typography>
-          <div
-            id="contact-container"
-            style={{
-              width: '100%',
-              alignItems: 'center',
-              marginBottom: '10px',
-            }}
-          >
-            <Stack
-              spacing={{ xs: 1 }}
-              direction="row"
-              className="contact-stack"
-              useFlexGap
-              sx={{ flexWrap: 'wrap' }}
-              style={{
-                width: '100%',
-              }}
-            >
-              <Chip
-                icon={<AlternateEmailIcon />}
+          <div className="sidebar-divider" />
+
+          {/* stats */}
+          <div className="stats-row">
+            <div className="stat-item">
+              <span className="stat-value">
+                <CountUp
+                  end={totalExp}
+                  duration={3}
+                  enableScrollSpy
+                  scrollSpyOnce
+                />
+                +
+              </span>
+              <span className="stat-key">YRS EXP</span>
+            </div>
+            <div className="stat-sep" />
+            <div className="stat-item">
+              <span className="stat-value">
+                <CountUp end={6} duration={3} enableScrollSpy scrollSpyOnce />
+              </span>
+              <span className="stat-key">PROJECTS</span>
+            </div>
+            <div className="stat-sep" />
+            <div className="stat-item">
+              <span className="stat-value">1</span>
+              <span className="stat-key">PATENT</span>
+            </div>
+          </div>
+
+          <div className="sidebar-divider" />
+
+          {/* contact */}
+          <div className="sidebar-section">
+            <p className="sidebar-label">CONTACT</p>
+            <div className="contact-list">
+              <ContactLink
+                Icon={AlternateEmailIcon}
                 label="dorian.voydie@gmail.com"
-                onClick={() => window.open('mailto:dorian.voydie@gmail.com')}
+                href="mailto:dorian.voydie@gmail.com"
               />
-              <Chip
-                icon={<LinkedInIcon />}
+              <ContactLink
+                Icon={LinkedInIcon}
                 label="in/dorian-voydie"
-                onClick={() =>
-                  window.open('https://www.linkedin.com/in/dorian-voydie/')
-                }
+                href="https://www.linkedin.com/in/dorian-voydie/"
               />
-              <Chip
-                icon={<GitHubIcon />}
+              <ContactLink
+                Icon={GitHubIcon}
                 label="Dodalpaga"
-                onClick={() =>
-                  window.open('https://github.com/Dodalpaga?tab=repositories')
-                }
+                href="https://github.com/Dodalpaga?tab=repositories"
               />
-              <Chip
-                icon={<CodeIcon />}
-                label="dorianvoydie"
-                onClick={() =>
-                  window.open('https://www.kaggle.com/dorianvoydie')
-                }
+              <ContactLink
+                Icon={CodeIcon}
+                label="Kaggle / dorianvoydie"
+                href="https://www.kaggle.com/dorianvoydie"
               />
-            </Stack>
+            </div>
           </div>
-          <Typography className="title" variant="h5" gutterBottom>
-            Skill set
-          </Typography>
-          <div
-            id="skill-set-container"
-            style={{
-              width: '100%',
-              alignItems: 'center',
-              marginBottom: '10px',
-            }}
-          >
-            <Stack
-              spacing={{ xs: 1 }}
-              direction="row"
-              className="skill-stack"
-              useFlexGap
-              sx={{ flexWrap: 'wrap' }}
-              style={{
-                width: '100%',
-              }}
-            >
-              <Chip label="Machine Learning" variant="outlined" />
-              <Chip label="Python" variant="outlined" />
-              <Chip label="Data Science" variant="outlined" />
-              <Chip label="Generative AI" variant="outlined" />
-              <Chip label="React.js" variant="outlined" />
-              <Chip label="Next.js" variant="outlined" />
-              <Chip label="Typescript" variant="outlined" />
-            </Stack>
-            <Image
-              src="/images/capsule/Capsule.png"
-              alt="Capsule"
-              width={0}
-              height={0}
-              style={{
-                width: '60%',
-                height: 'auto',
-                display: 'block',
-                margin: '1rem auto',
-              }}
-            />
+
+          <div className="sidebar-divider" />
+
+          {/* core skills */}
+          <div className="sidebar-section">
+            <p className="sidebar-label">CORE SYSTEMS</p>
+            <div className="core-skills">
+              {coreSkills.map((s) => (
+                <span key={s} className="core-skill-tag">
+                  {s}
+                </span>
+              ))}
+            </div>
           </div>
-          <Typography className="title" variant="h5" gutterBottom>
-            Coding Stats
-          </Typography>
-          <Stack
-            id="skill-set-container"
-            direction="row"
-            useFlexGap
-            sx={{ flexWrap: 'wrap' }}
-          >
-            {/* <Image
-              src={`https://github-readme-stats.vercel.app/api/top-langs/?username=Dodalpaga&title_color=${encodeURIComponent(foreground)}&text_color=${encodeURIComponent(foreground)}&layout=compact&theme=transparent&count_private=true&hide=java,css,procfile,html,jupyter%20notebook`}
-              alt="Top Languages"
-              width={500}
-              height={200}
-            /> */}
-            <Image
-              src={`https://github-readme-streak-stats.herokuapp.com?user=Dodalpaga&theme=transparent&currStreakLabel=${encodeURIComponent(foreground)}&currStreakNum=EB5454&fire=EB5454&ring=${encodeURIComponent(foreground)}&sideNums=${encodeURIComponent(foreground)}&sideLabels=${encodeURIComponent(foreground)}`}
-              alt="GitHub Streak"
-              width={500}
-              height={200}
-            />
-          </Stack>
+
+          <div className="sidebar-divider" />
+
+          {/* github streak */}
+          <div className="sidebar-section">
+            <p className="sidebar-label">CODING STREAK</p>
+            <div className="stats-img-wrapper">
+              <Image
+                src={`https://github-readme-streak-stats.herokuapp.com?user=Dodalpaga&theme=transparent&currStreakLabel=${foreground}&currStreakNum=EB5454&fire=EB5454&ring=${foreground}&sideNums=${foreground}&sideLabels=${foreground}`}
+                alt="GitHub Streak"
+                width={260}
+                height={130}
+                style={{ width: '100%', height: 'auto' }}
+              />
+            </div>
+          </div>
         </div>
-      </div>
+      </aside>
 
-      {/* Main Scrollable Content Section */}
-      <div className="right-scrollable">
-        {/* Experience Section */}
-        <section id="profile-section">
-          <Typography variant="h3">Experience</Typography>
-          <Typography variant="body1" sx={titleStyle}>
-            ({totalExperience}+ years)
-          </Typography>
+      {/* ── MAIN ── */}
+      <main className="profile-main">
+        {/* ── Experience ── */}
+        <section className="content-section">
+          <SectionHeader number="01" title="EXPERIENCE" />
 
-          {/* Experience Thales */}
-          <div className="experience">
-            <InfoCard
-              startDate={startDate}
-              yearsSpent={yearsSpent}
-              companyName="Thales Services Numériques"
-              location="Toulouse Area, France"
-              imageSrc={
-                theme === 'dark'
-                  ? '/images/thales-inverted.png'
-                  : '/images/thales.png'
-              }
-            />
-            {/* Description */}
-            <Typography variant="body1">
-              Participated in multiple{' '}
-              <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                international projects
-              </Typography>
-              , initially as a Data Engineer on the European{' '}
-              <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                Galileo
-              </Typography>{' '}
-              navigation system software, then as a Data Scientist on the{' '}
-              <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                Euclid
-              </Typography>{' '}
-              satellite ground segment for{' '}
-              <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                CNES - Centre National d’Etudes Spatiales
-              </Typography>{' '}
-              (Toulouse, France). Developed strong expertise in{' '}
-              <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                Data Science, Python, LLM, and AI
-              </Typography>
-              , including participation in competitive coding challenges (ranked
-              4/200 in corporate competitions).
-            </Typography>
+          {/* Thales */}
+          <div
+            className="mission-card animate-fadeup"
+            style={{ '--delay': '0.05s' } as React.CSSProperties}
+          >
+            <CornerBrackets />
 
-            {/* Detailed responsibilities */}
-            <List
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                width: 'calc(100% - 40px)',
-                marginLeft: 'auto',
-              }}
-            >
-              <ListItem sx={descriptionItemStyle}>
-                <Typography variant="body1">
-                  - Applied{' '}
-                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                    AI and data science techniques
-                  </Typography>{' '}
-                  to satellite image analysis, delivering insights for Earth
-                  Observation applications.
-                </Typography>
-              </ListItem>
-              <ListItem sx={descriptionItemStyle}>
-                <Typography variant="body1">
-                  - Designed and implemented{' '}
-                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                    machine learning pipelines
-                  </Typography>{' '}
-                  for large-scale data processing.
-                </Typography>
-              </ListItem>
-              <ListItem sx={descriptionItemStyle}>
-                <Typography variant="body1">
-                  - Created full-stack{' '}
-                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                    containerized applications
-                  </Typography>{' '}
-                  (via{' '}
-                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                    Docker
-                  </Typography>
-                  ) including APIs, monitoring solutions, and user interfaces.
-                </Typography>
-              </ListItem>
-              <ListItem sx={descriptionItemStyle}>
-                <Typography variant="body1">
-                  - Managed projects end-to-end, coordinating{' '}
-                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                    stakeholders, timelines, and deliverables
-                  </Typography>
-                  .
-                </Typography>
-              </ListItem>
-              <ListItem sx={descriptionItemStyle}>
-                <Typography variant="body1">
-                  - Contributed to numerous{' '}
-                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                    tenders and technical studies
-                  </Typography>{' '}
-                  for CNES.
-                </Typography>
-              </ListItem>
-              <ListItem sx={descriptionItemStyle}>
-                <Typography variant="body1">
-                  - Developed{' '}
-                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                    conversational agents
-                  </Typography>{' '}
-                  using advanced AI and LLM technologies.
-                </Typography>
-              </ListItem>
-            </List>
+            <div className="mission-header">
+              <span className="mission-id">MISSION // THALES-002</span>
+              <span className="mission-dates">DEC 2022 — PRESENT</span>
+            </div>
 
-            <Typography variant="h5">
-              Total projects developed :{' '}
-              <CountUp
-                end={6}
-                duration={5}
-                enableScrollSpy={true}
-                scrollSpyOnce={true}
-              />
-            </Typography>
+            <div className="mission-company">
+              <div className="company-logo-wrapper">
+                <Image
+                  src={
+                    theme === 'dark'
+                      ? '/images/thales-inverted.png'
+                      : '/images/thales.png'
+                  }
+                  alt="Thales"
+                  width={100}
+                  height={32}
+                  style={{
+                    objectFit: 'contain',
+                    width: 'auto',
+                    height: '28px',
+                  }}
+                />
+              </div>
+              <div className="company-meta">
+                <h3 className="company-name">Thales Services Numériques</h3>
+                <p className="company-location">Toulouse Area, France</p>
+              </div>
+              <div className="mission-badges">
+                <span className="mission-badge badge-primary">
+                  {yearsSpent}+ YRS
+                </span>
+                <span className="mission-badge badge-accent">TECH LEAD</span>
+                <span className="mission-badge badge-accent">AI ENGINEER</span>
+              </div>
+            </div>
 
-            {/* Selected Project Experience */}
-            <Typography variant="h6" sx={{ marginTop: '20px' }}>
-              Selected Project Experience
-            </Typography>
-            <List
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                width: 'calc(100% - 40px)',
-                marginLeft: 'auto',
-              }}
-            >
-              <ListItem sx={descriptionItemStyle}>
-                <Typography variant="body1">
-                  -{' '}
-                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                    Technical Lead
-                  </Typography>{' '}
-                  for a 3–4 person cross-functional team (PM, Data Scientist,
-                  DevOps, Security) on a €1.5M, 2-year{' '}
-                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                    Generative AI project
-                  </Typography>{' '}
-                  for{' '}
-                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                    ESRIN – ESA Centre for Earth Observation
-                  </Typography>{' '}
-                  (Frascati, Italy).
-                </Typography>
-              </ListItem>
-              <ListItem sx={descriptionItemStyle}>
-                <Typography variant="body1">
-                  - Designed and delivered a{' '}
-                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                    specialized scalable conversational assistant
-                  </Typography>{' '}
-                  using cutting-edge{' '}
-                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                    AI Agents and LLM
-                  </Typography>{' '}
-                  to help users navigate over 200+ Earth Observation collections
-                  (tens of millions of data products), providing intelligent
-                  recommendations, visualizations, access guidance, and more.
-                </Typography>
-              </ListItem>
-            </List>
+            <p className="mission-brief">
+              Participated in multiple <strong>international projects</strong> —
+              initially as a Data Engineer on the European{' '}
+              <strong>Galileo</strong> navigation system, then as a Data
+              Scientist on the <strong>Euclid</strong> satellite ground segment
+              for <strong>CNES — Centre National d'Études Spatiales</strong>.
+              Developed deep expertise in{' '}
+              <strong>Data Science, Python, LLM, and AI</strong>, including
+              placement 4/200 in corporate coding competitions.
+            </p>
 
-            <SkillsSection categories={thalesSkills} />
+            <div className="mission-section-label">OBJECTIVES</div>
+            <div className="objectives-list">
+              <Objective>
+                Applied <strong>AI and data science</strong> to satellite
+                imagery for Earth Observation applications.
+              </Objective>
+              <Objective>
+                Designed and implemented <strong>ML pipelines</strong> for
+                large-scale data processing.
+              </Objective>
+              <Objective>
+                Built full-stack <strong>containerised applications</strong> via
+                Docker — APIs, monitoring, and UIs.
+              </Objective>
+              <Objective>
+                Managed projects end-to-end, coordinating{' '}
+                <strong>stakeholders, timelines, and deliverables</strong>.
+              </Objective>
+              <Objective>
+                Contributed to <strong>tenders and technical studies</strong>{' '}
+                for CNES.
+              </Objective>
+              <Objective>
+                Developed <strong>conversational agents</strong> using advanced
+                AI and LLM technologies.
+              </Objective>
+            </div>
+
+            <div className="featured-project">
+              <div className="featured-label">
+                ◆ FEATURED PROJECT — ESRIN / ESA
+              </div>
+              <p className="featured-text">
+                <strong>Technical Lead</strong> for a 3–4 person
+                cross-functional team on a{' '}
+                <strong>€1.5M, 2-year Generative AI project</strong> for{' '}
+                <strong>ESRIN – ESA Centre for Earth Observation</strong>{' '}
+                (Frascati, Italy). Delivered a scalable conversational assistant
+                using <strong>AI Agents + LLM</strong> to help users navigate
+                200+ Earth Observation collections (tens of millions of data
+                products) with intelligent recommendations, visualisations, and
+                access guidance.
+              </p>
+            </div>
+
+            <div className="mission-section-label">TECHNOLOGY PAYLOAD</div>
+            <div className="tech-grid">
+              {thalesSkills.map((s) => (
+                <TechTag key={s.label} {...s} />
+              ))}
+            </div>
+
+            <div className="mission-stat-line">
+              <span className="mission-stat-label">
+                TOTAL PROJECTS DEPLOYED
+              </span>
+              <span className="mission-stat-value">
+                <CountUp end={6} duration={5} enableScrollSpy scrollSpyOnce />
+              </span>
+            </div>
           </div>
 
-          <Divider sx={{ m: 2 }} />
+          {/* Atos */}
+          <div
+            className="mission-card animate-fadeup"
+            style={{ '--delay': '0.15s' } as React.CSSProperties}
+          >
+            <CornerBrackets />
 
-          {/* Experience Atos */}
-          <div className="experience">
-            <InfoCard
-              startDate="Sept 2021"
-              endDate="Nov 2022"
-              yearsSpent={1}
-              companyName="Atos France"
-              location="Toulouse Area, France"
-              imageSrc="/images/atos.png"
-            />
-            <Typography variant="body1">
-              In parallel with my{' '}
-              <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                MsC
-              </Typography>{' '}
-              (called VALDOM, in apprenticeship contract between INSA Toulouse &
-              ENSEEIHT), I contributed to various{' '}
-              <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                AI and embedded machine learning
-              </Typography>{' '}
-              projects, including{' '}
-              <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                predictive maintenance
-              </Typography>{' '}
-              of physical systems and{' '}
-              <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                defect detection
-              </Typography>{' '}
-              on aircraft fuselages.
-            </Typography>
-            <List
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                width: 'calc(100% - 40px)',
-                marginLeft: 'auto',
-              }}
-            >
-              <ListItem sx={descriptionItemStyle}>
-                <Typography variant="body1">
-                  - Developed{' '}
-                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                    embedded instrumentation
-                  </Typography>{' '}
-                  and conducted experiments on{' '}
-                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                    Raspberry Pi
-                  </Typography>{' '}
-                  and{' '}
-                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                    Jetson Nano
-                  </Typography>
-                  .
-                </Typography>
-              </ListItem>
-              <ListItem sx={descriptionItemStyle}>
-                <Typography variant="body1">
-                  -{' '}
-                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                    Analyzed
-                  </Typography>{' '}
-                  and{' '}
-                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                    structured
-                  </Typography>{' '}
-                  data, and designed architectures for{' '}
-                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                    machine learning models
-                  </Typography>
-                  .
-                </Typography>
-              </ListItem>
-              <ListItem sx={descriptionItemStyle}>
-                <Typography variant="body1">
-                  - Developed{' '}
-                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                    computer vision AI models
-                  </Typography>{' '}
-                  to visually detect defects on aircraft fuselages.
-                </Typography>
-              </ListItem>
-              <ListItem sx={descriptionItemStyle}>
-                <Typography variant="body1">
-                  - Created dashboards for{' '}
-                  <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                    data visualization
-                  </Typography>{' '}
-                  of model predictions.
-                </Typography>
-              </ListItem>
-            </List>
-            <Typography variant="body1">
-              Authored a paper for the{' '}
-              <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                IFAC 2023 conference
-              </Typography>{' '}
-              and contributed to a{' '}
-              <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                patent
-              </Typography>
-              .
-            </Typography>
-            <SkillsSection categories={atosSkills} />
+            <div className="mission-header">
+              <span className="mission-id">MISSION // ATOS-001</span>
+              <span className="mission-dates">SEPT 2021 — NOV 2022</span>
+            </div>
+
+            <div className="mission-company">
+              <div className="company-logo-wrapper">
+                <Image
+                  src="/images/atos.png"
+                  alt="Atos"
+                  width={80}
+                  height={32}
+                  style={{
+                    objectFit: 'contain',
+                    width: 'auto',
+                    height: '24px',
+                  }}
+                />
+              </div>
+              <div className="company-meta">
+                <h3 className="company-name">Atos France</h3>
+                <p className="company-location">Toulouse Area, France</p>
+              </div>
+              <div className="mission-badges">
+                <span className="mission-badge badge-secondary">1 YR</span>
+                <span className="mission-badge badge-accent">EMBEDDED ML</span>
+              </div>
+            </div>
+
+            <p className="mission-brief">
+              In parallel with my <strong>MsC</strong> (VALDOM — apprenticeship
+              at INSA Toulouse &amp; ENSEEIHT), contributed to{' '}
+              <strong>AI and embedded machine learning</strong> projects
+              including <strong>predictive maintenance</strong> of physical
+              systems and <strong>defect detection</strong> on aircraft
+              fuselages.
+            </p>
+
+            <div className="mission-section-label">OBJECTIVES</div>
+            <div className="objectives-list">
+              <Objective>
+                Developed <strong>embedded instrumentation</strong> on{' '}
+                <strong>Raspberry Pi</strong> and <strong>Jetson Nano</strong>.
+              </Objective>
+              <Objective>
+                Analysed and structured data; designed architectures for{' '}
+                <strong>ML models</strong>.
+              </Objective>
+              <Objective>
+                Developed <strong>computer vision AI models</strong> for visual
+                defect detection on aircraft fuselages.
+              </Objective>
+              <Objective>
+                Created dashboards for <strong>data visualisation</strong> of
+                model predictions.
+              </Objective>
+            </div>
+
+            <div className="mission-section-label">PUBLICATIONS</div>
+            <div className="publications-block">
+              <div className="pub-item">
+                <span className="pub-icon">📄</span>
+                <span>
+                  Paper authored for the <strong>IFAC 2023 Conference</strong>
+                </span>
+              </div>
+              <div className="pub-item">
+                <span className="pub-icon">🔏</span>
+                <span>
+                  Contributed to a registered <strong>Patent</strong>
+                </span>
+              </div>
+            </div>
+
+            <div className="mission-section-label">TECHNOLOGY PAYLOAD</div>
+            <div className="tech-grid">
+              {atosSkills.map((s) => (
+                <TechTag key={s.label} {...s} />
+              ))}
+            </div>
           </div>
         </section>
 
-        {/* Education Section */}
-        <section id="profile-section">
-          <Typography variant="h3" sx={titleStyle}>
-            Education
-          </Typography>
-          <Grid container spacing={2}>
-            <Link></Link>
-            <Grid
-              item
-              xs={12}
-              sm={6}
-              md={6}
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
+        {/* ── Education ── */}
+        <section className="content-section">
+          <SectionHeader number="02" title="EDUCATION" />
+          <div className="education-grid">
+            <a
+              className="edu-card animate-fadeup"
+              style={{ '--delay': '0.05s' } as React.CSSProperties}
+              href="https://www.insa-toulouse.fr/valorisation-des-donnees-massives/"
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              <Card
-                sx={{
-                  maxWidth: 345,
-                  backgroundColor: 'var(--background)',
-                  color: 'var(--foreground)',
-                }}
-              >
-                <CardActionArea
-                  href="https://www.insa-toulouse.fr/valorisation-des-donnees-massives/"
-                  target="_blank"
-                >
-                  <CardMedia
-                    component="img"
-                    height="140"
-                    image="/images/insa-toulouse.webp"
-                    alt="insa toulouse"
-                    sx={{
-                      padding: '10px',
-                      maxHeight: '100px',
-                      objectFit: 'contain',
-                    }}
-                  />
-                  <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
-                      INSA Toulouse
-                    </Typography>
-                    <Typography variant="body2">
-                      MsC spécialisé VALDOM : Valorisation des données massives.
-                      Compétences clef : Big Data, Machine Learning, Cloud.
-                    </Typography>
-                  </CardContent>
-                </CardActionArea>
-              </Card>
-            </Grid>
-            <Grid
-              item
-              xs={12}
-              sm={6}
-              md={6}
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
+              <CornerBrackets />
+              <div className="edu-logo">
+                <Image
+                  src="/images/insa-toulouse.webp"
+                  alt="INSA Toulouse"
+                  width={140}
+                  height={60}
+                  style={{
+                    objectFit: 'contain',
+                    width: '100%',
+                    height: '56px',
+                  }}
+                />
+              </div>
+              <div className="edu-body">
+                <p className="edu-degree">MsC — VALDOM</p>
+                <h4 className="edu-school">INSA Toulouse</h4>
+                <p className="edu-desc">
+                  Valorisation des Données Massives. Core competencies: Big
+                  Data, Machine Learning, Cloud.
+                </p>
+              </div>
+              <div className="edu-tags">
+                <span className="edu-tag">Big Data</span>
+                <span className="edu-tag">Machine Learning</span>
+                <span className="edu-tag">Cloud</span>
+              </div>
+            </a>
+
+            <a
+              className="edu-card animate-fadeup"
+              style={{ '--delay': '0.19s' } as React.CSSProperties}
+              href="https://www.enseeiht.fr/"
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              <Card
-                sx={{
-                  maxWidth: 345,
-                  backgroundColor: 'var(--background)',
-                  color: 'var(--foreground)',
-                }}
-              >
-                <CardActionArea
-                  href="https://www.supmicrotech.fr/"
-                  target="_blank"
-                >
-                  <CardMedia
-                    component="img"
-                    height="140"
-                    image="/images/ensmm.png"
-                    alt="ensmm"
-                    sx={{
-                      padding: '10px',
-                      maxHeight: '100px',
-                      objectFit: 'contain',
-                    }}
-                  />
-                  <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
-                      Supmicrotech ENSMM
-                    </Typography>
-                    <Typography variant="body2">
-                      Ecole d&apos;ingénieur, avec spécialisation en conception
-                      et réalisation d&apos;objets connectés. Compétences clef :
-                      Embedded Systems, Machine Learning, Network, Cloud, OOP.
-                    </Typography>
-                  </CardContent>
-                </CardActionArea>
-              </Card>
-            </Grid>
-          </Grid>
+              <CornerBrackets />
+              <div className="edu-logo">
+                <Image
+                  src="/images/n7.png"
+                  alt="ENSEEIHT"
+                  width={140}
+                  height={60}
+                  style={{
+                    objectFit: 'contain',
+                    width: '100%',
+                    height: '56px',
+                  }}
+                />
+              </div>
+              <div className="edu-body">
+                <p className="edu-degree">MsC — VALDOM</p>
+                <h4 className="edu-school">ENSEEIHT</h4>
+                <p className="edu-desc">
+                  École Nationale Supérieure d'Électrotechnique, d'Électronique,
+                  d'Informatique, d'Hydraulique et des Télécommunications.
+                  Advanced engineering curriculum in Toulouse.
+                </p>
+              </div>
+              <div className="edu-tags">
+                <span className="edu-tag">Engineering</span>
+                <span className="edu-tag">Electronics</span>
+                <span className="edu-tag">Computer Science</span>
+              </div>
+            </a>
+
+            <a
+              className="edu-card animate-fadeup"
+              style={{ '--delay': '0.12s' } as React.CSSProperties}
+              href="https://www.supmicrotech.fr/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <CornerBrackets />
+              <div className="edu-logo">
+                <Image
+                  src="/images/ensmm.png"
+                  alt="ENSMM"
+                  width={140}
+                  height={60}
+                  style={{
+                    objectFit: 'contain',
+                    width: '100%',
+                    height: '56px',
+                  }}
+                />
+              </div>
+              <div className="edu-body">
+                <p className="edu-degree">Engineering Degree</p>
+                <h4 className="edu-school">Supmicrotech ENSMM</h4>
+                <p className="edu-desc">
+                  Specialisation in connected objects. Core competencies:
+                  Embedded Systems, ML, Networking, OOP.
+                </p>
+              </div>
+              <div className="edu-tags">
+                <span className="edu-tag">Embedded</span>
+                <span className="edu-tag">IoT</span>
+                <span className="edu-tag">Networking</span>
+                <span className="edu-tag">OOP</span>
+              </div>
+            </a>
+          </div>
         </section>
-      </div>
-    </Container>
+      </main>
+    </div>
   );
 }
