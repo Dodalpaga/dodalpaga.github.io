@@ -9,6 +9,7 @@ import { ThemeProvider } from '@/context/ThemeContext';
 import { CookieConsent } from '@/components/cookie_consent';
 import { Suspense } from 'react';
 import { AnalyticsTracker } from '@/components/analytics_tracker';
+import FloatingChat from '@/components/floating-chat/index';
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -21,6 +22,9 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       </AppRouterCacheProvider>
 
       <MediaPlayer />
+
+      {/* Floating AI chat — always mounted so the panel persists across scrolling */}
+      <FloatingChat />
 
       <div className="status-hub">
         <CookieStatusChecker />

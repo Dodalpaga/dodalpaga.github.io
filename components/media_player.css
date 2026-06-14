@@ -4,7 +4,7 @@
 .mp-widget {
   position: fixed;
   bottom: 20px;
-  left: 20px;
+  left: 80px;
   z-index: 1000;
   pointer-events: none;
 
