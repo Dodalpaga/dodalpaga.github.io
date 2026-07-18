@@ -3,7 +3,7 @@
 .cookie-consent-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 1100;
+  z-index: 1400;
   pointer-events: none; /* let clicks through everywhere except the card */
 }
 
@@ -13,7 +13,7 @@
   bottom: 24px;
   left: 50%;
   transform: translateX(-50%) translateY(0);
-  z-index: 1101;
+  z-index: 1401;
 
   display: flex;
   align-items: center;
