@@ -1,8 +1,11 @@
 // app/projects/snowflakes/content.tsx
+'use client';
 
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import { Slider } from '@mui/material';
 import Image from 'next/image';
 import './styles.css'; // Import regular CSS
@@ -72,100 +75,209 @@ export default function Content() {
       maxWidth={false}
       sx={{
         display: 'flex',
-        alignItems: 'center',
         flexDirection: 'column',
-        justifyContent: 'center',
         height: '100%',
-        backgroundColor: 'black', // Set background color to black
+        padding: { xs: 2, sm: 3 },
       }}
     >
-      <Stack
-        spacing={4}
-        direction="row"
-        alignItems="center"
-        justifyContent="center"
-        width="100%"
-        height="100%"
+      {/* Header */}
+      <Box sx={{ mb: 2, pb: 2, borderBottom: '1px solid var(--card-border)' }}>
+        <span className="section-label">Simulation · Science</span>
+        <Typography
+          variant="h4"
+          sx={{
+            fontFamily: "'Syne', sans-serif",
+            fontWeight: 800,
+            letterSpacing: '-0.03em',
+          }}
+        >
+          Snowflakes
+        </Typography>
+        <Typography
+          variant="body2"
+          sx={{
+            color: 'var(--foreground-muted)',
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
+          }}
+        >
+          Learn how snowflake shape is determined by temperature and humidity
+        </Typography>
+      </Box>
+
+      {/* Stage */}
+      <Box
+        sx={{
+          flex: 1,
+          minHeight: 0,
+          borderRadius: '14px',
+          overflow: 'hidden',
+          border: '1px solid var(--card-border)',
+          backgroundColor: 'var(--background-sunken)',
+          boxShadow: 'var(--card-shadow)',
+        }}
       >
-        {/* Left: Humidity Selector */}
         <Stack
-          direction="column"
+          spacing={4}
+          direction="row"
           alignItems="center"
           justifyContent="center"
-          textAlign="center"
+          width="100%"
+          height="100%"
+          sx={{ px: { xs: 2, sm: 5 } }}
         >
-          <div style={{ color: 'white' }}>Humidity</div>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-            }}
+          {/* Left: Humidity Selector */}
+          <Stack
+            direction="column"
+            alignItems="center"
+            justifyContent="center"
+            textAlign="center"
+            spacing={1.5}
           >
-            {['Level 3', 'Level 2', 'Level 1'].map((level, index) => (
-              <div
-                key={level}
-                onClick={() => handleHumidityChange(3 - index)} // Set humidity level on click
-                style={{
-                  width: 30,
-                  height: 30,
-                  borderRadius: '50%',
-                  border: '2px solid white',
-                  margin: '5px 0',
-                  backgroundColor:
-                    humidity >= 3 - index ? 'white' : 'transparent',
-                  cursor: 'pointer', // Show a pointer cursor on hover
-                }}
-              />
-            ))}
+            <span
+              style={{
+                fontFamily: "'DM Mono', monospace",
+                fontSize: '0.68rem',
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                color: 'var(--foreground-muted)',
+              }}
+            >
+              Humidity
+            </span>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '10px',
+              }}
+            >
+              {['Level 3', 'Level 2', 'Level 1'].map((level, index) => (
+                <div
+                  key={level}
+                  onClick={() => handleHumidityChange(3 - index)}
+                  title={level}
+                  style={{
+                    width: 26,
+                    height: 26,
+                    borderRadius: '50%',
+                    border: '2px solid var(--accent)',
+                    backgroundColor:
+                      humidity >= 3 - index ? 'var(--accent)' : 'transparent',
+                    boxShadow:
+                      humidity >= 3 - index
+                        ? '0 0 10px var(--accent-muted)'
+                        : 'none',
+                    cursor: 'pointer',
+                    transition: 'all 0.25s ease',
+                  }}
+                />
+              ))}
+            </div>
+          </Stack>
+
+          {/* Image in between Humidity and Temperature */}
+          <div
+            className="fadein"
+            style={{ width: '90%', maxWidth: 480, height: '85%' }}
+          >
+            <Image
+              src={`/snowflakes/images/snowflake_${humidity}_${temperature}.jpg`}
+              alt="Snowflake"
+              key={imageKey}
+              fill
+              sizes="(max-width: 600px) 90vw, 480px"
+              style={{ objectFit: 'contain' }}
+            />
           </div>
-        </Stack>
 
-        {/* Image in between Humidity and Temperature */}
-        <div className="fadein" style={{ width: '90%', height: '100%' }}>
-          <Image
-            src={`/snowflakes/images/snowflake_${humidity}_${temperature}.jpg`}
-            alt="Snowflake"
-            key={imageKey}
-            layout="fill" // Makes the image fit the parent div
-            objectFit="contain" // Ensures the image maintains its aspect ratio
-          />
-        </div>
-
-        {/* Right: Temperature Slider */}
-        <Stack spacing={2} direction="column" alignItems="center">
-          <div style={{ color: 'white' }}>Temperature</div>
-          <div style={{ color: 'white' }}>0°C</div>
-          <Slider
-            value={temperature}
-            valueLabelDisplay="on"
-            valueLabelFormat={(value) => `${value}°C`}
-            min={-30}
-            max={0}
-            step={1}
-            onChange={handleTemperatureChange}
-            orientation="vertical"
-            sx={{
-              height: 300,
-              color: 'white',
-              '& .MuiSlider-thumb': {
-                backgroundColor: 'white',
-              },
-              '& .MuiSlider-track': {
-                backgroundColor: 'white',
-              },
-            }}
-          />
-          <div style={{ color: 'white' }}>-30°C</div>
+          {/* Right: Temperature Slider */}
+          <Stack spacing={1.5} direction="column" alignItems="center">
+            <span
+              style={{
+                fontFamily: "'DM Mono', monospace",
+                fontSize: '0.68rem',
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                color: 'var(--foreground-muted)',
+              }}
+            >
+              Temperature
+            </span>
+            <span
+              style={{
+                fontFamily: "'DM Mono', monospace",
+                fontSize: '0.72rem',
+                color: 'var(--foreground)',
+                opacity: 0.6,
+              }}
+            >
+              0°C
+            </span>
+            <Slider
+              value={temperature}
+              valueLabelDisplay="on"
+              valueLabelFormat={(value) => `${value}°C`}
+              min={-30}
+              max={0}
+              step={1}
+              onChange={handleTemperatureChange}
+              orientation="vertical"
+              sx={{
+                height: 260,
+                color: 'var(--accent)',
+                '& .MuiSlider-thumb': {
+                  backgroundColor: 'var(--accent)',
+                  '&:hover, &.Mui-focusVisible': {
+                    boxShadow: '0 0 0 8px var(--accent-muted)',
+                  },
+                },
+                '& .MuiSlider-track': {
+                  backgroundColor: 'var(--accent)',
+                  border: 'none',
+                },
+                '& .MuiSlider-rail': {
+                  backgroundColor: 'var(--card-border)',
+                  opacity: 1,
+                },
+                '& .MuiSlider-valueLabel': {
+                  fontFamily: "'DM Mono', monospace",
+                  fontSize: '0.7rem',
+                  backgroundColor: 'var(--background-elevated)',
+                  color: 'var(--foreground)',
+                },
+              }}
+            />
+            <span
+              style={{
+                fontFamily: "'DM Mono', monospace",
+                fontSize: '0.72rem',
+                color: 'var(--foreground)',
+                opacity: 0.6,
+              }}
+            >
+              -30°C
+            </span>
+          </Stack>
         </Stack>
-      </Stack>
-      <a
-        href="https://gagarin.is/work/arctic-opposites"
-        style={{ color: 'white', padding: '3px' }}
-        target="_blank"
-      >
-        Inspiration : Gagarin
-      </a>
+      </Box>
+
+      {/* Footer credit */}
+      <Box sx={{ textAlign: 'center', mt: 1.5 }}>
+        <a
+          href="https://gagarin.is/work/arctic-opposites"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            fontFamily: "'DM Mono', monospace",
+            fontSize: '0.68rem',
+            letterSpacing: '0.04em',
+            color: 'var(--foreground-muted)',
+          }}
+        >
+          Inspiration · Gagarin
+        </a>
+      </Box>
     </Container>
   );
 }

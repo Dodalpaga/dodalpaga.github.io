@@ -16,6 +16,57 @@ import {
   Cell,
 } from 'recharts';
 
+const panelStyle: React.CSSProperties = {
+  borderRadius: '16px',
+  padding: '24px',
+  background: 'var(--card)',
+  border: '1px solid var(--card-border)',
+  boxShadow: 'var(--card-shadow)',
+};
+
+const panelTitleStyle: React.CSSProperties = {
+  fontFamily: "'Syne', sans-serif",
+  fontWeight: 700,
+  fontSize: '1.15rem',
+  marginBottom: '16px',
+  color: 'var(--foreground)',
+};
+
+const thStyle: React.CSSProperties = {
+  padding: '10px 16px',
+  textAlign: 'left',
+  fontFamily: "'DM Mono', monospace",
+  fontSize: '0.7rem',
+  letterSpacing: '0.06em',
+  textTransform: 'uppercase',
+  color: 'var(--foreground-muted)',
+  borderBottom: '1px solid var(--card-border)',
+};
+
+const tdStyle: React.CSSProperties = {
+  padding: '10px 16px',
+  fontFamily: "'Plus Jakarta Sans', sans-serif",
+  fontSize: '0.88rem',
+  color: 'var(--foreground)',
+};
+
+const trStyle: React.CSSProperties = {
+  borderBottom: '1px solid var(--card-border)',
+};
+
+const metricLabelStyle: React.CSSProperties = {
+  fontFamily: "'DM Mono', monospace",
+  fontSize: '0.75rem',
+  color: 'var(--foreground-muted)',
+  marginBottom: '4px',
+};
+
+const metricValueStyle: React.CSSProperties = {
+  fontFamily: "'Syne', sans-serif",
+  fontWeight: 800,
+  fontSize: '2.25rem',
+};
+
 const COLORS = [
   '#f59e0b',
   '#3b82f6',
@@ -99,44 +150,71 @@ const StatCard: React.FC<StatCardProps> = ({
   explanation,
 }) => (
   <div
-    className="h-full rounded-lg p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+    className="h-full transition-all duration-300 hover:-translate-y-1"
     style={{
-      background: `linear-gradient(135deg, ${color}15 0%, ${color}05 100%)`,
-      border: `2px solid ${color}30`,
+      borderRadius: '14px',
+      padding: '20px',
+      background: 'var(--card)',
+      border: '1px solid var(--card-border)',
+      boxShadow: 'var(--card-shadow)',
+      borderTop: `2px solid ${color}`,
     }}
   >
     {explanation ? (
       <div className="group relative">
         <div
           className="text-xs font-medium uppercase tracking-wider mb-2 cursor-help"
-          style={{ color: 'var(--foreground)' }}
+          style={{
+            color: 'var(--foreground-muted)',
+            fontFamily: "'DM Mono', monospace",
+            letterSpacing: '0.08em',
+          }}
         >
           {title}
           <span className="ml-1 opacity-60">
-            <InfoIcon />
+            <InfoIcon style={{ fontSize: 14 }} />
           </span>
         </div>
-        <div className="absolute left-0 top-full mt-2 w-48 bg-gray-900 text-white text-xs rounded-lg p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10 shadow-lg">
+        <div
+          className="absolute left-0 top-full mt-2 w-48 text-xs opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10"
+          style={{
+            background: 'var(--background-elevated)',
+            border: '1px solid var(--card-border)',
+            color: 'var(--foreground)',
+            borderRadius: '10px',
+            padding: '8px 10px',
+            boxShadow: 'var(--card-shadow-hover)',
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
+          }}
+        >
           {explanation}
         </div>
       </div>
     ) : (
       <div
         className="text-xs font-medium uppercase tracking-wider mb-2"
-        style={{ color: 'var(--foreground)' }}
+        style={{
+          color: 'var(--foreground-muted)',
+          fontFamily: "'DM Mono', monospace",
+          letterSpacing: '0.08em',
+        }}
       >
         {title}
       </div>
     )}
     <div className="flex items-baseline gap-2 my-2">
-      <div className="text-4xl font-bold" style={{ color }}>
+      <div
+        className="text-4xl font-bold"
+        style={{ color, fontFamily: "'Syne', sans-serif" }}
+      >
         {value}
       </div>
       {change && (
         <div
           className="flex items-center gap-1 text-sm font-semibold"
           style={{
-            color: change.positive ? '#10b981' : '#ef4444',
+            color: change.positive ? '#22c55e' : '#ef4444',
+            fontFamily: "'DM Mono', monospace",
           }}
         >
           <span>{change.positive ? '↑' : '↓'}</span>
@@ -145,7 +223,10 @@ const StatCard: React.FC<StatCardProps> = ({
       )}
     </div>
     {subtitle && (
-      <div className="text-sm" style={{ color: 'var(--foreground)' }}>
+      <div
+        className="text-sm"
+        style={{ color: 'var(--foreground-muted)', fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+      >
         {subtitle}
       </div>
     )}
@@ -159,17 +240,18 @@ interface ChartCardProps {
 
 const ChartCard: React.FC<ChartCardProps> = ({ title, children }) => (
   <div
-    className="rounded-xl p-6 shadow-lg hover:-translate-y-1 transition-transform duration-200"
+    className="hover:-translate-y-1 transition-transform duration-200"
     style={{
-      background: 'var(--background-transparent)',
-      backdropFilter: 'blur(12px)',
-      WebkitBackdropFilter: 'blur(12px)',
-      border: '1px solid rgba(255, 255, 255, 0.1)',
+      borderRadius: '16px',
+      padding: '24px',
+      background: 'var(--card)',
+      border: '1px solid var(--card-border)',
+      boxShadow: 'var(--card-shadow)',
     }}
   >
     <h3
       className="text-xl font-bold mb-4"
-      style={{ color: 'var(--foreground)' }}
+      style={{ color: 'var(--foreground)', fontFamily: "'Syne', sans-serif" }}
     >
       {title}
     </h3>
@@ -199,9 +281,11 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
       <div
         className="p-3 rounded-lg shadow-xl border"
         style={{
-          background: 'var(--background-transparent)',
+          background: 'var(--background-elevated)',
           backdropFilter: 'blur(8px)',
-          borderColor: 'rgba(255, 255, 255, 0.2)',
+          borderColor: 'var(--card-border)',
+          fontFamily: "'DM Mono', monospace",
+          fontSize: '0.8rem',
         }}
       >
         <div
@@ -412,10 +496,22 @@ export default function Analytics() {
     >
       {/* Header */}
       <div className="mb-8 text-center">
-        <h1 className="text-5xl font-extrabold mb-2 bg-gradient-to-r from-blue-600 to-green-500 bg-clip-text text-transparent">
+        <span className="section-label">Data · Dashboard</span>
+        <h1
+          style={{
+            fontFamily: "'Syne', sans-serif",
+            fontWeight: 800,
+            letterSpacing: '-0.03em',
+          }}
+        >
           Analytics Dashboard
         </h1>
-        <p className="text-lg" style={{ color: 'var(--foreground)' }}>
+        <p
+          style={{
+            color: 'var(--foreground-muted)',
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
+          }}
+        >
           Real-time insights over the last {days} days vs previous {days} days
         </p>
       </div>
@@ -427,11 +523,19 @@ export default function Analytics() {
             <button
               key={d}
               onClick={() => setDays(d)}
-              className={`px-4 py-2 rounded-lg font-semibold transition-all ${
-                days === d
-                  ? 'bg-gradient-to-r from-blue-600 to-green-500 text-white shadow-lg'
-                  : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-blue-400'
-              }`}
+              className="transition-all"
+              style={{
+                fontFamily: "'DM Mono', monospace",
+                fontSize: '0.78rem',
+                letterSpacing: '0.04em',
+                padding: '8px 16px',
+                borderRadius: '10px',
+                fontWeight: 600,
+                cursor: 'pointer',
+                backgroundColor: days === d ? 'var(--accent)' : 'transparent',
+                color: days === d ? '#fff' : 'var(--foreground-muted)',
+                border: `1px solid ${days === d ? 'var(--accent)' : 'var(--card-border)'}`,
+              }}
             >
               {d} days
             </button>
@@ -444,11 +548,20 @@ export default function Analytics() {
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-4 py-2 rounded-lg font-semibold capitalize transition-all ${
-                  activeTab === tab
-                    ? 'bg-gradient-to-r from-blue-600 to-green-500 text-white shadow-lg'
-                    : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-blue-400'
-                }`}
+                className="capitalize transition-all"
+                style={{
+                  fontFamily: "'DM Mono', monospace",
+                  fontSize: '0.78rem',
+                  letterSpacing: '0.04em',
+                  padding: '8px 16px',
+                  borderRadius: '10px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  backgroundColor:
+                    activeTab === tab ? 'var(--accent)' : 'transparent',
+                  color: activeTab === tab ? '#fff' : 'var(--foreground-muted)',
+                  border: `1px solid ${activeTab === tab ? 'var(--accent)' : 'var(--card-border)'}`,
+                }}
               >
                 {tab}
               </button>
@@ -459,13 +572,31 @@ export default function Analytics() {
 
       {loading && (
         <div className="flex justify-center items-center py-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+          <div
+            className="animate-spin rounded-full h-12 w-12"
+            style={{
+              border: '2px solid var(--card-border)',
+              borderBottomColor: 'var(--accent)',
+            }}
+          ></div>
         </div>
       )}
 
       {error && (
-        <div className="bg-red-50 border-2 border-red-500 rounded-lg p-4 mb-6 w-full max-w-2xl">
-          <p className="text-red-700" style={{ color: 'var(--foreground)' }}>
+        <div
+          className="rounded-lg p-4 mb-6 w-full max-w-2xl"
+          style={{
+            background: 'rgba(239, 68, 68, 0.08)',
+            border: '1px solid rgba(239, 68, 68, 0.35)',
+          }}
+        >
+          <p
+            style={{
+              color: '#ef4444',
+              fontFamily: "'DM Mono', monospace",
+              fontSize: '0.85rem',
+            }}
+          >
             Error: {error}
           </p>
         </div>
@@ -554,7 +685,7 @@ export default function Analytics() {
                 </defs>
                 <CartesianGrid
                   strokeDasharray="3 3"
-                  stroke="rgba(255,255,255,0.1)"
+                  stroke="var(--card-border)"
                 />
                 <XAxis
                   dataKey="name"
@@ -583,7 +714,7 @@ export default function Analytics() {
               <BarChart data={pagesData.slice(0, 8)} layout="vertical">
                 <CartesianGrid
                   strokeDasharray="3 3"
-                  stroke="rgba(255,255,255,0.1)"
+                  stroke="var(--card-border)"
                 />
                 <XAxis
                   type="number"
@@ -635,7 +766,7 @@ export default function Analytics() {
                 <BarChart data={topCities}>
                   <CartesianGrid
                     strokeDasharray="3 3"
-                    stroke="rgba(255,255,255,0.1)"
+                    stroke="var(--card-border)"
                   />
                   <XAxis
                     dataKey="name"
@@ -660,29 +791,27 @@ export default function Analytics() {
 
       {stats && activeTab === 'geography' && (
         <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 rounded-xl shadow-lg overflow-hidden p-6">
-            <h3 className="text-xl font-bold mb-4">Country Distribution</h3>
+          <div className="lg:col-span-2" style={panelStyle}>
+            <h3 style={panelTitleStyle}>Country Distribution</h3>
             <div className="overflow-x-auto">
-              <table className="w-full">
+              <table className="w-full" style={{ borderCollapse: 'collapse' }}>
                 <thead>
                   <tr>
-                    <th className="px-4 py-3 text-left font-semibold">
-                      Country
-                    </th>
-                    <th className="px-4 py-3 text-right font-semibold">
-                      Visits
-                    </th>
-                    <th className="px-4 py-3 text-right font-semibold">
+                    <th style={thStyle}>Country</th>
+                    <th style={{ ...thStyle, textAlign: 'right' }}>Visits</th>
+                    <th style={{ ...thStyle, textAlign: 'right' }}>
                       % of Total
                     </th>
                   </tr>
                 </thead>
                 <tbody>
                   {countriesData.map((country, idx) => (
-                    <tr key={idx} className="border-b hover:bg-gray-50">
-                      <td className="px-4 py-3">{country.name}</td>
-                      <td className="px-4 py-3 text-right">{country.value}</td>
-                      <td className="px-4 py-3 text-right">
+                    <tr key={idx} style={trStyle}>
+                      <td style={tdStyle}>{country.name}</td>
+                      <td style={{ ...tdStyle, textAlign: 'right' }}>
+                        {country.value}
+                      </td>
+                      <td style={{ ...tdStyle, textAlign: 'right' }}>
                         {((country.value / countryDistribution) * 100).toFixed(
                           1
                         )}
@@ -695,21 +824,29 @@ export default function Analytics() {
             </div>
           </div>
 
-          <div className="rounded-xl shadow-lg p-6">
-            <h3 className="text-xl font-bold mb-4">Geographic Summary</h3>
+          <div style={panelStyle}>
+            <h3 style={panelTitleStyle}>Geographic Summary</h3>
             <div className="space-y-6">
               <div>
-                <p className="text-sm mb-1">Total Countries</p>
-                <p className="text-4xl font-bold text-blue-500">
+                <p style={metricLabelStyle}>Total Countries</p>
+                <p style={{ ...metricValueStyle, color: '#3b82f6' }}>
                   {countriesData.length}
                 </p>
               </div>
               <div>
-                <p className="text-sm mb-1">Top Country</p>
-                <p className="text-2xl font-bold text-green-600">
+                <p style={metricLabelStyle}>Top Country</p>
+                <p
+                  style={{
+                    ...metricValueStyle,
+                    fontSize: '1.5rem',
+                    color: '#22c55e',
+                  }}
+                >
                   {countriesData[0]?.name || 'N/A'}
                 </p>
-                <p className="text-sm">{countriesData[0]?.value || 0} visits</p>
+                <p style={{ ...metricLabelStyle, marginTop: 4 }}>
+                  {countriesData[0]?.value || 0} visits
+                </p>
               </div>
             </div>
           </div>
@@ -718,31 +855,27 @@ export default function Analytics() {
 
       {stats && activeTab === 'behavior' && (
         <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 rounded-xl shadow-lg overflow-hidden p-6">
-            <h3 className="text-xl font-bold mb-4">Page Performance</h3>
+          <div className="lg:col-span-2" style={panelStyle}>
+            <h3 style={panelTitleStyle}>Page Performance</h3>
             <div className="overflow-x-auto">
-              <table className="w-full">
+              <table className="w-full" style={{ borderCollapse: 'collapse' }}>
                 <thead>
                   <tr>
-                    <th className="px-4 py-3 text-left font-semibold">Page</th>
-                    <th className="px-4 py-3 text-right font-semibold">
-                      Views
-                    </th>
-                    <th className="px-4 py-3 text-right font-semibold">
+                    <th style={thStyle}>Page</th>
+                    <th style={{ ...thStyle, textAlign: 'right' }}>Views</th>
+                    <th style={{ ...thStyle, textAlign: 'right' }}>
                       % of Total
                     </th>
                   </tr>
                 </thead>
                 <tbody>
                   {pagesData.map((page, idx) => (
-                    <tr key={idx} className="border-b hover:bg-gray-50">
-                      <td className="px-4 py-3">
-                        <span className="inline-block px-3 py-1 rounded-full text-sm">
-                          {page.name}
-                        </span>
+                    <tr key={idx} style={trStyle}>
+                      <td style={tdStyle}>{page.name}</td>
+                      <td style={{ ...tdStyle, textAlign: 'right' }}>
+                        {page.value}
                       </td>
-                      <td className="px-4 py-3 text-right">{page.value}</td>
-                      <td className="px-4 py-3 text-right">
+                      <td style={{ ...tdStyle, textAlign: 'right' }}>
                         {((page.value / stats.total_page_views) * 100).toFixed(
                           1
                         )}
@@ -755,22 +888,24 @@ export default function Analytics() {
             </div>
           </div>
 
-          <div className="rounded-xl shadow-lg p-6">
-            <h3 className="text-xl font-bold mb-4">Behavior Metrics</h3>
+          <div style={panelStyle}>
+            <h3 style={panelTitleStyle}>Behavior Metrics</h3>
             <div className="space-y-6">
               <div>
-                <p className="text-sm mb-1">Bounce Rate</p>
-                <p className="text-4xl font-bold text-red-500">{bounceRate}%</p>
+                <p style={metricLabelStyle}>Bounce Rate</p>
+                <p style={{ ...metricValueStyle, color: '#ef4444' }}>
+                  {bounceRate}%
+                </p>
               </div>
               <div>
-                <p className="text-sm mb-1">Return Visitors</p>
-                <p className="text-4xl font-bold text-green-500">
+                <p style={metricLabelStyle}>Return Visitors</p>
+                <p style={{ ...metricValueStyle, color: '#22c55e' }}>
                   {returnVisitorsRate}%
                 </p>
               </div>
               <div>
-                <p className="text-sm mb-1">Avg Pages/Session</p>
-                <p className="text-4xl font-bold text-blue-500">
+                <p style={metricLabelStyle}>Avg Pages/Session</p>
+                <p style={{ ...metricValueStyle, color: '#3b82f6' }}>
                   {avgPagesPerSession}
                 </p>
               </div>
@@ -780,24 +915,20 @@ export default function Analytics() {
       )}
 
       {visitors && activeTab === 'visitors' && (
-        <div className="w-full max-w-7xl rounded-xl shadow-lg overflow-hidden p-6">
-          <h3 className="text-xl font-bold mb-4">
+        <div className="w-full max-w-7xl" style={panelStyle}>
+          <h3 style={panelTitleStyle}>
             Top Visitors ({visitors.total_unique_ips} total)
           </h3>
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full" style={{ borderCollapse: 'collapse' }}>
               <thead>
                 <tr>
-                  <th className="px-4 py-3 text-left font-semibold">Country</th>
-                  <th className="px-4 py-3 text-left font-semibold">City</th>
-                  <th className="px-4 py-3 text-left font-semibold">ISP</th>
-                  <th className="px-4 py-3 text-center font-semibold">Views</th>
-                  <th className="px-4 py-3 text-left font-semibold">
-                    Duration
-                  </th>
-                  <th className="px-4 py-3 text-left font-semibold">
-                    Last Seen
-                  </th>
+                  <th style={thStyle}>Country</th>
+                  <th style={thStyle}>City</th>
+                  <th style={thStyle}>ISP</th>
+                  <th style={{ ...thStyle, textAlign: 'center' }}>Views</th>
+                  <th style={thStyle}>Duration</th>
+                  <th style={thStyle}>Last Seen</th>
                 </tr>
               </thead>
               <tbody>
@@ -808,8 +939,8 @@ export default function Analytics() {
                       60000
                   );
                   return (
-                    <tr key={visitor.ip} className="border-b hover:bg-gray-50">
-                      <td className="px-4 py-3">
+                    <tr key={visitor.ip} style={trStyle}>
+                      <td style={tdStyle}>
                         <div className="flex items-center gap-2">
                           {visitor.country_code && (
                             <span>
@@ -824,15 +955,22 @@ export default function Analytics() {
                           <span>{visitor.country}</span>
                         </div>
                       </td>
-                      <td className="px-4 py-3">{visitor.city}</td>
-                      <td className="px-4 py-3 text-sm opacity-75">
+                      <td style={tdStyle}>{visitor.city}</td>
+                      <td style={{ ...tdStyle, opacity: 0.75 }}>
                         {visitor.isp}
                       </td>
-                      <td className="px-4 py-3 text-center font-bold text-blue-500">
+                      <td
+                        style={{
+                          ...tdStyle,
+                          textAlign: 'center',
+                          fontWeight: 700,
+                          color: '#3b82f6',
+                        }}
+                      >
                         {visitor.page_views}
                       </td>
-                      <td className="px-4 py-3">{duration} min</td>
-                      <td className="px-4 py-3">
+                      <td style={tdStyle}>{duration} min</td>
+                      <td style={tdStyle}>
                         {new Date(visitor.last_visit).toLocaleString()}
                       </td>
                     </tr>
