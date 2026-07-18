@@ -14,8 +14,12 @@ import './markdown.css';
 import 'highlight.js/styles/github.css'; // Example theme
 import { Metadata } from 'next';
 
-const PostPage = async ({ params }: { params: { slug: string } }) => {
-  const { slug } = params;
+const PostPage = async ({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) => {
+  const { slug } = await params;
   const filePath = path.join(process.cwd(), 'content/blog', `${slug}.md`);
   const fileContents = fs.readFileSync(filePath, 'utf8');
   const { data, content } = matter(fileContents);
@@ -54,9 +58,9 @@ const PostPage = async ({ params }: { params: { slug: string } }) => {
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const { slug } = params;
+  const { slug } = await params;
   const filePath = path.join(process.cwd(), 'content/blog', `${slug}.md`);
   const fileContents = fs.readFileSync(filePath, 'utf8');
   const { data } = matter(fileContents);
