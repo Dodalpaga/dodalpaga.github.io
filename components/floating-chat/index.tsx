@@ -13,6 +13,7 @@ import Collapse from '@mui/material/Collapse';
 import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
+import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
 import CloseIcon from '@mui/icons-material/Close';
 import SendIcon from '@mui/icons-material/Send';
 import PersonIcon from '@mui/icons-material/Person';
@@ -580,7 +581,9 @@ export default function FloatingChat() {
           {/* Header */}
           <Box className="fc-header">
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <SmartToyIcon sx={{ fontSize: 17, color: 'var(--accent)' }} />
+              <ChatBubbleOutlineRoundedIcon
+                sx={{ fontSize: 17, color: 'var(--accent)' }}
+              />
               <Box>
                 <Typography className="fc-title">Chat with me</Typography>
                 <Typography className="fc-subtitle">
@@ -814,7 +817,9 @@ export default function FloatingChat() {
             {open ? (
               <UnfoldLessIcon sx={{ fontSize: 22, color: '#fff' }} />
             ) : (
-              <SmartToyIcon sx={{ fontSize: 22, color: '#fff' }} />
+              <ChatBubbleOutlineRoundedIcon
+                sx={{ fontSize: 21, color: '#fff' }}
+              />
             )}
           </Box>
           {unread > 0 && (

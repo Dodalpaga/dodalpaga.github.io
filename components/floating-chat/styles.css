@@ -666,6 +666,13 @@
     bottom: 24px;
     left: 24px;
   }
+
+  /* The panel spans the full width from the bottom on mobile, so the FAB
+     would otherwise sit on top of it. The panel header already has its own
+     close button, so just hide the FAB while the panel is open. */
+  .fc-fab--open {
+    display: none;
+  }
 }
 
 /* ─── Tablet (601–900px) ─────────────────────────────────────────────────── */
