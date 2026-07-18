@@ -1,44 +1,62 @@
 /* ============================================================
-   NAVBAR — Glass morphism + fully responsive
+   NAVBAR — logo circle + centered pill, fully responsive
    ============================================================ */
 
-.navbar {
-  background-color: var(--background-transparent) !important;
-  backdrop-filter: blur(20px) saturate(1.6) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(1.6) !important;
-  position: fixed !important;
-  color: var(--foreground) !important;
-  top: 10px !important;
-  left: 10px !important;
-  right: 10px !important;
-  width: calc(100% - 20px) !important;
-  border-radius: 14px !important;
-  box-shadow:
-    0 4px 24px rgba(0, 0, 0, 0.18),
-    0 1px 0 var(--card-border) !important;
-  border: 1px solid var(--card-border) !important;
+.navbar-cluster {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ── Logo circle ─────────────────────────────────────────── */
+.navbar-logo-circle {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: var(--background-transparent);
+  backdrop-filter: blur(20px) saturate(1.6);
+  -webkit-backdrop-filter: blur(20px) saturate(1.6);
+  border: 1px solid var(--card-border);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.16);
+  text-decoration: none;
   transition:
-    box-shadow 0.3s ease,
-    background-color 0.25s ease !important;
-  z-index: 1000 !important;
+    background-color 0.6s ease,
+    border-color 0.6s ease;
 }
 
-.navbar .MuiToolbar-root {
-  min-height: 56px !important;
-  padding: 0 16px !important;
+/* ── Pill nav ─────────────────────────────────────────────── */
+.navbar-pill {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 44px;
+  padding: 0 6px;
+  background-color: var(--background-transparent);
+  backdrop-filter: blur(20px) saturate(1.6);
+  -webkit-backdrop-filter: blur(20px) saturate(1.6);
+  border-radius: 999px;
+  border: 1px solid var(--card-border);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.16);
+  color: var(--foreground);
+  transition:
+    background-color 0.6s ease,
+    border-color 0.6s ease,
+    color 0.6s ease;
 }
 
-.brandName {
-  font-size: 1rem !important;
-  font-weight: 700 !important;
-  white-space: nowrap;
-}
-
-/* Desktop nav links wrapper */
+/* Desktop nav links + theme toggle */
 .navbar-desktop-links {
   display: flex;
   align-items: center;
-  gap: 4px;
 }
 
 /* Mobile hamburger — hidden by default on desktop */
@@ -51,34 +69,19 @@
 .navbar-mobile-drawer {
   display: none;
   position: fixed;
-  top: 80px;
-  left: 10px;
-  right: 10px;
+  top: 68px;
+  right: 16px;
+  width: min(260px, calc(100vw - 32px));
   background: var(--background-elevated);
   border: 1px solid var(--card-border);
   border-radius: 14px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.24);
   z-index: 999;
   overflow: hidden;
-  transform-origin: top center;
-  animation: drawerOpen 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
 }
 
 .navbar-mobile-drawer.open {
   display: block;
-}
-
-@keyframes drawerOpen {
-  from {
-    opacity: 0;
-    transform: scaleY(0.92) translateY(-8px);
-  }
-  to {
-    opacity: 1;
-    transform: scaleY(1) translateY(0);
-  }
 }
 
 .navbar-mobile-links {
@@ -99,22 +102,12 @@
   font-family: var(--font-plus-jakarta), sans-serif;
   font-size: 0.95rem;
   font-weight: 500;
-  transition:
-    background-color 0.15s ease,
-    color 0.15s ease;
 }
 
 .navbar-mobile-link:hover {
   background-color: var(--accent-muted);
   color: var(--accent);
   opacity: 1;
-}
-
-.navbar-mobile-link-icon {
-  font-size: 1rem;
-  width: 20px;
-  text-align: center;
-  flex-shrink: 0;
 }
 
 .navbar-mobile-divider {
@@ -145,7 +138,6 @@
   inset: 0;
   z-index: 998;
   background: rgba(0, 0, 0, 0.2);
-  animation: fadeIn 0.15s ease both;
 }
 
 .navbar-overlay.open {
@@ -155,30 +147,44 @@
 /* ── Breakpoints ──────────────────────────────────────────── */
 @media (max-width: 768px) {
   .navbar-desktop-links {
-    display: none;
+    display: none !important;
   }
 
   .navbar-menu-btn {
     display: flex !important;
   }
 
-  .brandName {
-    font-size: 0.9rem !important;
+  /* Spread cluster edge-to-edge: logo far left, burger far right */
+  .navbar-cluster {
+    left: 16px;
+    right: 16px;
+    top: 16px;
+    transform: none;
+    justify-content: space-between;
+  }
+
+  .navbar-pill {
+    padding: 0;
+    width: 44px;
+    justify-content: center;
   }
 }
 
 @media (max-width: 400px) {
-  .navbar {
-    top: 6px !important;
-    left: 6px !important;
-    right: 6px !important;
-    width: calc(100% - 12px) !important;
-    border-radius: 12px !important;
+  .navbar-cluster {
+    left: 10px;
+    right: 10px;
+    top: 10px;
+    gap: 8px;
   }
 
-  .navbar-mobile-drawer {
-    top: 72px;
-    left: 6px;
-    right: 6px;
+  .navbar-logo-circle,
+  .navbar-pill {
+    height: 40px;
+  }
+
+  .navbar-logo-circle,
+  .navbar-pill {
+    width: 40px;
   }
 }

@@ -176,10 +176,6 @@ export default function Content() {
                 height={120}
                 className="profile-img"
               />
-              <span
-                className="profile-online-dot"
-                title="Available for opportunities"
-              />
             </div>
             <div className="identity-text">
               <p className="identity-label">AI ENGINEER</p>
@@ -188,10 +184,6 @@ export default function Content() {
                 <br />
                 Voydie
               </h1>
-              <div className="status-badge">
-                <span className="status-dot" />
-                OPERATIONAL
-              </div>
             </div>
           </div>
 

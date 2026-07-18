@@ -1,10 +1,6 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
 import Link from 'next/link';
 import { List, ListItem, ListItemText, IconButton } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -25,8 +21,9 @@ const NavLink = styled(ListItem)(() => ({
   textTransform: 'capitalize',
   color: 'inherit',
   cursor: 'pointer',
-  borderRadius: '8px',
-  padding: '6px 12px',
+  borderRadius: '999px',
+  padding: '6px 14px',
+  transition: 'background-color 0.4s ease, color 0.4s ease',
   '&:hover': {
     backgroundColor: 'var(--accent-muted)',
     color: 'var(--accent)',
@@ -76,107 +73,60 @@ const NavBar = () => {
 
   return (
     <>
-      <AppBar className="navbar" elevation={0}>
-        <Toolbar>
-          {/* ── Brand ──────────────────────────────────────── */}
-          <Link
-            href="/"
-            passHref
-            style={{ textDecoration: 'none', flexShrink: 0 }}
-          >
-            <Box
-              sx={{ display: 'flex', alignItems: 'center', color: 'inherit' }}
-            >
-              <Image
-                src={logoSrc}
-                alt="Logo"
-                width={44}
-                height={44}
-                style={{ marginRight: 8, padding: '6px' }}
-              />
-              <Typography
-                variant="h6"
-                component="div"
-                className="brandName"
-                noWrap
-                sx={{ color: 'var(--foreground)' }}
+      <div className="navbar-cluster">
+        {/* ── Logo — standalone circle ─────────────────────── */}
+        <Link href="/" passHref aria-label="Home" className="navbar-logo-circle">
+          <Image src={logoSrc} alt="Logo" width={26} height={26} />
+        </Link>
+
+        {/* ── Pill nav ─────────────────────────────────────── */}
+        <nav className="navbar-pill">
+          <List className="navbar-desktop-links" sx={{ display: 'flex', p: 0, gap: '2px' }}>
+            {NAV_ITEMS.map(({ label, href }) => (
+              <Link
+                key={href}
+                href={href}
+                passHref
+                style={{ textDecoration: 'none', color: 'var(--foreground-2)' }}
               >
-                Dorian VOYDIE
-              </Typography>
-            </Box>
-          </Link>
+                <NavLink>
+                  <ListItemText
+                    primary={label}
+                    primaryTypographyProps={{ fontSize: '0.9rem', fontWeight: 500 }}
+                  />
+                </NavLink>
+              </Link>
+            ))}
+          </List>
 
-          <Box sx={{ flexGrow: 1 }} />
-
-          {/* ── Desktop nav ────────────────────────────────── */}
-          <Box className="navbar-desktop-links">
-            <List sx={{ display: 'flex', p: 0, gap: '2px' }}>
-              {NAV_ITEMS.map(({ label, href }) => (
-                <Link
-                  key={href}
-                  href={href}
-                  passHref
-                  style={{
-                    textDecoration: 'none',
-                    color: 'var(--foreground-2)',
-                  }}
-                >
-                  <NavLink
-                    sx={{
-                      '&:hover': {
-                        backgroundColor: 'var(--accent-muted)',
-                        color: 'var(--accent)',
-                      },
-                    }}
-                  >
-                    <ListItemText
-                      primary={label}
-                      primaryTypographyProps={{
-                        fontSize: '0.9rem',
-                        fontWeight: 500,
-                      }}
-                    />
-                  </NavLink>
-                </Link>
-              ))}
-            </List>
-
-            <IconButton
-              onClick={toggleTheme}
-              sx={{
-                ml: 0.5,
-                color: 'var(--foreground-2)',
-                borderRadius: '8px',
-                '&:hover': {
-                  backgroundColor: 'var(--accent-muted)',
-                  color: 'var(--accent)',
-                },
-              }}
-            >
-              {isClient ? (
-                theme === 'light' ? (
-                  <DarkModeIcon />
-                ) : (
-                  <LightModeIcon />
-                )
-              ) : null}
-            </IconButton>
-          </Box>
+          <IconButton
+            onClick={toggleTheme}
+            className="navbar-desktop-links"
+            sx={{
+              color: 'var(--foreground-2)',
+              borderRadius: '999px',
+              '&:hover': {
+                backgroundColor: 'var(--accent-muted)',
+                color: 'var(--accent)',
+              },
+            }}
+          >
+            {isClient ? (
+              theme === 'light' ? <DarkModeIcon fontSize="small" /> : <LightModeIcon fontSize="small" />
+            ) : null}
+          </IconButton>
 
           {/* ── Mobile hamburger ───────────────────────────── */}
           <IconButton
             className="navbar-menu-btn"
             onClick={() => setMenuOpen((v) => !v)}
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-            sx={{
-              borderRadius: '8px',
-              '&:hover': { backgroundColor: 'var(--accent-muted)' },
-            }}
+            sx={{ borderRadius: '999px' }}
           >
             {menuOpen ? <CloseIcon /> : <MenuIcon />}
           </IconButton>
-        </Toolbar>
-      </AppBar>
+        </nav>
+      </div>
 
       {/* ── Mobile overlay scrim ───────────────────────────── */}
       <div
@@ -209,11 +159,7 @@ const NavBar = () => {
 
         <div className="navbar-mobile-theme-row">
           <span className="navbar-mobile-theme-label">
-            {isClient
-              ? theme === 'light'
-                ? 'Light mode'
-                : 'Dark mode'
-              : 'Theme'}
+            {isClient ? (theme === 'light' ? 'Light mode' : 'Dark mode') : 'Theme'}
           </span>
           <IconButton
             onClick={toggleTheme}
@@ -229,11 +175,7 @@ const NavBar = () => {
             }}
           >
             {isClient ? (
-              theme === 'light' ? (
-                <DarkModeIcon fontSize="small" />
-              ) : (
-                <LightModeIcon fontSize="small" />
-              )
+              theme === 'light' ? <DarkModeIcon fontSize="small" /> : <LightModeIcon fontSize="small" />
             ) : null}
           </IconButton>
         </div>

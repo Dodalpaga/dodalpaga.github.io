@@ -1,363 +1,153 @@
 /* ============================================================
-   BLUEPRINT PHOTO — CSS CUSTOM PROPERTIES (theme-aware)
+   HOME PAGE — minimal, non-scrollable
    ============================================================ */
 
-:root {
-  --blueprint-accent: rgba(37, 99, 180, 0.75);
-  --blueprint-line: rgba(37, 99, 180, 0.28);
-  --blueprint-line-faint: rgba(37, 99, 180, 0.12);
-  --blueprint-bar-bg: rgba(230, 238, 250, 0.92);
-  --blueprint-chip-bg: rgba(225, 236, 252, 0.95);
-  --blueprint-chip-border: rgba(37, 99, 180, 0.28);
-  --blueprint-chip-color: rgba(37, 99, 180, 0.9);
-}
-
-.dark,
-[data-theme='dark'],
-[class*='dark'] {
-  --blueprint-accent: rgba(99, 179, 237, 0.85);
-  --blueprint-line: rgba(99, 179, 237, 0.38);
-  --blueprint-line-faint: rgba(99, 179, 237, 0.14);
-  --blueprint-bar-bg: rgba(10, 18, 30, 0.88);
-  --blueprint-chip-bg: rgba(10, 18, 30, 0.92);
-  --blueprint-chip-border: rgba(99, 179, 237, 0.3);
-  --blueprint-chip-color: rgba(99, 179, 237, 0.88);
-}
-
-/* ============================================================
-   BLUEPRINT PHOTO COMPONENT
-   ============================================================ */
-
-.blueprint-photo {
+.home-main {
   position: relative;
-  flex-shrink: 0;
-  cursor: crosshair;
-  /* Responsive: width driven by CSS, height follows aspect ratio */
-  width: min(420px, 90vw);
-  height: auto;
-  aspect-ratio: 420 / 560;
+  height: 100dvh;
+  width: 100%;
+  overflow: hidden;
+  background: var(--background);
+  transition: background-color 0.6s ease;
 }
 
-/* SVG layers */
-.blueprint-svg {
+/* Background — centered horizontally, anchored to bottom.
+   Height always fills the full viewport; width scales automatically
+   from the image's own aspect ratio and is allowed to overflow the
+   sides (clipped by .home-main) so the center stays large. */
+.home-bg-wrap {
   position: absolute;
   inset: 0;
-  pointer-events: none;
-  width: 100%;
-  height: 100%;
-}
-.blueprint-svg--back {
   z-index: 0;
-}
-.blueprint-svg--front {
-  z-index: 3;
-}
-
-/* Photo wrapper */
-.blueprint-photo__img-wrap {
-  position: absolute;
-  /* These are proportional to the original 420×560 canvas */
-  top: 5%;
-  left: 6.7%;
-  right: 6.7%;
-  bottom: 9.6%;
-  border-radius: 3px;
-  overflow: hidden;
-  box-shadow:
-    0 0 0 1px var(--blueprint-line),
-    0 24px 64px rgba(0, 0, 0, 0.55);
-  z-index: 2;
-}
-
-.blueprint-photo__img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: top center;
-  display: block;
-  filter: contrast(1.04) brightness(0.97) saturate(0.94);
-  transition: transform 0.4s ease-out;
-}
-
-.blueprint-photo__fade {
-  position: absolute;
-  inset: 0;
   pointer-events: none;
-}
-
-.blueprint-photo__fade--bottom,
-.blueprint-photo__fade--sides,
-.blueprint-photo__fade--top {
-  display: none;
-}
-
-/* Floating tech chips */
-.blueprint-chip {
-  position: absolute;
-  background: var(--blueprint-chip-bg);
-  border: 1px solid var(--blueprint-chip-border);
-  border-radius: 4px;
-  padding: 4px 9px;
-  font-size: 0.58rem;
-  font-family: 'DM Mono', 'Courier New', monospace;
-  color: var(--blueprint-chip-color);
-  letter-spacing: 0.08em;
-  z-index: 4;
-  white-space: nowrap;
-  animation: floatChip 3s ease-in-out infinite;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-}
-
-@keyframes floatChip {
-  0%,
-  100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-5px);
-  }
-}
-
-/* ============================================================
-   HOME PAGE HERO LAYOUT
-   ============================================================ */
-
-.home-hero {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 56px;
-  align-items: center;
-  justify-items: center;
-  width: 100%;
-  max-width: 1280px;
-  padding: 0 32px;
-  box-sizing: border-box;
-}
-
-.home-nav-links {
   display: flex;
-  flex-direction: column;
-  gap: 14px;
-  width: 100%;
-  /* Prevent overflow */
-  min-width: 0;
-}
-
-.home-nav-link {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 20px 24px;
-  border-radius: 14px;
-  border: 1px solid var(--card-border);
-  background-color: var(--card);
-  transition:
-    transform 0.25s cubic-bezier(0.34, 1.2, 0.64, 1),
-    box-shadow 0.25s ease,
-    border-color 0.25s ease,
-    background-color 0.25s ease;
-  cursor: pointer;
-  position: relative;
+  justify-content: center;
+  align-items: flex-end;
   overflow: hidden;
-  /* Prevent text from overflowing card */
-  min-width: 0;
-  word-break: break-word;
 }
 
-.home-nav-link::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, var(--accent-muted), transparent);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.home-nav-link:hover {
-  transform: translateX(6px);
-  box-shadow: var(--card-shadow-hover);
-  border-color: var(--accent-muted);
-  opacity: 1;
-}
-
-.home-nav-link:hover::after {
-  opacity: 1;
-}
-
-.home-nav-link .link-label {
-  font-family: 'DM Mono', monospace;
-  font-size: 0.7rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--accent);
-  opacity: 0.8;
-}
-
-.home-nav-link h2 {
-  font-family: 'Syne', sans-serif;
-  font-size: 1.4rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--foreground);
-  margin: 0;
-  position: relative;
-  z-index: 1;
-}
-
-.home-nav-link p {
-  font-size: 0.875rem;
-  color: var(--foreground-muted);
-  margin: 0;
-  line-height: 1.5;
-  position: relative;
-  z-index: 1;
-  /* Leave room for arrow */
-  padding-right: 28px;
-}
-
-.home-nav-link .arrow {
-  position: absolute;
-  right: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1.2rem;
-  color: var(--accent);
-  opacity: 0.5;
-  transition:
-    transform 0.25s ease,
-    opacity 0.25s ease;
-  z-index: 1;
-}
-
-.home-nav-link:hover .arrow {
-  transform: translateY(-50%) translateX(4px);
-  opacity: 1;
+.home-bg-image {
+  height: 100dvh;
+  width: auto;
+  max-width: none;
 }
 
 /* ============================================================
-   API SECTION
+   FOOTER
    ============================================================ */
 
-.api-section-container {
-  width: 100%;
-  max-width: 680px;
+.home-footer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  padding: 0 140px calc(16px + env(safe-area-inset-bottom, 0px));
+}
+
+/* Card behind the footer links — keeps them legible over the background image */
+.home-footer-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 22px;
+  background-color: var(--background-transparent);
+  backdrop-filter: blur(20px) saturate(1.6);
+  -webkit-backdrop-filter: blur(20px) saturate(1.6);
+  border: 1px solid var(--card-border);
   border-radius: 16px;
-  overflow: hidden;
-  border: 1px solid var(--card-border);
-  background: var(--background-elevated);
-  box-shadow: var(--card-shadow);
-  box-sizing: border-box;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.16);
+  transition:
+    background-color 0.6s ease,
+    border-color 0.6s ease,
+    box-shadow 0.6s ease;
 }
 
-.api-section-header {
-  padding: 6px 16px;
-  background: var(--background-2);
-  border-bottom: 1px solid var(--card-border);
+.home-footer-row {
   display: flex;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
+  flex-wrap: wrap;
+  row-gap: 6px;
+  column-gap: 12px;
+  font-family: var(--font-dm-mono), 'DM Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--foreground-muted);
 }
 
-.api-section-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
+.home-footer-item {
+  white-space: nowrap;
 }
 
-.api-section-body {
-  padding: 16px 20px;
-  font-family: 'DM Mono', monospace;
-  font-size: 0.82rem;
-  color: var(--foreground-2);
+.home-footer-divider {
+  width: 1px;
+  height: 12px;
+  background: var(--card-border);
+}
+
+.home-footer-link {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  color: var(--foreground-muted);
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.4s ease;
+}
+
+.home-footer-link:hover {
+  color: var(--accent);
+}
+
+.home-footer-contacts {
   display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: 10px;
-  align-items: center;
 }
 
-/* ============================================================
-   PAGE ENTRANCE ANIMATIONS
-   ============================================================ */
-
-.hero-enter {
-  animation: heroEnter 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+.home-footer-icon {
+  display: flex;
+  color: var(--foreground-muted);
+  transition: color 0.4s ease;
 }
 
-@keyframes heroEnter {
-  from {
-    opacity: 0;
-    transform: translateY(32px) scale(0.97);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+.home-footer-icon:hover {
+  color: var(--accent);
+}
+
+.home-footer-copyright {
+  font-family: var(--font-dm-mono), 'DM Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--foreground-muted);
+  opacity: 0.7;
+  margin: 0;
+  text-align: center;
 }
 
 /* ============================================================
    RESPONSIVE
    ============================================================ */
 
-/* Tablet — collapse side by side into stacked */
 @media (max-width: 900px) {
-  .home-hero {
-    grid-template-columns: 1fr;
-    gap: 32px;
-    padding: 0 20px;
-    justify-items: center;
-  }
-
-  .blueprint-photo {
-    width: min(360px, 85vw);
-  }
-
-  .home-nav-links {
-    gap: 12px;
+  .home-footer {
+    padding-left: 16px;
+    padding-right: 16px;
   }
 }
 
-/* Mobile */
 @media (max-width: 600px) {
-  .home-hero {
-    gap: 24px;
-    padding: 0 16px;
+  .home-footer {
+    padding-top: 12px;
+    padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
   }
 
-  .blueprint-photo {
-    width: min(320px, 82vw);
-  }
-
-  .home-nav-link {
-    padding: 16px 18px;
-  }
-
-  .home-nav-link h2 {
-    font-size: 1.15rem;
-  }
-
-  .home-nav-link p {
-    font-size: 0.82rem;
-  }
-
-  .blueprint-chip {
-    display: none; /* side chips would overflow at small widths */
-  }
-}
-
-/* Small mobile */
-@media (max-width: 380px) {
-  .home-hero {
-    padding: 0 12px;
-  }
-
-  .blueprint-photo {
-    width: min(290px, 88vw);
-  }
-
-  .home-nav-link h2 {
-    font-size: 1.05rem;
+  .home-footer-row {
+    column-gap: 9px;
   }
 }

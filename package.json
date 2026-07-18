@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next",
-    "build": "next build",
+    "dev": "next --webpack",
+    "build": "next build --webpack",
     "start": "next start",
     "lint": "next lint"
   },
@@ -20,7 +20,7 @@
     "@headlessui/react": "^2.1.8",
     "@hello-pangea/dnd": "^18.0.1",
     "@heroicons/react": "^2.1.5",
-    "@maptiler/sdk": "^2.2.1",
+    "@maptiler/sdk": "^4.0.2",
     "@monaco-editor/react": "^4.6.0",
     "@mui/base": "^5.0.0-beta.40",
     "@mui/icons-material": "^5.16.7",
@@ -52,7 +52,7 @@
     "maplibre-gl": "^4.7.1",
     "monaco-editor-webpack-plugin": "^7.1.0",
     "monaco-jsx-highlighter": "^2.77.77",
-    "next": "^14.2.8",
+    "next": "^16.2.10",
     "next-themes": "^0.3.0",
     "next-transpile-modules": "^10.0.1",
     "p5": "^1.10.0",
@@ -95,6 +95,7 @@
     "@types/p5": "^1.7.6",
     "@types/three": "^0.180.0",
     "@types/trusted-types": "^2.0.7",
+    "baseline-browser-mapping": "^2.10.43",
     "json-loader": "^0.5.7"
   }
 }
