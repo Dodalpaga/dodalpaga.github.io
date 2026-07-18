@@ -17,6 +17,20 @@ export default function Home() {
     setMounted(true);
   }, []);
 
+  // Lock document scroll while on the home page — without this, a hair of
+  // extra scrollable height on mobile is enough to trigger the browser's
+  // address-bar collapse animation, which resizes 100dvh mid-gesture.
+  useEffect(() => {
+    const { overflow: htmlOverflow } = document.documentElement.style;
+    const { overflow: bodyOverflow } = document.body.style;
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.documentElement.style.overflow = htmlOverflow;
+      document.body.style.overflow = bodyOverflow;
+    };
+  }, []);
+
   return (
     <main className="home-main">
       <NavBar />
