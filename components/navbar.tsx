@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { List, ListItem, ListItemText, IconButton } from '@mui/material';
+import { IconButton } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
@@ -17,12 +17,23 @@ const NAV_ITEMS = [
   { label: 'Blog', href: '/blog' },
 ];
 
-const NavLink = styled(ListItem)(() => ({
+const NAV_ITEM_PADDING = '10px';
+const NAV_CONTENT_HEIGHT = '20px';
+
+const NavPillLink = styled(Link)(() => ({
+  display: 'inline-flex',
+  alignItems: 'center',
+  boxSizing: 'border-box',
+  fontFamily: 'inherit',
+  fontSize: '0.9rem',
+  fontWeight: 500,
+  lineHeight: NAV_CONTENT_HEIGHT, // fixe la hauteur du texte = hauteur d'une icône small
   textTransform: 'capitalize',
-  color: 'inherit',
+  textDecoration: 'none',
+  color: 'var(--foreground-2)',
   cursor: 'pointer',
   borderRadius: '999px',
-  padding: '6px 14px',
+  padding: NAV_ITEM_PADDING,
   transition: 'background-color 0.4s ease, color 0.4s ease',
   '&:hover': {
     backgroundColor: 'var(--accent-muted)',
@@ -75,34 +86,33 @@ const NavBar = () => {
     <>
       <div className="navbar-cluster">
         {/* ── Logo — standalone circle ─────────────────────── */}
-        <Link href="/" passHref aria-label="Home" className="navbar-logo-circle">
+        <Link
+          href="/"
+          passHref
+          aria-label="Home"
+          className="navbar-logo-circle"
+        >
           <Image src={logoSrc} alt="Logo" width={26} height={26} />
         </Link>
 
         {/* ── Pill nav ─────────────────────────────────────── */}
         <nav className="navbar-pill">
-          <List className="navbar-desktop-links" sx={{ display: 'flex', p: 0, gap: '2px' }}>
+          <div
+            className="navbar-desktop-links"
+            style={{ display: 'flex', alignItems: 'center', gap: '2px' }}
+          >
             {NAV_ITEMS.map(({ label, href }) => (
-              <Link
-                key={href}
-                href={href}
-                passHref
-                style={{ textDecoration: 'none', color: 'var(--foreground-2)' }}
-              >
-                <NavLink>
-                  <ListItemText
-                    primary={label}
-                    primaryTypographyProps={{ fontSize: '0.9rem', fontWeight: 500 }}
-                  />
-                </NavLink>
-              </Link>
+              <NavPillLink key={href} href={href}>
+                {label}
+              </NavPillLink>
             ))}
-          </List>
+          </div>
 
           <IconButton
             onClick={toggleTheme}
             className="navbar-desktop-links"
             sx={{
+              padding: NAV_ITEM_PADDING,
               color: 'var(--foreground-2)',
               borderRadius: '999px',
               '&:hover': {
@@ -112,7 +122,11 @@ const NavBar = () => {
             }}
           >
             {isClient ? (
-              theme === 'light' ? <DarkModeIcon fontSize="small" /> : <LightModeIcon fontSize="small" />
+              theme === 'light' ? (
+                <DarkModeIcon sx={{ fontSize: NAV_CONTENT_HEIGHT }} />
+              ) : (
+                <LightModeIcon sx={{ fontSize: NAV_CONTENT_HEIGHT }} />
+              )
             ) : null}
           </IconButton>
 
@@ -159,7 +173,11 @@ const NavBar = () => {
 
         <div className="navbar-mobile-theme-row">
           <span className="navbar-mobile-theme-label">
-            {isClient ? (theme === 'light' ? 'Light mode' : 'Dark mode') : 'Theme'}
+            {isClient
+              ? theme === 'light'
+                ? 'Light mode'
+                : 'Dark mode'
+              : 'Theme'}
           </span>
           <IconButton
             onClick={toggleTheme}
@@ -175,7 +193,11 @@ const NavBar = () => {
             }}
           >
             {isClient ? (
-              theme === 'light' ? <DarkModeIcon fontSize="small" /> : <LightModeIcon fontSize="small" />
+              theme === 'light' ? (
+                <DarkModeIcon sx={{ fontSize: NAV_CONTENT_HEIGHT }} />
+              ) : (
+                <LightModeIcon sx={{ fontSize: NAV_CONTENT_HEIGHT }} />
+              )
             ) : null}
           </IconButton>
         </div>
