@@ -34,6 +34,14 @@ import EditIcon from '@mui/icons-material/Edit';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { projectInputSx, projectSelectSx } from '@/constants/ui';
 
+// ─── Config ───────────────────────────────────────────────────────────────────
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? '';
+if (!API_BASE_URL && typeof window !== 'undefined') {
+  // eslint-disable-next-line no-console
+  console.error('NEXT_PUBLIC_API_URL is not set — chatbot requests will fail.');
+}
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type AgentStepType = 'thinking' | 'tool_call' | 'tool_result';
@@ -59,6 +67,9 @@ interface Message {
 // ─── Utilities ────────────────────────────────────────────────────────────────
 
 const getUserId = (): string => {
+  // 'use client' components are still pre-rendered on the server for the
+  // initial HTML pass — localStorage doesn't exist there, so guard it.
+  if (typeof window === 'undefined') return '';
   const KEY = 'llm_chat_user_id';
   let id = localStorage.getItem(KEY);
   if (!id) {
@@ -216,6 +227,8 @@ const renderMarkdown = (text: string): React.ReactNode[] => {
   if (last < text.length) nodes.push(renderBlock(text.slice(last), `b${last}`));
   return nodes;
 };
+
+const INPUT_MAX_LEN = 1000;
 
 // ─── Suggestions ─────────────────────────────────────────────────────────────
 
@@ -468,8 +481,17 @@ export default function Content() {
   const [modelsLoading, setModelsLoading] = useState(true);
   const [showScrollFab, setShowScrollFab] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingTurnIndex, setEditingTurnIndex] = useState<number | null>(null);
+  // Messages temporarily removed while editing, restored if the edit is
+  // cancelled instead of resent.
+  const removedOnEditRef = useRef<Message[]>([]);
 
-  const [userId] = useState(getUserId);
+  // getUserId() returns '' during SSR (no localStorage there); re-resolve
+  // once we're mounted in the browser.
+  const [userId, setUserId] = useState(getUserId);
+  useEffect(() => {
+    if (!userId) setUserId(getUserId());
+  }, [userId]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const scrollBoxRef = useRef<HTMLDivElement>(null);
   const textFieldRef = useRef<HTMLInputElement>(null);
@@ -494,9 +516,7 @@ export default function Content() {
   useEffect(() => {
     (async () => {
       try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/llm/models`,
-        );
+        const res = await fetch(`${API_BASE_URL}/llm/models`);
         const data = await res.json();
         setModels(data.models || []);
         setSelectedModel(data.default || '');
@@ -507,12 +527,18 @@ export default function Content() {
   }, []);
 
   const handleModelChange = async (m: string) => {
+    if (isLoading) return; // avoid switching mid-stream
     try {
       await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/llm/set-model?model_name=${encodeURIComponent(m)}`,
+        `${API_BASE_URL}/llm/set-model?model_name=${encodeURIComponent(m)}`,
         { method: 'POST', headers: { 'user-id': userId } },
       );
       setSelectedModel(m);
+      // Backend resets session history on model change — mirror that here so
+      // the visible conversation never diverges from what the model can see.
+      setMessages([]);
+      setEditingId(null);
+      setInput('');
     } catch (e) {
       console.error(e);
     }
@@ -524,7 +550,7 @@ export default function Content() {
       abortRef.current = new AbortController();
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/llm/generate-agentic?input=${encodeURIComponent(userInput)}`,
+          `${API_BASE_URL}/llm/generate-agentic?input=${encodeURIComponent(userInput)}`,
           {
             method: 'POST',
             headers: { 'user-id': userId },
@@ -630,12 +656,35 @@ export default function Content() {
     [userId],
   );
 
+  // Number of user turns that precede a given message index — this maps
+  // 1:1 to the backend's turn_starts bookkeeping, letting us tell the
+  // server exactly which turn to roll its session history back to.
+  const turnIndexAt = (msgIndex: number) =>
+    messages.slice(0, msgIndex).filter((m) => m.type === 'user').length;
+
+  // Tell the backend to drop its session history back to the start of a
+  // given turn, so the model's actual context matches what the UI shows
+  // after an edit or retry. Without this, edit/retry only look correct —
+  // the model still sees the old (pre-edit) conversation underneath.
+  const resetBackendContext = async (turnIndex: number) => {
+    try {
+      await fetch(
+        `${API_BASE_URL}/llm/truncate-history?turn_index=${turnIndex}`,
+        { method: 'POST', headers: { 'user-id': userId } },
+      );
+    } catch (e) {
+      console.error('Failed to sync backend context:', e);
+    }
+  };
+
   // main send — accepts optional truncation index for retry/edit
   const handleSend = useCallback(
     async (userInput: string, truncateAt?: number) => {
       if (!userInput.trim() || isLoading) return;
       setIsLoading(true);
       setEditingId(null);
+      setEditingTurnIndex(null);
+      removedOnEditRef.current = [];
 
       const userMsgId = `user_${Date.now()}`;
       const botMsgId = `bot_${Date.now() + 1}`;
@@ -671,27 +720,51 @@ export default function Content() {
   const handleSuggestion = (label: string) => handleSend(label);
 
   // retry: re-run user message at msgIndex, drop everything from that point
-  const handleRetry = (msgIndex: number) => {
+  // (frontend AND backend session history)
+  const handleRetry = async (msgIndex: number) => {
     const msg = messages[msgIndex];
     if (!msg || msg.type !== 'user' || isLoading) return;
+    await resetBackendContext(turnIndexAt(msgIndex));
     handleSend(msg.text, msgIndex);
   };
 
-  // edit: restore text to input, drop that message + everything after
+  // edit: restore text to input, drop that message + everything after from
+  // the UI (kept in a ref in case the user cancels), defer the backend
+  // truncation until the edit is actually resent.
   const handleEdit = (msgIndex: number) => {
     const msg = messages[msgIndex];
     if (!msg || msg.type !== 'user' || isLoading) return;
+    removedOnEditRef.current = messages.slice(msgIndex);
     setMessages((prev) => prev.slice(0, msgIndex));
     setInput(msg.text);
     setEditingId(msg.id);
+    setEditingTurnIndex(turnIndexAt(msgIndex));
     setTimeout(() => textFieldRef.current?.focus(), 50);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const cancelEdit = () => {
+    // Restore whatever was hidden when editing started.
+    if (removedOnEditRef.current.length) {
+      setMessages((prev) => [...prev, ...removedOnEditRef.current]);
+      removedOnEditRef.current = [];
+    }
+    setEditingId(null);
+    setEditingTurnIndex(null);
+    setInput('');
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
-    handleSend(input.trim());
+    const text = input.trim();
     setInput('');
+    if (editingId && editingTurnIndex !== null) {
+      // removedOnEditRef held the messages hidden since handleEdit — they
+      // won't be restored now since we're committing the edit, not cancelling.
+      removedOnEditRef.current = [];
+      await resetBackendContext(editingTurnIndex);
+    }
+    handleSend(text);
   };
 
   const handleStop = () => {
@@ -1150,10 +1223,7 @@ export default function Content() {
             Editing — press Enter to resend, Esc to cancel
           </Typography>
           <Typography
-            onClick={() => {
-              setEditingId(null);
-              setInput('');
-            }}
+            onClick={cancelEdit}
             sx={{
               fontFamily: "'DM Mono', monospace",
               fontSize: '0.7rem',
@@ -1193,8 +1263,7 @@ export default function Content() {
                 handleSubmit(e as unknown as React.FormEvent);
               }
               if (e.key === 'Escape' && editingId) {
-                setEditingId(null);
-                setInput('');
+                cancelEdit();
               }
             }}
             variant="outlined"
@@ -1204,6 +1273,7 @@ export default function Content() {
                 : 'Ask something… (Enter to send)'
             }
             disabled={modelsLoading}
+            inputProps={{ maxLength: INPUT_MAX_LEN }}
             multiline
             maxRows={4}
             autoComplete="off"
@@ -1232,15 +1302,17 @@ export default function Content() {
                 fontSize: '0.62rem',
                 lineHeight: 1,
                 color:
-                  input.length > 800
+                  input.length > INPUT_MAX_LEN * 0.8
                     ? 'var(--accent)'
                     : 'var(--foreground-muted)',
-                opacity: input.length > 800 ? 1 : 0.45,
+                opacity: input.length > INPUT_MAX_LEN * 0.8 ? 1 : 0.45,
                 pointerEvents: 'none',
                 transition: 'color .2s, opacity .2s',
               }}
             >
-              {input.length > 800 ? `${input.length} / 1000` : input.length}
+              {input.length > INPUT_MAX_LEN * 0.8
+                ? `${input.length} / ${INPUT_MAX_LEN}`
+                : input.length}
             </Typography>
           )}
         </Box>
