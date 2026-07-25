@@ -249,6 +249,112 @@ body > * {
   z-index: 1;
 }
 
+/* ============================================================
+   404 PAGE
+   ============================================================ */
+
+.not-found-page {
+  min-height: 100vh;
+  padding: 24px 20px 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.not-found-card {
+  width: min(100%, 680px);
+  padding: 40px 28px;
+  border: 1px solid var(--card-border);
+  border-radius: 24px;
+  background: var(--background-transparent);
+  box-shadow: var(--card-shadow);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  text-align: center;
+}
+
+.not-found-eyebrow {
+  margin: 0 0 12px;
+  color: var(--accent);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.not-found-card h1 {
+  margin: 0 0 14px;
+  font-family: var(--font-syne), sans-serif;
+  font-size: clamp(1.8rem, 3.2vw, 2.8rem);
+  line-height: 1.1;
+  color: var(--foreground);
+}
+
+.not-found-copy {
+  margin: 0 auto 24px;
+  max-width: 560px;
+  color: var(--foreground-2);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.not-found-actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.not-found-primary,
+.not-found-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 11px 16px;
+  border-radius: 999px;
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.not-found-primary {
+  background: var(--accent);
+  color: white;
+}
+
+.not-found-secondary {
+  background: var(--accent-muted);
+  color: var(--foreground);
+  border: 1px solid var(--card-border);
+}
+
+.not-found-primary:hover,
+.not-found-secondary:hover {
+  transform: translateY(-1px);
+}
+
+@media (max-width: 640px) {
+  .not-found-page {
+    padding: 16px 14px 32px;
+  }
+
+  .not-found-card {
+    padding: 32px 20px;
+  }
+
+  .not-found-actions {
+    flex-direction: column;
+  }
+
+  .not-found-primary,
+  .not-found-secondary {
+    width: 100%;
+  }
+}
+
 /* Typography scale */
 h1,
 h2,
