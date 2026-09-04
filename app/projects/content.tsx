@@ -24,13 +24,22 @@ type App = {
 
 const apps: App[] = [
   {
+    title: 'VISEO',
+    image: `/images/viseo.png`,
+    link: 'https://viseo.esa.int/',
+    target: '_blank',
+    description:
+      'Virtual Support for Earth Observation — a tool to discover ESA ecosystem and visualize satellite data.',
+    tags: ['Tool', 'External', 'Professional'],
+  },
+  {
     title: 'Chat Bot',
     image: `/images/chatbot.png`,
     link: '/projects/chatbot',
     target: '',
     description:
       'A chatbot fine-tuned on my resume, previous projects, and other relevant information about me.',
-    tags: ['AI', 'LLM'],
+    tags: ['AI', 'LLM', 'Personal'],
   },
   {
     title: 'Board Game Card Printer',
@@ -38,7 +47,7 @@ const apps: App[] = [
     link: 'https://dodalpaga.github.io/Board-Game-Card-Printer/',
     target: '_blank',
     description: 'A small website to print your custom cards for board games.',
-    tags: ['Tool', 'External'],
+    tags: ['Tool', 'External', 'Personal'],
   },
   {
     title: 'Analytics',
@@ -46,15 +55,7 @@ const apps: App[] = [
     link: '/projects/analytics',
     target: '',
     description: 'Live analytics dashboard for this website.',
-    tags: ['Data', 'Dashboard'],
-  },
-  {
-    title: 'Roadmap',
-    image: `/images/mind_map.jpg`,
-    link: '/projects/roadmap',
-    target: '',
-    description: 'A roadmap maker, makes it easier for me to make TODOs',
-    tags: ['Tool', 'Productivity'],
+    tags: ['Data', 'Dashboard', 'Personal'],
   },
   {
     title: 'Image Detection',
@@ -63,7 +64,7 @@ const apps: App[] = [
     target: '',
     description:
       'Real-time object detection within images using YOLO (You Only Look Once).',
-    tags: ['AI', 'Computer Vision'],
+    tags: ['AI', 'Computer Vision', 'Personal'],
   },
   {
     title: 'Image Generation',
@@ -71,7 +72,7 @@ const apps: App[] = [
     link: '/projects/image_generation',
     target: '',
     description: 'Image generation powered by Stable Diffusion.',
-    tags: ['AI', 'Generative'],
+    tags: ['AI', 'Generative', 'Personal'],
   },
   {
     title: "What's Halfway?",
@@ -80,7 +81,7 @@ const apps: App[] = [
     target: '',
     description:
       'Find the perfect meeting spot between multiple locations based on driving time.',
-    tags: ['Maps', 'Tool'],
+    tags: ['Maps', 'Tool', 'Personal'],
   },
   {
     title: 'CAD',
@@ -88,16 +89,7 @@ const apps: App[] = [
     link: '/projects/cad',
     target: '',
     description: 'My collection of 3D models and parametric designs.',
-    tags: ['3D', 'Design'],
-  },
-  {
-    title: 'Code Interpreter',
-    image: `/images/cmd.jpg`,
-    link: '/projects/code_interpreter',
-    target: '',
-    description:
-      'Advanced code editor supporting JavaScript, Python, and more — write, interpret, and execute.',
-    tags: ['Dev Tool', 'Code'],
+    tags: ['3D', 'Design', 'Personal'],
   },
   {
     title: 'Processing Apps',
@@ -106,16 +98,7 @@ const apps: App[] = [
     target: '',
     description:
       'Creative and interactive visual projects built with the p5.js framework.',
-    tags: ['Creative', 'p5.js'],
-  },
-  {
-    title: 'Clustering',
-    image: `/images/clustering.png`,
-    link: '/projects/clustering',
-    target: '',
-    description:
-      'Draw dots on a canvas and apply K-means clustering. Watch the algorithm in action.',
-    tags: ['ML', 'Interactive'],
+    tags: ['Creative', 'p5.js', 'Personal'],
   },
   {
     title: 'Jupyter Notebooks',
@@ -124,7 +107,7 @@ const apps: App[] = [
     target: '',
     description:
       'A curated collection of notebooks on AI, machine learning, and algorithmic problem-solving.',
-    tags: ['AI', 'Notebooks'],
+    tags: ['AI', 'Notebooks', 'Personal'],
   },
   {
     title: 'Travels',
@@ -132,16 +115,7 @@ const apps: App[] = [
     link: '/projects/travels',
     target: '',
     description: "Track the countries I've visited — growing every year.",
-    tags: ['Personal', 'Maps'],
-  },
-  {
-    title: 'Mind Mapping',
-    image: `/images/mind_map.jpg`,
-    link: '/projects/mind_map',
-    target: '',
-    description:
-      'A dynamic mind mapping tool to organize ideas through interconnected nodes.',
-    tags: ['Tool', 'Productivity'],
+    tags: ['Personal', 'Maps', 'Personal'],
   },
   {
     title: 'Snowflakes',
@@ -150,15 +124,7 @@ const apps: App[] = [
     target: '',
     description:
       'Learn how snowflakes form based on temperature and humidity conditions.',
-    tags: ['Simulation', 'Science'],
-  },
-  {
-    title: 'Black Hole Simulator',
-    image: `/images/black_hole.png`,
-    link: '/projects/black_hole',
-    target: '',
-    description: 'An interactive gravitational lensing black hole simulation.',
-    tags: ['Simulation', 'Physics'],
+    tags: ['Simulation', 'Science', 'Personal'],
   },
   {
     title: 'Regex Matcher',
@@ -167,16 +133,7 @@ const apps: App[] = [
     target: '',
     description:
       'Test and validate regular expressions in real time against sample input.',
-    tags: ['Dev Tool', 'Utility'],
-  },
-  {
-    title: 'JSON Explorer',
-    image: `/images/json.jpg`,
-    link: '/projects/json_explorer',
-    target: '',
-    description:
-      'Interactively explore and navigate complex JSON structures — perfect for API work.',
-    tags: ['Dev Tool', 'Utility'],
+    tags: ['Dev Tool', 'Utility', 'Personal'],
   },
   {
     title: 'Music Production',
@@ -185,16 +142,7 @@ const apps: App[] = [
     target: '',
     description:
       'Electronic music I produce in my free time, experimenting with sounds and styles.',
-    tags: ['Music', 'Creative'],
-  },
-  {
-    title: 'Satellite Segmenter',
-    image: `/images/earth.jpg`,
-    link: '/projects/satellite_segmentation',
-    target: '',
-    description:
-      'Select an Earth tile and get a segmented version highlighting regions and features.',
-    tags: ['AI', 'Remote Sensing'],
+    tags: ['Music', 'Creative', 'Personal'],
   },
   {
     title: 'Guess What',
@@ -203,7 +151,7 @@ const apps: App[] = [
     target: '_blank',
     description:
       'A classic image guessing game — play with friends and family.',
-    tags: ['Game', 'External'],
+    tags: ['Game', 'External', 'Personal'],
   },
   {
     title: 'Richesses du Monde',
@@ -212,7 +160,7 @@ const apps: App[] = [
     target: '_blank',
     description:
       'A French Monopoly-style board game — buy resources and build your empire.',
-    tags: ['Game', 'External'],
+    tags: ['Game', 'External', 'Personal'],
   },
   {
     title: 'Cognitive Game',
@@ -221,16 +169,7 @@ const apps: App[] = [
     target: '_blank',
     description:
       'Type matching arrows as fast as you can. One mistake costs you time!',
-    tags: ['Game', 'External'],
-  },
-  {
-    title: 'Three.js Website Template',
-    image: `/images/threejs.png`,
-    link: 'https://boat-configurator.netlify.app/',
-    target: '_blank',
-    description:
-      'A 3D boat configurator demo built as a template with Three.js.',
-    tags: ['3D', 'Three.js'],
+    tags: ['Game', 'External', 'Personal'],
   },
   {
     title: 'SEAWOLF Website',
@@ -239,7 +178,7 @@ const apps: App[] = [
     target: '_blank',
     description:
       'Website for SEAWOLF, an open-hull boat designed for fishing and diving.',
-    tags: ['Web', 'External'],
+    tags: ['Web', 'External', 'Personal'],
   },
   {
     title: 'VBSO Website',
@@ -248,7 +187,7 @@ const apps: App[] = [
     target: '_blank',
     description:
       'Website for the Saint-Orens Volleyball Club — competitive and recreational teams.',
-    tags: ['Web', 'External'],
+    tags: ['Web', 'External', 'Personal'],
   },
 ];
 
@@ -321,8 +260,8 @@ export default function Content() {
             lineHeight: 1.6,
           }}
         >
-          {apps.length} projects — from AI experiments to interactive tools and
-          creative demos.
+          {apps.length} projects — from profesionnal projects, to personal AI
+          interactive tools and creative demos.
         </p>
 
         {/* Search */}
