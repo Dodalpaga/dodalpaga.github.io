@@ -1,7 +1,17 @@
 'use client';
 import React from 'react';
 import { T } from './theme';
-import { gridCells, visibleCells, type ViewInfo } from './openMeteo/grid';
+import { visibleCells, type ViewInfo } from './openMeteo/grid';
+
+// How many cells visibleCells() may return in one go. The number of cells
+// needed to fully cover the on-screen patch scales as (1/degrees)^2, so a
+// flat cap sized for coarse levels leaves fine levels (0.1°, 0.05°) only
+// partially painted, shrinking into a smaller and smaller disc around the
+// view centre as the grid gets finer. This ceiling is picked high enough to
+// fully cover every level at typical viewport sizes and max zoom (40x); it's
+// a safety ceiling, not a target — visibleCells returns fewer cells whenever
+// fewer are actually on screen.
+const MAX_VISIBLE_CELLS = 25_000;
 import { makeProjector } from './openMeteo/projection';
 import type { GlobeDataset, Head, Sample } from './openMeteo';
 
@@ -181,10 +191,10 @@ export function useOrthographicGlobe(options?: GlobeOptions) {
       if (values) {
         const degrees = dataset.cellDegrees[level];
         const cells = visibleCells(
-          gridCells(level, degrees),
+          level,
           degrees,
           { ...currentView, w: width, h: height } as ViewInfo,
-          1400,
+          MAX_VISIBLE_CELLS,
         );
         for (const cell of cells) {
           const sample = values.get(cell.id);
@@ -294,14 +304,14 @@ export function useOrthographicGlobe(options?: GlobeOptions) {
         const canvas = canvasRef.current;
         const degrees = dataset.cellDegrees[currentLevel];
         const cells = visibleCells(
-          gridCells(currentLevel, degrees),
+          currentLevel,
           degrees,
           {
             ...view.current,
             w: canvas?.clientWidth ?? 0,
             h: canvas?.clientHeight ?? 0,
           } as ViewInfo,
-          1400,
+          MAX_VISIBLE_CELLS,
         );
         const values =
           samples.current.get(currentLevel) ?? new Map<string, Sample>();
@@ -390,7 +400,7 @@ export function useOrthographicGlobe(options?: GlobeOptions) {
       beginInteraction();
       view.current.zoom = Math.max(
         0.6,
-        Math.min(40, view.current.zoom * Math.exp(-event.deltaY * 0.0015)),
+        Math.min(170, view.current.zoom * Math.exp(-event.deltaY * 0.0015)),
       );
       schedule();
       interactionTimer = setTimeout(endInteraction, 140);

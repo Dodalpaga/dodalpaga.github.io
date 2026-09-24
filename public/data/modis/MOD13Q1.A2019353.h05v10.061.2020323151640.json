@@ -1,1 +1,1 @@
-{"format":"modis-ndvi-v1","source":"MOD13Q1 Collection 6.1","tile":"h05v10","acquisition":"2019-12-19","sourcePixels":[4800,4800],"blockSize":20,"points":[[-18.5625,-136.27705,0.22493]]}
+{"format":"modis-ndvi-v2","source":"MOD13Q1 Collection 6.1","tile":"h05v10","acquisition":"2019-12-19","sourcePixels":[4800,4800],"cellDegrees":0.045,"points":[[-18.5625,-136.3275,0.23085],[-18.5625,-136.2825,0.22444]]}

@@ -1,1 +1,1 @@
-{"format":"modis-ndvi-v1","source":"MOD13Q1 Collection 6.1","tile":"h10v11","acquisition":"2019-12-19","sourcePixels":[4800,4800],"blockSize":20,"points":[[-26.27083,-80.08425,0.04838],[-26.3125,-80.11303,0.08469],[-26.35417,-79.90938,0.10617]]}
+{"format":"modis-ndvi-v2","source":"MOD13Q1 Collection 6.1","tile":"h10v11","acquisition":"2019-12-19","sourcePixels":[4800,4800],"cellDegrees":0.045,"points":[[-26.3475,-79.8975,0.10857],[-26.3475,-79.8525,-0.0067],[-26.3025,-80.1225,0.04488],[-26.3025,-80.0775,0.05726]]}

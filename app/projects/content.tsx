@@ -33,6 +33,15 @@ const apps: App[] = [
     tags: ['Tool', 'External', 'Professional'],
   },
   {
+    title: 'NDVI Map',
+    image: `/images/ndvi.png`,
+    link: '/projects/globe',
+    target: '',
+    description:
+      'A web app to visualize NDVI (Normalized Difference Vegetation Index) data on a global map.',
+    tags: ['Tool', 'Maps', 'Personal'],
+  },
+  {
     title: 'Chat Bot',
     image: `/images/chatbot.png`,
     link: '/projects/chatbot',
