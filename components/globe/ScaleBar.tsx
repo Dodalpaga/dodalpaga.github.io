@@ -25,28 +25,31 @@ export default function ScaleBar({
     <div
       style={{
         position: 'relative',
-        display: 'flex',
         width,
-        height: 12,
-        borderRadius: 6,
-        overflow: 'hidden',
+        height: 30,
       }}
       role="img"
       aria-label="Class share legend"
     >
-      {segments.map((s, i) => (
-        <div
-          key={i}
-          aria-label={s.label}
-          onMouseEnter={() => setHovered(s)}
-          onMouseLeave={() => setHovered(null)}
-          style={{
-            flex: s.share,
-            background: s.color,
-            cursor: s.label ? 'help' : undefined,
-          }}
-        />
-      ))}
+      <div
+        style={{
+          display: 'flex',
+          width: '100%',
+          height: 12,
+          borderRadius: 6,
+          overflow: 'hidden',
+        }}
+      >
+        {segments.map((s, i) => (
+          <div
+            key={i}
+            aria-label={s.label}
+            onMouseEnter={() => setHovered(s)}
+            onMouseLeave={() => setHovered(null)}
+            style={{ flex: s.share, background: s.color }}
+          />
+        ))}
+      </div>
       {hovered?.label && (
         <div
           role="tooltip"

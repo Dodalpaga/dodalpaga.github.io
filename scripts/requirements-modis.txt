@@ -1,0 +1,4 @@
+earthaccess>=0.15
+python-dotenv>=1.0
+numpy>=1.24
+pyhdf>=0.11

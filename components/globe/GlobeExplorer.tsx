@@ -7,7 +7,6 @@ import EmbeddingPanel from './EmbeddingPanel';
 import ScaleBadge from './ScaleBadge';
 import ScaleBar from './ScaleBar';
 import StatsBar from './StatsBar';
-import TimeControl from './TimeControl';
 import type { GlobeStats } from './useOrthographicGlobe';
 import { T, cardStyle } from './theme';
 import { DATASETS } from './openMeteo';
@@ -58,20 +57,13 @@ export default function GlobeExplorer({
   const [headId, setHeadId] = React.useState(
     DATASETS[0]?.defaultHeadId ?? DATASETS[0]?.heads[0]?.id,
   );
-  const [timeId, setTimeId] = React.useState(
-    DATASETS[0]?.defaultTimeId ?? DATASETS[0]?.timeOptions?.[0]?.id,
-  );
   const colRef = React.useRef<HTMLDivElement>(null);
   const dataset = DATASETS.find((item) => item.id === datasetId) ?? DATASETS[0];
 
   React.useEffect(() => {
     setHeadId(dataset?.defaultHeadId ?? dataset?.heads[0]?.id);
-    setTimeId(dataset?.defaultTimeId ?? dataset?.timeOptions?.[0]?.id);
   }, [dataset]);
 
-  const timeOption = dataset?.timeOptions?.find(
-    (option) => option.id === timeId,
-  );
   const activeHead =
     dataset?.heads.find((head) => head.id === headId) ?? dataset?.heads[0];
   const scaleSegments =
@@ -129,12 +121,7 @@ export default function GlobeExplorer({
           visibility: mobile && panelsOpen ? 'hidden' : 'visible',
         }}
       >
-        <GlobeCanvas
-          dataset={dataset}
-          headId={headId}
-          timeOffsetHours={timeOption?.offsetHours}
-          onStats={setStats}
-        />
+        <GlobeCanvas dataset={dataset} headId={headId} onStats={setStats} />
       </div>
 
       {!widgetsReady && (
@@ -215,13 +202,6 @@ export default function GlobeExplorer({
             <ScaleBadge
               title={dataset?.describeLevel(stats.level).title ?? 'Grid level'}
               subtitle={dataset?.describeLevel(stats.level).subtitle ?? '—'}
-            />
-          </div>
-          <div style={{ pointerEvents: 'auto' }}>
-            <TimeControl
-              options={dataset?.timeOptions}
-              value={timeId}
-              onChange={setTimeId}
             />
           </div>
         </div>

@@ -65,7 +65,6 @@ export type GlobeStats = {
 type GlobeOptions = {
   dataset?: GlobeDataset;
   headId?: string;
-  timeOffsetHours?: number;
   onStats?: (stats: GlobeStats) => void;
 };
 
@@ -77,10 +76,10 @@ export function useOrthographicGlobe(options?: GlobeOptions) {
   const generation = React.useRef(0);
   const raf = React.useRef(0);
   const datasetId = React.useRef<string | undefined>(undefined);
+  const interacting = React.useRef(false);
   const [viewRevision, setViewRevision] = React.useState(0);
   const dataset = options?.dataset;
   const headId = options?.headId;
-  const timeOffsetHours = options?.timeOffsetHours ?? 0;
   const onStats = React.useRef(options?.onStats);
   onStats.current = options?.onStats;
 
@@ -318,7 +317,6 @@ export function useOrthographicGlobe(options?: GlobeOptions) {
             );
             schedule();
           },
-          { timeOffsetHours },
         );
       }
     };
@@ -326,7 +324,7 @@ export function useOrthographicGlobe(options?: GlobeOptions) {
       if (error?.name !== 'AbortError') schedule();
     });
     return () => controller.abort();
-  }, [dataset, schedule, timeOffsetHours, viewRevision]);
+  }, [dataset, schedule, viewRevision]);
 
   React.useEffect(() => {
     let dead = false;
@@ -353,7 +351,18 @@ export function useOrthographicGlobe(options?: GlobeOptions) {
     const canvas = canvasRef.current;
     if (!canvas) return;
     let drag: { x: number; y: number } | null = null;
+    let interactionTimer: ReturnType<typeof setTimeout> | undefined;
+    const beginInteraction = () => {
+      interacting.current = true;
+      if (interactionTimer) clearTimeout(interactionTimer);
+    };
+    const endInteraction = () => {
+      interacting.current = false;
+      setViewRevision((revision) => revision + 1);
+      schedule();
+    };
     const down = (event: PointerEvent) => {
+      beginInteraction();
       drag = { x: event.clientX, y: event.clientY };
       canvas.setPointerCapture(event.pointerId);
       canvas.style.cursor = 'grabbing';
@@ -374,16 +383,17 @@ export function useOrthographicGlobe(options?: GlobeOptions) {
       if (canvas.hasPointerCapture(event.pointerId))
         canvas.releasePointerCapture(event.pointerId);
       canvas.style.cursor = 'grab';
-      setViewRevision((revision) => revision + 1);
+      endInteraction();
     };
     const wheel = (event: WheelEvent) => {
       event.preventDefault();
+      beginInteraction();
       view.current.zoom = Math.max(
         0.6,
         Math.min(40, view.current.zoom * Math.exp(-event.deltaY * 0.0015)),
       );
-      setViewRevision((revision) => revision + 1);
       schedule();
+      interactionTimer = setTimeout(endInteraction, 140);
     };
     canvas.style.cursor = 'grab';
     canvas.addEventListener('pointerdown', down);
@@ -402,6 +412,7 @@ export function useOrthographicGlobe(options?: GlobeOptions) {
       canvas.removeEventListener('wheel', wheel);
       resizeObserver.disconnect();
       cancelAnimationFrame(raf.current);
+      if (interactionTimer) clearTimeout(interactionTimer);
     };
   }, [schedule]);
 

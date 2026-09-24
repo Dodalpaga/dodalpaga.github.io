@@ -33,51 +33,54 @@ export default function DatasetPanel({
           style={{
             margin: 0,
             fontFamily: T.serif,
-            fontWeight: 500,
-            fontSize: 30,
+            fontWeight: 600,
+            fontSize: 26,
             letterSpacing: '-0.01em',
           }}
         >
           {dataset.title}
         </h1>
-        {datasets.length > 1 && (
-          <select
-            aria-label="Dataset"
-            value={dataset.id}
-            onChange={(event) => onSelect?.(event.target.value)}
-            style={{
-              maxWidth: 150,
-              padding: '5px 8px',
-              border: `1px solid ${T.border}`,
-              borderRadius: 6,
-              background: 'transparent',
-              color: T.ink,
-              fontFamily: T.sans,
-              fontSize: 11,
-            }}
-          >
-            {datasets.map((item) => (
-              <option key={item.id} value={item.id}>
-                {item.title}
-              </option>
-            ))}
-          </select>
-        )}
-        <button
-          aria-label="Help"
+        <div
           style={{
-            width: 22,
-            height: 22,
-            borderRadius: '50%',
-            border: `1px solid ${T.border}`,
-            background: 'transparent',
-            color: T.muted,
-            fontSize: 12,
-            cursor: 'pointer',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-end',
+            gap: 6,
           }}
         >
-          ?
-        </button>
+          <div
+            style={{
+              fontSize: 11,
+              letterSpacing: '0.08em',
+              color: T.muted,
+            }}
+          >
+            {dataset.category ?? 'DATASET'}
+          </div>
+          {datasets.length > 1 && (
+            <select
+              aria-label="Dataset"
+              value={dataset.id}
+              onChange={(event) => onSelect?.(event.target.value)}
+              style={{
+                maxWidth: 150,
+                padding: '5px 8px',
+                border: `1px solid ${T.border}`,
+                borderRadius: 6,
+                background: 'transparent',
+                color: T.ink,
+                fontFamily: T.sans,
+                fontSize: 11,
+              }}
+            >
+              {datasets.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.title}
+                </option>
+              ))}
+            </select>
+          )}
+        </div>
       </div>
       <p
         style={{

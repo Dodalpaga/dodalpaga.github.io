@@ -29,14 +29,9 @@ export interface FetchBatch {
   requests: number;
 }
 
-export interface DatasetTimeOption {
-  id: string;
-  label: string;
-  offsetHours: number;
-}
-
 export interface GlobeDataset {
   id: string;
+  category?: string;
   title: string;
   description: React.ReactNode;
   footnote: string;
@@ -45,8 +40,6 @@ export interface GlobeDataset {
 
   heads: Head[];
   defaultHeadId?: string;
-  timeOptions?: DatasetTimeOption[];
-  defaultTimeId?: string;
 
   /** cell size in degrees for each level (index = level) */
   cellDegrees: number[];
@@ -61,7 +54,6 @@ export interface GlobeDataset {
     cells: Cell[],
     signal: AbortSignal,
     onBatch: (batch: FetchBatch) => void,
-    options?: { timeOffsetHours?: number },
   ): Promise<void>;
 
   /** optional: feeds the embedding panel; omit and the panel is hidden */

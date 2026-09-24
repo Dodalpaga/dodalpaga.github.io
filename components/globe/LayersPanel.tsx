@@ -41,7 +41,7 @@ export default function LayersPanel({
           <span
             style={{ fontSize: 11, letterSpacing: '0.08em', color: T.muted }}
           >
-            DATASETS
+            VARIABLES
           </span>
         </div>
         {headList.map((h) => {

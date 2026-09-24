@@ -6,20 +6,13 @@ import type { GlobeDataset } from './openMeteo';
 export default function GlobeCanvas({
   dataset,
   headId,
-  timeOffsetHours,
   onStats,
 }: {
   dataset?: GlobeDataset;
   headId?: string;
-  timeOffsetHours?: number;
   onStats?: (s: GlobeStats) => void;
 }) {
-  const { canvasRef } = useOrthographicGlobe({
-    dataset,
-    headId,
-    timeOffsetHours,
-    onStats,
-  });
+  const { canvasRef } = useOrthographicGlobe({ dataset, headId, onStats });
   return (
     <canvas
       id="globe"
