@@ -23,7 +23,11 @@ export function useAnalytics() {
   const trackEvent = useCallback(
     async (eventType: string, eventName?: string, customPage?: string) => {
       if (hasConsent !== true) {
-        console.log('❌ Tracking skipped - No consent');
+        return;
+      }
+
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL?.trim();
+      if (!apiUrl) {
         return;
       }
 
@@ -37,12 +41,12 @@ export function useAnalytics() {
         eventName,
         page: url,
         visitorId,
-        apiUrl: process.env.NEXT_PUBLIC_API_URL,
+        apiUrl,
       });
 
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/analytics/track`,
+          `${apiUrl.replace(/\/$/, '')}/analytics/track`,
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -52,7 +56,7 @@ export function useAnalytics() {
               event_name: eventName || '',
               visitor_id: visitorId,
             }),
-          }
+          },
         );
 
         if (response.ok) {
@@ -62,14 +66,14 @@ export function useAnalytics() {
           console.error(
             '❌ Tracking failed:',
             response.status,
-            response.statusText
+            response.statusText,
           );
         }
       } catch (err) {
-        console.error('❌ Analytics tracking error:', err);
+        console.warn('Analytics unavailable; tracking skipped.', err);
       }
     },
-    [hasConsent, pathname, searchParams]
+    [hasConsent, pathname, searchParams],
   );
 
   // Track page views automatiquement
