@@ -6,8 +6,6 @@
 .env.prod
 .venv-modis
 
-./data
-
 # dependencies
 /node_modules
 /.pnp
