@@ -33,7 +33,7 @@ const ExampleMap = forwardRef<MapRef, MapProps>(({ lng, lat, zoom }, ref) => {
       style: `https://api.maptiler.com/maps/satellite/style.json?key=${API_KEY}`,
       center: [lng, lat],
       zoom: zoom,
-      preserveDrawingBuffer: true,
+      canvasContextAttributes: { preserveDrawingBuffer: true },
     });
     map.current.addControl(new maplibregl.NavigationControl(), 'top-right');
   }, [API_KEY, lng, lat, zoom]);

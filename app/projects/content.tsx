@@ -33,13 +33,13 @@ const apps: App[] = [
     tags: ['Tool', 'External', 'Professional'],
   },
   {
-    title: 'NDVI Map',
+    title: 'COG Viewer',
     image: `/images/ndvi.png`,
-    link: '/projects/globe',
+    link: '/projects/cog',
     target: '',
     description:
-      'A web app to visualize NDVI (Normalized Difference Vegetation Index) data on a global map.',
-    tags: ['Tool', 'Maps', 'Personal'],
+      'Explore Cloud Optimized GeoTIFFs on an interactive globe with band, color, and map controls.',
+    tags: ['Tool', 'Maps', 'Geospatial'],
   },
   {
     title: 'Chat Bot',

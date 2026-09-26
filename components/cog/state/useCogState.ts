@@ -1,0 +1,156 @@
+import { useCallback, useMemo, useSyncExternalStore } from "react";
+import type {
+  Basemap,
+  CogState,
+  CogStateUpdate,
+  Mode,
+  PanelState,
+  Stretch,
+} from "./types";
+
+const VALID_MODES: Mode[] = ["rgb", "single"];
+const VALID_BASEMAPS: Basemap[] = ["auto", "light", "dark", "satellite", "off"];
+const VALID_PANEL: PanelState[] = ["open", "closed"];
+const VALID_STRETCH: Stretch[] = ["linear", "log", "sqrt"];
+
+const parseRescale = (raw: string | null): [number, number][] | null => {
+  if (!raw) return null;
+  const pairs: [number, number][] = [];
+  for (const part of raw.split(";")) {
+    const halves = part.split(",");
+    if (halves.length !== 2) return null;
+    const a = Number(halves[0]);
+    const b = Number(halves[1]);
+    if (!Number.isFinite(a) || !Number.isFinite(b)) return null;
+    pairs.push([a, b]);
+  }
+  return pairs.length > 0 ? pairs : null;
+};
+
+const parseBands = (raw: string | null): number[] | null => {
+  if (!raw) return null;
+  const out: number[] = [];
+  for (const tok of raw.split(",")) {
+    const n = Number(tok);
+    if (!Number.isFinite(n) || n < 1 || !Number.isInteger(n)) return null;
+    out.push(n);
+  }
+  return out.length > 0 ? out : null;
+};
+
+const parseNodata = (raw: string | null): number | "off" | null => {
+  if (raw === null || raw === "") return null;
+  if (raw === "off") return "off";
+  const n = Number(raw);
+  return Number.isFinite(n) ? n : null;
+};
+
+const parseOpacity = (raw: string | null): number => {
+  if (raw === null || raw === "") return 1;
+  const n = Number(raw);
+  if (!Number.isFinite(n)) return 1;
+  return Math.min(1, Math.max(0, n));
+};
+
+const parseGamma = (raw: string | null): number => {
+  if (raw === null || raw === "") return 1;
+  const n = Number(raw);
+  if (!Number.isFinite(n) || n <= 0) return 1;
+  return n;
+};
+
+const parseViewport = (raw: string | null): number | null => {
+  if (raw === null || raw === "") return null;
+  const n = Number(raw);
+  return Number.isFinite(n) ? n : null;
+};
+
+/** Stable string key derived from a state's URL list. Identical whenever
+ * the COG URLs haven't changed, even if other URL params (viewport, mode)
+ * did. Use this as an effect dep instead of state.urls (array ref) to
+ * prevent spurious GeoTIFF reloads when unrelated params change. */
+export function urlsKey(state: Pick<CogState, "urls">): string {
+  return state.urls.join("\n");
+}
+
+export function parseCogState(p: URLSearchParams): CogState {
+  const modeRaw = p.get("mode");
+  const basemapRaw = p.get("basemap");
+  return {
+    urls: p.getAll("url"),
+    mode: VALID_MODES.includes(modeRaw as Mode) ? (modeRaw as Mode) : null,
+    bands: parseBands(p.get("bands")),
+    rescale: parseRescale(p.get("rescale")),
+    colormap: p.get("colormap"),
+    nodata: parseNodata(p.get("nodata")),
+    opacity: parseOpacity(p.get("opacity")),
+    basemap: VALID_BASEMAPS.includes(basemapRaw as Basemap)
+      ? (basemapRaw as Basemap)
+      : "auto",
+    panel: VALID_PANEL.includes(p.get("panel") as PanelState)
+      ? (p.get("panel") as PanelState)
+      : "closed",
+    gamma: parseGamma(p.get("gamma")),
+    labelsAbove: p.get("labels") !== "below",
+    stretch: VALID_STRETCH.includes(p.get("stretch") as Stretch)
+      ? (p.get("stretch") as Stretch)
+      : "linear",
+    zoom: parseViewport(p.get("zoom")),
+    latitude: parseViewport(p.get("lat")),
+    longitude: parseViewport(p.get("lon")),
+  };
+}
+
+export function serializeCogState(s: CogState): URLSearchParams {
+  const p = new URLSearchParams();
+  for (const u of s.urls) p.append("url", u);
+  if (s.mode) p.set("mode", s.mode);
+  if (s.bands) p.set("bands", s.bands.join(","));
+  if (s.rescale) p.set("rescale", s.rescale.map((r) => r.join(",")).join(";"));
+  if (s.colormap) p.set("colormap", s.colormap);
+  if (s.nodata !== null) p.set("nodata", String(s.nodata));
+  if (s.opacity !== 1) p.set("opacity", String(s.opacity));
+  if (s.basemap !== "auto") p.set("basemap", s.basemap);
+  if (s.panel !== "closed") p.set("panel", s.panel);
+  if (s.gamma !== 1) p.set("gamma", String(s.gamma));
+  if (!s.labelsAbove) p.set("labels", "below");
+  if (s.stretch !== "linear") p.set("stretch", s.stretch);
+  if (s.zoom !== null) p.set("zoom", String(parseFloat(s.zoom.toFixed(2))));
+  if (s.latitude !== null) p.set("lat", String(parseFloat(s.latitude.toFixed(6))));
+  if (s.longitude !== null) p.set("lon", String(parseFloat(s.longitude.toFixed(6))));
+  return p;
+}
+
+const subscribe = (cb: () => void) => {
+  window.addEventListener("popstate", cb);
+  window.addEventListener("cog-state-change", cb);
+  return () => {
+    window.removeEventListener("popstate", cb);
+    window.removeEventListener("cog-state-change", cb);
+  };
+};
+
+const getSnapshot = () => window.location.search;
+
+export function useCogState() {
+  const search = useSyncExternalStore(subscribe, getSnapshot, () => "");
+  const state = useMemo(() => parseCogState(new URLSearchParams(search)), [search]);
+
+  const update = useCallback((patch: CogStateUpdate) => {
+    const current = parseCogState(new URLSearchParams(window.location.search));
+    const next: CogState = { ...current };
+    for (const key in patch) {
+      const v = (patch as Record<string, unknown>)[key];
+      if (v !== undefined) (next as Record<string, unknown>)[key] = v;
+    }
+    const params = serializeCogState(next);
+    const qs = params.toString();
+    const url = qs
+      ? `${window.location.pathname}?${qs}`
+      : window.location.pathname;
+    window.history.replaceState(null, "", url);
+    window.dispatchEvent(new Event("cog-state-change"));
+  }, []);
+
+  return [state, update] as const;
+}

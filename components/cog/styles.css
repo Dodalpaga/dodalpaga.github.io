@@ -1,0 +1,330 @@
+.cog-viewer {
+  --font-sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", SFMono-Regular, Menlo, Monaco, Consolas,
+    "Courier New", monospace;
+
+  --bg: #efebea;
+  --surface: #ffffff;
+  --surface-muted: #f7f5f4;
+  --border: rgba(44, 50, 51, 0.14);
+  --border-strong: rgba(44, 50, 51, 0.32);
+  --text: #2c3233;
+  --text-muted: rgba(44, 50, 51, 0.65);
+  --accent: #2c3233;
+  --accent-on: #ffffff;
+  --accent-hover: #1f2324;
+  --shadow-sm: 0 1px 2px rgba(44, 50, 51, 0.08);
+  --shadow: 0 4px 16px rgba(44, 50, 51, 0.12);
+  --cog-surface: var(--surface);
+  --cog-border: var(--border);
+  --cog-text: var(--text);
+  --cog-muted: var(--text-muted);
+  --cog-selected: var(--accent);
+  --cog-selected-text: var(--accent-on);
+  --cog-shadow: var(--shadow);
+
+  --radius-sm: 4px;
+  --radius: 6px;
+}
+
+/* Dark theme. Applied to descendants of .theme-dark; the basemap
+ * resolver uses the same prefers-color-scheme signal to pick the dark
+ * basemap, so panel and map stay in sync. */
+.cog-viewer.theme-dark {
+  --bg: #1a1d1e;
+  --surface: #25292a;
+  --surface-muted: #2c3233;
+  --border: rgba(239, 235, 234, 0.14);
+  --border-strong: rgba(239, 235, 234, 0.32);
+  --text: #e8e6e4;
+  --text-muted: rgba(239, 235, 234, 0.62);
+  --accent: #e8e6e4;
+  --accent-on: #1a1d1e;
+  --accent-hover: #f5f3f1;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+
+  font-family: var(--font-sans);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+
+.cog-viewer {
+  margin: 0;
+  font-family: var(--font-sans);
+  color: var(--text);
+  background: var(--bg);
+}
+
+.cog-viewer *, .cog-viewer *::before, .cog-viewer *::after {
+  box-sizing: border-box;
+}
+
+.cog-viewer button, .cog-viewer input, .cog-viewer select, .cog-viewer textarea {
+  font: inherit;
+  color: inherit;
+}
+
+.cog-viewer button {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: background 80ms ease;
+}
+.cog-viewer button:hover:not(:disabled) {
+  background: var(--surface-muted);
+}
+.cog-viewer button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.cog-viewer button.primary {
+  background: var(--accent);
+  color: var(--accent-on);
+  border-color: var(--accent);
+}
+.cog-viewer button.primary:hover:not(:disabled) {
+  background: var(--accent-hover);
+  color: var(--accent-on);
+}
+
+.cog-viewer input[type="text"], .cog-viewer input[type="number"], .cog-viewer input:not([type]), .cog-viewer select {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 6px 8px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--text);
+  min-width: 0;
+  width: 100%;
+}
+.cog-viewer input[type="number"]:focus, .cog-viewer input[type="text"]:focus, .cog-viewer input:not([type]):focus, .cog-viewer select:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: -1px;
+}
+.cog-viewer select {
+  font-family: var(--font-sans);
+}
+
+.cog-viewer input[type="range"] {
+  accent-color: var(--accent);
+}
+
+.cog-viewer a {
+  color: var(--accent);
+}
+
+.cog-viewer ::selection {
+  background: rgba(44, 50, 51, 0.15);
+}
+
+.cog-viewer .panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  font-size: 13px;
+  color: var(--text);
+}
+
+.cog-viewer .map-icon-button {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+}
+.cog-viewer .map-icon-button:hover {
+  background: var(--surface-muted);
+}
+
+.cog-viewer .panel-header {
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.cog-viewer .field-label {
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.cog-viewer .mono {
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.cog-viewer .divider {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 4px 0;
+}
+
+.cog-viewer .section {
+  display: grid;
+}
+
+/* First section sits right under the panel header. */
+.cog-viewer .section:first-of-type {
+  margin-top: 12px;
+}
+
+/* Spacing between adjacent sections; tighter when both are closed. */
+.cog-viewer .section + .section {
+  padding-top: 6px;
+  margin-top: 6px;
+  border-top: 1px solid var(--border);
+}
+
+.cog-viewer .section-title {
+  font-weight: 700;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text);
+}
+
+.cog-viewer details.section > summary, .cog-viewer details.panel > summary {
+  list-style: none;
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: center;
+}
+
+.cog-viewer details.section > summary::-webkit-details-marker, .cog-viewer details.panel > summary::-webkit-details-marker {
+  display: none;
+}
+
+.cog-viewer details.section > summary::after, .cog-viewer details.panel > summary::after {
+  content: "▸";
+  font-size: 24px;
+  color: var(--text-muted);
+  margin-left: auto;
+  transition: transform 100ms ease;
+}
+
+.cog-viewer details.section[open] > summary::after, .cog-viewer details.panel[open] > summary::after {
+  transform: rotate(90deg);
+}
+
+.cog-viewer details.section > div.section-body {
+  display: grid;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+/* Metadata panel — nested under a regular .section but with its own
+ * (more compact) collapsible sub-sections. */
+.cog-viewer .meta-root {
+  display: grid;
+  gap: 6px;
+}
+
+.cog-viewer details.sub-section > summary {
+  list-style: none;
+  cursor: pointer;
+  user-select: none;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 2px 0;
+  display: flex;
+  align-items: center;
+}
+.cog-viewer details.sub-section > summary::-webkit-details-marker {
+  display: none;
+}
+.cog-viewer details.sub-section > summary::after {
+  content: "▸";
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-left: auto;
+  transition: transform 100ms ease;
+}
+.cog-viewer details.sub-section[open] > summary::after {
+  transform: rotate(90deg);
+}
+.cog-viewer .sub-section + .sub-section {
+  border-top: 1px dashed var(--border);
+  padding-top: 4px;
+}
+.cog-viewer .sub-section-body {
+  margin-top: 4px;
+  font-size: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.cog-viewer .meta-kv {
+  display: grid;
+  grid-template-columns: minmax(80px, max-content) minmax(0, 1fr);
+  column-gap: 10px;
+  row-gap: 2px;
+  margin: 0;
+}
+.cog-viewer .meta-kv-row {
+  display: contents;
+}
+.cog-viewer .meta-kv dt {
+  color: var(--text-muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  align-self: baseline;
+}
+.cog-viewer .meta-kv dd {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  word-break: break-word;
+}
+
+.cog-viewer .meta-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 4px;
+}
+.cog-viewer .meta-list li {
+  word-break: break-word;
+}
+.cog-viewer .meta-muted {
+  color: var(--text-muted);
+}
+
+.cog-viewer .meta-xml {
+  margin: 0;
+  padding: 6px 8px;
+  background: var(--surface-muted);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.4;
+  max-height: 240px;
+  overflow: auto;
+  white-space: pre;
+}
