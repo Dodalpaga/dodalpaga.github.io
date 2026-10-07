@@ -8,6 +8,8 @@ import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
+import TuneIcon from '@mui/icons-material/Tune';
+import { useSiteTools } from './site-tools';
 import { useThemeContext } from '@/context/ThemeContext';
 import './navbar.css';
 
@@ -42,6 +44,7 @@ const NavPillLink = styled(Link)(() => ({
 }));
 
 const NavBar = () => {
+  const openTools = useSiteTools();
   const { theme, toggleTheme } = useThemeContext();
   const [isClient, setIsClient] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -130,6 +133,18 @@ const NavBar = () => {
             ) : null}
           </IconButton>
 
+          <button
+            className="navbar-tools-btn"
+            onClick={() => {
+              setMenuOpen(false);
+              openTools?.();
+            }}
+            aria-label="Open site tools"
+            title="Chat, music & settings"
+          >
+            <TuneIcon sx={{ fontSize: 18 }} />
+            <span>Tools</span>
+          </button>
           {/* ── Mobile hamburger ───────────────────────────── */}
           <IconButton
             className="navbar-menu-btn"

@@ -33,6 +33,7 @@ import ReplayIcon from '@mui/icons-material/Replay';
 import EditIcon from '@mui/icons-material/Edit';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { projectInputSx, projectSelectSx } from '@/constants/ui';
+import { readChatStream } from '@/utils/chat-stream';
 
 // ─── Config ───────────────────────────────────────────────────────────────────
 
@@ -303,6 +304,7 @@ const ProjectCard = ({
           src={previewUrl}
           alt={`${project} preview`}
           className="project-card-img"
+          loading="lazy"
         />
       </Box>
     )}
@@ -547,101 +549,89 @@ export default function Content() {
   // core SSE runner (operates on a known botMsgId)
   const runStream = useCallback(
     async (userInput: string, botMsgId: string) => {
-      abortRef.current = new AbortController();
+      const controller = new AbortController();
+      abortRef.current = controller;
+      let timedOut = false;
+      const timeout = setTimeout(() => {
+        timedOut = true;
+        controller.abort();
+      }, 150_000);
       try {
         const res = await fetch(
           `${API_BASE_URL}/llm/generate-agentic?input=${encodeURIComponent(userInput)}`,
           {
             method: 'POST',
             headers: { 'user-id': userId },
-            signal: abortRef.current.signal,
+            signal: controller.signal,
           },
         );
         if (!res.ok || !res.body) throw new Error('Stream unavailable');
 
-        const reader = res.body.getReader();
-        const dec = new TextDecoder();
-        let buf = '';
-
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          buf += dec.decode(value, { stream: true });
-          const lines = buf.split('\n');
-          buf = lines.pop() ?? '';
-
-          for (const line of lines) {
-            if (!line.startsWith('data: ')) continue;
-            let ev: Record<string, unknown>;
-            try {
-              ev = JSON.parse(line.slice(6));
-            } catch {
-              continue;
-            }
-
-            setMessages((prev) =>
-              prev.map((msg) => {
-                if (msg.id !== botMsgId) return msg;
-                switch (ev.type) {
-                  case 'thinking':
-                    return {
-                      ...msg,
-                      steps: [
-                        ...msg.steps,
-                        { type: 'thinking', content: ev.content as string },
-                      ],
-                    };
-                  case 'tool_call':
-                    return {
-                      ...msg,
-                      steps: [
-                        ...msg.steps,
-                        {
-                          type: 'tool_call',
-                          id: ev.id as string,
-                          name: ev.name as string,
-                          args: ev.args as Record<string, unknown>,
-                        },
-                      ],
-                    };
-                  case 'tool_result':
-                    return {
-                      ...msg,
-                      steps: [
-                        ...msg.steps,
-                        {
-                          type: 'tool_result',
-                          id: ev.id as string,
-                          name: ev.name as string,
-                          result: ev.result,
-                        },
-                      ],
-                    };
-                  case 'text_chunk':
-                    return { ...msg, text: msg.text + (ev.content as string) };
-                  case 'done':
-                    return { ...msg, isStreaming: false };
-                  case 'error':
-                    return {
-                      ...msg,
-                      text: (ev.message as string) || 'An error occurred.',
-                      isStreaming: false,
-                    };
-                  default:
-                    return msg;
-                }
-              }),
-            );
-          }
-        }
+        await readChatStream(res.body, (ev) => {
+          setMessages((prev) =>
+            prev.map((msg) => {
+              if (msg.id !== botMsgId) return msg;
+              switch (ev.type) {
+                case 'thinking':
+                  return {
+                    ...msg,
+                    steps: [
+                      ...msg.steps,
+                      { type: 'thinking', content: ev.content as string },
+                    ],
+                  };
+                case 'tool_call':
+                  return {
+                    ...msg,
+                    steps: [
+                      ...msg.steps,
+                      {
+                        type: 'tool_call',
+                        id: ev.id as string,
+                        name: ev.name as string,
+                        args: ev.args as Record<string, unknown>,
+                      },
+                    ],
+                  };
+                case 'tool_result':
+                  return {
+                    ...msg,
+                    steps: [
+                      ...msg.steps,
+                      {
+                        type: 'tool_result',
+                        id: ev.id as string,
+                        name: ev.name as string,
+                        result: ev.result,
+                      },
+                    ],
+                  };
+                case 'text_chunk':
+                  return { ...msg, text: msg.text + (ev.content as string) };
+                case 'done':
+                  return { ...msg, isStreaming: false };
+                case 'error':
+                  return {
+                    ...msg,
+                    text: (ev.message as string) || 'An error occurred.',
+                    isStreaming: false,
+                  };
+                default:
+                  return msg;
+              }
+            }),
+          );
+        });
       } catch (err: unknown) {
-        if ((err as Error).name !== 'AbortError') {
+        if (timedOut || (err as Error).name !== 'AbortError') {
           setMessages((prev) =>
             prev.map((msg) =>
               msg.id === botMsgId
                 ? {
                     ...msg,
-                    text: 'Something went wrong. Please try again.',
+                    text: timedOut
+                      ? 'The answer took too long. Please try again.'
+                      : 'The answer was interrupted. Please try again.',
                     isStreaming: false,
                   }
                 : msg,
@@ -649,8 +639,17 @@ export default function Content() {
           );
         }
       } finally {
-        setIsLoading(false);
-        abortRef.current = null;
+        clearTimeout(timeout);
+        // EOF, abort and network failure must all clear the message spinner.
+        setMessages((prev) =>
+          prev.map((msg) =>
+            msg.id === botMsgId ? { ...msg, isStreaming: false } : msg,
+          ),
+        );
+        if (abortRef.current === controller) {
+          setIsLoading(false);
+          abortRef.current = null;
+        }
       }
     },
     [userId],
@@ -792,7 +791,9 @@ export default function Content() {
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
-        padding: { xs: 2, sm: 3 },
+        minHeight: 0,
+        minWidth: 0,
+        padding: { xs: 1, sm: 2 },
         gap: 0,
         position: 'relative',
       }}
@@ -804,6 +805,7 @@ export default function Content() {
           alignItems: 'center',
           justifyContent: 'space-between',
           flexWrap: 'wrap',
+          flexShrink: 0,
           gap: 2,
           mb: 2,
           pb: 2,
@@ -817,6 +819,7 @@ export default function Content() {
             sx={{
               fontFamily: "'Syne', sans-serif",
               fontWeight: 800,
+              fontSize: { xs: '1.6rem', sm: '2.1rem' },
               letterSpacing: '-0.03em',
               lineHeight: 1.1,
               color: 'var(--foreground)',
@@ -841,6 +844,8 @@ export default function Content() {
             alignItems: 'center',
             gap: 1.5,
             flexWrap: 'wrap',
+            width: { xs: '100%', sm: 'auto' },
+            minWidth: 0,
           }}
         >
           {messages.length > 0 && (
@@ -850,6 +855,7 @@ export default function Content() {
                 fontSize: '0.72rem',
                 color: 'var(--foreground-muted)',
                 opacity: 0.55,
+                display: { xs: 'none', sm: 'block' },
               }}
             >
               {messages.filter((m) => m.type === 'user').length} messages
@@ -857,7 +863,7 @@ export default function Content() {
           )}
           <FormControl
             size="small"
-            sx={{ minWidth: 220 }}
+            sx={{ minWidth: 0, width: { xs: 'calc(100% - 48px)', sm: 300, md: 420 }, maxWidth: '100%' }}
             disabled={modelsLoading || isLoading}
           >
             <InputLabel
@@ -873,7 +879,8 @@ export default function Content() {
               value={selectedModel}
               onChange={(e) => handleModelChange(e.target.value)}
               label="Model"
-              sx={projectSelectSx}
+              MenuProps={{ PaperProps: { sx: { maxWidth: 'calc(100vw - 24px)' } } }}
+              sx={[projectSelectSx, { minWidth: 0, '& .MuiSelect-select': { overflow: 'hidden', textOverflow: 'ellipsis' } }]}
             >
               {models.map((m) => (
                 <MenuItem
@@ -882,6 +889,8 @@ export default function Content() {
                   sx={{
                     fontFamily: "'DM Mono', monospace",
                     fontSize: '0.82rem',
+                    whiteSpace: 'normal',
+                    overflowWrap: 'anywhere',
                   }}
                 >
                   {m}
@@ -920,6 +929,7 @@ export default function Content() {
         sx={{
           flex: 1,
           overflowY: 'auto',
+          overscrollBehavior: 'contain',
           display: 'flex',
           flexDirection: 'column',
           gap: 1.5,
@@ -1037,7 +1047,8 @@ export default function Content() {
             {/* Content column */}
             <Box
               sx={{
-                maxWidth: '78%',
+                maxWidth: { xs: 'calc(100% - 40px)', sm: 'min(78%, 760px)' },
+                minWidth: 0,
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 0.5,
@@ -1070,7 +1081,9 @@ export default function Content() {
                   }}
                 >
                   {msg.type === 'bot' && msg.text ? (
-                    <Box className="md-content">{renderMarkdown(msg.text)}</Box>
+                    <Box className="md-content" sx={{ display: 'inline' }}>
+                      {renderMarkdown(msg.text)}
+                    </Box>
                   ) : (
                     msg.text
                   )}

@@ -11,8 +11,9 @@ import player, {
 } from './media_player/libs/player';
 import { tracks } from './media_player/consts';
 
-const MediaPlayer = () => {
-  const [open, setOpen] = useState(false);
+const MediaPlayer = ({ embedded = false }: { embedded?: boolean }) => {
+  const [expanded, setOpen] = useState(false);
+  const open = embedded || expanded;
   const [mounted, setMounted] = useState(false);
   const state = usePlayerState();
   const currentTime = useCurrentTime();
@@ -27,20 +28,23 @@ const MediaPlayer = () => {
   if (!mounted) return null;
 
   const { currentTrack, playing, duration } = state;
+  const displayTrack = currentTrack ?? tracks[0];
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
   const isVideo = currentTrack?.url?.match(/\.(mp4|webm|mov|avi)$/i);
 
   const handlePlayPause = (e: React.MouseEvent) => {
     e.stopPropagation();
-    playing ? player.pause() : player.play();
+    if (playing) player.pause();
+    else if (!currentTrack && tracks.length) player.playTrack(0);
+    else player.play();
   };
 
   return (
     <div className={`mp-widget ${open ? 'open' : ''}`}>
       <div
         className={`mp-pill ${open ? 'open' : ''} ${playing ? 'playing' : ''}`}
-        onClick={() => setOpen((v) => !v)}
-        title={open ? 'Collapse player' : 'Open player'}
+        onClick={embedded ? undefined : () => setOpen((v) => !v)}
+        title={embedded ? undefined : open ? 'Collapse player' : 'Open player'}
       >
         {/* Equalizer bars */}
         <div className="mp-bars">
@@ -54,10 +58,10 @@ const MediaPlayer = () => {
         {/* Track info */}
         <div className="mp-pill-info">
           <span className="mp-pill-title">
-            {currentTrack?.title ?? 'No track'}
+            {displayTrack?.title ?? 'No tracks available'}
           </span>
           <span className="mp-pill-sub">
-            {isVideo ? '▶ Video' : playing ? 'Now playing' : 'Paused'}
+            {isVideo ? '▶ Video' : playing ? 'Now playing' : currentTrack ? 'Paused' : 'Ready to play'}
           </span>
         </div>
 
@@ -76,7 +80,7 @@ const MediaPlayer = () => {
         <button
           className="mp-pill-btn"
           onClick={handlePlayPause}
-          aria-label="Play/pause"
+          aria-label={playing ? 'Pause music' : 'Play music'}
         >
           {playing ? (
             <Pause size={12} strokeWidth={2.5} />

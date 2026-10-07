@@ -10,29 +10,37 @@ export function useCookieConsent() {
   });
 
   const [isLoaded, setIsLoaded] = useState(false);
+  const [hasDecided, setHasDecided] = useState(false);
 
   useEffect(() => {
-    // Mark as loaded après le premier render
-    setIsLoaded(true);
+    const sync = () => {
+      const stored = localStorage.getItem('analytics_consent');
+      setHasConsent(stored === 'true');
+      setHasDecided(stored !== null);
+      setIsLoaded(true);
+    };
+    sync();
+    window.addEventListener('analytics-consent-change', sync);
+    window.addEventListener('storage', sync);
+    return () => {
+      window.removeEventListener('analytics-consent-change', sync);
+      window.removeEventListener('storage', sync);
+    };
   }, []);
 
   const giveConsent = () => {
     localStorage.setItem('analytics_consent', 'true');
-    setHasConsent(true);
-    // Refresh après 300ms (permet à l'UI de se mettre à jour d'abord)
-    setTimeout(() => window.location.reload(), 300);
+    window.dispatchEvent(new Event('analytics-consent-change'));
   };
 
   const denyConsent = () => {
     localStorage.setItem('analytics_consent', 'false');
-    setHasConsent(true);
+    window.dispatchEvent(new Event('analytics-consent-change'));
   };
 
   const withdrawConsent = () => {
     localStorage.removeItem('analytics_consent');
-    setHasConsent(false);
-    // Refresh après 300ms
-    setTimeout(() => window.location.reload(), 300);
+    window.dispatchEvent(new Event('analytics-consent-change'));
   };
 
   // hasConsent: la valeur actuelle
@@ -40,6 +48,7 @@ export function useCookieConsent() {
   return {
     hasConsent,
     isLoaded,
+    hasDecided,
     giveConsent,
     denyConsent,
     withdrawConsent,

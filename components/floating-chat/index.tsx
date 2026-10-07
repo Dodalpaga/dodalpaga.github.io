@@ -27,6 +27,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import CheckIcon from '@mui/icons-material/Check';
 import UnfoldLessIcon from '@mui/icons-material/UnfoldLess';
 import './styles.css';
+import { readChatStream } from '@/utils/chat-stream';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -352,10 +353,19 @@ const CopyButton = ({ text }: { text: string }) => {
 
 // ─── Main FloatingChat ────────────────────────────────────────────────────────
 
-export default function FloatingChat() {
+export default function FloatingChat({
+  embedded = false,
+  active = true,
+  onClose,
+}: {
+  embedded?: boolean;
+  active?: boolean;
+  onClose?: () => void;
+}) {
   const { resolvedTheme } = useNextTheme();
 
-  const [open, setOpen] = useState(false);
+  const [localOpen, setOpen] = useState(false);
+  const open = embedded ? active : localOpen;
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -391,101 +401,89 @@ export default function FloatingChat() {
 
   const runStream = useCallback(
     async (userInput: string, botMsgId: string) => {
-      abortRef.current = new AbortController();
+      const controller = new AbortController();
+      abortRef.current = controller;
+      let timedOut = false;
+      const timeout = setTimeout(() => {
+        timedOut = true;
+        controller.abort();
+      }, 150_000);
       try {
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/llm/generate-agentic?input=${encodeURIComponent(userInput)}`,
           {
             method: 'POST',
             headers: { 'user-id': userId },
-            signal: abortRef.current.signal,
+            signal: controller.signal,
           },
         );
         if (!res.ok || !res.body) throw new Error('Stream unavailable');
 
-        const reader = res.body.getReader();
-        const dec = new TextDecoder();
-        let buf = '';
-
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          buf += dec.decode(value, { stream: true });
-          const lines = buf.split('\n');
-          buf = lines.pop() ?? '';
-
-          for (const line of lines) {
-            if (!line.startsWith('data: ')) continue;
-            let ev: Record<string, unknown>;
-            try {
-              ev = JSON.parse(line.slice(6));
-            } catch {
-              continue;
-            }
-
-            setMessages((prev) =>
-              prev.map((msg) => {
-                if (msg.id !== botMsgId) return msg;
-                switch (ev.type) {
-                  case 'thinking':
-                    return {
-                      ...msg,
-                      steps: [
-                        ...msg.steps,
-                        { type: 'thinking', content: ev.content as string },
-                      ],
-                    };
-                  case 'tool_call':
-                    return {
-                      ...msg,
-                      steps: [
-                        ...msg.steps,
-                        {
-                          type: 'tool_call',
-                          id: ev.id as string,
-                          name: ev.name as string,
-                          args: ev.args as Record<string, unknown>,
-                        },
-                      ],
-                    };
-                  case 'tool_result':
-                    return {
-                      ...msg,
-                      steps: [
-                        ...msg.steps,
-                        {
-                          type: 'tool_result',
-                          id: ev.id as string,
-                          name: ev.name as string,
-                          result: ev.result,
-                        },
-                      ],
-                    };
-                  case 'text_chunk':
-                    return { ...msg, text: msg.text + (ev.content as string) };
-                  case 'done':
-                    return { ...msg, isStreaming: false };
-                  case 'error':
-                    return {
-                      ...msg,
-                      text: (ev.message as string) || 'An error occurred.',
-                      isStreaming: false,
-                    };
-                  default:
-                    return msg;
-                }
-              }),
-            );
-          }
-        }
+        await readChatStream(res.body, (ev) => {
+          setMessages((prev) =>
+            prev.map((msg) => {
+              if (msg.id !== botMsgId) return msg;
+              switch (ev.type) {
+                case 'thinking':
+                  return {
+                    ...msg,
+                    steps: [
+                      ...msg.steps,
+                      { type: 'thinking', content: ev.content as string },
+                    ],
+                  };
+                case 'tool_call':
+                  return {
+                    ...msg,
+                    steps: [
+                      ...msg.steps,
+                      {
+                        type: 'tool_call',
+                        id: ev.id as string,
+                        name: ev.name as string,
+                        args: ev.args as Record<string, unknown>,
+                      },
+                    ],
+                  };
+                case 'tool_result':
+                  return {
+                    ...msg,
+                    steps: [
+                      ...msg.steps,
+                      {
+                        type: 'tool_result',
+                        id: ev.id as string,
+                        name: ev.name as string,
+                        result: ev.result,
+                      },
+                    ],
+                  };
+                case 'text_chunk':
+                  return { ...msg, text: msg.text + (ev.content as string) };
+                case 'done':
+                  return { ...msg, isStreaming: false };
+                case 'error':
+                  return {
+                    ...msg,
+                    text: (ev.message as string) || 'An error occurred.',
+                    isStreaming: false,
+                  };
+                default:
+                  return msg;
+              }
+            }),
+          );
+        });
       } catch (err: unknown) {
-        if ((err as Error).name !== 'AbortError') {
+        if (timedOut || (err as Error).name !== 'AbortError') {
           setMessages((prev) =>
             prev.map((msg) =>
               msg.id === botMsgId
                 ? {
                     ...msg,
-                    text: 'Something went wrong. Please try again.',
+                    text: timedOut
+                      ? 'The answer took too long. Please try again.'
+                      : 'The answer was interrupted. Please try again.',
                     isStreaming: false,
                   }
                 : msg,
@@ -493,8 +491,16 @@ export default function FloatingChat() {
           );
         }
       } finally {
-        setIsLoading(false);
-        abortRef.current = null;
+        clearTimeout(timeout);
+        setMessages((prev) =>
+          prev.map((msg) =>
+            msg.id === botMsgId ? { ...msg, isStreaming: false } : msg,
+          ),
+        );
+        if (abortRef.current === controller) {
+          setIsLoading(false);
+          abortRef.current = null;
+        }
         // Increment unread badge if panel is closed or minimized
         if (!openRef.current) setUnread((n) => n + 1);
       }
@@ -564,6 +570,7 @@ export default function FloatingChat() {
   };
 
   const handleClose = () => {
+    onClose?.();
     setOpen(false);
   };
 
@@ -572,10 +579,14 @@ export default function FloatingChat() {
   return (
     <>
       {/* ── Chat Panel ───────────────────────────────────────────────────── */}
-      <Fade in={open} timeout={{ enter: 280, exit: 220 }} unmountOnExit>
+      <Fade
+        in={embedded || open}
+        timeout={{ enter: 280, exit: 220 }}
+        unmountOnExit
+      >
         <Box
           className={`fc-panel ${open ? 'fc-panel--open' : 'fc-panel--closed'}`}
-          role="dialog"
+          role={embedded ? 'region' : 'dialog'}
           aria-label="Chat panel"
         >
           {/* Header */}
@@ -671,7 +682,7 @@ export default function FloatingChat() {
                   {(msg.text || msg.isStreaming) && (
                     <Box className={`fc-bubble fc-bubble--${msg.type}`}>
                       {msg.type === 'bot' && msg.text ? (
-                        <Box className="md-content">
+                        <Box className="md-content" sx={{ display: 'inline' }}>
                           {renderMarkdown(msg.text)}
                         </Box>
                       ) : (
@@ -798,35 +809,37 @@ export default function FloatingChat() {
       </Fade>
 
       {/* ── FAB ───────────────────────────────────────────────────────────── */}
-      <Fade in={true}>
-        <Box
-          component="button"
-          className={`fc-fab ${open ? 'fc-fab--open' : ''}`}
-          onClick={() => setOpen((v) => !v)}
-          aria-label="Open chat"
-        >
+      {!embedded && (
+        <Fade in={true}>
           <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              transition: 'transform .25s ease',
-              transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
-            }}
+            component="button"
+            className={`fc-fab ${open ? 'fc-fab--open' : ''}`}
+            onClick={() => setOpen((v) => !v)}
+            aria-label="Open chat"
           >
-            {open ? (
-              <UnfoldLessIcon sx={{ fontSize: 22, color: '#fff' }} />
-            ) : (
-              <ChatBubbleOutlineRoundedIcon
-                sx={{ fontSize: 21, color: '#fff' }}
-              />
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'transform .25s ease',
+                transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
+              }}
+            >
+              {open ? (
+                <UnfoldLessIcon sx={{ fontSize: 22, color: '#fff' }} />
+              ) : (
+                <ChatBubbleOutlineRoundedIcon
+                  sx={{ fontSize: 21, color: '#fff' }}
+                />
+              )}
+            </Box>
+            {unread > 0 && (
+              <Box className="fc-badge">{unread > 9 ? '9+' : unread}</Box>
             )}
           </Box>
-          {unread > 0 && (
-            <Box className="fc-badge">{unread > 9 ? '9+' : unread}</Box>
-          )}
-        </Box>
-      </Fade>
+        </Fade>
+      )}
     </>
   );
 }

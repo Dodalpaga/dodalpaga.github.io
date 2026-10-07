@@ -1,0 +1,155 @@
+.site-tools.MuiDrawer-paper {
+  width: min(440px, 100vw);
+  max-height: 100dvh;
+  background: var(--background-elevated);
+  color: var(--foreground);
+  border-left: 1px solid var(--card-border);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.site-tools-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 24px 20px 16px;
+  flex-shrink: 0;
+}
+.site-tools h2,
+.site-tools h3 {
+  font-family: var(--font-syne), sans-serif;
+  font-weight: 700;
+}
+.site-tools h2 {
+  font-size: 1.3rem;
+}
+.site-tools-heading p,
+.tools-copy p {
+  color: var(--foreground-muted);
+  font-size: 0.83rem;
+  line-height: 1.6;
+  margin-top: 6px;
+}
+.tools-panel {
+  padding: 20px;
+  min-height: 0;
+  overflow-y: auto;
+}
+.tools-panel[hidden] {
+  display: none;
+}
+.tools-chat {
+  display: flex;
+  flex: 1;
+  padding: 0;
+  overflow: hidden;
+}
+.tools-copy {
+  margin-bottom: 20px;
+}
+.tools-copy h3 {
+  font-size: 1rem;
+}
+.tools-preferences {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.tools-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  color: var(--foreground);
+  background: var(--card);
+  font-size: 0.82rem;
+  text-decoration: none;
+  cursor: pointer;
+  margin-top: 16px;
+}
+.tools-action:hover,
+.tools-action[aria-pressed='true'] {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-muted);
+}
+.tools-action:focus-visible,
+.tools-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+.tools-link {
+  display: block;
+  color: var(--accent);
+  font-size: 0.82rem;
+  margin-top: 24px;
+}
+.site-tools .status-pill {
+  max-width: none;
+  border-radius: 8px;
+  box-shadow: none;
+  margin-bottom: 10px;
+  padding: 14px;
+}
+.site-tools .status-label {
+  opacity: 1;
+  transform: none;
+  max-width: none;
+}
+.site-tools .mp-widget {
+  position: static;
+  display: block;
+  pointer-events: auto;
+}
+.site-tools .mp-pill.open {
+  width: 100%;
+  box-shadow: none;
+}
+.site-tools .mp-progress-bar {
+  width: 100% !important;
+}
+.site-tools .mp-pill-info {
+  min-width: 0;
+}
+.site-tools .mp-pill {
+  cursor: default;
+}
+.site-tools .mp-pill-btn {
+  width: 44px;
+  height: 44px;
+}
+.site-tools .mp-pill-link-btn {
+  width: 44px;
+  height: 44px;
+}
+.site-tools .fc-panel {
+  position: static;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  animation: none;
+}
+.site-tools .fc-messages {
+  overscroll-behavior: contain;
+}
+.tools-chat > .tools-copy {
+  padding: 24px;
+}
+@media (max-width: 600px) {
+  .site-tools.MuiDrawer-paper {
+    width: 100%;
+    height: 88dvh;
+    max-height: 100dvh;
+    border-radius: 18px 18px 0 0;
+    border-left: 0;
+    border-top: 1px solid var(--card-border);
+  }
+  .site-tools-heading {
+    padding-top: 16px;
+  }
+}

@@ -7,11 +7,10 @@ import { Cookie } from 'lucide-react';
 import './cookie_consent.css';
 
 export function CookieConsent() {
-  const { hasConsent, isLoaded, giveConsent, denyConsent } = useCookieConsent();
+  const { hasDecided, isLoaded, giveConsent, denyConsent } = useCookieConsent();
 
-  // Only hide the banner if the user has explicitly accepted.
-  // Show it when: not yet loaded (wait), never decided (null), or previously denied (false).
-  if (!isLoaded || hasConsent === true) return null;
+  // Both accept and deny are decisions; settings remain available in Site tools.
+  if (!isLoaded || hasDecided) return null;
 
   return (
     <div
