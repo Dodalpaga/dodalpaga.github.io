@@ -1,28 +1,27 @@
 .site-tools.MuiDrawer-paper {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
   width: min(440px, 100vw);
+  height: 100dvh;
   max-height: 100dvh;
+  box-sizing: border-box;
   background: var(--background-elevated);
   color: var(--foreground);
   border-left: 1px solid var(--card-border);
   padding-bottom: env(safe-area-inset-bottom);
 }
-.site-tools-heading {
+.site-tools-tabs-row {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 16px;
-  padding: 24px 20px 16px;
+  width: 100%;
   flex-shrink: 0;
+  border-bottom: 1px solid var(--card-border);
 }
-.site-tools h2,
 .site-tools h3 {
   font-family: var(--font-syne), sans-serif;
   font-weight: 700;
 }
-.site-tools h2 {
-  font-size: 1.3rem;
-}
-.site-tools-heading p,
 .tools-copy p {
   color: var(--foreground-muted);
   font-size: 0.83rem;
@@ -39,9 +38,20 @@
 }
 .tools-chat {
   display: flex;
-  flex: 1;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  min-height: 0;
+  position: relative;
+  box-sizing: border-box;
   padding: 0;
   overflow: hidden;
+}
+.site-tools-close {
+  flex: 0 0 auto;
+  margin: 0 8px 0 2px !important;
+  color: var(--foreground) !important;
 }
 .tools-copy {
   margin-bottom: 20px;
@@ -125,17 +135,57 @@
   height: 44px;
 }
 .site-tools .fc-panel {
-  position: static;
+  position: absolute;
+  inset: 0 0 12px;
+  z-index: 1;
   width: 100%;
-  height: 100%;
+  box-sizing: border-box;
+  height: auto;
+  flex: none;
   min-height: 0;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  align-items: stretch;
+  background: transparent;
   border: 0;
   border-radius: 0;
   box-shadow: none;
   animation: none;
 }
+.site-tools .fc-embedded-actions {
+  justify-content: space-between;
+  align-items: center;
+}
+.site-tools .fc-embedded-actions .fc-icon-btn {
+  width: 24px;
+  height: 24px;
+  padding: 3px !important;
+}
+.site-tools .fc-input-area {
+  width: calc(100% - 24px) !important;
+  margin: 0 12px 4px;
+  padding: 10px 0 4px;
+  align-self: center;
+  box-sizing: border-box;
+  background: transparent;
+}
+.site-tools .fc-input-area > .MuiFormControl-root {
+  flex: 1 1 0;
+  min-width: 0;
+}
 .site-tools .fc-messages {
+  width: auto;
+  min-width: 0;
+  box-sizing: border-box;
   overscroll-behavior: contain;
+}
+.site-tools .fc-empty {
+  width: auto;
+  max-width: 100%;
+  box-sizing: border-box;
+  align-items: center;
+  text-align: center;
 }
 .tools-chat > .tools-copy {
   padding: 24px;
@@ -148,8 +198,5 @@
     border-radius: 18px 18px 0 0;
     border-left: 0;
     border-top: 1px solid var(--card-border);
-  }
-  .site-tools-heading {
-    padding-top: 16px;
   }
 }

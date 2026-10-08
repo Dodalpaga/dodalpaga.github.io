@@ -73,6 +73,163 @@
   overflow: hidden;
 }
 
+.fc-orb-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+.fc-voice-orb {
+  display: block;
+  position: relative;
+  z-index: 1;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+@property --orb-glow-color {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: #9e99de;
+}
+
+html[data-theme='light'] .fc-orb-backdrop[data-orb-state='idle'] {
+  --orb-glow-color: #9e99de;
+}
+
+html[data-theme='light'] .fc-orb-backdrop[data-orb-state='listening'] {
+  --orb-glow-color: #29e8b5;
+}
+
+html[data-theme='light'] .fc-orb-backdrop[data-orb-state='thinking'] {
+  --orb-glow-color: #ff912e;
+}
+
+html[data-theme='light'] .fc-orb-backdrop[data-orb-state='speaking'] {
+  --orb-glow-color: #f5459e;
+}
+
+html[data-theme='light'] .fc-orb-backdrop::before {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  width: min(78%, 320px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--orb-glow-color) 62%, transparent) 0%,
+    color-mix(in srgb, var(--orb-glow-color) 30%, transparent) 42%,
+    transparent 74%
+  );
+  filter: blur(20px);
+  transition: --orb-glow-color 700ms ease;
+}
+
+html[data-theme='light'] .fc-voice-orb {
+  filter: invert(1) hue-rotate(180deg) brightness(0.82) saturate(1.2);
+}
+
+html[data-theme='light'] .fc-orb-backdrop {
+  opacity: 0.4;
+  mix-blend-mode: multiply;
+}
+
+.fc-orb-sr-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.fc-embedded-actions,
+.fc-api-status,
+.fc-messages,
+.fc-input-area {
+  position: relative;
+  z-index: 1;
+}
+
+.fc-embedded-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  padding: 4px 10px 0;
+}
+
+.fc-full-chat-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  color: var(--foreground-muted);
+  font-size: 0.72rem;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+.fc-full-chat-link:hover {
+  color: var(--accent);
+  background: var(--background-2);
+}
+
+.fc-api-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-shrink: 0;
+  margin: 8px 10px 0;
+  padding: 7px 10px;
+  border: 1px solid var(--card-border);
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--background-elevated) 90%, transparent);
+  color: var(--foreground-muted);
+  font-size: 0.76rem;
+}
+
+.fc-api-status--unavailable {
+  border-color: color-mix(in srgb, #ef4444 35%, var(--card-border));
+}
+
+.fc-api-status .MuiTypography-root {
+  min-width: 0;
+  color: var(--foreground) !important;
+  opacity: 1;
+}
+
+.fc-api-status .MuiButton-root {
+  flex-shrink: 0;
+  color: var(--accent) !important;
+}
+
+.fc-empty {
+  position: relative;
+  z-index: 1;
+}
+
+.fc-orb-label {
+  color: var(--foreground-muted) !important;
+  font: 500 0.6rem/1 var(--font-dm-mono), monospace !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
 .fc-fab--open {
   animation: fabPulse 2s infinite;
 }
@@ -256,6 +413,9 @@
 .fc-avatar--bot {
   background-color: var(--background-2, rgba(255, 255, 255, 0.04));
 }
+.fc-avatar svg {
+  display: block;
+}
 
 .fc-msg-content {
   max-width: 83%;
@@ -318,7 +478,7 @@
   gap: 8px;
   padding: 10px 12px;
   border-top: 1px solid var(--card-border, rgba(255, 255, 255, 0.08));
-  align-items: flex-end;
+  align-items: stretch;
   background: var(--background, #0a0a0a);
   flex-shrink: 0;
 }
@@ -326,7 +486,9 @@
 .fc-send-btn {
   min-width: 40px !important;
   width: 40px !important;
-  height: 40px !important;
+  height: auto !important;
+  min-height: 36px !important;
+  align-self: stretch;
   border-radius: 10px !important;
   padding: 0 !important;
   flex-shrink: 0 !important;

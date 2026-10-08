@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { useTheme as useNextTheme } from 'next-themes';
+import Link from 'next/link';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
@@ -12,11 +13,9 @@ import Chip from '@mui/material/Chip';
 import Collapse from '@mui/material/Collapse';
 import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
-import SmartToyIcon from '@mui/icons-material/SmartToy';
 import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
 import CloseIcon from '@mui/icons-material/Close';
 import SendIcon from '@mui/icons-material/Send';
-import PersonIcon from '@mui/icons-material/Person';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import PsychologyIcon from '@mui/icons-material/Psychology';
 import BuildIcon from '@mui/icons-material/Build';
@@ -28,6 +27,10 @@ import CheckIcon from '@mui/icons-material/Check';
 import UnfoldLessIcon from '@mui/icons-material/UnfoldLess';
 import './styles.css';
 import { readChatStream } from '@/utils/chat-stream';
+import { Bot, UserRound } from 'lucide-react';
+
+const API_BASE_URL = (process.env.NEXT_PUBLIC_API_URL ?? '').replace(/\/+$/, '');
+type ApiStatus = 'checking' | 'available' | 'unavailable';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -370,6 +373,8 @@ export default function FloatingChat({
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [unread, setUnread] = useState(0);
+  const [apiStatus, setApiStatus] = useState<ApiStatus>('checking');
+  const [apiError, setApiError] = useState('');
 
   const [userId] = useState<string>(() =>
     typeof window !== 'undefined' ? getUserId() : 'ssr_user',
@@ -379,6 +384,79 @@ export default function FloatingChat({
   const textFieldRef = useRef<HTMLInputElement>(null);
   const abortRef = useRef<AbortController | null>(null);
   const openRef = useRef(open);
+  const healthCheckIdRef = useRef(0);
+  const sendCheckInFlightRef = useRef(false);
+
+  const checkBackend = useCallback(async (): Promise<boolean> => {
+    const checkId = ++healthCheckIdRef.current;
+    setApiStatus('checking');
+    setApiError('');
+    if (!API_BASE_URL) {
+      if (checkId === healthCheckIdRef.current) {
+        setApiStatus('unavailable');
+        setApiError(
+          'The chat service is unavailable. Check your connection and retry.',
+        );
+      }
+      return false;
+    }
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000);
+    try {
+      const response = await fetch(`${API_BASE_URL}/health`, {
+        signal: controller.signal,
+      });
+      if (!response.ok) {
+        throw new Error(`Health check returned ${response.status}.`);
+      }
+      if (checkId === healthCheckIdRef.current) setApiStatus('available');
+      return true;
+    } catch {
+      if (checkId === healthCheckIdRef.current) {
+        setApiStatus('unavailable');
+        setApiError(
+          'The chat service is unavailable. Check your connection and retry.',
+        );
+      }
+      return false;
+    } finally {
+      clearTimeout(timeout);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (open) void checkBackend();
+  }, [open, checkBackend]);
+
+  useEffect(() => {
+    if (!embedded || !open || customElements.get('voice-orb')) return;
+    if (document.querySelector('script[data-voice-orb]')) return;
+    const script = document.createElement('script');
+    script.src =
+      'https://aqualang89.github.io/shipnotes-components/components/voice-orb/voice-orb.js';
+    script.async = true;
+    script.dataset.voiceOrb = 'true';
+    document.head.appendChild(script);
+  }, [embedded, open]);
+
+  const latestBotMessage = [...messages]
+    .reverse()
+    .find((message) => message.type === 'bot');
+  const orbState = isLoading
+    ? latestBotMessage?.text
+      ? 'speaking'
+      : 'thinking'
+    : input.trim()
+      ? 'listening'
+      : 'idle';
+  const voiceOrb = (size: number | string) =>
+    React.createElement('voice-orb', {
+      state: orbState,
+      className: 'fc-voice-orb',
+      style: { width: size, height: size },
+      'aria-label': `Assistant ${orbState}`,
+    });
 
   useEffect(() => {
     openRef.current = open;
@@ -410,7 +488,7 @@ export default function FloatingChat({
       }, 150_000);
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/llm/generate-agentic?input=${encodeURIComponent(userInput)}`,
+          `${API_BASE_URL}/llm/generate-agentic?input=${encodeURIComponent(userInput)}`,
           {
             method: 'POST',
             headers: { 'user-id': userId },
@@ -476,14 +554,18 @@ export default function FloatingChat({
         });
       } catch (err: unknown) {
         if (timedOut || (err as Error).name !== 'AbortError') {
+          setApiStatus('unavailable');
+          setApiError(
+            'The chat service is unavailable. Check your connection and retry.',
+          );
           setMessages((prev) =>
             prev.map((msg) =>
               msg.id === botMsgId
                 ? {
                     ...msg,
                     text: timedOut
-                      ? 'The answer took too long. Please try again.'
-                      : 'The answer was interrupted. Please try again.',
+                      ? 'The chat service stopped responding. Please retry.'
+                      : 'The chat service is unavailable. Please retry.',
                     isStreaming: false,
                   }
                 : msg,
@@ -511,8 +593,16 @@ export default function FloatingChat({
   // ── Send ───────────────────────────────────────────────────────────────────
 
   const handleSend = useCallback(
-    async (userInput: string) => {
-      if (!userInput.trim() || isLoading) return;
+    async (userInput: string): Promise<boolean> => {
+      if (!userInput.trim() || isLoading || sendCheckInFlightRef.current) {
+        return false;
+      }
+      sendCheckInFlightRef.current = true;
+      const available = await checkBackend();
+      if (!available) {
+        sendCheckInFlightRef.current = false;
+        return false;
+      }
       setIsLoading(true);
 
       const userMsgId = `user_${Date.now()}`;
@@ -537,16 +627,17 @@ export default function FloatingChat({
         },
       ]);
 
-      await runStream(userInput, botMsgId);
+      sendCheckInFlightRef.current = false;
+      void runStream(userInput, botMsgId);
+      return true;
     },
-    [isLoading, runStream],
+    [checkBackend, isLoading, runStream],
   );
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim() || isLoading) return;
-    handleSend(input.trim());
-    setInput('');
+    if (!input.trim() || isLoading || sendCheckInFlightRef.current) return;
+    if (await handleSend(input.trim())) setInput('');
   };
 
   const handleStop = () => {
@@ -589,55 +680,115 @@ export default function FloatingChat({
           role={embedded ? 'region' : 'dialog'}
           aria-label="Chat panel"
         >
-          {/* Header */}
-          <Box className="fc-header">
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <ChatBubbleOutlineRoundedIcon
-                sx={{ fontSize: 17, color: 'var(--accent)' }}
-              />
-              <Box>
-                <Typography className="fc-title">Chat with me</Typography>
-                <Typography className="fc-subtitle">
-                  AI · Agentic · Streaming
-                </Typography>
-              </Box>
+          {embedded && (
+            <Box
+              className="fc-orb-backdrop"
+              data-orb-state={orbState}
+              aria-hidden="true"
+            >
+              {voiceOrb('min(78vmin, 380px)')}
             </Box>
-            <Box sx={{ display: 'flex', gap: 0.25 }}>
-              {messages.length > 0 && (
-                <Tooltip title="Clear chat" placement="top">
+          )}
+          <Box className="fc-orb-sr-status" role="status" aria-live="polite">
+            Assistant {orbState}
+          </Box>
+
+          {/* The site-tools drawer already has its own heading and close
+              control, so the embedded chat only keeps its clear action. */}
+          {!embedded && (
+            <Box className="fc-header">
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <ChatBubbleOutlineRoundedIcon
+                  sx={{ fontSize: 17, color: 'var(--accent)' }}
+                />
+                <Box>
+                  <Typography className="fc-title">Chat with me</Typography>
+                  <Typography className="fc-subtitle">
+                    AI · Agentic · Streaming
+                  </Typography>
+                </Box>
+              </Box>
+              <Box sx={{ display: 'flex', gap: 0.25 }}>
+                {messages.length > 0 && (
+                  <Tooltip title="Clear chat" placement="top">
+                    <IconButton
+                      size="small"
+                      onClick={handleClear}
+                      className="fc-icon-btn"
+                    >
+                      <DeleteOutlineIcon sx={{ fontSize: 14 }} />
+                    </IconButton>
+                  </Tooltip>
+                )}
+                <Tooltip title="Close" placement="top">
                   <IconButton
                     size="small"
-                    onClick={handleClear}
+                    onClick={handleClose}
                     className="fc-icon-btn"
+                    aria-label="Close chat"
                   >
-                    <DeleteOutlineIcon sx={{ fontSize: 14 }} />
+                    <CloseIcon sx={{ fontSize: 14 }} />
                   </IconButton>
                 </Tooltip>
-              )}
-              <Tooltip title="Close" placement="top">
+              </Box>
+            </Box>
+          )}
+          {embedded && (
+            <Box className="fc-embedded-actions">
+              <Tooltip title="Clear chat" placement="top">
                 <IconButton
                   size="small"
-                  onClick={handleClose}
+                  onClick={handleClear}
                   className="fc-icon-btn"
+                  aria-label="Clear chat"
                 >
-                  <CloseIcon sx={{ fontSize: 14 }} />
+                  <DeleteOutlineIcon sx={{ fontSize: 18 }} />
                 </IconButton>
               </Tooltip>
+              <Link
+                className="fc-full-chat-link"
+                href="/projects/chatbot"
+                onClick={() => onClose?.()}
+              >
+                Open the full chatbot ↗
+              </Link>
             </Box>
-          </Box>
+          )}
+
+          {(apiStatus !== 'available') && (
+            <Box
+              className={`fc-api-status fc-api-status--${apiStatus}`}
+              role={apiStatus === 'unavailable' ? 'alert' : 'status'}
+            >
+              <Typography>
+                {apiStatus === 'checking'
+                  ? 'Checking chat service…'
+                  : apiError || 'The chat service is unavailable.'}
+              </Typography>
+              {apiStatus === 'unavailable' && (
+                <Button size="small" onClick={() => void checkBackend()}>
+                  Retry
+                </Button>
+              )}
+            </Box>
+          )}
 
           {/* Messages */}
           <Box className="fc-messages">
             {/* Empty state */}
             {messages.length === 0 && (
               <Box className="fc-empty">
-                <SmartToyIcon
-                  sx={{
-                    fontSize: 38,
-                    opacity: 0.18,
-                    color: 'var(--foreground)',
-                  }}
-                />
+                {embedded && (
+                  <Typography className="fc-orb-label">
+                    {orbState === 'listening'
+                      ? 'Typing'
+                      : orbState === 'thinking'
+                        ? 'Thinking'
+                        : orbState === 'speaking'
+                          ? 'Responding'
+                          : 'Ready'}
+                  </Typography>
+                )}
                 <Typography className="fc-empty-text">
                   Ask about my background, projects, or skills.
                 </Typography>
@@ -648,7 +799,7 @@ export default function FloatingChat({
                       label={s}
                       size="small"
                       onClick={() => handleSend(s)}
-                      disabled={isLoading}
+                      disabled={isLoading || apiStatus !== 'available'}
                       className="fc-suggestion-chip"
                     />
                   ))}
@@ -665,11 +816,9 @@ export default function FloatingChat({
                 {/* Avatar */}
                 <Box className={`fc-avatar fc-avatar--${msg.type}`}>
                   {msg.type === 'user' ? (
-                    <PersonIcon sx={{ fontSize: 12, color: 'var(--accent)' }} />
+                    <UserRound size={15} strokeWidth={1.8} color="var(--accent)" />
                   ) : (
-                    <SmartToyIcon
-                      sx={{ fontSize: 12, color: 'var(--foreground-muted)' }}
-                    />
+                    <Bot size={16} strokeWidth={1.8} color="var(--foreground-muted)" />
                   )}
                 </Box>
 
@@ -748,7 +897,14 @@ export default function FloatingChat({
                 }
               }}
               variant="outlined"
-              placeholder="Ask something… (Enter to send)"
+              placeholder={
+                apiStatus === 'unavailable'
+                  ? 'Chat unavailable — use Retry to reconnect'
+                  : apiStatus === 'checking'
+                    ? 'Connecting to chat service…'
+                    : 'Ask something… (Enter to send)'
+              }
+              disabled={isLoading || apiStatus !== 'available'}
               multiline
               maxRows={3}
               autoComplete="off"
@@ -791,7 +947,7 @@ export default function FloatingChat({
               <Button
                 type="submit"
                 variant="contained"
-                disabled={!input.trim()}
+                disabled={!input.trim() || apiStatus !== 'available'}
                 className="fc-send-btn"
                 sx={{
                   backgroundColor: 'var(--accent)',

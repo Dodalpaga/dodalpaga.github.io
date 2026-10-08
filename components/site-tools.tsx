@@ -47,61 +47,57 @@ export default function SiteToolsProvider({
           'aria-modal': true,
         }}
       >
-        <div className="site-tools-heading">
-          <div>
-            <h2>Site tools</h2>
-            <p>A little more from this portfolio.</p>
-          </div>
+        <div className="site-tools-tabs-row">
+          <Tabs
+            value={panel}
+            onChange={(_, value: Panel) => setPanel(value)}
+            variant="fullWidth"
+            aria-label="Site tools"
+            sx={{
+              flex: 1,
+              minWidth: 0,
+              '& .MuiTab-root': {
+                color: 'var(--foreground-muted)',
+                minHeight: 56,
+                textTransform: 'none',
+              },
+              '& .Mui-selected': { color: 'var(--accent) !important' },
+              '& .MuiTabs-indicator': { backgroundColor: 'var(--accent)' },
+            }}
+          >
+            <Tab
+              value="chat"
+              id="tools-tab-chat"
+              aria-controls="tools-chat"
+              icon={<ChatBubbleOutline fontSize="small" />}
+              iconPosition="start"
+              label="Chat"
+            />
+            <Tab
+              value="music"
+              id="tools-tab-music"
+              aria-controls="tools-music"
+              icon={<MusicNote fontSize="small" />}
+              iconPosition="start"
+              label="Music"
+            />
+            <Tab
+              value="settings"
+              id="tools-tab-settings"
+              aria-controls="tools-settings"
+              icon={<Tune fontSize="small" />}
+              iconPosition="start"
+              label="Settings"
+            />
+          </Tabs>
           <IconButton
+            className="site-tools-close"
             onClick={close}
             aria-label="Close site tools"
-            sx={{ color: 'var(--foreground)' }}
           >
             <Close />
           </IconButton>
         </div>
-        <Tabs
-          value={panel}
-          onChange={(_, value: Panel) => setPanel(value)}
-          variant="fullWidth"
-          aria-label="Site tools"
-          sx={{
-            flexShrink: 0,
-            borderBottom: '1px solid var(--card-border)',
-            '& .MuiTab-root': {
-              color: 'var(--foreground-muted)',
-              minHeight: 56,
-              textTransform: 'none',
-            },
-            '& .Mui-selected': { color: 'var(--accent) !important' },
-            '& .MuiTabs-indicator': { backgroundColor: 'var(--accent)' },
-          }}
-        >
-          <Tab
-            value="chat"
-            id="tools-tab-chat"
-            aria-controls="tools-chat"
-            icon={<ChatBubbleOutline fontSize="small" />}
-            iconPosition="start"
-            label="Chat"
-          />
-          <Tab
-            value="music"
-            id="tools-tab-music"
-            aria-controls="tools-music"
-            icon={<MusicNote fontSize="small" />}
-            iconPosition="start"
-            label="Music"
-          />
-          <Tab
-            value="settings"
-            id="tools-tab-settings"
-            aria-controls="tools-settings"
-            icon={<Tune fontSize="small" />}
-            iconPosition="start"
-            label="Settings"
-          />
-        </Tabs>
         <section
           className="tools-panel tools-chat"
           id="tools-chat"

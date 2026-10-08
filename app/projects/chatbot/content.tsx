@@ -18,8 +18,6 @@ import Tooltip from '@mui/material/Tooltip';
 import Collapse from '@mui/material/Collapse';
 import Chip from '@mui/material/Chip';
 import Fade from '@mui/material/Fade';
-import PersonIcon from '@mui/icons-material/Person';
-import SmartToyIcon from '@mui/icons-material/SmartToy';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import SendIcon from '@mui/icons-material/Send';
 import PsychologyIcon from '@mui/icons-material/Psychology';
@@ -229,7 +227,34 @@ const renderMarkdown = (text: string): React.ReactNode[] => {
   return nodes;
 };
 
+const animateStreamedWords = (nodes: React.ReactNode[]): React.ReactNode[] => {
+  let wordIndex = 0;
+  const animate = (node: React.ReactNode): React.ReactNode => {
+    if (typeof node === 'string') {
+      return node.split(/(\s+)/).map((part) => {
+        if (!part || /^\s+$/.test(part)) return part;
+        return (
+          <span className="chat-stream-word" key={`word-${wordIndex++}`}>
+            {part}
+          </span>
+        );
+      });
+    }
+    if (Array.isArray(node)) return node.map(animate);
+    if (React.isValidElement<{ children?: React.ReactNode }>(node)) {
+      return React.cloneElement(
+        node,
+        {},
+        React.Children.map(node.props.children, animate),
+      );
+    }
+    return node;
+  };
+  return nodes.map(animate);
+};
+
 const INPUT_MAX_LEN = 1000;
+type ApiStatus = 'checking' | 'available' | 'unavailable';
 
 // ─── Suggestions ─────────────────────────────────────────────────────────────
 
@@ -481,6 +506,9 @@ export default function Content() {
   const [models, setModels] = useState<string[]>([]);
   const [selectedModel, setSelectedModel] = useState('');
   const [modelsLoading, setModelsLoading] = useState(true);
+  const [apiStatus, setApiStatus] = useState<ApiStatus>('checking');
+  const [apiError, setApiError] = useState('');
+  const [apiRetryCount, setApiRetryCount] = useState(0);
   const [showScrollFab, setShowScrollFab] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingTurnIndex, setEditingTurnIndex] = useState<number | null>(null);
@@ -499,6 +527,41 @@ export default function Content() {
   const textFieldRef = useRef<HTMLInputElement>(null);
   const abortRef = useRef<AbortController | null>(null);
 
+  useEffect(() => {
+    if (customElements.get('voice-orb')) return;
+    if (document.querySelector('script[data-voice-orb]')) return;
+    const script = document.createElement('script');
+    script.src =
+      'https://aqualang89.github.io/shipnotes-components/components/voice-orb/voice-orb.js';
+    script.async = true;
+    script.dataset.voiceOrb = 'true';
+    document.head.appendChild(script);
+  }, []);
+
+  const latestBotMessage = [...messages]
+    .reverse()
+    .find((message) => message.type === 'bot');
+  const orbState = isLoading
+    ? latestBotMessage?.text
+      ? 'speaking'
+      : 'thinking'
+    : input.trim()
+      ? 'listening'
+      : 'idle';
+  const orbLabel = {
+    idle: 'Ready',
+    listening: 'Typing',
+    thinking: 'Thinking',
+    speaking: 'Responding',
+  }[orbState];
+  const voiceOrb = (size: number | string) =>
+    React.createElement('voice-orb', {
+      state: orbState,
+      className: 'chat-voice-orb',
+      style: { width: size, height: size },
+      'aria-label': `Assistant ${orbState}`,
+    });
+
   // auto-scroll only when near bottom
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -514,28 +577,81 @@ export default function Content() {
     setShowScrollFab(el.scrollHeight - el.scrollTop - el.clientHeight > 120);
   };
 
-  // fetch models
+  // Load the model list as the initial health check for the chat API.
   useEffect(() => {
+    let cancelled = false;
     (async () => {
+      setModelsLoading(true);
+      setApiStatus('checking');
+      setApiError('');
+      const healthCheck = new AbortController();
+      const healthCheckTimeout = setTimeout(
+        () => healthCheck.abort(),
+        10_000,
+      );
       try {
-        const res = await fetch(`${API_BASE_URL}/llm/models`);
-        const data = await res.json();
-        setModels(data.models || []);
-        setSelectedModel(data.default || '');
+        if (!API_BASE_URL) throw new Error('Chat API URL is not configured.');
+        const res = await fetch(`${API_BASE_URL}/llm/models`, {
+          signal: healthCheck.signal,
+        });
+        if (!res.ok) throw new Error(`Chat API returned ${res.status}.`);
+        const data = (await res.json()) as {
+          models?: unknown;
+          default?: unknown;
+        };
+        if (!Array.isArray(data.models) || data.models.length === 0) {
+          throw new Error('Chat API did not return any models.');
+        }
+        if (cancelled) return;
+        const availableModels = data.models.filter(
+          (model): model is string =>
+            typeof model === 'string' && model.length > 0,
+        );
+        if (availableModels.length === 0) {
+          throw new Error('Chat API did not return any usable models.');
+        }
+        setModels(availableModels);
+        setSelectedModel(
+          typeof data.default === 'string' &&
+          availableModels.includes(data.default)
+            ? data.default
+            : availableModels[0],
+        );
+        setApiStatus('available');
       } finally {
-        setModelsLoading(false);
+        clearTimeout(healthCheckTimeout);
+        if (!cancelled) setModelsLoading(false);
       }
-    })();
-  }, []);
+    })().catch((error: unknown) => {
+      if (cancelled) return;
+      console.error('Unable to load chatbot models:', error);
+      setModels([]);
+      setSelectedModel('');
+      setApiStatus('unavailable');
+      setApiError(
+        'The chat service is unavailable. Check your connection and retry.',
+      );
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [apiRetryCount]);
+
+  const retryApiConnection = () => {
+    setModelsLoading(true);
+    setApiRetryCount((count) => count + 1);
+  };
 
   const handleModelChange = async (m: string) => {
-    if (isLoading) return; // avoid switching mid-stream
+    if (isLoading || apiStatus !== 'available') return;
     try {
-      await fetch(
+      const res = await fetch(
         `${API_BASE_URL}/llm/set-model?model_name=${encodeURIComponent(m)}`,
         { method: 'POST', headers: { 'user-id': userId } },
       );
+      if (!res.ok) throw new Error(`Chat API returned ${res.status}.`);
       setSelectedModel(m);
+      setApiError('');
       // Backend resets session history on model change — mirror that here so
       // the visible conversation never diverges from what the model can see.
       setMessages([]);
@@ -543,6 +659,10 @@ export default function Content() {
       setInput('');
     } catch (e) {
       console.error(e);
+      setApiStatus('unavailable');
+      setApiError(
+        'The chat service became unavailable. Check your connection and retry.',
+      );
     }
   };
 
@@ -565,7 +685,7 @@ export default function Content() {
             signal: controller.signal,
           },
         );
-        if (!res.ok || !res.body) throw new Error('Stream unavailable');
+        if (!res.ok || !res.body) throw new Error('Chat stream unavailable.');
 
         await readChatStream(res.body, (ev) => {
           setMessages((prev) =>
@@ -624,14 +744,18 @@ export default function Content() {
         });
       } catch (err: unknown) {
         if (timedOut || (err as Error).name !== 'AbortError') {
+          setApiStatus('unavailable');
+          setApiError(
+            'The chat service is unavailable. Check your connection and retry.',
+          );
           setMessages((prev) =>
             prev.map((msg) =>
               msg.id === botMsgId
                 ? {
                     ...msg,
                     text: timedOut
-                      ? 'The answer took too long. Please try again.'
-                      : 'The answer was interrupted. Please try again.',
+                ? 'The chat service stopped responding. Retry when it is back.'
+                      : 'The chat service is unavailable. Retry when it is back.',
                     isStreaming: false,
                   }
                 : msg,
@@ -665,21 +789,28 @@ export default function Content() {
   // given turn, so the model's actual context matches what the UI shows
   // after an edit or retry. Without this, edit/retry only look correct —
   // the model still sees the old (pre-edit) conversation underneath.
-  const resetBackendContext = async (turnIndex: number) => {
+  const resetBackendContext = async (turnIndex: number): Promise<boolean> => {
     try {
-      await fetch(
+      const res = await fetch(
         `${API_BASE_URL}/llm/truncate-history?turn_index=${turnIndex}`,
         { method: 'POST', headers: { 'user-id': userId } },
       );
+      if (!res.ok) throw new Error(`Chat API returned ${res.status}.`);
+      return true;
     } catch (e) {
       console.error('Failed to sync backend context:', e);
+      setApiStatus('unavailable');
+      setApiError(
+        'The chat service became unavailable. Check your connection and retry.',
+      );
+      return false;
     }
   };
 
   // main send — accepts optional truncation index for retry/edit
   const handleSend = useCallback(
     async (userInput: string, truncateAt?: number) => {
-      if (!userInput.trim() || isLoading) return;
+      if (!userInput.trim() || isLoading || apiStatus !== 'available') return;
       setIsLoading(true);
       setEditingId(null);
       setEditingTurnIndex(null);
@@ -712,7 +843,7 @@ export default function Content() {
 
       await runStream(userInput, botMsgId);
     },
-    [isLoading, runStream],
+    [apiStatus, isLoading, runStream],
   );
 
   // suggestion chip click → auto-fire
@@ -721,9 +852,10 @@ export default function Content() {
   // retry: re-run user message at msgIndex, drop everything from that point
   // (frontend AND backend session history)
   const handleRetry = async (msgIndex: number) => {
+    if (apiStatus !== 'available') return;
     const msg = messages[msgIndex];
     if (!msg || msg.type !== 'user' || isLoading) return;
-    await resetBackendContext(turnIndexAt(msgIndex));
+    if (!(await resetBackendContext(turnIndexAt(msgIndex)))) return;
     handleSend(msg.text, msgIndex);
   };
 
@@ -731,6 +863,7 @@ export default function Content() {
   // the UI (kept in a ref in case the user cancels), defer the backend
   // truncation until the edit is actually resent.
   const handleEdit = (msgIndex: number) => {
+    if (apiStatus !== 'available') return;
     const msg = messages[msgIndex];
     if (!msg || msg.type !== 'user' || isLoading) return;
     removedOnEditRef.current = messages.slice(msgIndex);
@@ -754,15 +887,15 @@ export default function Content() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim() || isLoading) return;
+    if (!input.trim() || isLoading || apiStatus !== 'available') return;
     const text = input.trim();
-    setInput('');
     if (editingId && editingTurnIndex !== null) {
       // removedOnEditRef held the messages hidden since handleEdit — they
       // won't be restored now since we're committing the edit, not cancelling.
+      if (!(await resetBackendContext(editingTurnIndex))) return;
       removedOnEditRef.current = [];
-      await resetBackendContext(editingTurnIndex);
     }
+    setInput('');
     handleSend(text);
   };
 
@@ -798,73 +931,44 @@ export default function Content() {
         position: 'relative',
       }}
     >
-      {/* Header */}
+      <Box className="chat-orb-backdrop" aria-hidden="true">
+        {voiceOrb('min(88vmin, 900px)')}
+      </Box>
+      <Box className="chat-orb-sr-status" role="status" aria-live="polite">
+        Assistant {orbLabel.toLowerCase()}
+      </Box>
+      {/* Compact controls */}
       <Box
+        className="chatbot-controls"
         sx={{
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between',
+          justifyContent: 'flex-end',
           flexWrap: 'wrap',
           flexShrink: 0,
-          gap: 2,
-          mb: 2,
-          pb: 2,
-          borderBottom: '1px solid var(--card-border)',
+          gap: 1,
+          mb: 1,
+          position: 'relative',
+          zIndex: 1,
         }}
       >
-        <Box>
-          <span className="section-label">AI · Agentic LLM</span>
-          <Typography
-            variant="h4"
-            sx={{
-              fontFamily: "'Syne', sans-serif",
-              fontWeight: 800,
-              fontSize: { xs: '1.6rem', sm: '2.1rem' },
-              letterSpacing: '-0.03em',
-              lineHeight: 1.1,
-              color: 'var(--foreground)',
-            }}
-          >
-            Chat with me
-          </Typography>
-          <Typography
-            variant="body2"
-            sx={{
-              color: 'var(--foreground-muted)',
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
-            }}
-          >
-            Agentic AI · tools · thinking · streaming
-          </Typography>
-        </Box>
-
         <Box
           sx={{
             display: 'flex',
             alignItems: 'center',
-            gap: 1.5,
+            gap: 1,
             flexWrap: 'wrap',
-            width: { xs: '100%', sm: 'auto' },
             minWidth: 0,
           }}
         >
-          {messages.length > 0 && (
-            <Typography
-              sx={{
-                fontFamily: "'DM Mono', monospace",
-                fontSize: '0.72rem',
-                color: 'var(--foreground-muted)',
-                opacity: 0.55,
-                display: { xs: 'none', sm: 'block' },
-              }}
-            >
-              {messages.filter((m) => m.type === 'user').length} messages
-            </Typography>
-          )}
           <FormControl
             size="small"
-            sx={{ minWidth: 0, width: { xs: 'calc(100% - 48px)', sm: 300, md: 420 }, maxWidth: '100%' }}
-            disabled={modelsLoading || isLoading}
+            sx={{
+              minWidth: 0,
+              width: { xs: 190, sm: 300, md: 420 },
+              maxWidth: 'calc(100vw - 76px)',
+            }}
+            disabled={apiStatus !== 'available' || modelsLoading || isLoading}
           >
             <InputLabel
               sx={{
@@ -879,6 +983,15 @@ export default function Content() {
               value={selectedModel}
               onChange={(e) => handleModelChange(e.target.value)}
               label="Model"
+              displayEmpty
+              renderValue={(value) =>
+                value ||
+                (apiStatus === 'unavailable'
+                  ? 'Unavailable'
+                  : modelsLoading
+                    ? 'Connecting…'
+                    : 'Choose a model')
+              }
               MenuProps={{ PaperProps: { sx: { maxWidth: 'calc(100vw - 24px)' } } }}
               sx={[projectSelectSx, { minWidth: 0, '& .MuiSelect-select': { overflow: 'hidden', textOverflow: 'ellipsis' } }]}
             >
@@ -922,6 +1035,19 @@ export default function Content() {
         </Box>
       </Box>
 
+      {apiStatus === 'unavailable' && (
+        <Box className="chat-api-unavailable" role="alert">
+          <Typography>{apiError}</Typography>
+          <Button
+            onClick={retryApiConnection}
+            size="small"
+            variant="outlined"
+          >
+            Retry
+          </Button>
+        </Box>
+      )}
+
       {/* Messages */}
       <Box
         ref={scrollBoxRef}
@@ -936,6 +1062,8 @@ export default function Content() {
           py: 1,
           pr: 1,
           minHeight: 0,
+          position: 'relative',
+          zIndex: 1,
         }}
       >
         {/* Empty state + suggestions */}
@@ -947,14 +1075,14 @@ export default function Content() {
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: 3,
-              py: 6,
+              gap: 2,
+              py: 2,
               textAlign: 'center',
             }}
           >
-            <SmartToyIcon
-              sx={{ fontSize: 48, opacity: 0.22, color: 'var(--foreground)' }}
-            />
+            <Typography className="chat-orb-status">
+              {orbLabel}
+            </Typography>
             <Typography
               sx={{
                 fontFamily: "'DM Mono', monospace",
@@ -980,7 +1108,7 @@ export default function Content() {
                   label={s}
                   size="small"
                   onClick={() => handleSuggestion(s)}
-                  disabled={isLoading || modelsLoading}
+                  disabled={apiStatus !== 'available' || isLoading || modelsLoading}
                   sx={{
                     fontFamily: "'Plus Jakarta Sans', sans-serif",
                     fontSize: '0.78rem',
@@ -1017,37 +1145,10 @@ export default function Content() {
               },
             }}
           >
-            {/* Avatar */}
-            <Box
-              sx={{
-                width: 32,
-                height: 32,
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0,
-                mt: 0.3,
-                backgroundColor:
-                  msg.type === 'user'
-                    ? 'var(--accent-muted)'
-                    : 'var(--background-2)',
-                border: '1px solid var(--card-border)',
-              }}
-            >
-              {msg.type === 'user' ? (
-                <PersonIcon sx={{ fontSize: 15, color: 'var(--accent)' }} />
-              ) : (
-                <SmartToyIcon
-                  sx={{ fontSize: 15, color: 'var(--foreground-muted)' }}
-                />
-              )}
-            </Box>
-
             {/* Content column */}
             <Box
               sx={{
-                maxWidth: { xs: 'calc(100% - 40px)', sm: 'min(78%, 760px)' },
+                maxWidth: { xs: '92%', sm: 'min(78%, 760px)' },
                 minWidth: 0,
                 display: 'flex',
                 flexDirection: 'column',
@@ -1082,7 +1183,9 @@ export default function Content() {
                 >
                   {msg.type === 'bot' && msg.text ? (
                     <Box className="md-content" sx={{ display: 'inline' }}>
-                      {renderMarkdown(msg.text)}
+                      {msg.isStreaming
+                        ? animateStreamedWords(renderMarkdown(msg.text))
+                        : renderMarkdown(msg.text)}
                     </Box>
                   ) : (
                     msg.text
@@ -1137,7 +1240,7 @@ export default function Content() {
                 </Typography>
 
                 {/* User actions: Edit · Retry */}
-                {msg.type === 'user' && !isLoading && (
+                {msg.type === 'user' && !isLoading && apiStatus === 'available' && (
                   <Box sx={{ display: 'flex', gap: 0.25 }}>
                     <Tooltip title="Edit message" placement="top">
                       <IconButton
@@ -1263,6 +1366,8 @@ export default function Content() {
           mt: 1,
           alignItems: 'flex-end',
           transition: 'border-color .2s',
+          position: 'relative',
+          zIndex: 1,
         }}
       >
         <Box sx={{ position: 'relative', flex: 1 }}>
@@ -1281,11 +1386,15 @@ export default function Content() {
             }}
             variant="outlined"
             placeholder={
-              editingId
-                ? 'Edit your message… (Enter to resend, Esc to cancel)'
-                : 'Ask something… (Enter to send)'
+              apiStatus === 'unavailable'
+                ? 'Chat unavailable — use Retry to reconnect'
+                : apiStatus === 'checking'
+                  ? 'Connecting to chat service…'
+                  : editingId
+                    ? 'Edit your message… (Enter to resend, Esc to cancel)'
+                    : 'Ask something… (Enter to send)'
             }
-            disabled={modelsLoading}
+            disabled={apiStatus !== 'available' || modelsLoading}
             inputProps={{ maxLength: INPUT_MAX_LEN }}
             multiline
             maxRows={4}
@@ -1352,7 +1461,9 @@ export default function Content() {
           <Button
             type="submit"
             variant="contained"
-            disabled={modelsLoading || !input.trim()}
+            disabled={
+              apiStatus !== 'available' || modelsLoading || !input.trim()
+            }
             sx={{
               minWidth: 48,
               width: 48,

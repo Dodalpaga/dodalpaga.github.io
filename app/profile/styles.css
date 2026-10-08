@@ -7,7 +7,7 @@
 .profile-container {
   display: flex;
   width: 100%;
-  height: calc(100vh - 84px - 56px); /* fixed height for independent scrolling — leaves room for the fixed navbar (84px) and footer (56px) so the outer page never scrolls */
+  height: calc(100vh - 84px - 36px); /* fixed height for independent scrolling — leaves room for the fixed navbar and compact footer */
   align-items: flex-start;
   overflow: hidden; /* prevent page scroll */
 
