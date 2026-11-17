@@ -5,47 +5,48 @@
 .profile-container {
   display: flex;
   width: 100%;
-  height: calc(100vh - 84px - 36px);
-  align-items: flex-start;
+  /* Viewport minus the 84px navbar row and the 36px footer. */
+  height: calc(100dvh - 84px - 36px);
+  align-items: stretch;
   overflow: hidden;
 }
 
 /* ============================================================
    SIDEBAR
+   Never scrolls: sizes are tied to the viewport height so the whole
+   column fits, and the GitHub card absorbs whatever space is left.
    ============================================================ */
 
 .profile-sidebar {
   width: 300px;
   min-width: 300px;
   height: 100%;
-  overflow-y: auto;
-  scrollbar-width: none;
+  overflow: hidden;
   background: var(--surface-strong);
   color: var(--on-prussian);
   border-radius: 0 16px 0 0;
 }
 
-.profile-sidebar::-webkit-scrollbar {
-  display: none;
-}
-
 .sidebar-inner {
-  padding: 36px 28px 40px;
+  height: 100%;
+  padding: clamp(16px, 3vh, 32px) 26px clamp(16px, 3vh, 28px);
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: clamp(10px, 2.2vh, 24px);
 }
 
 .identity-block {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 18px;
+  flex-direction: row;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
 }
 
 .profile-img {
-  width: 112px !important;
-  height: 112px !important;
+  width: clamp(56px, 9vh, 84px) !important;
+  height: clamp(56px, 9vh, 84px) !important;
+  flex-shrink: 0;
   border-radius: 50%;
   object-fit: cover;
   border: 3px solid var(--on-prussian);
@@ -54,13 +55,14 @@
 .identity-text {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
+  min-width: 0;
 }
 
 .identity-name {
   font-family: var(--font-syne), sans-serif;
   font-weight: 700;
-  font-size: 1.75rem;
+  font-size: clamp(1.25rem, 2.6vh, 1.6rem);
   line-height: 1.1;
   letter-spacing: -0.03em;
   color: var(--on-prussian);
@@ -80,9 +82,10 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
   margin: 0;
-  padding: 18px 0;
+  padding: clamp(10px, 1.8vh, 16px) 0;
   border-top: 1px solid rgba(240, 232, 216, 0.12);
   border-bottom: 1px solid rgba(240, 232, 216, 0.12);
+  flex-shrink: 0;
 }
 
 .stat-item {
@@ -95,7 +98,7 @@
   margin: 0;
   font-family: var(--font-syne), sans-serif;
   font-weight: 700;
-  font-size: 1.6rem;
+  font-size: clamp(1.25rem, 2.6vh, 1.6rem);
   line-height: 1;
   color: var(--on-prussian);
 }
@@ -111,7 +114,8 @@
 .sidebar-section {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: clamp(6px, 1vh, 10px);
+  flex-shrink: 0;
 }
 
 .sidebar-label {
@@ -126,14 +130,14 @@
 .contact-list {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 0;
 }
 
 .contact-link {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 7px 8px;
+  padding: clamp(3px, 0.7vh, 7px) 8px;
   margin: 0 -8px;
   border-radius: 6px;
   color: rgba(240, 232, 216, 0.85);
@@ -161,15 +165,34 @@
 
 .core-skill-tag {
   font-size: 0.75rem;
-  padding: 4px 10px;
+  padding: 3px 10px;
   border: 1px solid rgba(240, 232, 216, 0.18);
   border-radius: 999px;
   color: rgba(240, 232, 216, 0.85);
 }
 
+/* GitHub card takes the remaining height and scales down to fit it. */
+.sidebar-section--fill {
+  flex: 1 1 0;
+  min-height: 0;
+}
+
 .stats-img-wrapper {
+  flex: 1 1 0;
+  min-height: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.stats-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+  object-fit: contain;
+  object-position: top center;
   border-radius: 8px;
-  overflow: hidden;
   border: 1px solid rgba(240, 232, 216, 0.12);
 }
 
@@ -181,11 +204,11 @@
   flex: 1;
   height: 100%;
   overflow-y: auto;
-  padding: 40px 56px 80px;
+  padding: 36px clamp(24px, 3.5vw, 64px) 48px;
 }
 
-.profile-main > * {
-  max-width: 880px;
+.content-section:last-child {
+  margin-bottom: 0;
 }
 
 .content-section {
@@ -216,6 +239,21 @@
 }
 
 /* ── Experience cards ── */
+
+.mission-body {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 1280px) {
+  .mission-body {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    column-gap: 40px;
+  }
+  .mission-body .mission-col:first-child > :last-child {
+    margin-bottom: 0;
+  }
+}
 
 .mission-card {
   padding: 28px 32px;
@@ -447,55 +485,81 @@
     width: 270px;
     min-width: 270px;
   }
-  .profile-main {
-    padding: 32px 32px 60px;
+  .sidebar-inner {
+    padding-left: 22px;
+    padding-right: 22px;
   }
 }
 
+/* Short windows: below this height the GitHub card would shrink to an
+   unreadable sliver, so drop it rather than squash it or scroll. */
+@media (min-width: 881px) and (max-height: 740px) {
+  .sidebar-section--fill {
+    display: none;
+  }
+}
+
+/* ── Tablet & phone: stacked, page scrolls normally ── */
 @media (max-width: 880px) {
   .profile-container {
     flex-direction: column;
     height: auto;
-    min-height: calc(100vh - 84px);
     overflow: visible;
+    padding: 0 16px;
+    gap: 24px;
   }
 
+  /* Sidebar becomes a card, matching the cards below it. */
   .profile-sidebar {
     width: 100%;
     min-width: 0;
     height: auto;
-    overflow-y: visible;
-    border-radius: 0;
+    border-radius: 16px;
   }
 
   .sidebar-inner {
+    height: auto;
     max-width: 640px;
     margin: 0 auto;
-    padding: 28px 20px 32px;
-  }
-
-  .identity-block {
-    flex-direction: row;
-    align-items: center;
+    padding: 24px 20px;
+    gap: 22px;
   }
 
   .profile-img {
-    width: 80px !important;
-    height: 80px !important;
+    width: 76px !important;
+    height: 76px !important;
   }
 
   .identity-name {
     font-size: 1.5rem;
   }
 
+  .contact-link {
+    padding: 6px 8px;
+  }
+
+  .sidebar-section--fill {
+    flex: none;
+  }
+
   .stats-img-wrapper {
-    max-width: 320px;
+    flex: none;
+    justify-content: flex-start;
+  }
+
+  .stats-img {
+    max-width: 360px;
+    max-height: none;
   }
 
   .profile-main {
     height: auto;
-    overflow-y: visible;
-    padding: 28px 20px 60px;
+    overflow: visible;
+    padding: 0 0 24px;
+  }
+
+  .content-section {
+    margin-bottom: 32px;
   }
 }
 
@@ -507,7 +571,7 @@
     align-items: flex-start;
     gap: 12px;
   }
-  .profile-main {
-    padding: 20px 16px 48px;
+  .profile-container {
+    padding: 0 12px;
   }
 }

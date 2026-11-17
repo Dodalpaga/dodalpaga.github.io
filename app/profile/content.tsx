@@ -1,14 +1,14 @@
 // app/profile/content.tsx
-'use client';
-import * as React from 'react';
-import Image from 'next/image';
-import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
-import GitHubIcon from '@mui/icons-material/GitHub';
-import CodeIcon from '@mui/icons-material/Code';
-import { useThemeContext } from '@/context/ThemeContext';
-import '../globals.css';
-import './styles.css';
+"use client";
+import * as React from "react";
+import Image from "next/image";
+import AlternateEmailIcon from "@mui/icons-material/AlternateEmail";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import CodeIcon from "@mui/icons-material/Code";
+import { useThemeContext } from "@/context/ThemeContext";
+import "../globals.css";
+import "./styles.css";
 import {
   SiPytorch,
   SiScikitlearn,
@@ -30,8 +30,8 @@ import {
   SiOpencv,
   SiPlotly,
   SiGrafana,
-} from 'react-icons/si';
-import type { IconType } from 'react-icons';
+} from "react-icons/si";
+import type { IconType } from "react-icons";
 
 const getYearsSince = (startDateString: string): number => {
   const start = new Date(startDateString);
@@ -79,47 +79,47 @@ const SectionHeader: React.FC<{ title: string }> = ({ title }) => (
 );
 
 const thalesSkills: TechTagProps[] = [
-  { Icon: SiPython, label: 'Python' },
-  { Icon: SiTensorflow, label: 'TensorFlow' },
-  { Icon: SiPytorch, label: 'PyTorch' },
-  { Icon: SiLangchain, label: 'LangChain' },
-  { Icon: SiScikitlearn, label: 'Scikit-Learn' },
-  { Icon: SiFastapi, label: 'FastAPI' },
-  { Icon: SiDjango, label: 'Django' },
-  { Icon: SiDocker, label: 'Docker' },
-  { Icon: SiKubernetes, label: 'Kubernetes' },
-  { Icon: SiNextdotjs, label: 'Next.js' },
-  { Icon: SiReact, label: 'React' },
-  { Icon: SiTypescript, label: 'TypeScript' },
-  { Icon: SiElasticsearch, label: 'Elasticsearch' },
-  { Icon: SiKibana, label: 'Kibana' },
-  { Icon: SiLogstash, label: 'Logstash' },
+  { Icon: SiPython, label: "Python" },
+  { Icon: SiTensorflow, label: "TensorFlow" },
+  { Icon: SiPytorch, label: "PyTorch" },
+  { Icon: SiLangchain, label: "LangChain" },
+  { Icon: SiScikitlearn, label: "Scikit-Learn" },
+  { Icon: SiFastapi, label: "FastAPI" },
+  { Icon: SiDjango, label: "Django" },
+  { Icon: SiDocker, label: "Docker" },
+  { Icon: SiKubernetes, label: "Kubernetes" },
+  { Icon: SiNextdotjs, label: "Next.js" },
+  { Icon: SiReact, label: "React" },
+  { Icon: SiTypescript, label: "TypeScript" },
+  { Icon: SiElasticsearch, label: "Elasticsearch" },
+  { Icon: SiKibana, label: "Kibana" },
+  { Icon: SiLogstash, label: "Logstash" },
 ];
 
 const atosSkills: TechTagProps[] = [
-  { Icon: SiPython, label: 'Python' },
-  { Icon: SiRaspberrypi, label: 'Raspberry Pi' },
-  { Icon: SiNvidia, label: 'Jetson Nano' },
-  { Icon: SiOpencv, label: 'OpenCV' },
-  { Icon: SiScikitlearn, label: 'Scikit-Learn' },
-  { Icon: SiPlotly, label: 'Dash Plotly' },
-  { Icon: SiGrafana, label: 'Grafana' },
+  { Icon: SiPython, label: "Python" },
+  { Icon: SiRaspberrypi, label: "Raspberry Pi" },
+  { Icon: SiNvidia, label: "Jetson Nano" },
+  { Icon: SiOpencv, label: "OpenCV" },
+  { Icon: SiScikitlearn, label: "Scikit-Learn" },
+  { Icon: SiPlotly, label: "Dash Plotly" },
+  { Icon: SiGrafana, label: "Grafana" },
 ];
 
 const coreSkills = [
-  'Machine learning',
-  'Generative AI',
-  'Data science',
-  'Python',
-  'TypeScript',
-  'React',
-  'Next.js',
+  "Machine learning",
+  "Generative AI",
+  "Data science",
+  "Python",
+  "TypeScript",
+  "React",
+  "Next.js",
 ];
 
 export default function Content() {
   const { theme } = useThemeContext();
-  const yearsAtThales = getYearsSince('2022-12-01');
-  const totalYears = getYearsSince('2021-09-01');
+  const yearsAtThales = getYearsSince("2022-12-01");
+  const totalYears = getYearsSince("2021-09-01");
 
   return (
     <div className="profile-container">
@@ -191,15 +191,15 @@ export default function Content() {
             </div>
           </div>
 
-          <div className="sidebar-section">
+          <div className="sidebar-section sidebar-section--fill">
             <p className="sidebar-label">GitHub activity</p>
             <div className="stats-img-wrapper">
               <Image
                 src="https://github-readme-streak-stats.herokuapp.com?user=Dodalpaga&theme=transparent&hide_border=true&currStreakLabel=F0E8D8&currStreakNum=F03A2A&fire=F03A2A&ring=F03A2A&sideNums=F0E8D8&sideLabels=F0E8D8&dates=C9BFAE&stroke=3A5371"
                 alt="GitHub contribution streak"
-                width={260}
-                height={130}
-                style={{ width: '100%', height: 'auto' }}
+                width={495}
+                height={195}
+                className="stats-img"
               />
             </div>
           </div>
@@ -215,17 +215,17 @@ export default function Content() {
               <div className="company-logo-wrapper">
                 <Image
                   src={
-                    theme === 'dark'
-                      ? '/images/thales-inverted.png'
-                      : '/images/thales.png'
+                    theme === "dark"
+                      ? "/images/thales-inverted.png"
+                      : "/images/thales.png"
                   }
                   alt="Thales"
                   width={100}
                   height={32}
                   style={{
-                    objectFit: 'contain',
-                    width: 'auto',
-                    height: '26px',
+                    objectFit: "contain",
+                    width: "auto",
+                    height: "26px",
                   }}
                 />
               </div>
@@ -240,54 +240,64 @@ export default function Content() {
               </div>
             </header>
 
-            <p className="mission-brief">
-              I started as a data engineer on the European Galileo navigation
-              system, then worked as a data scientist on the Euclid satellite
-              ground segment for CNES (Centre National d&apos;Études
-              Spatiales). I placed 4th out of 200 in internal coding
-              competitions.
-            </p>
+            <div className="mission-body">
+              <div className="mission-col">
+                <p className="mission-brief">
+                  I started as a data engineer on the European Galileo
+                  navigation system, then worked as a data scientist on the
+                  Euclid satellite ground segment for CNES (Centre National
+                  d&apos;Études Spatiales). I placed 4th out of 200 in internal
+                  coding competitions.
+                </p>
 
-            <h4 className="mission-section-label">What I did</h4>
-            <ul className="objectives-list">
-              <li>
-                Applied AI and data science to satellite imagery for Earth
-                observation.
-              </li>
-              <li>
-                Designed and built ML pipelines for large-scale data
-                processing.
-              </li>
-              <li>
-                Built containerised full-stack apps with Docker: APIs,
-                monitoring and UIs.
-              </li>
-              <li>
-                Ran projects end to end, coordinating stakeholders, timelines
-                and deliverables.
-              </li>
-              <li>Contributed to tenders and technical studies for CNES.</li>
-              <li>Built conversational agents on top of LLMs.</li>
-            </ul>
+                <h4 className="mission-section-label">What I did</h4>
+                <ul className="objectives-list">
+                  <li>
+                    Applied AI and data science to satellite imagery for Earth
+                    observation.
+                  </li>
+                  <li>
+                    Designed and built ML pipelines for large-scale data
+                    processing.
+                  </li>
+                  <li>
+                    Built containerised full-stack apps with Docker: APIs,
+                    monitoring and UIs.
+                  </li>
+                  <li>
+                    Ran projects end to end, coordinating stakeholders,
+                    timelines and deliverables.
+                  </li>
+                  <li>
+                    Contributed to tenders and technical studies for CNES.
+                  </li>
+                  <li>Built conversational agents on top of LLMs.</li>
+                </ul>
+              </div>
 
-            <div className="featured-project">
-              <p className="featured-label">Featured project · ESRIN / ESA</p>
-              <p className="featured-text">
-                Technical lead of a 3 to 4 person team on a €1.5M, two-year
-                generative AI project for ESRIN, ESA&apos;s Centre for Earth
-                Observation in Frascati, Italy. We shipped a conversational
-                assistant built on LLM agents that helps users find their way
-                through 200+ Earth observation collections (tens of millions of
-                products), with recommendations, visualisations and access
-                guidance.
-              </p>
-            </div>
+              <div className="mission-col">
+                <div className="featured-project">
+                  <p className="featured-label">
+                    Featured project · ESRIN / ESA
+                  </p>
+                  <p className="featured-text">
+                    Technical lead of a 3 to 4 person team on a €1.5M, two-year
+                    generative AI project for ESRIN, ESA&apos;s Centre for Earth
+                    Observation in Frascati, Italy. We shipped a conversational
+                    assistant built on LLM agents that helps users find their
+                    way through 200+ Earth observation collections (tens of
+                    millions of products), with recommendations, visualisations
+                    and access guidance.
+                  </p>
+                </div>
 
-            <h4 className="mission-section-label">Stack</h4>
-            <div className="tech-grid">
-              {thalesSkills.map((s) => (
-                <TechTag key={s.label} {...s} />
-              ))}
+                <h4 className="mission-section-label">Stack</h4>
+                <div className="tech-grid">
+                  {thalesSkills.map((s) => (
+                    <TechTag key={s.label} {...s} />
+                  ))}
+                </div>
+              </div>
             </div>
           </article>
 
@@ -300,9 +310,9 @@ export default function Content() {
                   width={80}
                   height={32}
                   style={{
-                    objectFit: 'contain',
-                    width: 'auto',
-                    height: '22px',
+                    objectFit: "contain",
+                    width: "auto",
+                    height: "22px",
                   }}
                 />
               </div>
@@ -315,40 +325,47 @@ export default function Content() {
               <div className="mission-dates">Sep 2021 to Nov 2022</div>
             </header>
 
-            <p className="mission-brief">
-              Apprenticeship alongside my MSc (VALDOM at INSA Toulouse and
-              ENSEEIHT). I worked on AI and embedded machine learning projects,
-              including predictive maintenance of physical systems and defect
-              detection on aircraft fuselages.
-            </p>
+            <div className="mission-body">
+              <div className="mission-col">
+                <p className="mission-brief">
+                  Apprenticeship alongside my MSc (VALDOM at INSA Toulouse and
+                  ENSEEIHT). I worked on AI and embedded machine learning
+                  projects, including predictive maintenance of physical systems
+                  and defect detection on aircraft fuselages.
+                </p>
 
-            <h4 className="mission-section-label">What I did</h4>
-            <ul className="objectives-list">
-              <li>
-                Built embedded instrumentation on Raspberry Pi and Jetson Nano.
-              </li>
-              <li>
-                Analysed and structured sensor data and designed ML model
-                architectures.
-              </li>
-              <li>
-                Trained computer vision models to detect defects on aircraft
-                fuselages.
-              </li>
-              <li>Built dashboards to visualise model predictions.</li>
-            </ul>
+                <h4 className="mission-section-label">What I did</h4>
+                <ul className="objectives-list">
+                  <li>
+                    Built embedded instrumentation on Raspberry Pi and Jetson
+                    Nano.
+                  </li>
+                  <li>
+                    Analysed and structured sensor data and designed ML model
+                    architectures.
+                  </li>
+                  <li>
+                    Trained computer vision models to detect defects on aircraft
+                    fuselages.
+                  </li>
+                  <li>Built dashboards to visualise model predictions.</li>
+                </ul>
+              </div>
 
-            <h4 className="mission-section-label">Publications</h4>
-            <ul className="objectives-list">
-              <li>Co-authored a paper for the IFAC 2023 conference.</li>
-              <li>Contributed to a registered patent.</li>
-            </ul>
+              <div className="mission-col">
+                <h4 className="mission-section-label">Publications</h4>
+                <ul className="objectives-list">
+                  <li>Co-authored a paper for the IFAC 2023 conference.</li>
+                  <li>Contributed to a registered patent.</li>
+                </ul>
 
-            <h4 className="mission-section-label">Stack</h4>
-            <div className="tech-grid">
-              {atosSkills.map((s) => (
-                <TechTag key={s.label} {...s} />
-              ))}
+                <h4 className="mission-section-label">Stack</h4>
+                <div className="tech-grid">
+                  {atosSkills.map((s) => (
+                    <TechTag key={s.label} {...s} />
+                  ))}
+                </div>
+              </div>
             </div>
           </article>
         </section>
@@ -368,7 +385,11 @@ export default function Content() {
                   alt="INSA Toulouse"
                   width={140}
                   height={60}
-                  style={{ objectFit: 'contain', width: '100%', height: '48px' }}
+                  style={{
+                    objectFit: "contain",
+                    width: "100%",
+                    height: "48px",
+                  }}
                 />
               </div>
               <div className="edu-body">
@@ -393,7 +414,11 @@ export default function Content() {
                   alt="ENSEEIHT"
                   width={140}
                   height={60}
-                  style={{ objectFit: 'contain', width: '100%', height: '48px' }}
+                  style={{
+                    objectFit: "contain",
+                    width: "100%",
+                    height: "48px",
+                  }}
                 />
               </div>
               <div className="edu-body">
@@ -418,7 +443,11 @@ export default function Content() {
                   alt="ENSMM"
                   width={140}
                   height={60}
-                  style={{ objectFit: 'contain', width: '100%', height: '48px' }}
+                  style={{
+                    objectFit: "contain",
+                    width: "100%",
+                    height: "48px",
+                  }}
                 />
               </div>
               <div className="edu-body">
