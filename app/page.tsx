@@ -49,19 +49,6 @@ export default function Home() {
       <footer className="home-footer">
         <div className="home-footer-card">
           <div className="home-footer-row">
-            <span className="home-footer-item">
-              REST API&nbsp;
-              <Link
-                href={`${process.env.NEXT_PUBLIC_API_URL}/docs`}
-                target="_blank"
-                className="home-footer-link"
-              >
-                /docs
-              </Link>
-            </span>
-
-            <span className="home-footer-divider" />
-
             <Link href="/privacy" className="home-footer-link">
               Privacy Policy
             </Link>
