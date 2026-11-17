@@ -53,8 +53,6 @@ export const projectButtonSx = {
   transition: 'all 0.2s ease',
   '&:hover': {
     backgroundColor: 'var(--accent-hover)',
-    transform: 'translateY(-1px)',
-    boxShadow: '0 4px 16px var(--accent-muted)',
   },
   '&:disabled': {
     backgroundColor: 'var(--background-2)',
@@ -93,9 +91,8 @@ export const projectCardSx = {
   border: '1px solid var(--card-border)',
   borderRadius: '14px',
   boxShadow: 'var(--card-shadow)',
-  transition: 'box-shadow 0.2s ease, transform 0.2s ease',
+  transition: 'border-color 0.2s ease',
   '&:hover': {
-    boxShadow: 'var(--card-shadow-hover)',
-    transform: 'translateY(-2px)',
+    borderColor: 'var(--foreground-muted)',
   },
 };

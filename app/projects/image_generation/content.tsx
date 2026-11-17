@@ -275,7 +275,6 @@ export default function Content() {
                   background: 'linear-gradient(135deg, var(--accent), #764ba2)',
                   boxShadow: '0 4px 16px var(--accent-muted)',
                   '&:hover': {
-                    transform: 'translateY(-2px)',
                     boxShadow: '0 6px 24px var(--accent-muted)',
                   },
                   '&:disabled': {

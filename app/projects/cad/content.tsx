@@ -351,7 +351,6 @@ export default function Content() {
                 flexDirection: 'column',
                 gap: 2.5,
               },
-              animation: 'fadeInUp 0.6s ease both',
               animationDelay: `${index * 0.1}s`,
             }}
           >

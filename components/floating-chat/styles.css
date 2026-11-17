@@ -12,26 +12,15 @@
   background: var(--accent-fill);
   border: none;
   cursor: pointer;
-  box-shadow:
-    0 4px 20px rgba(0, 0, 0, 0.28),
-    0 0 0 0 color-mix(in srgb, var(--accent, #8b5cf6) 40%, transparent);
-  transition:
-    transform 0.22s cubic-bezier(0.34, 1.2, 0.64, 1),
-    box-shadow 0.22s ease;
+  box-shadow: 0 4px 14px rgba(12, 26, 44, 0.25);
+  transition: background-color 0.15s ease;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .fc-fab:hover {
-  transform: scale(1.1) translateY(-2px);
-  box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.3),
-    0 0 0 6px color-mix(in srgb, var(--accent, #8b5cf6) 18%, transparent);
-}
-
-.fc-fab:active {
-  transform: scale(0.96);
+  background: var(--accent-hover);
 }
 
 .fc-badge {
@@ -224,24 +213,7 @@ html[data-theme='light'] .fc-orb-backdrop {
 
 .fc-orb-label {
   color: var(--foreground-muted) !important;
-  font: 500 0.6rem/1 var(--font-dm-mono), monospace !important;
-  letter-spacing: 0.14em !important;
-  text-transform: uppercase;
-  opacity: 0.75;
-}
-
-.fc-fab--open {
-  animation: fabPulse 2s infinite;
-}
-
-@keyframes fabPulse {
-  0%,
-  100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.08);
-  }
+  font: 500 0.75rem/1 var(--font-plus-jakarta), sans-serif !important;
 }
 
 @keyframes fc-slide-in {

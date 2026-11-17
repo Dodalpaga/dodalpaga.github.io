@@ -240,16 +240,50 @@ export default function Content() {
               </div>
             </header>
 
+            <p className="mission-brief">
+              I&apos;m a tech lead with {totalYears}+ years of experience, and I
+              specialise in taking agentic AI applications to production,
+              including{" "}
+              <a
+                className="inline-link"
+                href="https://viseo.esa.int/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                VISEO
+              </a>{" "}
+              for ESA. I&apos;m also a Knowledge Booster at Thales. I started as
+              a data engineer on the European Galileo navigation system, then
+              worked as a data scientist on the Euclid satellite ground segment
+              for CNES (Centre National d&apos;Études Spatiales). I placed 4th
+              out of 200 in internal coding competitions.
+            </p>
+
+            <div className="featured-project">
+              <div className="featured-head">
+                <h4 className="featured-title">VISEO for ESA / ESRIN</h4>
+                <a
+                  className="inline-link"
+                  href="https://viseo.esa.int/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  viseo.esa.int (live)
+                </a>
+              </div>
+              <p className="featured-text">
+                Tech lead of a 3 to 4 person team on a €1.5M, two-year
+                generative AI project for ESRIN, ESA&apos;s Centre for Earth
+                Observation in Frascati, Italy. I write and ship code alongside
+                the team and own delivery: stakeholders, timelines and
+                deliverables. VISEO uses LLM agents to guide users through 200+
+                Earth observation collections (tens of millions of products),
+                with recommendations, visualisations and access guidance.
+              </p>
+            </div>
+
             <div className="mission-body">
               <div className="mission-col">
-                <p className="mission-brief">
-                  I started as a data engineer on the European Galileo
-                  navigation system, then worked as a data scientist on the
-                  Euclid satellite ground segment for CNES (Centre National
-                  d&apos;Études Spatiales). I placed 4th out of 200 in internal
-                  coding competitions.
-                </p>
-
                 <h4 className="mission-section-label">What I did</h4>
                 <ul className="objectives-list">
                   <li>
@@ -265,32 +299,12 @@ export default function Content() {
                     monitoring and UIs.
                   </li>
                   <li>
-                    Ran projects end to end, coordinating stakeholders,
-                    timelines and deliverables.
-                  </li>
-                  <li>
                     Contributed to tenders and technical studies for CNES.
                   </li>
-                  <li>Built conversational agents on top of LLMs.</li>
                 </ul>
               </div>
 
               <div className="mission-col">
-                <div className="featured-project">
-                  <p className="featured-label">
-                    Featured project · ESRIN / ESA
-                  </p>
-                  <p className="featured-text">
-                    Technical lead of a 3 to 4 person team on a €1.5M, two-year
-                    generative AI project for ESRIN, ESA&apos;s Centre for Earth
-                    Observation in Frascati, Italy. We shipped a conversational
-                    assistant built on LLM agents that helps users find their
-                    way through 200+ Earth observation collections (tens of
-                    millions of products), with recommendations, visualisations
-                    and access guidance.
-                  </p>
-                </div>
-
                 <h4 className="mission-section-label">Stack</h4>
                 <div className="tech-grid">
                   {thalesSkills.map((s) => (

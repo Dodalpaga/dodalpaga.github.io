@@ -119,10 +119,8 @@
 }
 
 .sidebar-label {
-  font-family: var(--font-dm-mono), monospace;
-  font-size: 0.72rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font-size: 0.8rem;
+  font-weight: 600;
   color: rgba(240, 232, 216, 0.78);
   margin: 0;
 }
@@ -309,8 +307,7 @@
 }
 
 .mission-dates {
-  font-family: var(--font-dm-mono), monospace;
-  font-size: 0.75rem;
+  font-size: 0.82rem;
   color: var(--foreground-muted);
   white-space: nowrap;
 }
@@ -323,12 +320,9 @@
 }
 
 .mission-section-label {
-  font-family: var(--font-dm-mono), monospace;
-  font-size: 0.7rem;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--foreground-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--foreground);
   margin: 0 0 12px;
 }
 
@@ -362,24 +356,15 @@
 }
 
 .featured-project {
-  border-left: 3px solid var(--lobster);
-  border-radius: 0 10px 10px 0;
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
   padding: 16px 20px;
   margin: 0 0 24px;
-  background: var(--background-2);
+  background: var(--background);
 }
 
 :root[data-theme='dark'] .featured-project {
-  background: rgba(240, 232, 216, 0.05);
-}
-
-.featured-label {
-  font-family: var(--font-dm-mono), monospace;
-  font-size: 0.7rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--accent-text);
-  margin: 0 0 8px;
+  background: var(--background);
 }
 
 .featured-text {
@@ -412,6 +397,38 @@
   flex-shrink: 0;
 }
 
+/* ── Featured project header: label + live link ── */
+
+.featured-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.featured-title {
+  margin: 0;
+  font-family: var(--font-syne), sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--foreground);
+}
+
+.inline-link {
+  color: var(--foreground);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--lobster);
+  text-underline-offset: 3px;
+}
+
+.inline-link:hover {
+  opacity: 1;
+  color: var(--accent-text);
+}
+
 /* ============================================================
    EDUCATION
    ============================================================ */
@@ -440,7 +457,6 @@
 .edu-card:hover {
   opacity: 1;
   border-color: var(--foreground-muted);
-  box-shadow: var(--card-shadow-hover);
 }
 
 .edu-logo {
@@ -453,11 +469,8 @@
 }
 
 .edu-degree {
-  font-family: var(--font-dm-mono), monospace;
-  font-size: 0.7rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--accent-text);
+  font-size: 0.8rem;
+  color: var(--foreground-muted);
   margin: 0;
 }
 

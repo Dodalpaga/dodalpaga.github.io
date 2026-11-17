@@ -341,7 +341,6 @@ export default function ImageSegmentation() {
             backgroundColor: 'var(--accent)',
             '&:hover': {
               backgroundColor: 'var(--accent-hover)',
-              transform: 'translateY(-1px)',
             },
             '&:disabled': {
               backgroundColor: 'var(--background-2)',

@@ -27,24 +27,10 @@
   box-shadow:
     0 8px 40px rgba(0, 0, 0, 0.18),
     0 2px 8px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
 
   max-width: min(560px, calc(100vw - 32px));
   width: max-content;
 
-  animation: consent-rise 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-@keyframes consent-rise {
-  from {
-    opacity: 0;
-    transform: translateX(-50%) translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
 }
 
 /* Cookie icon badge */
@@ -129,6 +115,4 @@
 }
 .cookie-btn-allow:hover {
   background: var(--accent-hover, var(--accent));
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px var(--accent-muted);
 }

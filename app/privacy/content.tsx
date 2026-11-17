@@ -1,38 +1,38 @@
 // app/privacy/content.tsx
-'use client';
+"use client";
 
-import { useEffect, useState, useRef } from 'react';
-import Link from '@mui/material/Link';
-import Button from '@mui/material/Button';
-import LockIcon from '@mui/icons-material/Lock';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import StorageIcon from '@mui/icons-material/Storage';
-import PublicIcon from '@mui/icons-material/Public';
-import CloudIcon from '@mui/icons-material/Cloud';
-import GitHubIcon from '@mui/icons-material/GitHub';
-import FolderOpenIcon from '@mui/icons-material/FolderOpen';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import PauseCircleOutlineIcon from '@mui/icons-material/PauseCircleOutline';
-import UndoIcon from '@mui/icons-material/Undo';
-import MoveToInboxIcon from '@mui/icons-material/MoveToInbox';
-import BlockIcon from '@mui/icons-material/Block';
-import GavelIcon from '@mui/icons-material/Gavel';
-import { useCookieConsent } from '@/hooks/useCookieConsent';
-import './styles.css';
+import { useEffect, useState, useRef } from "react";
+import Link from "@mui/material/Link";
+import Button from "@mui/material/Button";
+import LockIcon from "@mui/icons-material/Lock";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import StorageIcon from "@mui/icons-material/Storage";
+import PublicIcon from "@mui/icons-material/Public";
+import CloudIcon from "@mui/icons-material/Cloud";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import FolderOpenIcon from "@mui/icons-material/FolderOpen";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import PauseCircleOutlineIcon from "@mui/icons-material/PauseCircleOutline";
+import UndoIcon from "@mui/icons-material/Undo";
+import MoveToInboxIcon from "@mui/icons-material/MoveToInbox";
+import BlockIcon from "@mui/icons-material/Block";
+import GavelIcon from "@mui/icons-material/Gavel";
+import { useCookieConsent } from "@/hooks/useCookieConsent";
+import "./styles.css";
 
 /* ─────────────────────────────────────────────────────────────────────────
    Types
 ───────────────────────────────────────────────────────────────────────── */
 const SECTIONS = [
-  { id: 'introduction', index: '01', title: 'Introduction' },
-  { id: 'analytics', index: '02', title: 'Analytics & Tracking' },
-  { id: 'storage', index: '03', title: 'Data Storage' },
-  { id: 'rights', index: '04', title: 'Your GDPR Rights' },
-  { id: 'cookies', index: '05', title: 'Cookie Management' },
-  { id: 'third-party', index: '06', title: 'Third-Party Services' },
-  { id: 'principles', index: '07', title: 'Processing Principles' },
-  { id: 'contact', index: '08', title: 'Contact & DPA' },
+  { id: "introduction", index: "01", title: "Introduction" },
+  { id: "analytics", index: "02", title: "Analytics & Tracking" },
+  { id: "storage", index: "03", title: "Data Storage" },
+  { id: "rights", index: "04", title: "Your GDPR Rights" },
+  { id: "cookies", index: "05", title: "Cookie Management" },
+  { id: "third-party", index: "06", title: "Third-Party Services" },
+  { id: "principles", index: "07", title: "Processing Principles" },
+  { id: "contact", index: "08", title: "Contact & DPA" },
 ];
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -57,10 +57,9 @@ function TableOfContents({
         {SECTIONS.map((s) => (
           <li key={s.id}>
             <button
-              className={`priv-toc__item${active === s.id ? ' priv-toc__item--active' : ''}`}
+              className={`priv-toc__item${active === s.id ? " priv-toc__item--active" : ""}`}
               onClick={() => onNavigate(s.id)}
             >
-              <span className="priv-toc__index">{s.index}</span>
               <span className="priv-toc__title">{s.title}</span>
             </button>
           </li>
@@ -89,7 +88,6 @@ function SectionCard({
   return (
     <section id={id} className="priv-card">
       <div className="priv-card__header">
-        <span className="priv-card__index">{index}</span>
         <h2 className="priv-card__title">{title}</h2>
         {badge && <span className="priv-card__badge">{badge}</span>}
       </div>
@@ -176,7 +174,7 @@ export default function PrivacyPolicy() {
         entries.forEach((e) => {
           if (e.isIntersecting) setActive(e.target.id);
         }),
-      { rootMargin: '-20% 0px -70% 0px' },
+      { rootMargin: "-20% 0px -70% 0px" },
     );
     SECTIONS.forEach(({ id }) => {
       const el = document.getElementById(id);
@@ -188,48 +186,34 @@ export default function PrivacyPolicy() {
   const scrollTo = (id: string) =>
     document
       .getElementById(id)
-      ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
 
   const today = isMounted
-    ? new Date().toLocaleDateString('en-GB', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
+    ? new Date().toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
       })
-    : '';
+    : "";
 
-  const iconSx = { fontSize: 18, color: 'var(--accent-text)', opacity: 0.85 };
+  const iconSx = { fontSize: 18, color: "var(--accent-text)", opacity: 0.85 };
 
   return (
     <div className="priv-root">
-
       {/* ── Hero ─────────────────────────────────────────────────── */}
       <header className="priv-hero">
         <div className="priv-hero__terminal">
           <div className="priv-hero__content">
-            <h1 className="priv-hero__title">
-              Privacy policy
-            </h1>
+            <h1 className="priv-hero__title">Privacy policy</h1>
             <p className="priv-hero__subtitle">
               What this site collects, why, where it is stored and how long it
               is kept.
             </p>
             {isMounted && (
-              <div className="priv-hero__meta">
-                <span className="priv-meta-badge">
-                  <span
-                    className="priv-meta-badge__dot"
-                    style={{ background: hasConsent ? '#2e9e62' : 'var(--lobster)' }}
-                  />
-                  {hasConsent ? 'Analytics ON' : 'Analytics OFF'}
-                </span>
-                <span className="priv-meta-badge priv-meta-badge--muted">
-                  Updated: {today}
-                </span>
-                <span className="priv-meta-badge priv-meta-badge--muted">
-                  Retention: 90 days
-                </span>
-              </div>
+              <p className="priv-hero__meta">
+                Analytics {hasConsent ? "on" : "off"} for you · Data kept 90
+                days · Updated {today}
+              </p>
             )}
           </div>
         </div>
@@ -314,7 +298,7 @@ export default function PrivacyPolicy() {
                 title="Storage Location"
               >
                 <p>
-                  Hosted on{' '}
+                  Hosted on{" "}
                   <Link
                     href="https://render.com"
                     target="_blank"
@@ -331,7 +315,7 @@ export default function PrivacyPolicy() {
                 title="Retention Period"
               >
                 <p>
-                  Analytics data is automatically purged after{' '}
+                  Analytics data is automatically purged after{" "}
                   <strong>90 days</strong>. Expiry is enforced at the database
                   level.
                 </p>
@@ -352,10 +336,10 @@ export default function PrivacyPolicy() {
             badge="Art. 15–22"
           >
             <p className="priv-rights-intro">
-              Under the GDPR you hold the following enforceable rights. Email{' '}
+              Under the GDPR you hold the following enforceable rights. Email{" "}
               <Link href="mailto:dorian.voydie@gmail.com" underline="hover">
                 dorian.voydie@gmail.com
-              </Link>{' '}
+              </Link>{" "}
               to exercise any of them. I reply within 30 days.
             </p>
             <div className="priv-rights-grid">
@@ -406,7 +390,7 @@ export default function PrivacyPolicy() {
             <p>
               Cookies are small text files stored on your device to persist your
               analytics consent preference and track page interactions, only
-              after you opt in. I use{' '}
+              after you opt in. I use{" "}
               <strong>no third-party advertising or tracking cookies</strong>.
             </p>
             <div className="priv-sub-section">
@@ -426,33 +410,39 @@ export default function PrivacyPolicy() {
                   </span>
                   <span
                     className="priv-consent-panel__value"
-                    style={{ color: hasConsent ? 'var(--foreground)' : 'var(--accent-text)' }}
+                    style={{
+                      color: hasConsent
+                        ? "var(--foreground)"
+                        : "var(--accent-text)",
+                    }}
                   >
                     <span
                       className="priv-consent-panel__dot"
-                      style={{ background: hasConsent ? '#2e9e62' : 'var(--lobster)' }}
+                      style={{
+                        background: hasConsent ? "#2e9e62" : "var(--lobster)",
+                      }}
                     />
-                    {hasConsent ? 'Analytics Enabled' : 'Analytics Disabled'}
+                    {hasConsent ? "Analytics Enabled" : "Analytics Disabled"}
                   </span>
                 </div>
                 <Button
                   size="small"
                   onClick={hasConsent ? withdrawConsent : giveConsent}
                   sx={{
-                    textTransform: 'none',
-                    fontFamily: 'var(--font-dm-mono), monospace',
-                    fontSize: '0.75rem',
-                    padding: '6px 18px',
-                    borderRadius: '8px',
-                    border: '1px solid var(--card-border)',
-                    color: 'var(--foreground-muted)',
-                    '&:hover': {
-                      borderColor: 'var(--card-border)',
-                      color: 'var(--foreground)',
+                    textTransform: "none",
+                    fontFamily: "var(--font-dm-mono), monospace",
+                    fontSize: "0.75rem",
+                    padding: "6px 18px",
+                    borderRadius: "8px",
+                    border: "1px solid var(--card-border)",
+                    color: "var(--foreground-muted)",
+                    "&:hover": {
+                      borderColor: "var(--card-border)",
+                      color: "var(--foreground)",
                     },
                   }}
                 >
-                  {hasConsent ? 'Withdraw Consent' : 'Enable Analytics'}
+                  {hasConsent ? "Withdraw Consent" : "Enable Analytics"}
                 </Button>
               </div>
             )}
@@ -468,7 +458,7 @@ export default function PrivacyPolicy() {
               <InfoCard icon={<PublicIcon sx={iconSx} />} title="ipapi.co">
                 <p>
                   Geolocation service. Converts anonymised IPs to country/city
-                  data. Governed by their{' '}
+                  data. Governed by their{" "}
                   <Link
                     href="https://ipapi.co/privacy/"
                     target="_blank"
@@ -482,7 +472,7 @@ export default function PrivacyPolicy() {
               <InfoCard icon={<CloudIcon sx={iconSx} />} title="Render">
                 <p>
                   Backend hosting (GDPR-compliant). All analytics data is
-                  persisted here.{' '}
+                  persisted here.{" "}
                   <Link
                     href="https://render.com/privacy"
                     target="_blank"
@@ -494,7 +484,7 @@ export default function PrivacyPolicy() {
               </InfoCard>
               <InfoCard icon={<GitHubIcon sx={iconSx} />} title="GitHub Pages">
                 <p>
-                  Frontend hosting. May collect standard server access logs.{' '}
+                  Frontend hosting. May collect standard server access logs.{" "}
                   <Link
                     href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement"
                     target="_blank"
@@ -596,7 +586,7 @@ export default function PrivacyPolicy() {
               <GavelIcon
                 sx={{
                   fontSize: 20,
-                  color: 'var(--accent-text)',
+                  color: "var(--accent-text)",
                   opacity: 0.7,
                   flexShrink: 0,
                 }}
@@ -605,22 +595,22 @@ export default function PrivacyPolicy() {
                 If you believe your GDPR rights have been violated and direct
                 contact has not resolved the issue, you have the right to lodge
                 a complaint with the relevant supervisory authority in your
-                country of residence (e.g.{' '}
+                country of residence (e.g.{" "}
                 <Link
                   href="https://www.cnil.fr"
                   target="_blank"
                   underline="hover"
                 >
                   CNIL
-                </Link>{' '}
-                in France,{' '}
+                </Link>{" "}
+                in France,{" "}
                 <Link
                   href="https://ico.org.uk"
                   target="_blank"
                   underline="hover"
                 >
                   ICO
-                </Link>{' '}
+                </Link>{" "}
                 in the UK).
               </p>
             </div>
@@ -629,7 +619,7 @@ export default function PrivacyPolicy() {
           <footer className="priv-footer">
             <div className="priv-footer__line" />
             <p className="priv-footer__text">
-              This policy is effective as of {isMounted ? today : '—'} and may
+              This policy is effective as of {isMounted ? today : "—"} and may
               be updated periodically. Material changes will be reflected in the
               &quot;last updated&quot; date above.
             </p>

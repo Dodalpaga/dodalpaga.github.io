@@ -96,10 +96,7 @@ function CategoryCard({ cat }: { cat: SkillCategory }) {
         borderColor: hovered
           ? cat.accent
           : 'var(--card-border, rgba(255,255,255,0.08))',
-        boxShadow: hovered
-          ? `0 8px 32px rgba(0,0,0,0.25), 0 0 0 1px ${cat.accent}40`
-          : '0 2px 12px rgba(0,0,0,0.15)',
-        transform: hovered ? 'translateY(-3px)' : 'translateY(0)',
+        boxShadow: '0 2px 12px rgba(0,0,0,0.15)',
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}

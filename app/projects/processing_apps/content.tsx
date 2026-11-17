@@ -77,9 +77,7 @@ function SimCard({
         transition: 'box-shadow 0.25s ease, transform 0.25s ease',
         '&:hover': {
           boxShadow: 'var(--card-shadow-hover)',
-          transform: 'translateY(-2px)',
         },
-        animation: 'fadeInUp 0.5s ease both',
         animationDelay: `${index * 0.08}s`,
         ...(expanded && {
           position: 'fixed',

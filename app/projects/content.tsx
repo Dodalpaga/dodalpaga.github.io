@@ -1,18 +1,18 @@
 // app/projects/content.tsx
-'use client';
-import * as React from 'react';
-import Container from '@mui/material/Container';
-import Link from 'next/link';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Grid';
-import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
-import Chip from '@mui/material/Chip';
-import SearchIcon from '@mui/icons-material/Search';
-import '../globals.css';
+"use client";
+import * as React from "react";
+import Container from "@mui/material/Container";
+import Link from "next/link";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
+import TextField from "@mui/material/TextField";
+import InputAdornment from "@mui/material/InputAdornment";
+import Chip from "@mui/material/Chip";
+import SearchIcon from "@mui/icons-material/Search";
+import "../globals.css";
 
 type App = {
   title: string;
@@ -25,179 +25,172 @@ type App = {
 
 const apps: App[] = [
   {
-    title: 'VISEO',
+    title: "VISEO",
     image: `/images/viseo.png`,
-    link: 'https://viseo.esa.int/',
-    target: '_blank',
+    link: "https://viseo.esa.int/",
+    target: "_blank",
     description:
-      'Virtual Support for Earth Observation: discover the ESA ecosystem and visualise satellite data.',
-    tags: ['Tool', 'External', 'Professional'],
+      "Virtual Support for Earth Observation: discover the ESA ecosystem and visualise satellite data.",
+    tags: ["Tool", "External", "Professional"],
   },
   {
-    title: 'COG Viewer',
+    title: "COG Viewer",
     image: `/images/ndvi.png`,
-    link: '/projects/cog',
-    target: '',
+    link: "/projects/cog",
+    target: "",
     description:
-      'Explore Cloud Optimized GeoTIFFs on an interactive globe, with band, colour and map controls.',
-    tags: ['Tool', 'Maps', 'Geospatial'],
+      "Explore Cloud Optimized GeoTIFFs on an interactive globe, with band, colour and map controls.",
+    tags: ["Tool", "Maps", "Geospatial"],
   },
   {
-    title: 'Chat Bot',
+    title: "Chat Bot",
     image: `/images/chatbot.png`,
-    link: '/projects/chatbot',
-    target: '',
+    link: "/projects/chatbot",
+    target: "",
     description:
-      'A chatbot that answers questions about my resume and past projects.',
-    tags: ['AI', 'LLM', 'Personal'],
+      "A chatbot that answers questions about my resume and past projects.",
+    tags: ["AI", "LLM", "Personal"],
   },
   {
-    title: 'Board Game Card Printer',
+    title: "Board Game Card Printer",
     image: `/images/cardprinter.png`,
-    link: 'https://dodalpaga.github.io/Board-Game-Card-Printer/',
-    target: '_blank',
-    description: 'Print your own custom cards for board games.',
-    tags: ['Tool', 'External', 'Personal'],
+    link: "https://dodalpaga.github.io/Board-Game-Card-Printer/",
+    target: "_blank",
+    description: "Print your own custom cards for board games.",
+    tags: ["Tool", "External", "Personal"],
   },
   {
-    title: 'Analytics',
+    title: "Analytics",
     image: `/images/analytics.jpg`,
-    link: '/projects/analytics',
-    target: '',
-    description: 'Live analytics dashboard for this website.',
-    tags: ['Data', 'Dashboard', 'Personal'],
+    link: "/projects/analytics",
+    target: "",
+    description: "Live analytics dashboard for this website.",
+    tags: ["Data", "Dashboard", "Personal"],
   },
   {
-    title: 'Image Detection',
+    title: "Image Detection",
     image: `/images/detection.jpeg`,
-    link: '/projects/image_detection',
-    target: '',
-    description:
-      'Object detection on images with YOLO.',
-    tags: ['AI', 'Computer Vision', 'Personal'],
+    link: "/projects/image_detection",
+    target: "",
+    description: "Object detection on images with YOLO.",
+    tags: ["AI", "Computer Vision", "Personal"],
   },
   {
-    title: 'Image Generation',
+    title: "Image Generation",
     image: `/images/image_gen.jpg`,
-    link: '/projects/image_generation',
-    target: '',
-    description: 'Generate images with Stable Diffusion.',
-    tags: ['AI', 'Generative', 'Personal'],
+    link: "/projects/image_generation",
+    target: "",
+    description: "Generate images with Stable Diffusion.",
+    tags: ["AI", "Generative", "Personal"],
   },
   {
     title: "What's Halfway?",
     image: `/images/whats_halfway.png`,
-    link: '/projects/whats_halfway',
-    target: '',
+    link: "/projects/whats_halfway",
+    target: "",
     description:
-      'Find a meeting point between several places based on driving time.',
-    tags: ['Maps', 'Tool', 'Personal'],
+      "Find a meeting point between several places based on driving time.",
+    tags: ["Maps", "Tool", "Personal"],
   },
   {
-    title: 'CAD',
+    title: "CAD",
     image: `/images/cad.jpg`,
-    link: '/projects/cad',
-    target: '',
-    description: 'My collection of 3D models and parametric designs.',
-    tags: ['3D', 'Design', 'Personal'],
+    link: "/projects/cad",
+    target: "",
+    description: "My collection of 3D models and parametric designs.",
+    tags: ["3D", "Design", "Personal"],
   },
   {
-    title: 'Processing Apps',
+    title: "Processing Apps",
     image: `/images/drawing.jpg`,
-    link: '/projects/processing_apps',
-    target: '',
-    description:
-      'Interactive visual experiments built with p5.js.',
-    tags: ['Creative', 'p5.js', 'Personal'],
+    link: "/projects/processing_apps",
+    target: "",
+    description: "Interactive visual experiments built with p5.js.",
+    tags: ["Creative", "p5.js", "Personal"],
   },
   {
-    title: 'Jupyter Notebooks',
+    title: "Jupyter Notebooks",
     image: `/images/jupyter.jpg`,
-    link: '/projects/notebooks',
-    target: '',
+    link: "/projects/notebooks",
+    target: "",
     description:
-      'Notebooks on machine learning, Kaggle datasets and routing problems.',
-    tags: ['AI', 'Notebooks', 'Personal'],
+      "Notebooks on machine learning, Kaggle datasets and routing problems.",
+    tags: ["AI", "Notebooks", "Personal"],
   },
   {
-    title: 'Travels',
+    title: "Travels",
     image: `/images/traveler.jpg`,
-    link: '/projects/travels',
-    target: '',
+    link: "/projects/travels",
+    target: "",
     description: "A map of the countries I've visited.",
-    tags: ['Maps', 'Personal'],
+    tags: ["Maps", "Personal"],
   },
   {
-    title: 'Snowflakes',
+    title: "Snowflakes",
     image: `/images/snowflakes.jpeg`,
-    link: '/projects/snowflakes',
-    target: '',
-    description:
-      'See how temperature and humidity shape a growing snowflake.',
-    tags: ['Simulation', 'Science', 'Personal'],
+    link: "/projects/snowflakes",
+    target: "",
+    description: "See how temperature and humidity shape a growing snowflake.",
+    tags: ["Simulation", "Science", "Personal"],
   },
   {
-    title: 'Regex Matcher',
+    title: "Regex Matcher",
     image: `/images/regex.png`,
-    link: '/projects/regex',
-    target: '',
-    description:
-      'Test regular expressions live against sample input.',
-    tags: ['Dev Tool', 'Utility', 'Personal'],
+    link: "/projects/regex",
+    target: "",
+    description: "Test regular expressions live against sample input.",
+    tags: ["Dev Tool", "Utility", "Personal"],
   },
   {
-    title: 'Music Production',
+    title: "Music Production",
     image: `/images/music_producer.jpg`,
-    link: '/projects/media_player',
-    target: '',
-    description:
-      'Electronic music I produce in my free time.',
-    tags: ['Music', 'Creative', 'Personal'],
+    link: "/projects/media_player",
+    target: "",
+    description: "Electronic music I produce in my free time.",
+    tags: ["Music", "Creative", "Personal"],
   },
   {
-    title: 'Guess What',
+    title: "Guess What",
     image: `/images/guesswhat.png`,
-    link: 'https://guess-what.onrender.com/',
-    target: '_blank',
-    description:
-      'An image guessing game to play with friends and family.',
-    tags: ['Game', 'External', 'Personal'],
+    link: "https://guess-what.onrender.com/",
+    target: "_blank",
+    description: "An image guessing game to play with friends and family.",
+    tags: ["Game", "External", "Personal"],
   },
   {
-    title: 'Richesses du Monde',
+    title: "Richesses du Monde",
     image: `/images/richesses_du_monde.png`,
-    link: 'https://richesses-du-monde.onrender.com/',
-    target: '_blank',
+    link: "https://richesses-du-monde.onrender.com/",
+    target: "_blank",
     description:
-      'A French Monopoly-style board game about buying and trading resources.',
-    tags: ['Game', 'External', 'Personal'],
+      "A French Monopoly-style board game about buying and trading resources.",
+    tags: ["Game", "External", "Personal"],
   },
   {
-    title: 'Cognitive Game',
+    title: "Cognitive Game",
     image: `/images/cognitive.jpg`,
-    link: 'https://cognitive-game.netlify.app/',
-    target: '_blank',
+    link: "https://cognitive-game.netlify.app/",
+    target: "_blank",
     description:
-      'Type the matching arrows as fast as you can. Each mistake costs time.',
-    tags: ['Game', 'External', 'Personal'],
+      "Type the matching arrows as fast as you can. Each mistake costs time.",
+    tags: ["Game", "External", "Personal"],
   },
   {
-    title: 'SEAWOLF Website',
+    title: "SEAWOLF Website",
     image: `/images/SEAWOLF.png`,
-    link: 'https://seawolf.netlify.app/',
-    target: '_blank',
+    link: "https://seawolf.netlify.app/",
+    target: "_blank",
     description:
-      'Website for SEAWOLF, an open-hull boat designed for fishing and diving.',
-    tags: ['Web', 'External', 'Personal'],
+      "Website for SEAWOLF, an open-hull boat designed for fishing and diving.",
+    tags: ["Web", "External", "Personal"],
   },
   {
-    title: 'VBSO Website',
+    title: "VBSO Website",
     image: `/images/vbso.png`,
-    link: 'https://vbso.fr/',
-    target: '_blank',
-    description:
-      'Website for the Saint-Orens volleyball club.',
-    tags: ['Web', 'External', 'Personal'],
+    link: "https://vbso.fr/",
+    target: "_blank",
+    description: "Website for the Saint-Orens volleyball club.",
+    tags: ["Web", "External", "Personal"],
   },
 ];
 
@@ -205,9 +198,8 @@ const apps: App[] = [
 const ALL_TAGS = Array.from(new Set(apps.flatMap((a) => a.tags ?? []))).sort();
 
 export default function Content() {
-  const [search, setSearch] = React.useState('');
+  const [search, setSearch] = React.useState("");
   const [activeTag, setActiveTag] = React.useState<string | null>(null);
-  const [visibleCount, setVisibleCount] = React.useState(0);
 
   const filtered = React.useMemo(() => {
     return apps.filter((app) => {
@@ -222,50 +214,42 @@ export default function Content() {
     });
   }, [search, activeTag]);
 
-  // Trigger staggered reveal when filter changes
-  React.useEffect(() => {
-    setVisibleCount(0);
-    const timer = setTimeout(() => setVisibleCount(filtered.length), 50);
-    return () => clearTimeout(timer);
-  }, [filtered]);
-
   return (
     <Container
       maxWidth={false}
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
         padding: { xs: 2, sm: 4 },
       }}
     >
       {/* Header */}
       <div
         style={{
-          width: '100%',
-          marginBottom: '32px',
-          textAlign: 'center',
+          width: "100%",
+          marginBottom: "32px",
+          textAlign: "center",
         }}
-        className="animate-fade-up"
       >
         <h1
           style={{
             fontFamily: "'Syne', sans-serif",
-            fontSize: 'clamp(2rem, 5vw, 3.5rem)',
+            fontSize: "clamp(2rem, 5vw, 3.5rem)",
             fontWeight: 800,
-            letterSpacing: '-0.03em',
-            margin: '0 0 8px',
+            letterSpacing: "-0.03em",
+            margin: "0 0 8px",
           }}
         >
           Projects
         </h1>
         <p
           style={{
-            color: 'var(--foreground-muted)',
+            color: "var(--foreground-muted)",
             fontFamily: "'Plus Jakarta Sans', sans-serif",
-            maxWidth: '480px',
-            margin: '0 auto 24px',
+            maxWidth: "480px",
+            margin: "0 auto 24px",
             lineHeight: 1.6,
           }}
         >
@@ -284,7 +268,7 @@ export default function Content() {
             startAdornment: (
               <InputAdornment position="start">
                 <span
-                  style={{ color: 'var(--foreground-muted)', display: 'flex' }}
+                  style={{ color: "var(--foreground-muted)", display: "flex" }}
                 >
                   <SearchIcon sx={{ fontSize: 18 }} />
                 </span>
@@ -292,20 +276,20 @@ export default function Content() {
             ),
             style: {
               fontFamily: "'DM Mono', monospace",
-              fontSize: '0.85rem',
-              borderRadius: '10px',
-              backgroundColor: 'var(--card)',
-              color: 'var(--foreground)',
+              fontSize: "0.85rem",
+              borderRadius: "10px",
+              backgroundColor: "var(--card)",
+              color: "var(--foreground)",
             },
           }}
           sx={{
-            width: '100%',
-            maxWidth: '400px',
+            width: "100%",
+            maxWidth: "400px",
             mb: 2,
-            '& .MuiOutlinedInput-root': {
-              '& fieldset': { borderColor: 'var(--card-border)' },
-              '&:hover fieldset': { borderColor: 'var(--foreground-muted)' },
-              '&.Mui-focused fieldset': { borderColor: 'var(--foreground)' },
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": { borderColor: "var(--card-border)" },
+              "&:hover fieldset": { borderColor: "var(--foreground-muted)" },
+              "&.Mui-focused fieldset": { borderColor: "var(--foreground)" },
             },
           }}
         />
@@ -313,32 +297,37 @@ export default function Content() {
         {/* Tag filters */}
         <div
           style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: '8px',
-            justifyContent: 'center',
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "8px",
+            justifyContent: "center",
           }}
         >
           <Chip
             label="All"
             size="small"
             onClick={() => setActiveTag(null)}
-            variant={activeTag === null ? 'filled' : 'outlined'}
+            variant={activeTag === null ? "filled" : "outlined"}
             sx={{
               fontFamily: "'DM Mono', monospace",
-              fontSize: '0.7rem',
-              letterSpacing: '0.05em',
+              fontSize: "0.7rem",
+              letterSpacing: "0.05em",
               backgroundColor:
-                activeTag === null ? 'var(--surface-strong)' : 'transparent',
-              color: activeTag === null ? 'var(--on-prussian)' : 'var(--foreground-2)',
+                activeTag === null ? "var(--surface-strong)" : "transparent",
+              color:
+                activeTag === null
+                  ? "var(--on-prussian)"
+                  : "var(--foreground-2)",
               borderColor:
-                activeTag === null ? 'var(--surface-strong)' : 'var(--card-border)',
-              cursor: 'pointer',
-              '&:hover': {
+                activeTag === null
+                  ? "var(--surface-strong)"
+                  : "var(--card-border)",
+              cursor: "pointer",
+              "&:hover": {
                 backgroundColor:
                   activeTag === null
-                    ? 'var(--surface-strong-2)'
-                    : 'var(--background-2)',
+                    ? "var(--surface-strong-2)"
+                    : "var(--background-2)",
               },
             }}
           />
@@ -348,22 +337,27 @@ export default function Content() {
               label={tag}
               size="small"
               onClick={() => setActiveTag(activeTag === tag ? null : tag)}
-              variant={activeTag === tag ? 'filled' : 'outlined'}
+              variant={activeTag === tag ? "filled" : "outlined"}
               sx={{
                 fontFamily: "'DM Mono', monospace",
-                fontSize: '0.7rem',
-                letterSpacing: '0.05em',
+                fontSize: "0.7rem",
+                letterSpacing: "0.05em",
                 backgroundColor:
-                  activeTag === tag ? 'var(--surface-strong)' : 'transparent',
-                color: activeTag === tag ? 'var(--on-prussian)' : 'var(--foreground-2)',
+                  activeTag === tag ? "var(--surface-strong)" : "transparent",
+                color:
+                  activeTag === tag
+                    ? "var(--on-prussian)"
+                    : "var(--foreground-2)",
                 borderColor:
-                  activeTag === tag ? 'var(--surface-strong)' : 'var(--card-border)',
-                cursor: 'pointer',
-                '&:hover': {
+                  activeTag === tag
+                    ? "var(--surface-strong)"
+                    : "var(--card-border)",
+                cursor: "pointer",
+                "&:hover": {
                   backgroundColor:
                     activeTag === tag
-                      ? 'var(--surface-strong-2)'
-                      : 'var(--background-2)',
+                      ? "var(--surface-strong-2)"
+                      : "var(--background-2)",
                 },
               }}
             />
@@ -374,40 +368,34 @@ export default function Content() {
         <p
           style={{
             fontFamily: "'DM Mono', monospace",
-            fontSize: '0.72rem',
-            color: 'var(--foreground-muted)',
-            marginTop: '12px',
-            letterSpacing: '0.05em',
+            fontSize: "0.72rem",
+            color: "var(--foreground-muted)",
+            marginTop: "12px",
+            letterSpacing: "0.05em",
           }}
         >
-          {filtered.length} result{filtered.length !== 1 ? 's' : ''}
+          {filtered.length} result{filtered.length !== 1 ? "s" : ""}
         </p>
       </div>
 
       {/* Grid */}
-      <Grid container spacing={3} sx={{ width: '100%' }}>
-        {filtered.map((app, index) => (
+      <Grid container spacing={3} sx={{ width: "100%" }}>
+        {filtered.map((app) => (
           <Grid item xs={12} sm={6} md={4} key={app.title}>
             <Link href={app.link} target={app.target}>
-              <Card
-                className="card"
-                sx={{
-                  opacity: index < visibleCount ? 1 : 0,
-                  transition: `opacity 0.4s ease ${Math.min(index * 0.04, 0.5)}s, transform 0.4s ease ${Math.min(index * 0.04, 0.5)}s`,
-                }}
-              >
+              <Card className="card project-card">
                 {/* Tags row */}
                 {app.tags && app.tags.length > 0 && (
                   <div
                     style={{
-                      position: 'absolute',
-                      top: '10px',
-                      right: '10px',
-                      display: 'flex',
-                      gap: '4px',
+                      position: "absolute",
+                      top: "10px",
+                      right: "10px",
+                      display: "flex",
+                      gap: "4px",
                       zIndex: 2,
-                      flexWrap: 'wrap',
-                      justifyContent: 'flex-end',
+                      flexWrap: "wrap",
+                      justifyContent: "flex-end",
                     }}
                   >
                     {app.tags.map((tag) => (
@@ -420,12 +408,12 @@ export default function Content() {
 
                 <CardContent
                   sx={{
-                    padding: '12px 16px',
-                    minHeight: '44px',
-                    height: '18%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'flex-start',
+                    padding: "12px 16px",
+                    minHeight: "44px",
+                    height: "18%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-start",
                     flexShrink: 0,
                   }}
                 >
@@ -435,9 +423,9 @@ export default function Content() {
                     sx={{
                       fontFamily: "'Syne', sans-serif",
                       fontWeight: 700,
-                      fontSize: '1rem',
-                      letterSpacing: '-0.01em',
-                      color: 'var(--foreground)',
+                      fontSize: "1rem",
+                      letterSpacing: "-0.01em",
+                      color: "var(--foreground)",
                     }}
                   >
                     {app.title}
@@ -450,50 +438,19 @@ export default function Content() {
                   alt={app.title}
                   sx={{
                     flexGrow: 1,
-                    width: '100%',
-                    height: '82%',
-                    objectFit: 'cover',
-                    objectPosition: 'center',
-                    transition: 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
-                    '.card:hover &': {
-                      transform: 'scale(1.05)',
-                    },
+                    width: "100%",
+                    height: "82%",
+                    objectFit: "cover",
+                    objectPosition: "center",
                   }}
                 />
 
-                {/* Description overlay */}
-                <div className="card-overlay">
-                  <Typography
-                    variant="h5"
-                    sx={{
-                      fontFamily: "'Syne', sans-serif",
-                      fontWeight: 700,
-                      fontSize: '1.2rem',
-                      letterSpacing: '-0.02em',
-                      marginBottom: '8px',
-                    }}
-                  >
-                    {app.title}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      color: 'var(--foreground-2)',
-                      lineHeight: 1.6,
-                      fontSize: '0.85rem',
-                    }}
-                  >
-                    {app.description}
-                  </Typography>
-                  {app.target === '_blank' && (
-                    <span
-                      className="tag"
-                      style={{ marginTop: '12px', alignSelf: 'center' }}
-                    >
-                      ↗ External
-                    </span>
+                <p className="project-card__desc">
+                  {app.description}
+                  {app.target === "_blank" && (
+                    <span className="project-card__ext"> · opens site ↗</span>
                   )}
-                </div>
+                </p>
               </Card>
             </Link>
           </Grid>
@@ -504,22 +461,22 @@ export default function Content() {
       {filtered.length === 0 && (
         <div
           style={{
-            textAlign: 'center',
-            padding: '80px 0',
-            color: 'var(--foreground-muted)',
+            textAlign: "center",
+            padding: "80px 0",
+            color: "var(--foreground-muted)",
           }}
         >
           <p
             style={{
               fontFamily: "'DM Mono', monospace",
-              fontSize: '2rem',
-              marginBottom: '8px',
+              fontSize: "2rem",
+              marginBottom: "8px",
             }}
           >
             ∅
           </p>
           <p
-            style={{ fontFamily: "'DM Mono', monospace", fontSize: '0.85rem' }}
+            style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.85rem" }}
           >
             No projects match your search
           </p>

@@ -313,9 +313,7 @@ html[data-theme='light'] .chat-orb-backdrop {
 
 .chat-orb-status {
   color: var(--foreground-2);
-  font: 500 0.7rem/1 var(--font-dm-mono), monospace;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  font: 500 0.8rem/1 var(--font-plus-jakarta), sans-serif;
 }
 
 .chat-api-unavailable {
