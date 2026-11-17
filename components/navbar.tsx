@@ -20,7 +20,8 @@ const NAV_ITEMS = [
   { label: 'Blog', href: '/blog' },
 ];
 
-const NAV_ITEM_PADDING = '10px';
+const NAV_ITEM_PADDING = '12px 14px';
+const NAV_ICON_PADDING = '12px';
 const NAV_CONTENT_HEIGHT = '20px';
 
 const NavPillLink = styled(Link)(() => ({
@@ -61,7 +62,7 @@ const NavPillLink = styled(Link)(() => ({
 }));
 
 const navIconSx = {
-  padding: NAV_ITEM_PADDING,
+  padding: NAV_ICON_PADDING,
   color: 'rgba(240, 232, 216, 0.9)',
   borderRadius: '999px',
   '&:hover': {
