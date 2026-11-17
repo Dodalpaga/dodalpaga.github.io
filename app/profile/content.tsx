@@ -304,6 +304,10 @@ export default function Content() {
                 </ul>
 
                 <h4 className="mission-section-label">Conferences</h4>
+                <p className="mission-brief">
+                  Presented VISEO and joined round tables on agentic AI for
+                  Earth observation at:
+                </p>
                 <ul className="objectives-list">
                   <li>
                     WGISS-60 (Oberpfaffenhofen, Germany, 2025): CEOS Working
