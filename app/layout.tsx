@@ -28,11 +28,11 @@ const plusJakarta = Plus_Jakarta_Sans({
 
 export const metadata = {
   title: 'Dorian Voydie - Portfolio',
-  description: 'AI Engineer & Builder.',
+  description: 'Dorian Voydie, AI engineer. Projects, writing and experiments.',
 };
 
-// Minified — runs synchronously before first paint, prevents theme flash.
-const themeInitScript = `(function(){try{var s=localStorage.getItem('theme');var p=s?s:(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',p);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();`;
+// Runs before first paint to prevent a theme flash. Light (Ricotta Cream) is the default.
+const themeInitScript = `(function(){try{var s=localStorage.getItem('theme');var p=s==='dark'?'dark':'light';document.documentElement.setAttribute('data-theme',p);}catch(e){document.documentElement.setAttribute('data-theme','light');}})();`;
 
 export default function RootLayout({
   children,
@@ -47,7 +47,6 @@ export default function RootLayout({
       className={`${syne.variable} ${dmMono.variable} ${plusJakarta.variable}`}
     >
       <head>
-        {/* ⚡ Theme init — before body renders, prevents flash */}
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
 
         {/*

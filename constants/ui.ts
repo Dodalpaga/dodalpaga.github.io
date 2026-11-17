@@ -47,7 +47,7 @@ export const projectButtonSx = {
   textTransform: 'none',
   borderRadius: '10px',
   padding: '8px 20px',
-  backgroundColor: 'var(--accent)',
+  backgroundColor: 'var(--accent-fill)',
   color: '#fff',
   border: 'none',
   transition: 'all 0.2s ease',
@@ -74,7 +74,7 @@ export const projectOutlinedButtonSx = {
   borderColor: 'var(--card-border)',
   '&:hover': {
     borderColor: 'var(--accent)',
-    color: 'var(--accent)',
+    color: 'var(--accent-text)',
     backgroundColor: 'var(--accent-muted)',
   },
 };

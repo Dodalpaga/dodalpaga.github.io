@@ -21,7 +21,7 @@ const SIMULATIONS = [
     key: 'lorentz',
     title: 'Lorenz Attractor',
     label: 'Chaos · 3D',
-    description: 'Strange attractor from deterministic chaos — dx/dt = σ(y−x)',
+    description: 'Strange attractor of a chaotic system: dx/dt = σ(y−x)',
     Component: LorentzCanvas,
   },
   {
@@ -116,7 +116,7 @@ function SimCard({
                 py: 0.2,
                 borderRadius: '100px',
                 backgroundColor: 'var(--accent-muted)',
-                color: 'var(--accent)',
+                color: 'var(--accent-text)',
                 border: '1px solid var(--accent)',
                 textTransform: 'uppercase',
                 lineHeight: 1.4,
@@ -162,7 +162,7 @@ function SimCard({
               borderRadius: '8px',
               border: '1px solid var(--card-border)',
               '&:hover': {
-                color: 'var(--accent)',
+                color: 'var(--accent-text)',
                 borderColor: 'var(--accent)',
                 backgroundColor: 'var(--accent-muted)',
               },
@@ -241,8 +241,8 @@ export default function Content() {
             maxWidth: 520,
           }}
         >
-          Live mathematical simulations — chaos theory, signal analysis, and
-          stochastic methods, all rendered in real time.
+          Live simulations of chaotic systems, Fourier series and Monte Carlo
+          methods.
         </Typography>
       </Box>
 

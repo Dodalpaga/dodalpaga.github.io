@@ -81,7 +81,7 @@
 }
 .tools-action:hover,
 .tools-action[aria-pressed='true'] {
-  color: var(--accent);
+  color: var(--accent-text);
   border-color: var(--accent);
   background: var(--accent-muted);
 }
@@ -92,7 +92,7 @@
 }
 .tools-link {
   display: block;
-  color: var(--accent);
+  color: var(--accent-text);
   font-size: 0.82rem;
   margin-top: 24px;
 }

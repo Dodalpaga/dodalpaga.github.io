@@ -278,12 +278,10 @@ export default function Content() {
               textAlign: 'center',
             }}
           >
-            <Typography sx={{ fontSize: '2.5rem' }}>📓</Typography>
             <Typography
               sx={{
                 fontFamily: "'DM Mono', monospace",
                 fontSize: '0.85rem',
-                opacity: 0.6,
               }}
             >
               Select a notebook to display

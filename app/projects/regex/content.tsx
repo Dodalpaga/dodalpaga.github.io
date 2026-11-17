@@ -134,7 +134,7 @@ export default function RegexHighlighter() {
                 py: 0.2,
                 borderRadius: '100px',
                 backgroundColor: 'var(--accent-muted)',
-                color: 'var(--accent)',
+                color: 'var(--accent-text)',
                 border: '1px solid var(--accent)',
               }}
             >
@@ -199,13 +199,13 @@ export default function RegexHighlighter() {
               fontSize: '0.7rem',
               backgroundColor:
                 regexInput === p.pattern
-                  ? 'var(--accent-muted)'
+                  ? 'var(--surface-strong)'
                   : 'var(--background-elevated)',
-              border: `1px solid ${regexInput === p.pattern ? 'var(--accent)' : 'var(--card-border)'}`,
+              border: `1px solid ${regexInput === p.pattern ? 'var(--surface-strong)' : 'var(--card-border)'}`,
               color:
                 regexInput === p.pattern
-                  ? 'var(--accent)'
-                  : 'var(--foreground-muted)',
+                  ? 'var(--on-prussian)'
+                  : 'var(--foreground-2)',
               cursor: 'pointer',
               transition: 'all 0.15s ease',
             }}

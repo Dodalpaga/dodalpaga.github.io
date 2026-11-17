@@ -185,7 +185,7 @@
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--accent-text);
   background: var(--accent-muted);
   border: 1px solid var(--accent);
   padding: 2px 7px;
@@ -267,7 +267,7 @@
 }
 .fp-ctrl-btn:not(:disabled):hover {
   border-color: var(--accent);
-  color: var(--accent);
+  color: var(--accent-text);
   background: var(--accent-muted);
 }
 .fp-ctrl-btn.primary {
@@ -384,7 +384,7 @@
   flex-shrink: 0;
 }
 .fp-track-row.active .fp-track-num {
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 .fp-track-cover {
@@ -414,7 +414,7 @@
   align-items: center;
   justify-content: center;
   background: linear-gradient(135deg, var(--accent-muted), var(--background-2));
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 .fp-track-meta {
@@ -435,7 +435,7 @@
   margin: 0;
 }
 .fp-track-row.active .fp-track-name {
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 /* Inline video badge in playlist */
@@ -444,7 +444,7 @@
   font-size: 0.58rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--accent-text);
   opacity: 0.75;
 }
 
@@ -475,7 +475,7 @@
 }
 .fp-track-row.active .fp-track-play-btn {
   opacity: 1;
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 /* Vertical divider between panels */

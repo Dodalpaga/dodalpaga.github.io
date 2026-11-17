@@ -1,12 +1,6 @@
 /* app/globals.css */
 
-/*
-  ❌ REMOVED: @import url('https://fonts.googleapis.com/...')
-  ✅ Fonts are loaded via next/font in layout.tsx — importing them twice
-     causes a layout flash as the browser loads two separate font sources.
-     The CSS variables (--font-syne, --font-dm-mono, --font-plus-jakarta)
-     are injected by next/font and available immediately.
-*/
+/* Fonts are loaded via next/font in layout.tsx. */
 
 @tailwind base;
 @tailwind components;
@@ -17,154 +11,121 @@
    ============================================================ */
 
 /*
-  Default theme (dark) applied here so CSS variables are NEVER undefined.
-  The inline <script> in layout.tsx will set the correct theme before paint,
-  but this acts as a zero-flash fallback for the split-second before JS runs.
+  Palette (60 / 30 / 10)
+    Ricotta Cream  #F0E8D8  60%  main surfaces
+    Prussian Blue  #1B3350  30%  text, navigation, secondary surfaces
+    Lobster Red    #F03A2A  10%  accent: CTAs, active states, highlights
+
+  Light theme is the reference implementation of the palette.
+  Dark theme swaps the dominant surface to a deep Prussian Blue and uses
+  Ricotta Cream for text, keeping Lobster Red as the only accent.
 */
-:root {
-  /* Core surfaces */
-  --background: rgb(14, 14, 16);
-  --background-2: rgb(28, 28, 32);
-  --background-elevated: rgb(22, 22, 26);
-  --background-sunken: rgb(10, 10, 12);
-
-  /* Accent palette */
-  --bg-color-1: rgb(122, 79, 35);
-  --bg-color-2: rgb(94, 25, 25);
-  --bg-color-3: rgb(22, 107, 33);
-  --bg-color-4: rgb(63, 30, 100);
-  --text-color-1: rgb(243, 204, 168);
-  --text-color-2: rgb(253, 195, 195);
-  --text-color-3: rgb(177, 245, 186);
-  --text-color-4: rgb(225, 215, 252);
-
-  /* Primary accent */
-  --accent: rgb(100, 140, 255);
-  --accent-muted: rgba(100, 140, 255, 0.12);
-  --accent-hover: rgb(120, 160, 255);
-  --blue: rgb(159, 159, 226);
-
-  /* Typography */
-  --foreground: rgb(238, 238, 240);
-  --foreground-2: rgb(180, 180, 188);
-  --foreground-muted: rgb(110, 110, 120);
-
-  /* Glass & transparency */
-  --background-transparent: rgba(14, 14, 16, 0.88);
-  --card: rgb(22, 22, 28);
-  --card-border: rgba(255, 255, 255, 0.06);
-  --card-shadow:
-    0 1px 0px rgba(255, 255, 255, 0.04), 0 8px 32px rgba(0, 0, 0, 0.4);
-  --card-shadow-hover:
-    0 4px 16px rgba(0, 0, 0, 0.5), 0 24px 56px rgba(0, 0, 0, 0.6);
-
-  /* Gradients */
-  --background-start-rgb: rgb(14, 14, 16);
-  --background-end-rgb: rgb(10, 10, 14);
-
-  /* Dividers */
-  --divider: rgba(255, 255, 255, 0.07);
-
-  /* Noise overlay opacity */
-  --noise-opacity: 0.04;
-  --grid-color: rgba(255, 255, 255, 0.025);
-}
-
+:root,
 :root[data-theme='light'] {
-  /* Core surfaces */
-  --background: rgb(242, 241, 238);
-  --background-2: rgb(220, 218, 212);
-  --background-elevated: rgb(255, 255, 255);
-  --background-sunken: rgb(228, 226, 220);
+  /* Brand */
+  --cream: #f0e8d8;
+  --prussian: #1b3350;
+  --lobster: #f03a2a;
+  --on-prussian: #f0e8d8;
+  --on-lobster: #ffffff;
 
-  /* Accent palette */
-  --bg-color-1: rgb(218, 178, 140);
-  --bg-color-2: rgb(216, 153, 153);
-  --bg-color-3: rgb(152, 216, 161);
-  --bg-color-4: rgb(161, 142, 211);
-  --text-color-1: rgb(122, 79, 35);
-  --text-color-2: rgb(94, 25, 25);
-  --text-color-3: rgb(22, 107, 33);
-  --text-color-4: rgb(30, 37, 100);
+  /* Surfaces (60%) */
+  --background: #f0e8d8;
+  --background-2: #e3d9c5;
+  --background-elevated: #f7f2e8;
+  --background-sunken: #e8dfcc;
 
-  /* Primary accent */
-  --accent: rgb(48, 90, 214);
-  --accent-muted: rgba(48, 90, 214, 0.12);
-  --accent-hover: rgb(30, 65, 180);
-  --blue: rgb(48, 48, 214);
+  /* Secondary surface (30%) */
+  --surface-strong: #1b3350;
+  --surface-strong-2: #24415f;
+
+  /* Legacy categorical tokens, remapped onto the palette */
+  --bg-color-1: rgba(27, 51, 80, 0.08);
+  --bg-color-2: rgba(240, 58, 42, 0.1);
+  --bg-color-3: #f7f2e8;
+  --bg-color-4: rgba(27, 51, 80, 0.14);
+  --text-color-1: #1b3350;
+  --text-color-2: #b0241a;
+  --text-color-3: #4a5f78;
+  --text-color-4: #1b3350;
+
+  /* Accent (10%) */
+  --accent: #f03a2a;
+  --accent-text: #b0241a;
+  --accent-fill: #d02c1e;
+  --accent-muted: rgba(240, 58, 42, 0.1);
+  --accent-hover: #b8271a;
+  --blue: #1b3350;
 
   /* Typography */
-  --foreground: rgb(18, 18, 18);
-  --foreground-2: rgb(68, 68, 68);
-  --foreground-muted: rgb(120, 118, 112);
+  --foreground: #1b3350;
+  --foreground-2: #3d536d;
+  --foreground-muted: #4f5d70;
 
   /* Glass & transparency */
-  --background-transparent: rgba(248, 247, 244, 0.85);
-  --card: rgb(255, 255, 255);
-  --card-border: rgba(0, 0, 0, 0.07);
-  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 8px 24px rgba(0, 0, 0, 0.08);
-  --card-shadow-hover:
-    0 4px 12px rgba(0, 0, 0, 0.08), 0 20px 48px rgba(0, 0, 0, 0.14);
+  --background-transparent: rgba(247, 242, 232, 0.9);
+  --card: #f7f2e8;
+  --card-border: rgba(27, 51, 80, 0.12);
+  --card-shadow: 0 1px 2px rgba(27, 51, 80, 0.06), 0 6px 20px rgba(27, 51, 80, 0.06);
+  --card-shadow-hover: 0 2px 6px rgba(27, 51, 80, 0.08), 0 14px 36px rgba(27, 51, 80, 0.12);
 
-  /* Gradients */
-  --background-start-rgb: rgb(238, 237, 234);
-  --background-end-rgb: rgb(248, 247, 244);
+  /* Page background */
+  --background-start-rgb: #f0e8d8;
+  --background-end-rgb: #f0e8d8;
 
   /* Dividers */
-  --divider: rgba(0, 0, 0, 0.08);
+  --divider: rgba(27, 51, 80, 0.1);
 
-  /* Noise overlay opacity */
-  --noise-opacity: 0.025;
-  --grid-color: rgba(0, 0, 0, 0.04);
+  /* Texture */
+  --noise-opacity: 0;
+  --grid-color: transparent;
 }
 
 :root[data-theme='dark'] {
-  /* Core surfaces */
-  --background: rgb(14, 14, 16);
-  --background-2: rgb(28, 28, 32);
-  --background-elevated: rgb(22, 22, 26);
-  --background-sunken: rgb(10, 10, 12);
+  --on-prussian: #f0e8d8;
+  --on-lobster: #ffffff;
 
-  /* Accent palette */
-  --bg-color-1: rgb(122, 79, 35);
-  --bg-color-2: rgb(94, 25, 25);
-  --bg-color-3: rgb(22, 107, 33);
-  --bg-color-4: rgb(63, 30, 100);
-  --text-color-1: rgb(243, 204, 168);
-  --text-color-2: rgb(253, 195, 195);
-  --text-color-3: rgb(177, 245, 186);
-  --text-color-4: rgb(225, 215, 252);
+  --background: #11233a;
+  --background-2: #22405f;
+  --background-elevated: #1b3350;
+  --background-sunken: #0c1a2c;
 
-  /* Primary accent */
-  --accent: rgb(100, 140, 255);
-  --accent-muted: rgba(100, 140, 255, 0.12);
-  --accent-hover: rgb(120, 160, 255);
-  --blue: rgb(159, 159, 226);
+  --surface-strong: #0c1a2c;
+  --surface-strong-2: #162a42;
 
-  /* Typography */
-  --foreground: rgb(238, 238, 240);
-  --foreground-2: rgb(180, 180, 188);
-  --foreground-muted: rgb(110, 110, 120);
+  --bg-color-1: rgba(240, 232, 216, 0.08);
+  --bg-color-2: rgba(240, 58, 42, 0.16);
+  --bg-color-3: #1b3350;
+  --bg-color-4: rgba(240, 232, 216, 0.12);
+  --text-color-1: #f0e8d8;
+  --text-color-2: #ff7a6e;
+  --text-color-3: #c9bfae;
+  --text-color-4: #f0e8d8;
 
-  /* Glass & transparency */
-  --background-transparent: rgba(14, 14, 16, 0.88);
-  --card: rgb(22, 22, 28);
-  --card-border: rgba(255, 255, 255, 0.06);
-  --card-shadow:
-    0 1px 0px rgba(255, 255, 255, 0.04), 0 8px 32px rgba(0, 0, 0, 0.4);
-  --card-shadow-hover:
-    0 4px 16px rgba(0, 0, 0, 0.5), 0 24px 56px rgba(0, 0, 0, 0.6);
+  --accent: #f03a2a;
+  --accent-text: #ff8a7f;
+  --accent-fill: #d02c1e;
+  --accent-muted: rgba(240, 58, 42, 0.16);
+  --accent-hover: #b8271a;
+  --blue: #f0e8d8;
 
-  /* Gradients */
-  --background-start-rgb: rgb(14, 14, 16);
-  --background-end-rgb: rgb(10, 10, 14);
+  --foreground: #f0e8d8;
+  --foreground-2: #cfc6b5;
+  --foreground-muted: #a7b1bd;
 
-  /* Dividers */
-  --divider: rgba(255, 255, 255, 0.07);
+  --background-transparent: rgba(27, 51, 80, 0.9);
+  --card: #1b3350;
+  --card-border: rgba(240, 232, 216, 0.1);
+  --card-shadow: 0 1px 2px rgba(0, 0, 0, 0.2), 0 6px 20px rgba(0, 0, 0, 0.22);
+  --card-shadow-hover: 0 2px 6px rgba(0, 0, 0, 0.25), 0 14px 36px rgba(0, 0, 0, 0.32);
 
-  /* Noise overlay opacity */
-  --noise-opacity: 0.04;
-  --grid-color: rgba(255, 255, 255, 0.025);
+  --background-start-rgb: #11233a;
+  --background-end-rgb: #11233a;
+
+  --divider: rgba(240, 232, 216, 0.1);
+
+  --noise-opacity: 0;
+  --grid-color: transparent;
 }
 
 /* ============================================================
@@ -201,21 +162,7 @@ body {
     BlinkMacSystemFont,
     sans-serif;
   color: var(--foreground);
-  background-color: var(--background-end-rgb);
-  background-image:
-    radial-gradient(circle, var(--grid-color) 1px, transparent 1px),
-    linear-gradient(
-      160deg,
-      var(--background-start-rgb) 0%,
-      var(--background-end-rgb) 100%
-    );
-  background-size:
-    28px 28px,
-    100% 100%;
-  background-attachment: fixed;
-  background-position:
-    0 0,
-    0 0;
+  background-color: var(--background);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -276,7 +223,7 @@ body > * {
 
 .not-found-eyebrow {
   margin: 0 0 12px;
-  color: var(--accent);
+  color: var(--accent-text);
   font-size: 0.82rem;
   font-weight: 700;
   letter-spacing: 0.24em;
@@ -321,14 +268,14 @@ body > * {
 }
 
 .not-found-primary {
-  background: var(--accent);
-  color: white;
+  background: var(--accent-fill);
+  color: var(--on-lobster);
 }
 
 .not-found-secondary {
-  background: var(--accent-muted);
-  color: var(--foreground);
-  border: 1px solid var(--card-border);
+  background: var(--surface-strong);
+  color: var(--on-prussian);
+  border: 1px solid var(--surface-strong);
 }
 
 .not-found-primary:hover,
@@ -526,8 +473,7 @@ span {
   font-weight: 400;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--accent);
-  opacity: 0.8;
+  color: var(--accent-text);
   display: block;
   margin-bottom: 8px;
 }
@@ -606,7 +552,7 @@ span {
 .analytics-metric + .analytics-metric { border-left: 1px solid var(--card-border); }
 .analytics-metric > span { color: var(--foreground-muted); font-size: 12px; }
 .analytics-metric strong { grid-column: 1; grid-row: 2; font: 600 25px/1.15 var(--font-syne), sans-serif; letter-spacing: -.04em; }
-.analytics-metric small { grid-column: 2; grid-row: 2; color: #6fc69e; font: 11px var(--font-dm-mono), monospace; white-space: nowrap; }
+.analytics-metric small { grid-column: 2; grid-row: 2; color: var(--foreground-2); font: 11px var(--font-dm-mono), monospace; white-space: nowrap; }
 .analytics-metric small em { color: var(--foreground-muted); font: normal 10px var(--font-dm-mono), monospace; }
 .analytics-panel { min-width: 0; border: 1px solid var(--card-border); border-radius: 12px; background: var(--background-elevated); }
 .analytics-chart-panel { padding: 13px 16px 10px; }
@@ -624,7 +570,7 @@ span {
 .analytics-rank-value { min-width: 24px; color: var(--foreground); text-align: right; font: 11px var(--font-dm-mono), monospace; }
 .analytics-empty, .analytics-loading { color: var(--foreground-muted); font-size: 12px; }
 .analytics-loading { padding: 48px 0; text-align: center; }
-.analytics-error { padding: 8px 12px; border: 1px solid rgba(239,68,68,.35); border-radius: 8px; color: #ef7777; font-size: 12px; }
+.analytics-error { padding: 8px 12px; border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent); border-radius: 8px; color: var(--accent-text); font-size: 12px; }
 @media (min-height: 850px) {
   .analytics-dashboard { gap: 16px; padding-top: 14px; }
   .analytics-chart { height: clamp(185px, 28vh, 250px); }
@@ -837,25 +783,9 @@ span {
    HIGHLIGHT / GRADIENT TEXT
    ============================================================ */
 
-.gradient-text {
-  background: linear-gradient(135deg, var(--accent), var(--text-color-4));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
+.gradient-text,
 .shimmer-text {
-  background: linear-gradient(
-    90deg,
-    var(--foreground) 0%,
-    var(--accent) 50%,
-    var(--foreground) 100%
-  );
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: shimmer 4s linear infinite;
+  color: var(--accent-text);
 }
 
 /* ============================================================
@@ -867,7 +797,7 @@ span {
   font-size: 3rem;
   font-weight: 800;
   letter-spacing: -0.04em;
-  color: var(--accent);
+  color: var(--accent-text);
   line-height: 1;
 }
 
@@ -937,8 +867,8 @@ span {
   font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0.06em;
-  border: 1px solid var(--divider);
-  color: var(--foreground-muted);
+  border: 1px solid var(--card-border);
+  color: var(--foreground-2);
   background: var(--background-elevated);
   white-space: nowrap;
   transition: all 0.4s ease;
@@ -946,7 +876,7 @@ span {
 
 .tag:hover {
   border-color: var(--accent);
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 /* ============================================================
@@ -1048,6 +978,14 @@ a {
 
 a:hover {
   opacity: 0.75;
+}
+
+/* MUI links default to Material blue; keep them on the palette and readable. */
+.MuiLink-root {
+  color: var(--foreground) !important;
+  text-decoration-color: var(--lobster) !important;
+  text-underline-offset: 3px;
+  font-weight: 600;
 }
 
 /* ============================================================

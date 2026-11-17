@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { IconButton } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import LightModeIcon from '@mui/icons-material/LightMode';
@@ -23,28 +24,57 @@ const NAV_ITEM_PADDING = '10px';
 const NAV_CONTENT_HEIGHT = '20px';
 
 const NavPillLink = styled(Link)(() => ({
+  position: 'relative',
   display: 'inline-flex',
   alignItems: 'center',
   boxSizing: 'border-box',
   fontFamily: 'inherit',
   fontSize: '0.9rem',
-  fontWeight: 500,
-  lineHeight: NAV_CONTENT_HEIGHT, // fixe la hauteur du texte = hauteur d'une icône small
+  fontWeight: 600,
+  lineHeight: NAV_CONTENT_HEIGHT,
   textTransform: 'capitalize',
   textDecoration: 'none',
-  color: 'var(--foreground-2)',
+  color: 'rgba(240, 232, 216, 0.9)',
   cursor: 'pointer',
   borderRadius: '999px',
   padding: NAV_ITEM_PADDING,
-  transition: 'background-color 0.4s ease, color 0.4s ease',
+  transition: 'background-color 0.2s ease, color 0.2s ease',
   '&:hover': {
-    backgroundColor: 'var(--accent-muted)',
-    color: 'var(--accent)',
+    backgroundColor: 'rgba(240, 232, 216, 0.08)',
+    color: 'var(--on-prussian)',
+    opacity: 1,
+  },
+  '&[aria-current="page"]': {
+    color: 'var(--on-prussian)',
+  },
+  '&[aria-current="page"]::after': {
+    content: '""',
+    position: 'absolute',
+    left: '50%',
+    bottom: '3px',
+    width: '4px',
+    height: '4px',
+    marginLeft: '-2px',
+    borderRadius: '50%',
+    backgroundColor: 'var(--lobster)',
   },
 }));
 
+const navIconSx = {
+  padding: NAV_ITEM_PADDING,
+  color: 'rgba(240, 232, 216, 0.9)',
+  borderRadius: '999px',
+  '&:hover': {
+    backgroundColor: 'rgba(240, 232, 216, 0.08)',
+    color: 'var(--on-prussian)',
+  },
+};
+
 const NavBar = () => {
   const openTools = useSiteTools();
+  const pathname = usePathname();
+  const isActive = (href: string) =>
+    pathname === href || pathname?.startsWith(href + '/');
   const { theme, toggleTheme } = useThemeContext();
   const [isClient, setIsClient] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -79,16 +109,13 @@ const NavBar = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const logoSrc = isClient
-    ? theme === 'light'
-      ? '/images/logo/logo-dark.png'
-      : '/images/logo/logo-light.png'
-    : '/images/logo/logo-dark.png';
+  // The nav sits on Prussian Blue in both themes, so the light logo always applies.
+  const logoSrc = '/images/logo/logo-light.png';
 
   return (
     <>
       <div className="navbar-cluster">
-        {/* ── Logo — standalone circle ─────────────────────── */}
+        
         <Link
           href="/"
           passHref
@@ -98,14 +125,18 @@ const NavBar = () => {
           <Image src={logoSrc} alt="Logo" width={26} height={26} />
         </Link>
 
-        {/* ── Pill nav ─────────────────────────────────────── */}
+        
         <nav className="navbar-pill">
           <div
             className="navbar-desktop-links"
             style={{ display: 'flex', alignItems: 'center', gap: '2px' }}
           >
             {NAV_ITEMS.map(({ label, href }) => (
-              <NavPillLink key={href} href={href}>
+              <NavPillLink
+                key={href}
+                href={href}
+                aria-current={isActive(href) ? 'page' : undefined}
+              >
                 {label}
               </NavPillLink>
             ))}
@@ -114,15 +145,8 @@ const NavBar = () => {
           <IconButton
             onClick={toggleTheme}
             className="navbar-desktop-links"
-            sx={{
-              padding: NAV_ITEM_PADDING,
-              color: 'var(--foreground-2)',
-              borderRadius: '999px',
-              '&:hover': {
-                backgroundColor: 'var(--accent-muted)',
-                color: 'var(--accent)',
-              },
-            }}
+            aria-label="Toggle colour theme"
+            sx={navIconSx}
           >
             {isClient ? (
               theme === 'light' ? (
@@ -140,30 +164,30 @@ const NavBar = () => {
               openTools?.();
             }}
             aria-label="Open site tools"
-            title="Chat, music & settings"
+            title="Chat, music and settings"
           >
             <TuneIcon sx={{ fontSize: 18 }} />
             <span>Tools</span>
           </button>
-          {/* ── Mobile hamburger ───────────────────────────── */}
+          
           <IconButton
             className="navbar-menu-btn"
             onClick={() => setMenuOpen((v) => !v)}
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-            sx={{ borderRadius: '999px' }}
+            sx={navIconSx}
           >
             {menuOpen ? <CloseIcon /> : <MenuIcon />}
           </IconButton>
         </nav>
       </div>
 
-      {/* ── Mobile overlay scrim ───────────────────────────── */}
+      
       <div
         className={`navbar-overlay${menuOpen ? ' open' : ''}`}
         onClick={() => setMenuOpen(false)}
       />
 
-      {/* ── Mobile dropdown drawer ─────────────────────────── */}
+      
       <div
         ref={drawerRef}
         className={`navbar-mobile-drawer${menuOpen ? ' open' : ''}`}
@@ -177,6 +201,7 @@ const NavBar = () => {
               key={href}
               href={href}
               className="navbar-mobile-link"
+              aria-current={isActive(href) ? 'page' : undefined}
               onClick={() => setMenuOpen(false)}
             >
               {label}
@@ -202,8 +227,8 @@ const NavBar = () => {
               borderRadius: '8px',
               border: '1px solid var(--card-border)',
               '&:hover': {
-                backgroundColor: 'var(--accent-muted)',
-                color: 'var(--accent)',
+                backgroundColor: 'var(--background-2)',
+                color: 'var(--foreground)',
               },
             }}
           >

@@ -93,7 +93,7 @@
   transition: color 0.2s ease;
 }
 .status-pill:hover .status-icon-wrap {
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 /* Label text */

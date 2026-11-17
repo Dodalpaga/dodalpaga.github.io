@@ -11,6 +11,7 @@ import Grid from '@mui/material/Grid';
 import Pagination from '@mui/material/Pagination';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
+import SearchIcon from '@mui/icons-material/Search';
 import '../globals.css';
 
 type BlogPost = {
@@ -100,7 +101,6 @@ export default function Content({ blogPosts }: { blogPosts: BlogPost[] }) {
         }}
         className="animate-fade-up"
       >
-        <span className="section-label">Writing</span>
         <h1
           style={{
             fontFamily: "'Syne', sans-serif",
@@ -121,8 +121,7 @@ export default function Content({ blogPosts }: { blogPosts: BlogPost[] }) {
             lineHeight: 1.6,
           }}
         >
-          Thoughts on AI, data science, building things, and everything in
-          between.
+          Notes on AI engineering, data science and shipping side projects.
         </p>
 
         {/* Search */}
@@ -135,7 +134,7 @@ export default function Content({ blogPosts }: { blogPosts: BlogPost[] }) {
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
-                <span style={{ color: 'var(--foreground-muted)' }}>⌕</span>
+                <SearchIcon sx={{ fontSize: 18, color: 'var(--foreground-muted)' }} />
               </InputAdornment>
             ),
             style: {
@@ -151,8 +150,8 @@ export default function Content({ blogPosts }: { blogPosts: BlogPost[] }) {
             maxWidth: '380px',
             '& .MuiOutlinedInput-root': {
               '& fieldset': { borderColor: 'var(--card-border)' },
-              '&:hover fieldset': { borderColor: 'var(--accent)' },
-              '&.Mui-focused fieldset': { borderColor: 'var(--accent)' },
+              '&:hover fieldset': { borderColor: 'var(--foreground-muted)' },
+              '&.Mui-focused fieldset': { borderColor: 'var(--foreground)' },
             },
           }}
         />
@@ -186,15 +185,15 @@ export default function Content({ blogPosts }: { blogPosts: BlogPost[] }) {
               borderColor: 'var(--card-border)',
               borderRadius: '8px',
               '&:hover': {
-                backgroundColor: 'var(--accent-muted)',
-                borderColor: 'var(--accent)',
-                color: 'var(--accent)',
+                backgroundColor: 'var(--background-2)',
+                borderColor: 'var(--foreground-muted)',
+                color: 'var(--foreground)',
               },
             },
             '& .Mui-selected': {
-              backgroundColor: 'var(--accent) !important',
-              borderColor: 'var(--accent) !important',
-              color: '#fff !important',
+              backgroundColor: 'var(--surface-strong) !important',
+              borderColor: 'var(--surface-strong) !important',
+              color: 'var(--on-prussian) !important',
             },
           }}
           shape="rounded"
@@ -351,15 +350,15 @@ export default function Content({ blogPosts }: { blogPosts: BlogPost[] }) {
               borderColor: 'var(--card-border)',
               borderRadius: '8px',
               '&:hover': {
-                backgroundColor: 'var(--accent-muted)',
-                borderColor: 'var(--accent)',
-                color: 'var(--accent)',
+                backgroundColor: 'var(--background-2)',
+                borderColor: 'var(--foreground-muted)',
+                color: 'var(--foreground)',
               },
             },
             '& .Mui-selected': {
-              backgroundColor: 'var(--accent) !important',
-              borderColor: 'var(--accent) !important',
-              color: '#fff !important',
+              backgroundColor: 'var(--surface-strong) !important',
+              borderColor: 'var(--surface-strong) !important',
+              color: 'var(--on-prussian) !important',
             },
           }}
           shape="rounded"

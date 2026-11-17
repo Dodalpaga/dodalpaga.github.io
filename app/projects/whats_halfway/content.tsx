@@ -182,7 +182,7 @@ function StatCard({
           color: 'var(--foreground)',
         }}
       >
-        🕒 {formatDuration(duration / 60)}
+        {formatDuration(duration / 60)}
       </Typography>
       <Typography
         sx={{
@@ -191,7 +191,7 @@ function StatCard({
           color: 'var(--foreground-muted)',
         }}
       >
-        📏 {(distance / 1000).toFixed(1)} km
+        {(distance / 1000).toFixed(1)} km
       </Typography>
     </Box>
   );
@@ -281,7 +281,7 @@ function PointItem({
               width: 24,
               height: 24,
               '&:hover': {
-                color: 'var(--accent)',
+                color: 'var(--accent-text)',
                 backgroundColor: 'var(--accent-muted)',
               },
             }}
@@ -795,15 +795,15 @@ export default function MapWithRouting() {
                       px: 0.75,
                       py: 0.2,
                       borderRadius: '6px',
-                      backgroundColor: '#d81b6015',
+                      backgroundColor: 'var(--accent-muted)',
                       backdropFilter: 'blur(8px)',
-                      border: '1px solid #d81b60',
-                      color: '#d81b60',
+                      border: '1px solid var(--accent)',
+                      color: 'var(--accent-text)',
                     }}
                   >
                     Halfway ✦
                   </Box>
-                  <Target size={22} color="#d81b60" />
+                  <Target size={22} color="var(--lobster)" />
                 </Box>
               </Marker>
             )}
@@ -857,7 +857,7 @@ export default function MapWithRouting() {
                   gap: 1.5,
                 }}
               >
-                <CircularProgress size={32} sx={{ color: 'var(--accent)' }} />
+                <CircularProgress size={32} sx={{ color: 'var(--accent-text)' }} />
                 <Typography
                   sx={{
                     fontFamily: "'DM Mono', monospace",
@@ -922,7 +922,7 @@ export default function MapWithRouting() {
                   sx={{
                     fontFamily: "'DM Mono', monospace",
                     fontSize: '0.65rem',
-                    color: 'var(--accent)',
+                    color: 'var(--accent-text)',
                     letterSpacing: '0.08em',
                     mb: 0.5,
                   }}

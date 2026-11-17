@@ -80,7 +80,7 @@ export default function Content() {
         variant="body2"
         sx={{ fontWeight: 700, mb: 1, fontFamily: "'Syne', sans-serif" }}
       >
-        🔒 Token Privacy
+        Token privacy
       </Typography>
       {[
         'Never stored in a database',
@@ -101,7 +101,7 @@ export default function Content() {
           href="https://huggingface.co/settings/tokens"
           target="_blank"
           rel="noopener noreferrer"
-          style={{ color: 'var(--accent)', textDecoration: 'underline' }}
+          style={{ color: 'var(--accent-text)', textDecoration: 'underline' }}
         >
           Create one here ↗
         </a>
@@ -173,7 +173,7 @@ export default function Content() {
                 sx={{
                   fontFamily: "'DM Mono', monospace",
                   fontSize: '0.72rem',
-                  color: 'var(--accent)',
+                  color: 'var(--accent-text)',
                   letterSpacing: '0.1em',
                   textTransform: 'uppercase',
                   mb: 1,
@@ -215,7 +215,7 @@ export default function Content() {
                 sx={{
                   fontFamily: "'DM Mono', monospace",
                   fontSize: '0.72rem',
-                  color: 'var(--accent)',
+                  color: 'var(--accent-text)',
                   letterSpacing: '0.1em',
                   textTransform: 'uppercase',
                   mb: 1,
@@ -243,7 +243,7 @@ export default function Content() {
                     sx={{
                       flexShrink: 0,
                       color: 'var(--foreground-muted)',
-                      '&:hover': { color: 'var(--accent)' },
+                      '&:hover': { color: 'var(--accent-text)' },
                     }}
                   >
                     <Info size={16} />
@@ -300,7 +300,7 @@ export default function Content() {
                       color: 'var(--foreground-muted)',
                       '&:hover': {
                         borderColor: 'var(--accent)',
-                        color: 'var(--accent)',
+                        color: 'var(--accent-text)',
                         backgroundColor: 'var(--accent-muted)',
                       },
                     }}
@@ -356,7 +356,7 @@ export default function Content() {
                       '&:hover': {
                         backgroundColor: 'var(--accent-muted)',
                         borderColor: 'var(--accent)',
-                        color: 'var(--accent)',
+                        color: 'var(--accent-text)',
                       },
                       transition: 'all 0.15s ease',
                     }}
@@ -398,7 +398,7 @@ export default function Content() {
                         color: 'var(--foreground-muted)',
                         '&:hover': {
                           borderColor: 'var(--accent)',
-                          color: 'var(--accent)',
+                          color: 'var(--accent-text)',
                           backgroundColor: 'var(--accent-muted)',
                         },
                         transition: 'all 0.15s ease',
@@ -457,7 +457,7 @@ export default function Content() {
                   gap: 2,
                 }}
               >
-                <CircularProgress size={48} sx={{ color: 'var(--accent)' }} />
+                <CircularProgress size={48} sx={{ color: 'var(--accent-text)' }} />
                 <Typography
                   sx={{
                     fontFamily: "'DM Mono', monospace",

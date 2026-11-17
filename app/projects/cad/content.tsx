@@ -326,8 +326,7 @@ export default function Content() {
             mx: 'auto',
           }}
         >
-          Physical projects designed with Fusion 360 — from CAD to real-world
-          builds.
+          Objects I designed in Fusion 360 and then built.
         </Typography>
       </Box>
 

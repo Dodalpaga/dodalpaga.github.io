@@ -38,45 +38,6 @@ const SECTIONS = [
 /* ─────────────────────────────────────────────────────────────────────────
    Blueprint grid background
 ───────────────────────────────────────────────────────────────────────── */
-function PrivacyBackground() {
-  return (
-    <div className="privacy-bg" aria-hidden="true">
-      <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <pattern
-            id="privSm"
-            width="22"
-            height="22"
-            patternUnits="userSpaceOnUse"
-          >
-            <path
-              d="M 22 0 L 0 0 0 22"
-              fill="none"
-              stroke="var(--blueprint-line-faint)"
-              strokeWidth="0.4"
-            />
-          </pattern>
-          <pattern
-            id="privLg"
-            width="110"
-            height="110"
-            patternUnits="userSpaceOnUse"
-          >
-            <rect width="110" height="110" fill="url(#privSm)" />
-            <path
-              d="M 110 0 L 0 0 0 110"
-              fill="none"
-              stroke="var(--blueprint-line)"
-              strokeWidth="0.8"
-            />
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#privLg)" />
-      </svg>
-    </div>
-  );
-}
-
 /* ─────────────────────────────────────────────────────────────────────────
    Table of Contents
 ───────────────────────────────────────────────────────────────────────── */
@@ -237,48 +198,28 @@ export default function PrivacyPolicy() {
       })
     : '';
 
-  const iconSx = { fontSize: 18, color: 'var(--accent)', opacity: 0.85 };
+  const iconSx = { fontSize: 18, color: 'var(--accent-text)', opacity: 0.85 };
 
   return (
     <div className="priv-root">
-      <PrivacyBackground />
 
       {/* ── Hero ─────────────────────────────────────────────────── */}
       <header className="priv-hero">
         <div className="priv-hero__terminal">
-          <div className="priv-hero__bar">
-            <span
-              className="priv-hero__dot"
-              style={{ background: '#ff5f56' }}
-            />
-            <span
-              className="priv-hero__dot"
-              style={{ background: '#febc2e' }}
-            />
-            <span
-              className="priv-hero__dot"
-              style={{ background: '#27c840' }}
-            />
-            <span className="priv-hero__bar-label">PRIVACY.md</span>
-          </div>
-
           <div className="priv-hero__content">
-            <span className="section-label">Legal · Privacy</span>
             <h1 className="priv-hero__title">
-              Privacy Policy
-              <br />
-              &amp; GDPR Compliance.
+              Privacy policy
             </h1>
             <p className="priv-hero__subtitle">
-              Full transparency on how your data is collected, stored, and
-              protected on this site.
+              What this site collects, why, where it is stored and how long it
+              is kept.
             </p>
             {isMounted && (
               <div className="priv-hero__meta">
                 <span className="priv-meta-badge">
                   <span
                     className="priv-meta-badge__dot"
-                    style={{ background: hasConsent ? '#68d391' : '#fc8181' }}
+                    style={{ background: hasConsent ? '#2e9e62' : 'var(--lobster)' }}
                   />
                   {hasConsent ? 'Analytics ON' : 'Analytics OFF'}
                 </span>
@@ -308,18 +249,15 @@ export default function PrivacyPolicy() {
             badge="Overview"
           >
             <p>
-              This portfolio website (&quot;Site&quot;) is committed to
-              protecting your privacy and ensuring you have a positive
-              experience. This Privacy Policy explains how I collect, use,
-              disclose, and safeguard your information in accordance with the{' '}
-              <strong>General Data Protection Regulation (GDPR)</strong> and
-              other applicable data protection laws.
+              This policy explains how this portfolio (&quot;Site&quot;)
+              collects, uses, discloses and protects your information under the
+              General Data Protection Regulation (GDPR) and other applicable
+              data protection laws.
             </p>
             <p>
-              I believe in radical transparency: every piece of data collected
-              is documented here, along with exactly why it is needed and how
-              long it is kept. No surprises, no hidden tracking, no advertising
-              networks.
+              Every piece of data collected is listed below with the reason it
+              is needed and how long it is kept. The Site uses no advertising
+              networks and no third-party trackers.
             </p>
           </SectionCard>
 
@@ -354,7 +292,7 @@ export default function PrivacyPolicy() {
             </div>
             <div className="priv-legal-basis">
               <span className="priv-legal-basis__label">
-                Legal basis — GDPR Art. 6
+                Legal basis: GDPR Art. 6
               </span>
               <span className="priv-legal-basis__text">
                 Consent only. Analytics data is collected after explicit opt-in
@@ -418,7 +356,7 @@ export default function PrivacyPolicy() {
               <Link href="mailto:dorian.voydie@gmail.com" underline="hover">
                 dorian.voydie@gmail.com
               </Link>{' '}
-              to exercise any of them — I will respond within 30 days.
+              to exercise any of them. I reply within 30 days.
             </p>
             <div className="priv-rights-grid">
               <RightCard
@@ -467,7 +405,7 @@ export default function PrivacyPolicy() {
           >
             <p>
               Cookies are small text files stored on your device to persist your
-              analytics consent preference and track page interactions — only
+              analytics consent preference and track page interactions, only
               after you opt in. I use{' '}
               <strong>no third-party advertising or tracking cookies</strong>.
             </p>
@@ -488,11 +426,11 @@ export default function PrivacyPolicy() {
                   </span>
                   <span
                     className="priv-consent-panel__value"
-                    style={{ color: hasConsent ? '#68d391' : '#fc8181' }}
+                    style={{ color: hasConsent ? 'var(--foreground)' : 'var(--accent-text)' }}
                   >
                     <span
                       className="priv-consent-panel__dot"
-                      style={{ background: hasConsent ? '#68d391' : '#fc8181' }}
+                      style={{ background: hasConsent ? '#2e9e62' : 'var(--lobster)' }}
                     />
                     {hasConsent ? 'Analytics Enabled' : 'Analytics Disabled'}
                   </span>
@@ -509,8 +447,8 @@ export default function PrivacyPolicy() {
                     border: '1px solid var(--card-border)',
                     color: 'var(--foreground-muted)',
                     '&:hover': {
-                      borderColor: hasConsent ? '#fc8181' : '#68d391',
-                      color: hasConsent ? '#fc8181' : '#68d391',
+                      borderColor: 'var(--card-border)',
+                      color: 'var(--foreground)',
                     },
                   }}
                 >
@@ -586,11 +524,11 @@ export default function PrivacyPolicy() {
               />
               <Principle
                 label="Fairness"
-                text="I am fully transparent about what data is collected and why."
+                text="Every data point collected is listed here with its purpose."
               />
               <Principle
                 label="Transparency"
-                text="This policy clearly documents all data practices."
+                text="This policy documents all data practices."
               />
               <Principle
                 label="Purpose Limitation"
@@ -658,7 +596,7 @@ export default function PrivacyPolicy() {
               <GavelIcon
                 sx={{
                   fontSize: 20,
-                  color: 'var(--accent)',
+                  color: 'var(--accent-text)',
                   opacity: 0.7,
                   flexShrink: 0,
                 }}

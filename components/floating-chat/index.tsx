@@ -216,9 +216,9 @@ const renderMarkdown = (text: string): React.ReactNode[] => {
 // ─── Suggestions ─────────────────────────────────────────────────────────────
 
 const SUGGESTIONS = [
-  'What are you working on? 🚀',
+  'What are you working on?',
   "What's your tech stack?",
-  'Tell me about ESA project',
+  'Tell me about the ESA project',
   'How can I reach you?',
 ];
 
@@ -345,7 +345,7 @@ const CopyButton = ({ text }: { text: string }) => {
         }}
       >
         {copied ? (
-          <CheckIcon sx={{ fontSize: 12, color: 'var(--accent)' }} />
+          <CheckIcon sx={{ fontSize: 12, color: 'var(--accent-text)' }} />
         ) : (
           <ContentCopyIcon sx={{ fontSize: 12 }} />
         )}
@@ -699,7 +699,7 @@ export default function FloatingChat({
             <Box className="fc-header">
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <ChatBubbleOutlineRoundedIcon
-                  sx={{ fontSize: 17, color: 'var(--accent)' }}
+                  sx={{ fontSize: 17, color: 'var(--accent-text)' }}
                 />
                 <Box>
                   <Typography className="fc-title">Chat with me</Typography>
@@ -899,7 +899,7 @@ export default function FloatingChat({
               variant="outlined"
               placeholder={
                 apiStatus === 'unavailable'
-                  ? 'Chat unavailable — use Retry to reconnect'
+                  ? 'Chat unavailable. Use Retry to reconnect.'
                   : apiStatus === 'checking'
                     ? 'Connecting to chat service…'
                     : 'Ask something… (Enter to send)'
@@ -936,7 +936,7 @@ export default function FloatingChat({
                 variant="outlined"
                 className="fc-send-btn"
                 sx={{
-                  color: 'var(--accent)',
+                  color: 'var(--accent-text)',
                   border: '1px solid var(--accent)',
                   '&:hover': { backgroundColor: 'var(--accent-muted)' },
                 }}

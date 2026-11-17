@@ -11,6 +11,7 @@ import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import Chip from '@mui/material/Chip';
+import SearchIcon from '@mui/icons-material/Search';
 import '../globals.css';
 
 type App = {
@@ -29,7 +30,7 @@ const apps: App[] = [
     link: 'https://viseo.esa.int/',
     target: '_blank',
     description:
-      'Virtual Support for Earth Observation — a tool to discover ESA ecosystem and visualize satellite data.',
+      'Virtual Support for Earth Observation: discover the ESA ecosystem and visualise satellite data.',
     tags: ['Tool', 'External', 'Professional'],
   },
   {
@@ -38,7 +39,7 @@ const apps: App[] = [
     link: '/projects/cog',
     target: '',
     description:
-      'Explore Cloud Optimized GeoTIFFs on an interactive globe with band, color, and map controls.',
+      'Explore Cloud Optimized GeoTIFFs on an interactive globe, with band, colour and map controls.',
     tags: ['Tool', 'Maps', 'Geospatial'],
   },
   {
@@ -47,7 +48,7 @@ const apps: App[] = [
     link: '/projects/chatbot',
     target: '',
     description:
-      'A chatbot fine-tuned on my resume, previous projects, and other relevant information about me.',
+      'A chatbot that answers questions about my resume and past projects.',
     tags: ['AI', 'LLM', 'Personal'],
   },
   {
@@ -55,7 +56,7 @@ const apps: App[] = [
     image: `/images/cardprinter.png`,
     link: 'https://dodalpaga.github.io/Board-Game-Card-Printer/',
     target: '_blank',
-    description: 'A small website to print your custom cards for board games.',
+    description: 'Print your own custom cards for board games.',
     tags: ['Tool', 'External', 'Personal'],
   },
   {
@@ -72,7 +73,7 @@ const apps: App[] = [
     link: '/projects/image_detection',
     target: '',
     description:
-      'Real-time object detection within images using YOLO (You Only Look Once).',
+      'Object detection on images with YOLO.',
     tags: ['AI', 'Computer Vision', 'Personal'],
   },
   {
@@ -80,7 +81,7 @@ const apps: App[] = [
     image: `/images/image_gen.jpg`,
     link: '/projects/image_generation',
     target: '',
-    description: 'Image generation powered by Stable Diffusion.',
+    description: 'Generate images with Stable Diffusion.',
     tags: ['AI', 'Generative', 'Personal'],
   },
   {
@@ -89,7 +90,7 @@ const apps: App[] = [
     link: '/projects/whats_halfway',
     target: '',
     description:
-      'Find the perfect meeting spot between multiple locations based on driving time.',
+      'Find a meeting point between several places based on driving time.',
     tags: ['Maps', 'Tool', 'Personal'],
   },
   {
@@ -106,7 +107,7 @@ const apps: App[] = [
     link: '/projects/processing_apps',
     target: '',
     description:
-      'Creative and interactive visual projects built with the p5.js framework.',
+      'Interactive visual experiments built with p5.js.',
     tags: ['Creative', 'p5.js', 'Personal'],
   },
   {
@@ -115,7 +116,7 @@ const apps: App[] = [
     link: '/projects/notebooks',
     target: '',
     description:
-      'A curated collection of notebooks on AI, machine learning, and algorithmic problem-solving.',
+      'Notebooks on machine learning, Kaggle datasets and routing problems.',
     tags: ['AI', 'Notebooks', 'Personal'],
   },
   {
@@ -123,8 +124,8 @@ const apps: App[] = [
     image: `/images/traveler.jpg`,
     link: '/projects/travels',
     target: '',
-    description: "Track the countries I've visited — growing every year.",
-    tags: ['Personal', 'Maps', 'Personal'],
+    description: "A map of the countries I've visited.",
+    tags: ['Maps', 'Personal'],
   },
   {
     title: 'Snowflakes',
@@ -132,7 +133,7 @@ const apps: App[] = [
     link: '/projects/snowflakes',
     target: '',
     description:
-      'Learn how snowflakes form based on temperature and humidity conditions.',
+      'See how temperature and humidity shape a growing snowflake.',
     tags: ['Simulation', 'Science', 'Personal'],
   },
   {
@@ -141,7 +142,7 @@ const apps: App[] = [
     link: '/projects/regex',
     target: '',
     description:
-      'Test and validate regular expressions in real time against sample input.',
+      'Test regular expressions live against sample input.',
     tags: ['Dev Tool', 'Utility', 'Personal'],
   },
   {
@@ -150,7 +151,7 @@ const apps: App[] = [
     link: '/projects/media_player',
     target: '',
     description:
-      'Electronic music I produce in my free time, experimenting with sounds and styles.',
+      'Electronic music I produce in my free time.',
     tags: ['Music', 'Creative', 'Personal'],
   },
   {
@@ -159,7 +160,7 @@ const apps: App[] = [
     link: 'https://guess-what.onrender.com/',
     target: '_blank',
     description:
-      'A classic image guessing game — play with friends and family.',
+      'An image guessing game to play with friends and family.',
     tags: ['Game', 'External', 'Personal'],
   },
   {
@@ -168,7 +169,7 @@ const apps: App[] = [
     link: 'https://richesses-du-monde.onrender.com/',
     target: '_blank',
     description:
-      'A French Monopoly-style board game — buy resources and build your empire.',
+      'A French Monopoly-style board game about buying and trading resources.',
     tags: ['Game', 'External', 'Personal'],
   },
   {
@@ -177,7 +178,7 @@ const apps: App[] = [
     link: 'https://cognitive-game.netlify.app/',
     target: '_blank',
     description:
-      'Type matching arrows as fast as you can. One mistake costs you time!',
+      'Type the matching arrows as fast as you can. Each mistake costs time.',
     tags: ['Game', 'External', 'Personal'],
   },
   {
@@ -195,7 +196,7 @@ const apps: App[] = [
     link: 'https://vbso.fr/',
     target: '_blank',
     description:
-      'Website for the Saint-Orens Volleyball Club — competitive and recreational teams.',
+      'Website for the Saint-Orens volleyball club.',
     tags: ['Web', 'External', 'Personal'],
   },
 ];
@@ -248,7 +249,6 @@ export default function Content() {
         }}
         className="animate-fade-up"
       >
-        <span className="section-label">Portfolio</span>
         <h1
           style={{
             fontFamily: "'Syne', sans-serif",
@@ -269,8 +269,8 @@ export default function Content() {
             lineHeight: 1.6,
           }}
         >
-          {apps.length} projects — from profesionnal projects, to personal AI
-          interactive tools and creative demos.
+          {apps.length} projects, from client work to personal AI tools and
+          creative experiments.
         </p>
 
         {/* Search */}
@@ -284,9 +284,9 @@ export default function Content() {
             startAdornment: (
               <InputAdornment position="start">
                 <span
-                  style={{ color: 'var(--foreground-muted)', fontSize: '1rem' }}
+                  style={{ color: 'var(--foreground-muted)', display: 'flex' }}
                 >
-                  ⌕
+                  <SearchIcon sx={{ fontSize: 18 }} />
                 </span>
               </InputAdornment>
             ),
@@ -304,8 +304,8 @@ export default function Content() {
             mb: 2,
             '& .MuiOutlinedInput-root': {
               '& fieldset': { borderColor: 'var(--card-border)' },
-              '&:hover fieldset': { borderColor: 'var(--accent)' },
-              '&.Mui-focused fieldset': { borderColor: 'var(--accent)' },
+              '&:hover fieldset': { borderColor: 'var(--foreground-muted)' },
+              '&.Mui-focused fieldset': { borderColor: 'var(--foreground)' },
             },
           }}
         />
@@ -329,16 +329,16 @@ export default function Content() {
               fontSize: '0.7rem',
               letterSpacing: '0.05em',
               backgroundColor:
-                activeTag === null ? 'var(--accent)' : 'transparent',
-              color: activeTag === null ? '#fff' : 'var(--foreground-muted)',
+                activeTag === null ? 'var(--surface-strong)' : 'transparent',
+              color: activeTag === null ? 'var(--on-prussian)' : 'var(--foreground-2)',
               borderColor:
-                activeTag === null ? 'var(--accent)' : 'var(--card-border)',
+                activeTag === null ? 'var(--surface-strong)' : 'var(--card-border)',
               cursor: 'pointer',
               '&:hover': {
                 backgroundColor:
                   activeTag === null
-                    ? 'var(--accent-hover)'
-                    : 'var(--accent-muted)',
+                    ? 'var(--surface-strong-2)'
+                    : 'var(--background-2)',
               },
             }}
           />
@@ -354,16 +354,16 @@ export default function Content() {
                 fontSize: '0.7rem',
                 letterSpacing: '0.05em',
                 backgroundColor:
-                  activeTag === tag ? 'var(--accent)' : 'transparent',
-                color: activeTag === tag ? '#fff' : 'var(--foreground-muted)',
+                  activeTag === tag ? 'var(--surface-strong)' : 'transparent',
+                color: activeTag === tag ? 'var(--on-prussian)' : 'var(--foreground-2)',
                 borderColor:
-                  activeTag === tag ? 'var(--accent)' : 'var(--card-border)',
+                  activeTag === tag ? 'var(--surface-strong)' : 'var(--card-border)',
                 cursor: 'pointer',
                 '&:hover': {
                   backgroundColor:
                     activeTag === tag
-                      ? 'var(--accent-hover)'
-                      : 'var(--accent-muted)',
+                      ? 'var(--surface-strong-2)'
+                      : 'var(--background-2)',
                 },
               }}
             />

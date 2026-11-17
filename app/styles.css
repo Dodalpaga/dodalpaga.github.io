@@ -56,12 +56,10 @@
   align-items: center;
   gap: 6px;
   padding: 12px 22px;
-  background-color: var(--background-transparent);
-  backdrop-filter: blur(20px) saturate(1.6);
-  -webkit-backdrop-filter: blur(20px) saturate(1.6);
-  border: 1px solid var(--card-border);
+  background-color: var(--surface-strong);
+  border: 1px solid rgba(240, 232, 216, 0.1);
   border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.16);
+  box-shadow: 0 6px 24px rgba(12, 26, 44, 0.3);
   transition:
     background-color 0.6s ease,
     border-color 0.6s ease,
@@ -76,8 +74,8 @@
   row-gap: 6px;
   column-gap: 12px;
   font-family: var(--font-dm-mono), 'DM Mono', monospace;
-  font-size: 0.72rem;
-  color: var(--foreground-muted);
+  font-size: 0.8rem;
+  color: var(--on-prussian);
 }
 
 .home-footer-item {
@@ -87,7 +85,7 @@
 .home-footer-divider {
   width: 1px;
   height: 12px;
-  background: var(--card-border);
+  background: rgba(240, 232, 216, 0.25);
 }
 
 .home-footer-link {
@@ -97,14 +95,17 @@
   margin: 0;
   font-family: inherit;
   font-size: inherit;
-  color: var(--foreground-muted);
+  color: var(--on-prussian);
   text-decoration: none;
   cursor: pointer;
   transition: color 0.4s ease;
 }
 
 .home-footer-link:hover {
-  color: var(--accent);
+  color: var(--on-prussian);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  opacity: 1;
 }
 
 .home-footer-contacts {
@@ -115,19 +116,19 @@
 
 .home-footer-icon {
   display: flex;
-  color: var(--foreground-muted);
+  color: var(--on-prussian);
   transition: color 0.4s ease;
 }
 
 .home-footer-icon:hover {
-  color: var(--accent);
+  color: var(--lobster);
+  opacity: 1;
 }
 
 .home-footer-copyright {
   font-family: var(--font-dm-mono), 'DM Mono', monospace;
-  font-size: 0.68rem;
-  color: var(--foreground-muted);
-  opacity: 0.7;
+  font-size: 0.74rem;
+  color: rgba(240, 232, 216, 0.8);
   margin: 0;
   text-align: center;
 }

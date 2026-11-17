@@ -57,7 +57,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--accent);
+  color: var(--accent-text);
   flex-shrink: 0;
 }
 
@@ -85,7 +85,7 @@
 }
 
 .cookie-consent-desc a {
-  color: var(--accent);
+  color: var(--accent-text);
   text-decoration: none;
 }
 .cookie-consent-desc a:hover {
@@ -123,8 +123,8 @@
 }
 
 .cookie-btn-allow {
-  background: var(--accent);
-  color: #fff;
+  background: var(--accent-fill);
+  color: var(--on-lobster);
   border-color: var(--accent);
 }
 .cookie-btn-allow:hover {

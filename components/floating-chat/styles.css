@@ -9,7 +9,7 @@
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background: var(--accent, #8b5cf6);
+  background: var(--accent-fill);
   border: none;
   cursor: pointer;
   box-shadow:
@@ -38,8 +38,8 @@
   position: absolute;
   top: -4px;
   right: -4px;
-  background: #ef4444;
-  color: #fff;
+  background: var(--surface-strong);
+  color: var(--on-prussian);
   font-family: 'DM Mono', monospace;
   font-size: 0.58rem;
   font-weight: 700;
@@ -96,23 +96,23 @@
 @property --orb-glow-color {
   syntax: '<color>';
   inherits: false;
-  initial-value: #9e99de;
+  initial-value: #1b3350;
 }
 
 html[data-theme='light'] .fc-orb-backdrop[data-orb-state='idle'] {
-  --orb-glow-color: #9e99de;
+  --orb-glow-color: #1b3350;
 }
 
 html[data-theme='light'] .fc-orb-backdrop[data-orb-state='listening'] {
-  --orb-glow-color: #29e8b5;
+  --orb-glow-color: #3d6a9a;
 }
 
 html[data-theme='light'] .fc-orb-backdrop[data-orb-state='thinking'] {
-  --orb-glow-color: #ff912e;
+  --orb-glow-color: #8a6f4d;
 }
 
 html[data-theme='light'] .fc-orb-backdrop[data-orb-state='speaking'] {
-  --orb-glow-color: #f5459e;
+  --orb-glow-color: #f03a2a;
 }
 
 html[data-theme='light'] .fc-orb-backdrop::before {
@@ -183,7 +183,7 @@ html[data-theme='light'] .fc-orb-backdrop {
 }
 
 .fc-full-chat-link:hover {
-  color: var(--accent);
+  color: var(--accent-text);
   background: var(--background-2);
 }
 
@@ -203,7 +203,7 @@ html[data-theme='light'] .fc-orb-backdrop {
 }
 
 .fc-api-status--unavailable {
-  border-color: color-mix(in srgb, #ef4444 35%, var(--card-border));
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--card-border));
 }
 
 .fc-api-status .MuiTypography-root {
@@ -214,7 +214,7 @@ html[data-theme='light'] .fc-orb-backdrop {
 
 .fc-api-status .MuiButton-root {
   flex-shrink: 0;
-  color: var(--accent) !important;
+  color: var(--accent-text) !important;
 }
 
 .fc-empty {
@@ -294,7 +294,7 @@ html[data-theme='light'] .fc-orb-backdrop {
 }
 
 .fc-icon-btn:hover {
-  color: var(--accent) !important;
+  color: var(--accent-text) !important;
   background-color: var(--accent-muted) !important;
 }
 
@@ -364,7 +364,7 @@ html[data-theme='light'] .fc-orb-backdrop {
 
 .fc-suggestion-chip:hover {
   border-color: var(--accent) !important;
-  color: var(--accent) !important;
+  color: var(--accent-text) !important;
   background-color: var(--accent-muted) !important;
 }
 
@@ -435,8 +435,8 @@ html[data-theme='light'] .fc-orb-backdrop {
 }
 
 .fc-bubble--user {
-  background-color: var(--accent, #8b5cf6);
-  color: #fff;
+  background-color: var(--surface-strong);
+  color: var(--on-prussian);
   border-radius: 12px 3px 12px 12px;
 }
 
@@ -532,7 +532,7 @@ html[data-theme='light'] .fc-orb-backdrop {
 
 .thinking-header {
   background-color: color-mix(in srgb, var(--accent, #8b5cf6) 8%, transparent);
-  color: var(--accent, #8b5cf6);
+  color: var(--accent-text);
 }
 
 .thinking-header:hover {
@@ -707,7 +707,7 @@ html[data-theme='light'] .fc-orb-backdrop {
 }
 
 .md-link {
-  color: var(--accent, #8b5cf6);
+  color: var(--accent-text);
   text-decoration: none;
   border-bottom: 1px solid
     color-mix(in srgb, var(--accent, #8b5cf6) 38%, transparent);
@@ -772,7 +772,7 @@ html[data-theme='light'] .fc-orb-backdrop {
 }
 
 .msg-action-btn:hover {
-  color: var(--accent) !important;
+  color: var(--accent-text) !important;
 }
 
 /* ─── Scrollbar: shared inner scrollers ──────────────────────────────────── */

@@ -225,7 +225,7 @@ export default function Content() {
               orientation="vertical"
               sx={{
                 height: 260,
-                color: 'var(--accent)',
+                color: 'var(--accent-text)',
                 '& .MuiSlider-thumb': {
                   backgroundColor: 'var(--accent)',
                   '&:hover, &.Mui-focusVisible': {

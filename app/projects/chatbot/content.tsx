@@ -259,12 +259,12 @@ type ApiStatus = 'checking' | 'available' | 'unavailable';
 // ─── Suggestions ─────────────────────────────────────────────────────────────
 
 const SUGGESTIONS = [
-  'What are you working on right now? 🚀',
+  'What are you working on right now?',
   "What's your AI/ML stack?",
   'Tell me about your Thales experience',
   "What's the ESA project about?",
   'How can I reach you?',
-  'Tell me about your studies 🎓',
+  'Tell me about your studies',
 ];
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
@@ -487,7 +487,7 @@ const CopyButton = ({ text }: { text: string }) => {
         }}
       >
         {copied ? (
-          <CheckIcon sx={{ fontSize: 13, color: 'var(--accent)' }} />
+          <CheckIcon sx={{ fontSize: 13, color: 'var(--accent-text)' }} />
         ) : (
           <ContentCopyIcon sx={{ fontSize: 13 }} />
         )}
@@ -970,19 +970,27 @@ export default function Content() {
             }}
             disabled={apiStatus !== 'available' || modelsLoading || isLoading}
           >
+            {/* Always shrunk: displayEmpty renders a placeholder value, so an
+                unshrunk label would sit on top of it. */}
             <InputLabel
+              id="chat-model-label"
+              shrink
               sx={{
                 color: 'var(--foreground-muted)',
                 fontFamily: "'DM Mono', monospace",
                 fontSize: '0.8rem',
+                '&.Mui-focused': { color: 'var(--foreground)' },
+                '&.Mui-disabled': { color: 'var(--foreground-muted)' },
               }}
             >
               Model
             </InputLabel>
             <Select
+              labelId="chat-model-label"
               value={selectedModel}
               onChange={(e) => handleModelChange(e.target.value)}
               label="Model"
+              notched
               displayEmpty
               renderValue={(value) =>
                 value ||
@@ -1023,7 +1031,7 @@ export default function Content() {
                   borderRadius: '8px',
                   '&:hover': {
                     borderColor: 'var(--accent)',
-                    color: 'var(--accent)',
+                    color: 'var(--accent-text)',
                     backgroundColor: 'var(--accent-muted)',
                   },
                 }}
@@ -1042,6 +1050,20 @@ export default function Content() {
             onClick={retryApiConnection}
             size="small"
             variant="outlined"
+            sx={{
+              flexShrink: 0,
+              fontFamily: "'DM Mono', monospace",
+              fontSize: '0.75rem',
+              textTransform: 'none',
+              color: 'var(--foreground)',
+              borderColor: 'var(--card-border)',
+              borderRadius: '8px',
+              '&:hover': {
+                borderColor: 'var(--accent)',
+                color: 'var(--accent-text)',
+                backgroundColor: 'var(--accent-muted)',
+              },
+            }}
           >
             Retry
           </Button>
@@ -1087,8 +1109,7 @@ export default function Content() {
               sx={{
                 fontFamily: "'DM Mono', monospace",
                 fontSize: '0.82rem',
-                opacity: 0.45,
-                color: 'var(--foreground)',
+                color: 'var(--foreground-2)',
               }}
             >
               Ask me anything about my background, skills, or projects.
@@ -1119,7 +1140,7 @@ export default function Content() {
                     transition: 'all .15s',
                     '&:hover': {
                       borderColor: 'var(--accent)',
-                      color: 'var(--accent)',
+                      color: 'var(--accent-text)',
                       backgroundColor: 'var(--accent-muted)',
                     },
                   }}
@@ -1233,7 +1254,6 @@ export default function Content() {
                     fontFamily: "'DM Mono', monospace",
                     fontSize: '0.63rem',
                     color: 'var(--foreground-muted)',
-                    opacity: 0.5,
                   }}
                 >
                   {formatTime(msg.timestamp)}
@@ -1328,15 +1348,15 @@ export default function Content() {
             gap: 0.75,
           }}
         >
-          <EditIcon sx={{ fontSize: 12, color: 'var(--accent)' }} />
+          <EditIcon sx={{ fontSize: 12, color: 'var(--accent-text)' }} />
           <Typography
             sx={{
               fontFamily: "'DM Mono', monospace",
               fontSize: '0.7rem',
-              color: 'var(--accent)',
+              color: 'var(--accent-text)',
             }}
           >
-            Editing — press Enter to resend, Esc to cancel
+            Editing. Press Enter to resend, Esc to cancel.
           </Typography>
           <Typography
             onClick={cancelEdit}
@@ -1346,7 +1366,7 @@ export default function Content() {
               color: 'var(--foreground-muted)',
               cursor: 'pointer',
               ml: 'auto',
-              '&:hover': { color: 'var(--accent)' },
+              '&:hover': { color: 'var(--accent-text)' },
             }}
           >
             cancel
@@ -1387,7 +1407,7 @@ export default function Content() {
             variant="outlined"
             placeholder={
               apiStatus === 'unavailable'
-                ? 'Chat unavailable — use Retry to reconnect'
+                ? 'Chat unavailable. Use Retry to reconnect.'
                 : apiStatus === 'checking'
                   ? 'Connecting to chat service…'
                   : editingId
@@ -1450,7 +1470,7 @@ export default function Content() {
               borderRadius: '12px',
               padding: 0,
               flexShrink: 0,
-              color: 'var(--accent)',
+              color: 'var(--accent-text)',
               border: '1px solid var(--accent)',
               '&:hover': { backgroundColor: 'var(--accent-muted)' },
             }}

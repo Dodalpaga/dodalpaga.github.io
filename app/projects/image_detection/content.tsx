@@ -128,7 +128,7 @@ export default function ImageSegmentation() {
         variant="body2"
         sx={{ fontWeight: 700, mb: 1, fontFamily: "'Syne', sans-serif" }}
       >
-        🔒 Token Privacy
+        Token privacy
       </Typography>
       <Typography variant="caption" display="block" sx={{ mb: 0.5 }}>
         • Never stored in a database or persistent variable
@@ -153,7 +153,7 @@ export default function ImageSegmentation() {
           href="https://huggingface.co/settings/tokens"
           target="_blank"
           rel="noopener noreferrer"
-          style={{ color: 'var(--accent)', textDecoration: 'underline' }}
+          style={{ color: 'var(--accent-text)', textDecoration: 'underline' }}
         >
           Create one here ↗
         </a>
@@ -281,7 +281,7 @@ export default function ImageSegmentation() {
               size="small"
               sx={{
                 color: 'var(--foreground-muted)',
-                '&:hover': { color: 'var(--accent)' },
+                '&:hover': { color: 'var(--accent-text)' },
               }}
             >
               <Info size={16} />
@@ -302,7 +302,7 @@ export default function ImageSegmentation() {
             color: 'var(--foreground-muted)',
             '&:hover': {
               borderColor: 'var(--accent)',
-              color: 'var(--accent)',
+              color: 'var(--accent-text)',
               backgroundColor: 'var(--accent-muted)',
             },
           }}
@@ -449,7 +449,7 @@ export default function ImageSegmentation() {
                 color: 'var(--foreground-muted)',
               }}
             >
-              <CircularProgress size={36} sx={{ color: 'var(--accent)' }} />
+              <CircularProgress size={36} sx={{ color: 'var(--accent-text)' }} />
               <Typography
                 sx={{ fontFamily: "'DM Mono', monospace", fontSize: '0.8rem' }}
               >
