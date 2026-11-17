@@ -302,6 +302,25 @@ export default function Content() {
                     Contributed to tenders and technical studies for CNES.
                   </li>
                 </ul>
+
+                <h4 className="mission-section-label">Conferences</h4>
+                <ul className="objectives-list">
+                  <li>
+                    WGISS-60 (Oberpfaffenhofen, Germany, 2025): CEOS Working
+                    Group on Information Systems and Services, hosted by DLR,
+                    on Earth observation data discovery and interoperability.
+                  </li>
+                  <li>
+                    Φnnovation Summit (ESA ESRIN, Frascati, Italy, 2026): ESA
+                    Φ-lab&apos;s summit on AI, HPC and quantum computing for
+                    Earth observation.
+                  </li>
+                  <li>
+                    Agentic AI for Earth Observation (Berlin, Germany, 2026):
+                    workshop co-organised by ESA Φ-lab and BIFOLD on LLM agents
+                    applied to Earth observation.
+                  </li>
+                </ul>
               </div>
 
               <div className="mission-col">
